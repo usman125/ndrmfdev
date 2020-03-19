@@ -1,0 +1,70 @@
+.example-container {
+  height: 400px;
+  overflow: auto;
+  /* margin: 4px; */
+}
+
+.margin-5 {
+  margin: 5px !important;
+  padding: 15px;
+}
+
+table {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.fullbtn {
+  width: 100%;
+}
+.fullbtn button {
+  width: 100%;
+}
+
+.view-block {
+  display: flex;
+}
+
+.view-block .view-block-item {
+  padding: 8px 10px;
+}
+
+.view-block .view-block-item .top-controls .comments-box {
+  margin-top: 10px;
+}
+
+.view-block .view-block-item .top-controls .comments-box mat-form-field{
+  padding-bottom: 5px;
+}
+
+.view-block .form-items {
+  width: 62%;
+}
+
+.view-block .activity-items {
+  width: 38%;
+}
+
+.mobile-class.view-block{
+  flex-direction: column-reverse;
+}
+.mobile-class.view-block{
+  flex-direction: column-reverse;
+}
+
+.mobile-class.view-block .form-items {
+  /* margin-right: 20px; */
+  width: auto;
+}
+
+/* .view-block[_ngcontent-gnv-c12] .activity-items[_ngcontent-gnv-c12] */
+.mobile-class.view-block .activity-items {
+  width: auto;
+}

@@ -1,1 +1,113 @@
 /* You can add global styles to this file, and also import other style files */
+/* @import '@angular/material/prebuilt-themes/deeppurple-amber.css'; */
+/* @import '@angular/material/prebuilt-themes/pink-bluegrey.css'; */
+/* @import '@angular/material/prebuilt-themes/indigo-pink.css'; */
+/* @import '~ngx-bar-rating/themes/br-fontawesome-theme'; */
+@import "~ngx-bar-rating/themes/br-default-theme.css";
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.review-info {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.review-info #stars bar-rating .br-default .br-unit {
+  font-size: 8px;
+  width: 12px;
+  height: 12px;
+}
+
+.review-info #stars bar-rating .br {
+  margin: 5px auto;
+  /* padding-bottom: 7px; */
+  padding-left: 8px;
+}
+
+.comments-matrix .title-details #stars bar-rating .br-default .br-unit {
+  font-size: 15px;
+  height: 10px;
+  width: 12px;
+}
+
+.comments-matrix .title-details #stars bar-rating .br {
+  margin: 5px auto;
+}
+
+.comments-matrix .form-comments .form-item bar-rating .br {
+  margin: 5px auto;
+  padding-left: 8px;
+}
+
+.comments-matrix .form-comments .form-item bar-rating .br-default .br-unit {
+  font-size: 15px;
+  height: 10px;
+  width: 12px;
+}
+
+/* .form-comments .form-item bar-rating .br {
+  margin: 5px auto;
+  padding-left: 8px;
+} */
+
+.form-comments .controls bar-rating .br-default .br-unit {
+  font-size: 15px;
+  height: 15px;
+  width: 15px;
+}
+
+/* .app_header {
+  width: 100%;
+  min-width: 100%;
+  position: fixed;
+  z-index: 11111;
+} */
+
+.app-content {
+  position: relative;
+  top: 0%;
+}
+
+/* .app_header_padding {
+  padding-right: 200px;
+  transition: none;
+  transition: 0.3s ease-in-out all;
+  transition-delay: 0.05s;
+} */
+
+mat-card-header .mat-card-header-text {
+  margin: 0px !important;
+}
+
+.bottom-controls {
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
+  padding: 13px;
+  justify-content: space-between;
+}
+.bottom-controls .right-block,
+.bottom-controls .left-block {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+.bottom-controls .right-block {
+  text-align: center;
+}
+.bottom-controls .right-block .head,
+.bottom-controls .left-block .head {
+  font-weight: 600;
+  text-decoration: underline;
+  margin-bottom: 3px;
+}
+
+

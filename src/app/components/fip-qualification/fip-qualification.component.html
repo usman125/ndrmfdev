@@ -1,0 +1,54 @@
+<div class="container-block">
+  <div class="main-block" id="get-main-block">
+    <mat-card>
+      <mat-card-content>
+        <div class="toggle-btns">
+          <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
+            <mat-button-toggle *ngFor="let item of allSmes" (change)="setDefaults()" [value]="item.key"
+              aria-label="Text align left">
+              {{item.name}}
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div style="margin: 20px 10px;" [ngClass]="{'update-btn': secondForm}">
+          <formio disableAlerts="true" readOnly="true" [hidden]="!form.exists" [form]="form"
+            [submission]="{data:secondForm}" [refresh]="refreshForm" (submit)="onSubmit($event)"></formio>
+          <formio [hidden]="form.exists" [form]="form" [submission]="{data:secondForm}" [refresh]="refreshForm"
+            (submit)="onSubmit($event)"></formio>
+          <div *ngIf="secondForm">{{secondForm | json}}</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="intimation-block" id="get-intimation-block">
+    <mat-card style="margin: 10px;">
+      <div mat-card-title>Intimations</div>
+      <mat-card-content>
+        <div @pageAnimations class="badge-btns" mat-menu>
+          <div (click)="setInitmationSection(item)" [ngClass]="{'active': groupType === item.formIdentity}"
+            mat-menu-item class="btn-row hero" *ngFor="let item of allInitimations.intimations">
+            <div class="title_info">
+              <span class="title">{{item.formIdentity}}</span>
+              <small *ngIf="item.intimation_status === 'pending'" class="date"><span id="answer">Pending:</span>
+                {{item.endDate | date:'shortDate'}}</small>
+              <small *ngIf="item.intimation_status === 'updated'" class="date"><span id="answer">Updated:</span>
+                {{item.endDate | date:'shortDate'}}</small>
+            </div>
+            <div class="badge">
+              <mat-icon matTooltip="Commnets!" [matBadge]="item.comments.length" matBadgeColor="accent">comment
+              </mat-icon>
+            </div>
+          </div>
+          <div @pageAnimations>
+            <div class="hero">
+              <div mat-menu-item  style="background-color: rgba(0, 0, 0, 0.04);" *ngIf="allInitimations.intimations.length == 0">
+                <span id="answer">No Intimations Pending</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <accreditation-comments-matrix></accreditation-comments-matrix>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+mat-card {
+  margin: 10px;
+}
+
+.toggle-btns {
+  display: flex;
+}
+
+mat-button-toggle-group {
+  margin: 0 auto;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.container-block {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: center; */
+  padding: 15px;
+}
+
+.main-block {
+  width: 65%;
+}
+
+.intimation-block {
+  width: 35%;
+  /* position: fixed; */
+  /* right: 0px; */
+}
+
+.badge-btns {
+  display: flex;
+  flex-direction: column;
+}
+
+.badge-btns .btn-row.active {
+  background-color: rgba(102, 103, 103, 0.13);
+}
+
+.badge-btns .btn-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 5px;
+}
+
+.badge-btns .title_info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.badge-btns .title_info .title {
+  margin-bottom: 5px;
+  height: 15px;
+}
+
+.mat-card-title {
+  font-size: 20px !important;
+  font-weight: 500;
+}
+
+
+.mat-menu-item .mat-icon {
+  margin-right: 5px;
+  vertical-align: middle;
+}

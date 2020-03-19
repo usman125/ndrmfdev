@@ -1,0 +1,30 @@
+<div class="login-container">
+  <mat-card class="col-md-6 col-10 col-sm-6 col-lg-4 mat-elevation-z8">
+    <mat-card-content>
+      <p class="col-md-12" style="display: flex;">
+        <img style="margin:0 auto;" style="width: 50%; min-width: 60%; margin: 0 auto;" mat-card-image
+          src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png" alt="NDRMF">
+      </p>
+      <form [formGroup]="loginForm" (ngSubmit)="setLoggedUser(loginForm.value)">
+        <mat-form-field class="col col-md-12">
+          <mat-label>Username</mat-label>
+          <input matInput type="text" placeholder="johndoe" formControlName="username"
+            [formControl]="loginForm.controls['username']" />
+        </mat-form-field>
+        <mat-form-field class="col col-md-12">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" placeholder="johndoe" formControlName="password"
+            [formControl]="loginForm.controls['password']" />
+        </mat-form-field>
+        <button mat-raised-button class="col col-md-12" color="primary" type="submit">Login</button>
+      </form>
+    </mat-card-content>
+    <mat-card-actions class="login-actions">
+      <a id="answer" class="reset-pass cursor forgot-pass" routerLink="/register">Forgot Password?</a>
+      <div class="bottom-line">
+        <p class="reset-pass">Not a member?</p>
+        <a id="answer" class="register-link cursor" routerLink="/register">Register</a>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</div>

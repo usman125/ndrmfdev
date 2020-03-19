@@ -1,0 +1,271 @@
+.example-container {
+  height: 400px;
+  overflow: auto;
+}
+
+.margin-5 {
+  margin: 20px;
+  padding: 0px;
+}
+
+table {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.example-h2 {
+  margin: 0 8px 16px;
+}
+
+.example-section {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  height: 60px;
+}
+
+.example-margin {
+  margin: 8px;
+}
+
+.mat-card + .mat-card {
+  margin-top: 8px;
+}
+
+.example-result-card h2 {
+  margin: 0 8px;
+}
+.example-result-card {
+  margin-bottom: 5px;
+}
+
+.form-comments {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background: rgba(235, 235, 235, 0.5);
+  margin: 5px auto;
+  padding: 10px;
+}
+
+.form-comments .details {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+}
+
+.form-comments .controls {
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+  justify-content: center;
+  align-items: center;
+}
+/* .controls mat-button-toggle-group {
+  justify-content: center;
+} */
+.details span {
+  margin-top: 5px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  line-height: 0.8;
+}
+
+.profile-details small {
+  font-size: 10px;
+}
+
+.top-controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.top-controls button {
+  margin: 5px auto;
+}
+
+.comments-box {
+  margin-top: 5px;
+  width: 100%;
+}
+
+.comment-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(235, 235, 235, 0.7);
+  padding: 10px;
+}
+
+.comments-box mat-form-field .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}
+.fullbtn {
+  width: 100%;
+}
+.fullbtn button {
+  width: 100%;
+}
+
+button {
+  outline: none;
+}
+
+.admin-controls bar-rating,
+#stars bar-rating {
+  pointer-events: none;
+}
+
+.title-details {
+  display: flex;
+  flex-direction: column;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.title-details #date {
+  font-size: 10px;
+}
+/* .review-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.review-info #stars bar-rating .br-default .br-unit {
+  font-size: 8px !important;
+  width: 5px !important;
+  height: 5px !important;
+}
+
+.review-info #stars bar-rating .br{
+  margin: 5px auto !important;
+} */
+
+.comments-matrix {
+  display: flex;
+  background: rgba(7, 63, 136, 0);
+  margin: 5px auto;
+}
+.comments-matrix .review-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: gray;
+}
+
+.comments-matrix .form-comments {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  background: none;
+  padding: 0;
+}
+
+.comments-matrix .title-details {
+  flex-direction: column;
+  justify-content: center;
+  width: 22%;
+  padding: 10px;
+}
+.comments-matrix .title-details #title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.comments-matrix .form-comments .form-item {
+  flex-direction: column;
+  display: flex;
+  /* background: rgba(235, 235, 235, 0.6); */
+  /* background: rgba(0, 0, 0, 0.03); */
+  background: rgba(102, 103, 103, 0.1);
+  margin-bottom: 5px;
+  font-size: 12px;
+  padding: 5px;
+}
+
+.form-item .form-item-boxes {
+  display: flex;
+  flex-direction: row;
+}
+
+.review-comments {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  width: 18%;
+  padding: 10px;
+  font-size: 13px;
+}
+
+/* mat-card-content{
+  display:inline-flex;
+} */
+
+.formio-component-submit {
+  display: none;
+}
+
+.formio-component .formio-form .formio-component-submit button {
+  display: none;
+}
+
+@media (max-width: 880px) {
+  /* CSS that should be displayed if width is equal to or less than 800px goes here */
+  /* mat-card-content{
+      display:block;
+    } */
+}
+
+.view-block{
+  display: flex;
+  flex-direction: row;
+}
+
+.view-block .form-items {
+  width: 62%;
+  margin-right: 0px;
+}
+
+.view-block .activity-items {
+  width: 38%;
+}
+
+.right-layout {
+  position: sticky;
+  top: 25px;
+}
+
+
+.mobile-class.view-block{
+  flex-direction: column-reverse;
+}
+.mobile-class.view-block{
+  flex-direction: column-reverse;
+}
+
+.mobile-class.view-block .form-items {
+  margin-right: 20px;
+  width: auto;
+}
+
+/* .view-block[_ngcontent-gnv-c12] .activity-items[_ngcontent-gnv-c12] */
+.mobile-class.view-block .activity-items {
+  width: auto;
+}
+  

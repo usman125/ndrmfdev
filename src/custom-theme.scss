@@ -1,0 +1,557 @@
+@import "~@angular/material/theming";
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// **Be sure that you only ever include this mixin once!**
+@include mat-core();
+
+// Define the default theme (same as the example above).
+$candy-app-primary: mat-palette($mat-indigo);
+// $candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
+$candy-app-accent: mat-palette($mat-green);
+$candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
+
+// Include the default theme styles.
+@include angular-material-theme($candy-app-theme);
+
+.active-menu-item {
+  color: mat-color($candy-app-primary);
+}
+
+.update-btn formio-alerts .alerts {
+  display: none;
+}
+
+.side-list a.disabled {
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
+#comment {
+  color: mat-color($candy-app-accent);
+}
+#answer {
+  color: mat-color($candy-app-primary);
+}
+.mat-form-field-wrapper {
+  padding-bottom: 2px;
+}
+a:hover {
+  color: mat-color($candy-app-primary);
+  text-decoration: none;
+}
+.builder-sidebar .btn {
+  background-color: mat-color($candy-app-primary) !important;
+  border-color: transparent !important;
+}
+.builder-components .builder-component .formio-component-submit button {
+  background-color: mat-color($candy-app-primary) !important;
+}
+.builder-sidebar .btn-primary {
+  background-color: mat-color($candy-app-primary) !important;
+  border-color: transparent !important;
+}
+.builder-sidebar .builder-group-button {
+  background-color: transparent !important;
+}
+.margin-5 .formio-component .formio-form .formio-component-submit button {
+  display: none;
+}
+.formio-component .formio-form .formio-component-submit button {
+  border-color: transparent;
+  background: mat-color($candy-app-primary);
+}
+.update-btn .formio-component .formio-form .formio-component-submit button {
+  border-color: transparent;
+  background: mat-color($candy-app-accent);
+}
+
+#request-status,
+.request-status {
+  color: mat-color($candy-app-accent);
+  font-weight: 700;
+}
+
+.warn-comment {
+  color: map_get($mat-red, 800);
+}
+
+// $my-dark-theme-background: (
+//   status-bar: green,
+//   app-bar: map_get($mat-blue, 900),
+//   background: orange,
+//   hover: rgba(white, 0.04),
+//   card: map_get($mat-red, 800),
+//   dialog: map_get($mat-grey, 800),
+//   disabled-button: $white-12-opacity,
+//   raised-button: map-get($mat-grey, 800),
+//   focused-button: $white-6-opacity,
+//   selected-button: map_get($mat-grey, 900),
+//   selected-disabled-button: map_get($mat-grey, 800),
+//   disabled-button-toggle: black,
+//   unselected-chip: map_get($mat-grey, 700),
+//   disabled-list-option: black
+// );
+
+// $my-dark-theme-foreground: (
+//   base: yellow,
+//   divider: $white-12-opacity,
+//   dividers: $white-12-opacity,
+//   disabled: rgba(white, 0.3),
+//   disabled-button: rgba(white, 0.3),
+//   disabled-text: rgba(white, 0.3),
+//   hint-text: rgba(white, 0.3),
+//   secondary-text: rgba(white, 0.7),
+//   icon: white,
+//   icons: white,
+//   text: yellow,
+//   slider-min: white,
+//   slider-off: rgba(white, 0.3),
+//   slider-off-active: rgba(white, 0.3)
+// );
+
+// instead of creating a theme with mat-light-theme like a sane person, we will create our own theme-creating function that lets us apply our own foreground and background palettes.
+//@function create-wonky-theme($primary, $accent, $warn: mat-palette($mat-red)) {
+//@return (
+/*primary: $primary,
+    accent: $accent,
+    warn: $warn,
+    is-dark: true,
+    foreground: $my-dark-theme-foreground,
+    background: $my-dark-theme-background*/
+//);
+//}
+
+// Define an alternate dark theme.
+
+// $dark-primary: mat-palette($mat-light-blue, A700, 600, 300);
+$dark-primary: mat-palette($mat-purple);
+$dark-accent: mat-palette($mat-green, A400, 200, 700);
+$dark-warn: mat-palette($mat-deep-orange);
+$dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+// $dark-theme: mat-light-theme($dark-primary, $dark-accent, $dark-warn);
+// $dark-theme: create-wonky-theme($dark-primary, $dark-accent, $dark-warn);
+
+.unicorn-dark-theme {
+  @include angular-material-theme($dark-theme);
+
+  .mat-drawer-side {
+    border-right: 0px;
+  }
+
+  .hero {
+    height: 100vh !important;
+    background: #262626;
+  }
+
+  .hero .mat-accordion .mat-expansion-panel {
+    background-color: #262626;
+    color: #fff;
+  }
+
+  .hero
+    .mat-expansion-panel
+    .mat-expansion-panel-content
+    .mat-expansion-panel-body
+    .mat-list-base
+    .mat-list-item:hover
+    .mat-list-item-content {
+    color: mat-color($dark-primary);
+    background-color: rgba(0, 0, 0, 0.25);
+  }
+  .hero
+    .mat-expansion-panel
+    .mat-expansion-panel-content
+    .mat-expansion-panel-body
+    .mat-list-base
+    .mat-list-item:active {
+    color: mat-color($dark-primary);
+    // background-color: #000 !important;
+  }
+
+  .hero
+    .mat-expansion-panel
+    .mat-expansion-panel-content
+    .mat-expansion-panel-body
+    .mat-list-base
+    .mat-list-item.active-menu-item
+    .mat-list-item-content {
+    color: mat-color($dark-primary);
+    background-color: rgba(0, 0, 0, 0.25);
+  }
+  .active-menu-item {
+    // background-color: mat-color($dark-primary);
+    color: mat-color($dark-primary);
+  }
+
+  a:hover {
+    text-decoration: none;
+    color: mat-color($dark-primary);
+  }
+  #answer {
+    color: mat-color($dark-primary);
+  }
+  #comment {
+    color: mat-color($dark-accent);
+  }
+  .comments-matrix {
+    background: rgba(0, 174, 244, 0.1);
+  }
+  .login-container {
+    // $background: map-get($dark-theme, background);
+    background-color: #303030 !important;
+  }
+  .builder-sidebar .btn {
+    background-color: mat-color($dark-primary) !important;
+  }
+  .builder-sidebar .btn-primary {
+    background-color: mat-color($dark-primary) !important;
+  }
+  .builder-sidebar .builder-group-button {
+    background-color: #303030 !important;
+    color: #fff;
+  }
+  .builder-components .builder-component .formio-component-submit button {
+    background-color: mat-color($dark-primary) !important;
+    // background: black;
+  }
+  .margin-5 .formio-component .formio-form .formio-component-submit button {
+    display: none;
+    // background: black;
+  }
+
+  .update-btn .formio-component .formio-form .formio-component-submit button {
+    border-color: transparent;
+    background: mat-color($dark-accent);
+  }
+
+  .formio-component .formio-form .formio-component-submit button {
+    border-color: transparent;
+    background: mat-color($dark-primary);
+  }
+  a:hover {
+    color: mat-color($dark-primary);
+  }
+  .margin-5 .formio-component .formio-form .formio-component-panel .card,
+  .builder-sidebar .card {
+    background: #424242;
+    color: #fff;
+  }
+
+  .formio-component .formio-form .formio-component-panel .card {
+    background: #424242;
+    color: #fff;
+  }
+
+  #request-status,
+  .request-status {
+    color: mat-color($dark-accent);
+    font-weight: 700;
+  }
+
+  pre {
+    color: #fff;
+  }
+}
+
+// Define an alternate LIGHT theme.
+$light-primary: mat-palette($mat-light-blue, A700);
+$light-accent: mat-palette($mat-lime);
+$light-warn: mat-palette($mat-deep-orange);
+$light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
+
+.unicorn-light-theme {
+  @include angular-material-theme($light-theme);
+
+  .hero
+    .mat-expansion-panel
+    .mat-expansion-panel-content
+    .mat-expansion-panel-body
+    .mat-list-base
+    .mat-list-item:hover
+    .mat-list-item-content {
+    color: mat-color($light-primary);
+  }
+  .hero
+    .mat-expansion-panel
+    .mat-expansion-panel-content
+    .mat-expansion-panel-body
+    .mat-list-base
+    .mat-list-item:active
+    .mat-list-item-content {
+    color: mat-color($light-primary);
+    background-color: rgba(102, 103, 103, 0.04);
+  }
+  .hero
+    .mat-expansion-panel
+    .mat-expansion-panel-content
+    .mat-expansion-panel-body
+    .mat-list-base
+    .mat-list-item.active-menu-item
+    .mat-list-item-content {
+    color: mat-color($light-primary);
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+  #answer {
+    color: mat-color($light-primary);
+  }
+  #comment {
+    color: mat-color($light-accent);
+  }
+  .comments-matrix {
+    background: rgba(0, 174, 244, 0.1);
+  }
+  .login-container {
+    background-color: none !important;
+  }
+  .builder-sidebar .btn {
+    background-color: mat-color($light-primary) !important;
+  }
+  .builder-sidebar .btn-primary {
+    background-color: mat-color($light-primary) !important;
+  }
+  .builder-sidebar .builder-group-button {
+    background-color: transparent !important;
+    color: #000;
+  }
+  .builder-components .builder-component .formio-component-submit button {
+    background-color: mat-color($light-primary) !important;
+  }
+  .margin-5 .formio-component .formio-form .formio-component-submit button {
+    display: none;
+  }
+
+  .update-btn .formio-component .formio-form .formio-component-submit button {
+    border-color: transparent;
+    background: mat-color($light-accent);
+  }
+
+  .formio-component .formio-form .formio-component-submit button {
+    border-color: transparent;
+    background: mat-color($light-primary);
+  }
+  a:hover {
+    color: mat-color($light-primary);
+  }
+  .margin-5 .formio-component .formio-form .formio-component-panel .card,
+  .builder-sidebar .card {
+    background: unset;
+    color: #000;
+  }
+
+  .formio-component .formio-form .formio-component-panel .card {
+    background: unset;
+    color: #000;
+  }
+
+  #request-status,
+  .request-status {
+    color: mat-color($light-accent);
+    font-weight: 700;
+  }
+
+  pre {
+    color: #000;
+  }
+
+  .active-menu-item {
+    // background-color: mat-color($light-primary);
+    color: mat-color($light-primary);
+  }
+}
+
+.material-base-theme {
+  .overlay {
+    background: #fff;
+    width: 25px;
+    height: 20px;
+    position: absolute;
+    right: 0;
+    top: 16px;
+    .top-section {
+      background: mat-color($candy-app-primary);
+      height: 7px;
+      margin-bottom: 0px;
+      display: block;
+      position: relative;
+      top: -8px;
+    }
+    .accent-section {
+      background: mat-color($candy-app-accent);
+      height: 4px;
+      width: 8px;
+      position: absolute;
+      bottom: 6px;
+      left: 8px;
+      border-radius: 3px;
+    }
+  }
+}
+.uni-light-theme {
+  .overlay {
+    background: #fff;
+    width: 25px;
+    height: 20px;
+    position: absolute;
+    right: 0;
+    top: 16px;
+    .top-section {
+      background: mat-color($light-primary);
+      height: 7px;
+      margin-bottom: 0px;
+      display: block;
+      position: relative;
+      top: -8px;
+    }
+    .accent-section {
+      background: mat-color($light-accent);
+      height: 4px;
+      width: 8px;
+      position: absolute;
+      bottom: 6px;
+      left: 8px;
+      border-radius: 3px;
+    }
+  }
+}
+.uni-dark-theme {
+  .overlay {
+    width: 25px;
+    height: 20px;
+    background: #303030;
+    position: absolute;
+    right: 0;
+    top: 16px;
+    .top-section {
+      background: mat-color($dark-primary);
+      height: 7px;
+      margin-bottom: 0px;
+      display: block;
+      position: relative;
+      top: -8px;
+    }
+    .accent-section {
+      background: mat-color($dark-accent);
+      height: 3px;
+      width: 7px;
+      position: absolute;
+      bottom: 6px;
+      left: 8px;
+      border-radius: 3px;
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .main-block {
+    width: 50%;
+  }
+
+  .intimation-block {
+    width: 20%;
+  }
+}
+
+// .hero button {
+//   padding: 10px 15px;
+//   font-weight: 700;
+//   line-height: 16px;
+//   margin: 0;
+//   font-size: 13px;
+//   cursor: pointer;
+//   position: relative;
+//   display: block;
+//   width: 100%;
+//   text-align: left;
+//   background: none;
+//   border: none;
+// }
+
+// .hero .mat-list-base[dense] .mat-list-item,
+// .hero .mat-list-base[dense] .mat-list-option {
+//   display: block;
+//   height: 40px;
+//   width: 100%;
+//   padding: 0;
+//   position: relative;
+// }
+
+.hero .mat-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body .mat-list-base {
+  padding: 0px;
+}
+
+.hero
+  .mat-expansion-panel
+  .mat-expansion-panel-content
+  .mat-expansion-panel-body
+  .mat-list-base
+  .mat-list-item:hover
+  .mat-list-item-content {
+  color: mat-color($candy-app-primary);
+}
+
+.hero
+  .mat-expansion-panel
+  .mat-expansion-panel-content
+  .mat-expansion-panel-body
+  .mat-list-base
+  .mat-list-item.active-menu-item
+  .mat-list-item-content {
+  color: mat-color($candy-app-primary);
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.hero .mat-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body {
+  padding: 0px !important;
+}
+
+.hero mat-expansion-panel {
+  border-radius: 0px;
+  margin: 0px;
+}
+
+.hero .mat-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body .mat-list-base .mat-list-item {
+  font-size: 10px;
+}
+
+.hero .mat-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body .mat-list-base .mat-list-item,
+.hero
+  .mat-expansion-panel
+  .mat-expansion-panel-content
+  .mat-expansion-panel-body
+  .mat-list-base[dense]
+  .mat-list-option {
+  display: block;
+  height: 40px;
+  width: 100%;
+  padding: 0;
+  position: relative;
+}
+
+.hero .mat-expansion-panel-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 15px;
+  border-radius: inherit;
+  font-size: 12px;
+  height: 40px !important;
+}
+
+.hero .mat-expansion-panel-header-title {
+  font-weight: 500;
+}
+
+.hero .mat-accordion .mat-expansion-panel:first-of-type {
+  border-top-right-radius: 0px;
+  border-top-left-radius: 0px;
+}
+
+.hero .mat-accordion .mat-expansion-panel:last-of-type {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}

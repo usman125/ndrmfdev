@@ -1,0 +1,18 @@
+<mat-card style="margin: 5px;">
+  <mat-card-content>
+    <pre *ngIf="!eligibilityFlag">
+      You must apply for <code><a color="primary" routerLink="/fip-eligibility">Eligibility Accreditation</a></code>
+
+      in order to proceed for <code><a *ngIf="eligibilityFlag" color="primary" routerLink="/fip-qualification">Qualification Accreditation</a><a *ngIf="!eligibilityFlag" color="primary" href="javascript: void(0);">Qualification Accreditation</a></code> 
+      
+      once your <code id="answer">Accredication Status</code> is set you can to apply for projects.
+    </pre>
+    <pre *ngIf="eligibilityFlag">
+      You are eligible for <code><a color="primary" href="javascript: void(0);">Eligibility Accreditation</a></code>
+
+      now you can apply for <code><a *ngIf="eligibilityFlag" color="primary" routerLink="/fip-qualification">Qualification Accreditation</a><a *ngIf="!eligibilityFlag" color="primary" href="javascript: void(0);">Qualification Accreditation</a></code> 
+      
+      in order to set your <code id="answer">Accredication Status</code> for project posting.
+    </pre>
+  </mat-card-content>
+</mat-card>

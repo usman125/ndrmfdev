@@ -1,0 +1,77 @@
+<!-- <mat-sidenav-container
+  [ngClass]="{'app-content': !loggedUser, 'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
+  class="example-container"> -->
+<mat-sidenav-container class="example-container">
+  <mat-sidenav-content class="mat-app-background">
+    <mat-toolbar color="primary">
+      <mat-toolbar-row style="padding: 25px;height: 90px;">
+        Header
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div class="main" style="
+    width: 100%;
+    display: flex;
+    height: 100vh;
+    position: relative;">
+      <div class="side-nav" style="
+      /* width: 25%; */
+      width: 240px;
+      max-height: 75vh;
+      top: 25px;
+      margin: 25px;
+      position: sticky;" [hidden]="!opened">
+        <div class="hero custom-sidenav">
+          <mat-accordion multi="true">
+            <mat-expansion-panel [expanded]="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Profiles
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                <a mat-list-item routerLinkActive="active-menu-item" routerLink="/create-survey">Create
+                  Profile</a>
+                <a mat-list-item routerLinkActive="active-menu-item" routerLink="/surveys">All Profiles</a>
+              </mat-nav-list>
+            </mat-expansion-panel>
+            <mat-expansion-panel [expanded]="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Accreditation Requests
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                <a mat-list-item routerLinkActive="active-menu-item" routerLink="/eligibility-requests">Eligibility
+                  Requests</a>
+                <a mat-list-item routerLinkActive="active-menu-item" routerLink="/accreditation-requests">Qualification
+                  Requests</a>
+              </mat-nav-list>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Settings
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                <a mat-list-item routerLinkActive="active-menu-item" routerLink="/users">Users</a>
+                <a mat-list-item routerLinkActive="active-menu-item" routerLink="/smes">Smes</a>
+              </mat-nav-list>
+            </mat-expansion-panel>
+
+          </mat-accordion>
+
+
+        </div>
+      </div>
+      <div class="main-data" style="
+      width: 70%;
+    position: absolute;
+    margin: 20px;
+    right: 0px;">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

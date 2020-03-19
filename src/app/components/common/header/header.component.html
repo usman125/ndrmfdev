@@ -1,0 +1,50 @@
+<mat-toolbar color="primary" class="mat-elevation-z8">
+  <mat-toolbar-row>
+    <div class="menu-btn">
+      <button (click)="toggleSideNav()" mat-icon-button aria-label="Menu">
+        <mat-icon [hidden]="!sideNavMode">menu_open</mat-icon>
+        <mat-icon [hidden]="sideNavMode">menu</mat-icon>
+      </button>
+      <!-- <span class="company-name" id="comment">NDRMF</span> -->
+    </div>
+    <div *ngIf="loggedUser.role == 'admin'">
+      <button mat-button color="basic" (click)="goToRoute('smes')">Smes</button>
+      <button mat-button color="basic" (click)="goToRoute('users')">Users</button>
+    </div>
+    <div *ngIf="loggedUser.role == 'fip'">
+      <button mat-button color="basic" (click)="goToRoute('fip-home')">Home</button>
+    </div>
+    <span class="example-spacer"></span>
+    <button mat-icon-button [matMenuTriggerFor]="menu2">
+      <mat-icon>format_color_fill</mat-icon>
+    </button>
+    <mat-menu #menu2="matMenu" class="menu-items">
+      <button mat-menu-item *ngFor="let season of seasons;let i = index;">
+        <mat-radio-button [checked]="season.key === 'material-base-theme'" (change)="radioChange($event)"
+          class="example-radio-button" [value]="season.key">
+          <div class="radio-details" [ngClass]="{'material-base-theme': season.key === 'material-base-theme','uni-light-theme': season.key === 'unicorn-light-theme',
+          'uni-dark-theme': season.key === 'unicorn-dark-theme'}">
+            <span class="title">{{season.name}}</span>
+            <div class="overlay">
+              <div class="top-section"></div>
+              <div class="bottom-section"></div>
+              <div class="accent-section"></div>
+            </div>
+          </div>
+        </mat-radio-button>
+      </button>
+    </mat-menu>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>account_box</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" class="menu-items">
+      <button mat-menu-item (click)="logOut()" aria-label="Logout">
+        {{loggedUser.email}}
+        <mat-icon style="font-size: 16px;padding: 4px;">logout</mat-icon>
+      </button>
+    </mat-menu>
+
+  </mat-toolbar-row>
+
+</mat-toolbar>

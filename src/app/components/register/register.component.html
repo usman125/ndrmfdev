@@ -1,0 +1,35 @@
+<div class="login-container">
+  <mat-card class="col-md-6 col-10 col-sm-6 col-lg-4">
+    <mat-card-content>
+      <p class="col-md-12" style="display: flex;">
+        <img style="margin:0 auto;" style="width: 50%; min-width: 60%; margin: 0 auto;" mat-card-image
+        src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png" alt="NDRMF">
+      </p>
+      <div class="heading-title">
+        <!-- <span class="title">Register</span> -->
+        <span class="subheading">Please fill in the below info!</span>
+      </div>
+      <form [formGroup]="registerForm" (ngSubmit)="registerUser(registerForm.value)">
+        <mat-form-field class="col col-md-12">
+          <mat-label>Name</mat-label>
+          <input matInput type="text" placeholder="John Doe" formControlName="name"
+            [formControl]="registerForm.controls['name']" />
+        </mat-form-field>
+        <mat-form-field class="col col-md-12">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" placeholder="johndoe@mail.com" formControlName="email"
+            [formControl]="registerForm.controls['email']" />
+        </mat-form-field>
+        <mat-form-field class="col col-md-12">
+          <mat-label>Password</mat-label>
+          <input matInput type="email" formControlName="password"
+            [formControl]="registerForm.controls['password']" />
+        </mat-form-field>
+        <button mat-raised-button class="col col-md-12" color="primary" type="submit">Register</button>
+      </form>
+    </mat-card-content>
+    <mat-card-actions class="login-actions">
+      <a class="register-link cursor" routerLink="/login">Back to login!</a>
+    </mat-card-actions>
+  </mat-card>
+</div>

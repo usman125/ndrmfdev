@@ -1,0 +1,17 @@
+.example-container {
+  height: 400px;
+  overflow: auto;
+  margin: 10px;
+  position: relative;
+}
+
+table {
+  width: 100%;
+}
+
+
+.min-fab-addbtn{
+  position: absolute;
+  right: 50px;
+  bottom: 18%;
+}

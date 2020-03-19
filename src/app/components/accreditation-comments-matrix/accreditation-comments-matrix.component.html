@@ -1,0 +1,18 @@
+<mat-card style="margin: 20px 10px 10px;">
+  <div mat-card-title>Comments</div>
+  <mat-card-content>
+    <div *ngIf="currentComment.endDate" @pageAnimations class="heroes comments">
+      <div class="hero" *ngFor="let item of currentComment?.comments">
+        <span class="hero-title">{{item.data}}</span>
+        <small> <span id="answer">Posted:</span> {{item.date | date:'shortDate'}}</small>
+      </div>
+    </div>
+    <div>
+      <div @pageAnimations class="heroes" *ngIf="!currentComment.endDate">
+        <div class="hero">
+          <div id="answer">No Data Found</div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

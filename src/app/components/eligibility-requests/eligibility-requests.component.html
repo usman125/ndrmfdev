@@ -1,0 +1,78 @@
+<div *ngIf="!toggle" class="margin-5">
+  <mat-card style="padding: 0px;" class="mat-elevation-z8 example-container">
+    <mat-card-content>
+      <table mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef> User </th>
+          <td mat-cell *matCellDef="let element"> {{element.user}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Status </th>
+          <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let element">
+            <button (click)="getRequest(element)" mat-icon-button aria-label="Example icon-button with a heart icon">
+              <mat-icon>play_arrow</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<mat-toolbar *ngIf="toggle" style="margin-bottom:5px;padding: 10px 0px;" class="mat-elevation-z8" color="primary">
+  <mat-toolbar-row>
+    <small>{{selectedRequest?.user}}</small>
+    <span class="example-spacer"></span>
+    <button color="accent" (click)="hideRequest()" mat-icon-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
+      </mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div *ngIf="toggle" [ngClass]="{'mobile-class': addMobileClasses}" class="margin-5 view-block">
+  <div class="view-block-item form-items">
+    <mat-card style="padding: 0px;">
+      <mat-card-content>
+        <div *ngFor="let item of selectedRequestItems">
+          <mat-toolbar class="mat-elevation-z8" color="primary">
+            <mat-toolbar-row>
+              <small>{{item.formData?.name}}</small>
+              <span class="example-spacer"></span>
+            </mat-toolbar-row>
+          </mat-toolbar>
+          <formio [form]="item.formData" [options]="options" readOnly="true" [submission]="{data: item.formSubmitData}"></formio>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="view-block-item activity-items">
+    <mat-card>
+      <mat-card-content>
+        <div class="top-controls">
+          <div class="fullbtn">
+            <button (click)="markEligibleFlag()" [color]="!toggleBtn ? 'primary' : 'warn'" class="control-btn" mat-flat-button>
+              {{!toggleBtn ? "Mark Eligible" : "Mark Un-eligible"}}
+            </button>
+          </div>
+          <div class="comments-box">
+            <mat-form-field appearance="outline">
+              <mat-label>Comments for fip</mat-label>
+              <textarea matInput placeholder="write your comments..."></textarea>
+            </mat-form-field>
+            <button color="accent" (click)="intimateFip()" mat-raised-button>Intimate Fip</button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

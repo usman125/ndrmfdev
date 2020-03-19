@@ -1,0 +1,205 @@
+{
+  "name": "Qualification - Environment & Social Safeguards",
+  "display": "form",
+  "page": 0,
+  "refreshOn": "submit",
+  "numPages": 2,
+  "components": [
+    {
+      "html": "<p>E. Environment &amp; Social Safeguards</p>",
+      "label": "Content",
+      "refreshOnChange": false,
+      "tableView": false,
+      "key": "content",
+      "type": "content",
+      "input": false
+    },
+    {
+      "label": "Does the organization have a policy with regards to Environment and Social Safeguards?",
+      "optionsLabelPosition": "right",
+      "inline": false,
+      "tableView": false,
+      "values": [
+        {
+          "label": "Yes",
+          "value": "yes",
+          "shortcut": ""
+        },
+        {
+          "label": "No",
+          "value": "no",
+          "shortcut": ""
+        }
+      ],
+      "key": "radioea",
+      "type": "radio",
+      "input": true
+    },
+    {
+      "label": "Is Environment & Social Management (ESM) Policy approved by the Governing Board/Council//Body/ Management and communicated to all levels of staff and publically disclosed?",
+      "optionsLabelPosition": "right",
+      "inline": false,
+      "tableView": false,
+      "values": [
+        {
+          "label": "Yes",
+          "value": "yes",
+          "shortcut": ""
+        },
+        {
+          "label": "No",
+          "value": "no",
+          "shortcut": ""
+        }
+      ],
+      "key": "radioeb",
+      "type": "radio",
+      "input": true
+    },
+    {
+      "title": "Is the Environment & Social Management System (ESMS) being fully implemented and being used for:",
+      "collapsible": false,
+      "tableView": false,
+      "key": "projectScreeningAndCategorization",
+      "type": "panel",
+      "label": "Is the Environment & Social Management System (ESMS) being fully implemented and being used for:",
+      "input": false,
+      "components": [
+        {
+          "label": " Project screening and categorization?",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radioec1",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "Assessment of impacts?",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radioec2",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "Development of measures to mitigate adverse environment and social impacts and enhancement of positive impacts?",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radioec3",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "Capacity development of staff",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radioec4",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": " Implementation of grievance redressal mechanism",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radioec5",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "Monitoring of mitigation measures implementation",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radioec6",
+          "type": "radio",
+          "input": true
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "label": "Submit",
+      "key": "submit",
+      "disableOnInvalid": true,
+      "input": true,
+      "tableView": false
+    }
+  ]
+}

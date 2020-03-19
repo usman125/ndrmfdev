@@ -1,0 +1,300 @@
+{
+  "name": "Qualification - Gender and Inclusion",
+  "display": "form",
+  "page": 0,
+  "refreshOn": "submit",
+  "numPages": 2,
+  "components": [
+    {
+      "html": "<p>F. Gender and Inclusion</p>",
+      "label": "Content",
+      "refreshOnChange": false,
+      "tableView": false,
+      "key": "content",
+      "type": "content",
+      "input": false
+    },
+    {
+      "title": "1. Policies",
+      "collapsible": false,
+      "tableView": false,
+      "key": "1Policies",
+      "type": "panel",
+      "label": "1. Policies",
+      "input": false,
+      "components": [
+        {
+          "label": "Does the organization have a gender policy or strategy?",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radiof1a",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "Is gender policy or strategy approved by the Governing Board/Council//Body/ Management and communicated to all levels of staff?",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radiof1b",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "Does the organization have designated or dedicated staff to take gender agenda forward with well-defined role?",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radiof1c",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "Are gender and development training mandatory for all staff members?",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radiof1d",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "Does the organization comply with the Protection against Harassment of Women at the Workplace Act?",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radiof1e",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "Does the organization comply with the National Policy for Persons with Disabilities?",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radiof1f",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "What is the percentage of women staff of the organization with respect to the total number of staff?",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radiof1g",
+          "type": "radio",
+          "input": true
+        }
+      ]
+    },
+    {
+      "title": "2. Gender and Inclusive Programming",
+      "collapsible": false,
+      "tableView": false,
+      "key": "1Policies1",
+      "type": "panel",
+      "label": "2. Gender and Inclusive Programming",
+      "input": false,
+      "components": [
+        {
+          "label": "Is gender disaggregated qualitative and quantitative data collected, analyzed and used? ",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radiof2a",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "Is socio-economic and gender analysis2 conducted to assess differential needs of diverse women and men?",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radiof2b",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "Do projects respond to differential needs of diverse women and men identified during the socio-economic and gender analysis?",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radiof2c",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "Are specific gender elements spelled out at activities, outputs, outcomes and impact levels? ",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radiof2d",
+          "type": "radio",
+          "input": true
+        },
+        {
+          "label": "Are gender specific risk and mitigation strategies developed to avoid, minimize and/or mitigate adverse gender impacts?",
+          "optionsLabelPosition": "right",
+          "inline": false,
+          "tableView": false,
+          "values": [
+            {
+              "label": "Yes",
+              "value": "yes",
+              "shortcut": ""
+            },
+            {
+              "label": "No",
+              "value": "no",
+              "shortcut": ""
+            }
+          ],
+          "key": "radiof2e",
+          "type": "radio",
+          "input": true
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "label": "Submit",
+      "key": "submit",
+      "disableOnInvalid": true,
+      "input": true,
+      "tableView": false
+    }
+  ]
+}

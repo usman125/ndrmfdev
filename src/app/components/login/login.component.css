@@ -1,0 +1,40 @@
+.col {
+  padding: 0px;
+}
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eaedf4;
+}
+.login-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.login-actions .register-link {
+  font-size: 11px;
+  margin: 10px 0;
+  color: #073f88;
+}
+.login-actions .reset-pass {
+  margin-bottom: 0;
+  margin-top: 10px;
+  font-size: 10px;
+  padding-right: 5px;
+}
+.forgot-pass {
+  color: #073f88;
+}
+.cursor {
+  cursor: pointer;
+}
+.bottom-line {
+  display: flex;
+}
+
+mat-sidenav-conatiner {
+  top: 0;
+}

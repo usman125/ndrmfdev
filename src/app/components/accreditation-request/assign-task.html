@@ -1,0 +1,28 @@
+<!-- <div [ngClass]="{'unicorn-dark-theme': checked}"> -->
+  <div mat-dialog-content>
+    <p>Select Start & End Date!</p>
+    <mat-form-field>
+      <mat-label>Start Date</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="data.startDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>End Date</mat-label>
+      <input matInput [matDatepicker]="picker2" [(ngModel)]="data.endDate">
+      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+      <mat-datepicker #picker2></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Comments</mat-label>
+      <textarea matInput [(ngModel)]="data.comments"></textarea>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Close</button>
+    <button mat-raised-button color="primary" [disabled]="!data.startDate || !data.endDate"
+      [mat-dialog-close]="{endDate: data.endDate, startDate: data.startDate, comments: data.comments}">
+      Assign
+    </button>
+  </div>
+<!-- </div> -->

@@ -1,0 +1,13 @@
+mat-card {
+  margin: 10px;
+}
+
+.toggle-btns {
+  display: flex;
+}
+
+mat-button-toggle-group {
+  margin: 0 auto;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}

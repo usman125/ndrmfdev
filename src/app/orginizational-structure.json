@@ -1,0 +1,110 @@
+{
+    "name": "Qualification - Organizational Structure",
+    "display": "form",
+    "page": 0,
+    "refreshOn": "submit",
+    "numPages": 2,
+    "components": [
+        {
+            "html": "<p>A. Organizational Structure</p>",
+            "label": "Content",
+            "refreshOnChange": false,
+            "tableView": false,
+            "key": "content",
+            "type": "content",
+            "input": false
+        },
+        {
+            "label": "Do the organizational & reporting structures exist?",
+            "optionsLabelPosition": "right",
+            "inline": false,
+            "tableView": false,
+            "values": [
+                {
+                    "label": "Yes",
+                    "value": "yes",
+                    "shortcut": ""
+                },
+                {
+                    "label": "No",
+                    "value": "no",
+                    "shortcut": ""
+                }
+            ],
+            "key": "radioa",
+            "type": "radio",
+            "input": true
+        },
+        {
+            "label": "Are those structures clearly documented and disseminated? ",
+            "optionsLabelPosition": "right",
+            "inline": false,
+            "tableView": false,
+            "values": [
+                {
+                    "label": "Yes",
+                    "value": "yes",
+                    "shortcut": ""
+                },
+                {
+                    "label": "No",
+                    "value": "no",
+                    "shortcut": ""
+                }
+            ],
+            "key": "radiob",
+            "type": "radio",
+            "input": true
+        },
+        {
+            "label": "Is there a document that outlines the supervisory and staff responsibilities?",
+            "optionsLabelPosition": "right",
+            "inline": false,
+            "tableView": false,
+            "values": [
+                {
+                    "label": "Yes",
+                    "value": "yes",
+                    "shortcut": ""
+                },
+                {
+                    "label": "No",
+                    "value": "no",
+                    "shortcut": ""
+                }
+            ],
+            "key": "radioc",
+            "type": "radio",
+            "input": true
+        },
+        {
+            "label": "Does the organization have defined internal communication mechanisms? ",
+            "optionsLabelPosition": "right",
+            "inline": false,
+            "tableView": false,
+            "values": [
+                {
+                    "label": "Yes",
+                    "value": "yes",
+                    "shortcut": ""
+                },
+                {
+                    "label": "No",
+                    "value": "no",
+                    "shortcut": ""
+                }
+            ],
+            "key": "radiod",
+            "type": "radio",
+            "input": true
+        },
+        {
+            "type": "button",
+            "label": "Submit",
+            "key": "submit",
+            "disableOnInvalid": true,
+            "input": true,
+            "tableView": false
+        }
+    ]
+}
