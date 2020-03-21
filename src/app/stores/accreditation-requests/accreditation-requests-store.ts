@@ -21,6 +21,7 @@ export class AccreditationRequestStore extends Store<AccreditationRequestState> 
     currentReview: string,
     requestKey: string,
     userUpdateFlag: boolean,
+    rating: number,
   ): void {
     this.setState({
       ...this.state,
@@ -36,6 +37,7 @@ export class AccreditationRequestStore extends Store<AccreditationRequestState> 
           endDate: endDate,
           previousReview: previousReview,
           currentReview: currentReview,
+          rating: rating,
           requestKey: requestKey,
           userUpdateFlag: userUpdateFlag,
         }
@@ -132,12 +134,19 @@ export class AccreditationRequestStore extends Store<AccreditationRequestState> 
     currentReview: string,
     previousReview: string,
     status: string,
+    rating: number,
   ): void {
     this.setState({
       ...this.state,
       requests: this.state.requests.map((c) => {
         if (c.userRef === userRef && c.formIdentity === formIdentity) {
-          return { ...c, currentReview: currentReview, previousReview: previousReview, status: status }
+          return {
+            ...c,
+            rating: rating,
+            currentReview: currentReview,
+            previousReview: previousReview,
+            status: 'submit'
+          }
         }
         return c;
       })
@@ -159,6 +168,19 @@ export class AccreditationRequestStore extends Store<AccreditationRequestState> 
       return true;
     }
     return false;
+  }
+
+  submitAllRequests(): void {
+    this.setState({
+      ...this.state,
+      requests: this.state.requests.map((c) => {
+        return {
+          ...c,
+          status: 'submit'
+        }
+        return c;
+      })
+    });
   }
 
 }

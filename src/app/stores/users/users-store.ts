@@ -40,6 +40,59 @@ export class UsersStore extends Store<UsersState> {
     });
   }
 
+
+  editUser = (
+    selectedUserEmail: string,
+    name: string,
+    email: string,
+    role: string,
+    smeRef: string,
+    department: string,
+    username: string,
+    password: string,
+  ): void => {
+    this.setState({
+      ...this.state,
+      users: this.state.users.map((c) => {
+        if (c.email === selectedUserEmail) {
+          return {
+            ...c,
+            name: name,
+            email: email,
+            role: role,
+            smeRef: smeRef,
+            department: department,
+            username: username,
+            password: password,
+          }
+        }
+        return c;
+      })
+    });
+  }
+
+  updateUser(
+    email: string,
+    role: string,
+    smeRef: string,
+  ): void {
+    this.setState({
+      ...this.state,
+      users: this.state.users.map((c) => {
+        if (c.email === email) {
+          return {
+            ...c,
+            role: role,
+            smeRef: smeRef,
+            email: email,
+          }
+        }
+        // console.log("MATCH VALUE:--", c, email, role, smeRef);
+        return c;
+      })
+    });
+  }
+
   updateUserEligibleFlag(
     eligibileFlag: boolean,
     email: string
@@ -70,16 +123,9 @@ export class UsersStore extends Store<UsersState> {
     });
   }
 
-  // addCandidate(name: string): void {
-  //   this.setState({
-  //     ...this.state,
-  //     candidates: [...this.state.candidates, { name: name, votes: 0 }]
-  //   });
-  // }
-
   findEligibleUser(
     email: string
-  ) {
+  ): boolean {
     var flag: any = false;
     this.state.users.forEach((c) => {
       if (c.email === email && c.eligibileFlag === true) {

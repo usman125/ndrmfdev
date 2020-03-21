@@ -3,6 +3,9 @@ import { SmeStore } from "../../stores/sme/sme-store";
 import { AuthStore } from "../../stores/auth/auth-store";
 import { Subscription } from "rxjs";
 import { Router } from "@angular/router";
+import {
+  setCurrentSme
+} from "../../stores/sme/sme-replay";
 
 @Component({
   selector: 'app-sme',
@@ -30,16 +33,29 @@ export class SmeComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._smesStore.state$.subscribe((data) => {
         this.allSmes = data.smes;
+        console.log("ALL SMES;--", data.smes);
         this.dataSource = this.allSmes;
       })
     )
   }
 
-  goToAdd(){
+  editSme(sme) {
+    // console.log('Selected Sme:--', sme);
+    setCurrentSme(
+      sme.name,
+      sme.key,
+      sme.userRef,
+      sme.formGenerated
+    );
+    this._router.navigate(['/add-sme']);
+
+  }
+
+  goToAdd() {
     this._router.navigate(['/add-sme']);
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
 
   }
 

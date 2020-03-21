@@ -6,6 +6,10 @@ mat-card {
   display: flex;
 }
 
+.example-spacer{
+  flex: 1 1 auto;
+}
+
 mat-button-toggle-group {
   margin: 0 auto;
   flex-wrap: nowrap;
@@ -65,4 +69,17 @@ mat-button-toggle-group {
 .mat-menu-item .mat-icon {
   margin-right: 5px;
   vertical-align: middle;
+}
+
+
+.quali-details {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5;
+    font-size: 16px;
+}
+
+.quali-details .mat-cation {
+    font-size: 15px;
+    color: gray;
 }

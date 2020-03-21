@@ -1,5 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginService } from './services/login.service';
@@ -13,19 +13,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { LayoutModule } from '@angular/cdk/layout';
-// import { MatTableModule } from '@angular/material/table';
-// import { MatPaginatorModule } from '@angular/material/paginator';
-// import { MatSortModule } from '@angular/material/sort';
-import { MatSliderModule } from '@angular/material/slider';
-// import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatCardModule } from '@angular/material/card';
-// import { MatSnackBarModule } from '@angular/material/snack-bar';
-// import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { BarRatingModule } from "ngx-bar-rating";
-// import { FormioModule } from 'angular-formio';
-// import { FormioAuthService, FormioAuthConfig } from 'angular-formio/auth';
-import { AppConfig } from './config';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HeaderComponent } from './components/common/header/header.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -36,13 +27,32 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatBadgeModule } from '@angular/material/badge';
 import { SiteLayout } from "./components/common/layouts/sitelayout/sitelayout.component";
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AppConfig } from './config';
+import { FormioAppConfig } from 'angular-formio';
+// import { FormManagerModule, FormManagerRoutes, FormManagerService, FormManagerConfig } from 'angular-formio/manager';
+// import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+// import { FormioAuthService, FormioAuthConfig } from 'angular-formio/auth';
+// import {
+//   FormioResource,
+//   FormioResourceRoutes,
+//   FormioResourceConfig,
+//   FormioResourceService
+// } from 'angular-formio/resource';
+// import { MatTableModule } from '@angular/material/table';
+// import { MatPaginatorModule } from '@angular/material/paginator';
+// import { MatSortModule } from '@angular/material/sort';
+// import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+// import { MatSnackBarModule } from '@angular/material/snack-bar';
+// import { MatButtonToggleModule } from '@angular/material/button-toggle';
+// import { FormioModule } from 'angular-formio';
 
 import {
   AuthGuard,
   LoginComponent,
-  // SurveysComponent,
+  AssignTask,
+  IntimateFip,
   CoffeeElectionComponent,
+  // SurveysComponent,
   // RegisterComponent,
   // UsersComponent,
   // CreateSurveyComponent,
@@ -53,13 +63,9 @@ import {
   // SmeComponent,
   // AddSmeComponent,
   // AddUserComponent,
-  AssignTask,
-  IntimateFip,
   // AccreditationCommentsMatrixComponent,
   // EligibilityRequestsComponent,
 } from './components/component-index';
-
-// import { AuthGuard } from "./components/component-index";
 
 import { AccreditationRequestStore } from './stores/accreditation-requests/accreditation-requests-store';
 import { SingleAccreditationRequestStore } from './stores/single-accreditation-requests/single-accreditation-requests-store';
@@ -72,10 +78,10 @@ import { DepartmentsStore } from "./stores/departments/departments-store";
 import { AccreditationReviewStore } from "./stores/accreditation-reviews/accreditation-reviews-store";
 import { AccreditationCommentsMatrixStore } from './stores/accreditation-comments-matrix/accreditation-comments-matrix-store';
 import { fipIntimationsStore } from './stores/fip-intimations/fip-intimations-store';
-// import { SectionSelectorComponent } from './components/section-selector/section-selector.component';
 import { SectionSelectorStore } from './stores/section-selector/section-selector-store';
 import { IntimateFipModule } from './modules/fip-intimations/fip-intimations.module';
 import { AssigntaskModule } from './modules/assigntask/assigntask.module';
+import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-layout/no-header-layout.component';
 
 
 
@@ -84,9 +90,9 @@ import { AssigntaskModule } from './modules/assigntask/assigntask.module';
     AppComponent,
     HeaderComponent,
     CoffeeElectionComponent,
-    // AssignTask,
     SiteLayout,
     LoginComponent,
+    NoHeaderLayoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -101,22 +107,14 @@ import { AssigntaskModule } from './modules/assigntask/assigntask.module';
     MatButtonModule,
     MatInputModule,
     MatTooltipModule,
-    // MatProgressSpinnerModule,
-    // MatTableModule,
-    // MatPaginatorModule,
-    // MatSortModule,
-    // FormioModule,
     MatSidenavModule,
     MatListModule,
-    // MatSnackBarModule,
-    // MatButtonToggleModule,
     MatGridListModule,
     MatSliderModule,
     BarRatingModule,
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    // MatSlideToggleModule,
     MatMenuModule,
     MatRadioModule,
     MatBadgeModule,
@@ -124,8 +122,39 @@ import { AssigntaskModule } from './modules/assigntask/assigntask.module';
     LayoutModule,
     IntimateFipModule,
     AssigntaskModule,
+    // FormManagerModule,
+    // MatProgressSpinnerModule,
+    // MatTableModule,
+    // MatPaginatorModule,
+    // MatSortModule,
+    // FormioModule,
+    // MatSnackBarModule,
+    // MatButtonToggleModule,
+    // MatSlideToggleModule,
   ],
   providers: [
+    
+    // FormManagerService,
+    // {
+    //   provide: FormManagerConfig,
+    //   useValue: {
+    //     tag: 'common'
+    //   }
+    // },
+    
+    // FormioResourceService,
+    // {
+    //   provide: FormioResourceConfig, useValue: {
+    //     name: 'form1',
+    //     form: 'form1'
+    //   }
+    // },
+
+    {
+      provide: FormioAppConfig,
+      useValue: AppConfig
+    },
+
     AuthGuard,
     LoginService,
     AuthStore,

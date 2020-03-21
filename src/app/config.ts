@@ -1,4 +1,4 @@
 export const AppConfig = {
-  appUrl: 'https://example.form.io',
-  apiUrl: 'https://api.form.io'
+  appUrl: 'http://localhost:9000',
+  apiUrl: 'http://localhost:9000'
 };

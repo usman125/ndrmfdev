@@ -3,7 +3,9 @@
 
     <ng-container matColumnDef="user">
       <th mat-header-cell *matHeaderCellDef> User </th>
-      <td mat-cell *matCellDef="let element"> {{element.user}} </td>
+      <td mat-cell *matCellDef="let element">
+        {{element.user}}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="status">
@@ -57,17 +59,18 @@
           </div>
           <span class="example-spacer"></span>
           <div *ngIf="currentUser?.role !== 'sme'">
-            <button matTooltip="Assign Task" (click)="openDialog(item)" *ngIf="item.previousReview === null && item.submitData"
-              [disabled]="item.currentReview" mat-icon-button color="basic">
+            <button matTooltip="Assign Task" (click)="openDialog(item)"
+              *ngIf="item.previousReview === null && item.submitData" [disabled]="item.currentReview" mat-icon-button
+              color="basic">
               <mat-icon>assignment</mat-icon>
             </button>
-            <button matTooltip="Re-evaluate Task" [disabled]="item.currentReview === 'in_review'" (click)="openDialog(item)"
-              *ngIf="item.previousReview && item.submitData" mat-icon-button color="basic">
+            <button matTooltip="Re-evaluate Task" [disabled]="item.currentReview === 'in_review'"
+              (click)="openDialog(item)" *ngIf="item.previousReview && item.submitData" mat-icon-button color="basic">
               <mat-icon>redo</mat-icon>
             </button>
           </div>
           <div class="profile-details">
-            <span>{{(convertNumber(item.form.totalScore) / totalFormScore) * 100 | number:'1.0-0'}}%</span>
+            <span>{{(convertNumber(item.form?.totalScore) / totalFormScore) * 100 | number:'1.0-0'}}%</span>
             <div *ngIf="currentUser?.role !== 'sme'">
               <small id="request-status" *ngIf="item.previousReview === null && item.currentReview === null">Not
                 Reviewed</small>

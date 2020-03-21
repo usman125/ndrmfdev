@@ -36,13 +36,12 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const currentUser = JSON.parse(localStorage.getItem('user'));
     if (this._authService.loggedIn()) {
-      if (state.url === '/fip-qualification') {
-        if (!this.userEligibleStatus) {
-          this._router.navigate(['fip-eligibility']);
-        } else {
-          this._router.navigate(['fip-qualification']);
-        }
-      }
+      // if (state.url === '/fip-qualification') {
+        // if (!this.userEligibleStatus && currentUser.role === 'sme') {
+        //   this._router.navigate(['fip-eligibility']);
+        // }
+      //   this._router.navigate(['fip-qualification']);
+      // }
       if (route.data.roles && route.data.roles.indexOf(currentUser.role) === -1) {
         this._router.navigate(['login'], { queryParams: { returnUrl: state.url } });
         return false;

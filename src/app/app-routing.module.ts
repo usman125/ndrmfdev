@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import {
   LoginComponent,
   SurveysComponent,
@@ -19,6 +19,7 @@ import {
   EligibilityRequestsComponent,
 } from "./components/component-index";
 import { SiteLayout } from "./components/common/layouts/sitelayout/sitelayout.component";
+import { NoHeaderLayoutComponent } from "./components/common/layouts/no-header-layout/no-header-layout.component";
 import { Role } from './models/Roles';
 
 const loggedUser = JSON.parse(localStorage.getItem('user'));
@@ -146,9 +147,30 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'test',
+    component: SiteLayout,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'home',
+        component: FipHomeComponent,
+      },
+      {
+        path: 'users',
+        component: UsersComponent,
+      },
+    ]
+  },
+  {
     path: 'login',
     // loadChildren: () => import('./modules/login/login.module').then(m => m.LoginModule),
-    component: LoginComponent
+    component: NoHeaderLayoutComponent,
+    children: [
+      {
+        path: '',
+        component: LoginComponent
+      }
+    ]
   },
   {
     path: 'register',

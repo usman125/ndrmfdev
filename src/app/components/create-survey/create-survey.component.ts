@@ -6,6 +6,7 @@ import { SmeStore } from "../../stores/sme/sme-store";
 import { Subscription } from "rxjs";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Formio } from "angular-formio";
 
 @Component({
   selector: 'app-create-survey',
@@ -64,10 +65,10 @@ export class CreateSurveyComponent implements OnInit {
   }
 
   onChange(event) {
-    // if (this.jsonElement) {
-    //   this.jsonElement.nativeElement.innerHTML = '';
-    //   this.jsonElement.nativeElement.appendChild(document.createTextNode(JSON.stringify(event.form, null, 4)));
-    // }
+    if (this.jsonElement) {
+      this.jsonElement.nativeElement.innerHTML = '';
+      this.jsonElement.nativeElement.appendChild(document.createTextNode(JSON.stringify(event.form, null, 4)));
+    }
     this.refreshForm.emit({
       form: event.form
     });
@@ -90,6 +91,8 @@ export class CreateSurveyComponent implements OnInit {
         console.log("ALL SURVEYS:---", data.surveys);
       })
     );
+
+    // Formio.setProjectUrl('http://localhost:9000/form');
   }
 
   toggleBuilder() {

@@ -1,5 +1,6 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, EventEmitter } from '@angular/core';
 import { Subscription, from } from "rxjs";
+import { filter } from "rxjs/operators";
 import { SurveysStore } from "../../stores/surveys/surveys-store";
 import { AuthStore } from "../../stores/auth/auth-store";
 import { SmeStore } from "../../stores/sme/sme-store";
@@ -59,6 +60,9 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   @ViewChild('group') group;
 
   currentIntimation: any = null;
+  submitSectionsCount: number = 0;
+  pendingSectionsCount: number = 0;
+  allSectionsCount: number = 0;
 
   constructor(
     private _surveysStore: SurveysStore,
@@ -71,7 +75,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
-    
+
     setTimeout(() => {
       this._authStore.setRouteName('FIP-QUALIFICATION');
     });
@@ -90,14 +94,41 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     );
     this.Subscription.add(
       this._accreditationRequestStore.state$.subscribe(data => {
+        var count1 = 0;
+        var count2 = 0;
         this.allRequests = data.requests;
         console.log("ALL REQUESTS:--", this.allRequests);
+        from(data.requests).pipe(
+          filter((request: any) =>
+            request.status === 'pending' &&
+            request.requestKey === 'qualification' &&
+            request.userRef === this.loggedUser.email
+          ),
+        ).subscribe((request) => {
+          this.pendingSectionsCount = this.pendingSectionsCount + 1;
+          count1 = count1 + 1;
+          // console.log("PENDING REQESTED:---", this.pendingSectionsCount);
+        }).unsubscribe();
+        from(data.requests).pipe(
+          filter((request: any) =>
+          request.status === 'submit' &&
+          request.requestKey === 'qualification' &&
+          request.userRef === this.loggedUser.email
+          ),
+          ).subscribe((request) => {
+            this.submitSectionsCount = this.submitSectionsCount + 1;
+            count2 = count2 + 1;
+          }).unsubscribe();
+          this.pendingSectionsCount = count1;
+          this.submitSectionsCount = count2;
+          console.log("SUBMITTED REQESTED:---", this.submitSectionsCount, this.pendingSectionsCount);
       })
     );
     this.Subscription.add(
       this._smeStore.state$.subscribe(data => {
         this.allSmes = data.smes;
         // console.log("ALL REQUESTS:--", this.allRequests);
+        this.allSectionsCount = this.allSmes.length;
       })
     );
     shareStoreReplay.subscribe((c) => {
@@ -106,15 +137,12 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     this.setDefaults();
   }
 
-  // ngAfterViewInit(){
-  //   console.log("FIP QUALIFICATION STARTED:---", this.loggedUser)
-  //   if (!this.loggedUser.eligibileFlag){
-  //     // this._router.events.subscribe((data) => {
-  //       // if ()
-  //       this._router.navigate(['fip-home']);
-  //     // })
-  //   }
-  // }
+  ngAfterViewInit() {
+    console.log("FIP QUALIFICATION STARTED:---", this.loggedUser)
+    if (!this.loggedUser.eligibileFlag) {
+      this._router.navigate(['fip-home']);
+    }
+  }
 
   setDefaults() {
     // console.log("SET DEFAULTS CALLED");
@@ -190,7 +218,8 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
         null,
         null,
         'qualification',
-        false
+        false,
+        0
       );
     } else {
       var object = {
@@ -220,29 +249,37 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     this.Subscription.unsubscribe();
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    // .main-block {
-    //   width: 50%;
-    // }
-
-    // .intimation-block {
-    //   width: 20%;
-    // }
-    if (event.target.innerWidth < 765) {
-      // this.navMode = 'over';
-      // this.sidenav.close();
-      console.log("LESS THEN 886", event.target.innerWidth)
-      document.getElementById('get-main-block').style.width = '60%';
-      document.getElementById('get-intimation-block').style.width = '40%';
-    }
-    if (event.target.innerWidth > 886) {
-      console.log("GREATER 886", event.target.innerWidth)
-      document.getElementById('get-main-block').style.width = '68%';
-      document.getElementById('get-intimation-block').style.width = '32%';
-      //  this.navMode = 'side';
-      //  this.sidenav.open();
-    }
+  goBack() {
+    this._router.navigate(['fip-home']);
   }
+
+  submitAllSections(){
+    this._accreditationRequestStore.submitAllRequests();
+  }
+
+  // @HostListener('window:resize', ['$event'])
+  // onResize(event) {
+  //   // .main-block {
+  //   //   width: 50%;
+  //   // }
+
+  //   // .intimation-block {
+  //   //   width: 20%;
+  //   // }
+  //   if (event.target.innerWidth < 765) {
+  //     // this.navMode = 'over';
+  //     // this.sidenav.close();
+  //     console.log("LESS THEN 886", event.target.innerWidth)
+  //     document.getElementById('get-main-block').style.width = '60%';
+  //     document.getElementById('get-intimation-block').style.width = '40%';
+  //   }
+  //   if (event.target.innerWidth > 886) {
+  //     console.log("GREATER 886", event.target.innerWidth)
+  //     document.getElementById('get-main-block').style.width = '68%';
+  //     document.getElementById('get-intimation-block').style.width = '32%';
+  //     //  this.navMode = 'side';
+  //     //  this.sidenav.open();
+  //   }
+  // }
 
 }

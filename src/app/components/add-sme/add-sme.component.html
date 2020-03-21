@@ -3,7 +3,7 @@
     <!-- <div mat-card-avatar>
       <mat-icon>add</mat-icon>
     </div> -->
-    <mat-card-title title color="primary">Add Sme</mat-card-title>
+    <mat-card-title title color="primary">{{flag ?'Update Sme' :'Add Sme'}}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <mat-grid-list cols="1" rowHeight="60px">
@@ -22,7 +22,7 @@
               [formControl]="addSmeForm.controls['key']" />
           </mat-form-field>
         </mat-grid-tile>
-        <mat-grid-tile>
+        <mat-grid-tile  *ngIf="!selectedSme?.userRef">
           <mat-form-field>
             <mat-label>User</mat-label>
             <mat-select [formControl]="addSmeForm.controls['userRef']" (ngModelChange)="userChanged($event)">
@@ -30,8 +30,16 @@
             </mat-select>
           </mat-form-field>
         </mat-grid-tile>
+        <mat-grid-tile *ngIf="selectedSme?.userRef">
+          <mat-form-field>
+            <mat-label>User</mat-label>
+            <mat-select [formControl]="addSmeForm.controls['userRef']">
+              <mat-option [value]="selectedSme?.userRef">{{selectedSme?.userRef}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
         <mat-grid-tile>
-          <button [disabled]="!addSmeForm.valid" mat-raised-button color="primary" type="submit">Add</button>
+          <button [disabled]="!addSmeForm.valid" mat-raised-button [color]="flag ? 'accent' : 'primary'" type="submit">{{flag ?'Update' :'Add'}}</button>
         </mat-grid-tile>
       </form>
       <mat-grid-tile>

@@ -98,7 +98,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   logOut() {
     localStorage.removeItem('user');
     this._authStore.setLoginState(false);
-    this._authStore.setEligibleFlag(false);
+    this._authStore.closeSideNav();
     this._router.navigate(['/login']);
   }
 

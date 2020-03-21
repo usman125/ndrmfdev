@@ -1,7 +1,8 @@
 .example-container {
-  height: 400px;
-  overflow: auto;
-  margin: 10px;
+  /* height: 400px; */
+  /* overflow: auto; */
+  margin: 15px;
+  padding: 0px;
   position: relative;
 }
 

@@ -366,7 +366,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 
 .material-base-theme {
   .overlay {
-    background: #fff;
+    background: rgba(102,103,103,0.1);
     width: 25px;
     height: 20px;
     position: absolute;
@@ -393,7 +393,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 }
 .uni-light-theme {
   .overlay {
-    background: #fff;
+    background: rgba(102,103,103,0.1);
     width: 25px;
     height: 20px;
     position: absolute;
@@ -554,4 +554,8 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 .hero .mat-accordion .mat-expansion-panel:last-of-type {
   border-bottom-right-radius: 0px;
   border-bottom-left-radius: 0px;
+}
+
+.hero .mat-accordion .mat-expansion-panel {
+  box-shadow: none;
 }

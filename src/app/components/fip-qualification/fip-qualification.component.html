@@ -1,3 +1,38 @@
+<mat-toolbar style="margin-top:0px;padding: 25px 0px;" color="primary">
+  <mat-toolbar-row>
+    <div class="quali-details">
+      <span class="subheading-1">Qualification Sections</span>
+      <span *ngIf="submitSectionsCount === allSectionsCount" class="mat-cation">Submitted: {{submitSectionsCount}}</span>
+      <span *ngIf="pendingSectionsCount !== allSectionsCount && submitSectionsCount !== allSectionsCount" class="mat-cation">Submitted: {{pendingSectionsCount}}</span>
+      <span *ngIf="pendingSectionsCount === allSectionsCount" class="mat-cation">Submitted: {{allSectionsCount}}</span>
+      <span class="mat-cation">Total Sections: {{allSectionsCount}}</span>
+    </div>
+    <span class="example-spacer"></span>
+    <button matTooltip="Application Submitted!" disabled *ngIf="submitSectionsCount === allSectionsCount" mat-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">
+        cancel_schedule_send
+      </mat-icon>
+      Submitted
+    </button>
+    <button (click)="submitAllSections()" matTooltip="Submit Application!" *ngIf="pendingSectionsCount === allSectionsCount" mat-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">
+        send
+      </mat-icon>
+      Submit
+    </button>
+    <button matTooltip="Locked!" disabled *ngIf="pendingSectionsCount !== allSectionsCount && submitSectionsCount !== allSectionsCount" mat-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">
+        cancel_schedule_send
+      </mat-icon>
+      Locked
+    </button>
+    <button matTooltip="Close!" color="accent" (click)="goBack()" mat-icon-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">
+        close
+      </mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
 <div class="container-block">
   <div class="main-block" id="get-main-block">
     <mat-card>
@@ -41,8 +76,9 @@
           </div>
           <div @pageAnimations>
             <div class="hero">
-              <div mat-menu-item  style="background-color: rgba(0, 0, 0, 0.04);" *ngIf="allInitimations.intimations.length == 0">
-                <span id="answer">No Intimations Pending</span>
+              <div mat-menu-item style="background-color: rgba(0, 0, 0, 0.04);padding: 10px;"
+                *ngIf="allInitimations.intimations.length == 0">
+                <span id="answer">No Data Found</span>
               </div>
             </div>
           </div>

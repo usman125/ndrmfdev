@@ -73,18 +73,16 @@
 </mat-sidenav-container> -->
 
 
+<div
+  [ngClass]="{'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
+  class="app_header">
+  <app-header class="example-header" *ngIf="loggedUser"></app-header>
+</div>
 <ng-container>
-  <div
-    [ngClass]="{'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
-    class="app_header mat-app-background">
-    <app-header class="example-header" *ngIf="loggedUser"></app-header>
-  </div>
   <mat-sidenav-container
     [ngClass]="{'app-content': !loggedUser, 'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
     class="example-container">
-    <mat-sidenav *ngIf="loggedUser" #sidenav mode="side" [opened]="sideNavMode" class="example-sidenav"
-      [fixedInViewport]="true" [fixedTopGap]="53" [fixedBottomGap]="">
-
+    <mat-sidenav #sidenav mode="side" [opened]="sideNavMode" class="example-sidenav">
       <div class="hero" *ngIf="loggedUserRole === 'admin'">
         <mat-accordion multi="true">
 
@@ -138,7 +136,8 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-nav-list>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/fip-eligibility">Eligibility Management</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/fip-eligibility">Eligibility
+                Management</a>
               <a *ngIf="!userEligibleStatus" mat-list-item disabled href="javascript: void(0);">Qualification
                 Management</a>
               <a *ngIf="userEligibleStatus" mat-list-item routerLinkActive="active-menu-item"
@@ -148,37 +147,26 @@
 
         </mat-accordion>
       </div>
+      <div class="hero" *ngIf="loggedUserRole === 'sme'">
+        <mat-accordion multi="true">
 
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Accreditation
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/accreditation-requests">Assigned
+                Requests</a>
+            </mat-nav-list>
+          </mat-expansion-panel>
 
-      <!-- <div mat-menu [@pageAnimations]="-1">
-      <div class="hero">
-        <button mat-menu-item>
-          <a mat-button @fade routerLinkActive="active-menu-item" routerLink="/create-survey">Create Profile</a>
-        </button>
-        <button mat-menu-item>
-          <a mat-button routerLinkActive="active-menu-item" routerLink="/surveys">All Profiles</a>
-        </button>
-        <button mat-menu-item>
-          <a mat-button routerLinkActive="active-menu-item" routerLink="/eligibility-requests">Eligibility Requests</a>
-        </button>
-        <button mat-menu-item>
-          <a mat-button routerLinkActive="active-menu-item" routerLink="/accreditation-requests">Qualification
-            Requests</a>
-        </button>
-        <button mat-menu-item>
-          <a mat-button routerLinkActive="active-menu-item" routerLink="/users">Users</a>
-        </button>
-        <button mat-menu-item>
-          <a mat-button routerLinkActive="active-menu-item" routerLink="/smes">Smes</a>
-        </button>
+        </mat-accordion>
       </div>
-    </div> -->
     </mat-sidenav>
     <mat-sidenav-content class="mat-app-background">
-      <!-- <app-header class="example-header" *ngIf="loggedUser"></app-header> -->
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
-
-  <!-- <mat-toolbar class="example-footer">Footer</mat-toolbar> -->
 </ng-container>

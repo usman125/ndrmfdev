@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AccreditationRequestStore } from "../../stores/accreditation-requests/accreditation-requests-store";
-import { Subscription } from "rxjs";
-import { distinctUntilChanged } from "rxjs/operators";
+import { Subscription, from } from "rxjs";
+import { distinctUntilChanged, filter } from "rxjs/operators";
 import { AuthStore } from "../../stores/auth/auth-store";
 import { SmeStore } from "../../stores/sme/sme-store";
 import { SurveysStore } from "../../stores/surveys/surveys-store";
@@ -14,6 +14,9 @@ import { SectionSelectorStore } from "../../stores/section-selector/section-sele
 import { fipIntimationsStore } from "../../stores/fip-intimations/fip-intimations-store";
 import { setValue } from "../../stores/fip-intimations/intimate-fip";
 
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+
 declare var $: any;
 
 export interface DialogData {
@@ -21,6 +24,18 @@ export interface DialogData {
   startDate: string;
   endDate: string;
 }
+
+interface ExampleFlatNode {
+  expandable: boolean;
+  name: string;
+  level: number;
+}
+
+interface FoodNode {
+  name: string;
+  children?: FoodNode[];
+}
+
 
 @Component({
   selector: 'app-accreditation-request',
@@ -96,6 +111,28 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
 
   addMobileClasses: boolean;
 
+
+
+  private _transformer = (node: FoodNode, level: number) => {
+    return {
+      expandable: !!node.children && node.children.length > 0,
+      name: node.name,
+      level: level,
+    };
+  }
+
+
+
+  treeControl = new FlatTreeControl<ExampleFlatNode>(
+    node => node.level, node => node.expandable);
+
+  treeFlattener = new MatTreeFlattener(
+    this._transformer, node => node.level, node => node.expandable, node => node.children);
+
+  dataSourceTree = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  // dataSourceTree;
+
+
   constructor(
     private _accreditationRequestStore: AccreditationRequestStore,
     private _singleAccreditationRequestStore: SingleAccreditationRequestStore,
@@ -123,7 +160,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     );
     this.Subscription.add(
       this._smeStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-        this.allSmes = data.smes;
+        this.allSmes = _.filter(data.smes, { formGenerated: true });
       })
     );
     this.Subscription.add(
@@ -171,15 +208,19 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     );
   }
 
+  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+
   adminDefaults() {
     this.allRequests = _.chain(this.userRequests)
-      .filter({ requestKey: 'qualification' })
+      .filter({ requestKey: 'qualification', status: 'submit' })
       .groupBy('userRef')
       .map((val, user) => {
         return { val, user }
       })
       .value();
     this.dataSource = this.allRequests;
+    this.dataSourceTree.data = this.allRequests;
+    console.log("ALL REQUESTS:--", this.allRequests);
   }
 
   smeDefaults() {
@@ -191,6 +232,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       })
       .value();
     this.dataSource = this.allRequests;
+    console.log("ALL REQUESTS:--", this.allRequests);
   }
 
   checkForAllTasks() {
@@ -472,7 +514,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         item.formIdentity,
         "reviewed",
         "done",
-        requestStatus
+        requestStatus,
+        Math.ceil(count1 / count2),
       );
       this._singleAccreditationRequestStore.updateSingleReviewStatus(
         item.userRef,
@@ -500,7 +543,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         item.formIdentity,
         "reviewed",
         "done",
-        requestStatus
+        requestStatus,
+        Math.ceil(count1 / count2),
       );
       this._singleAccreditationRequestStore.updateSingleReviewStatus(
         item.userRef,
@@ -591,12 +635,12 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       this.userSystemStatus = requestStatus;
       this.userAllScore = Math.ceil(count1 / count2);
     }
-    console.log(
-      "ALL Request SCORES:--\n", rating,
-      "SYSTEM STATUS:--\n", requestStatus,
-      "USER SCORES:--\n", this.userAllScore,
+    // console.log(
+    //   "ALL Request SCORES:--\n", rating,
+    //   "SYSTEM STATUS:--\n", requestStatus,
+    //   "USER SCORES:--\n", this.userAllScore,
 
-    );
+    // );
 
   }
 

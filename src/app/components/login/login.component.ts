@@ -66,6 +66,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this._authStore.setUserRole(user.role);
       this._authStore.setEligibleFlag(user.eligibileFlag);
       this._authStore.setQualificationFlag(user.qualificationFlag);
+      this._authStore.openSideNav();
       var newUser = JSON.stringify(user).slice();
       localStorage.setItem('user', newUser);
       if (JSON.parse(newUser).role === 'admin') {

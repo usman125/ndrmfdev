@@ -28,6 +28,29 @@ export class SmeStore extends Store<SmeState> {
     });
   }
 
+  updateSme(
+    name: string,
+    key: string,
+    userRef: string,
+    formGenerated: boolean,
+  ): void {
+    this.setState({
+      ...this.state,
+      smes: this.state.smes.map((c) => {
+        if (c.key === key) {
+          return {
+            ...c,
+            name: name,
+            key: key,
+            userRef: userRef,
+            formGenerated: formGenerated
+          }
+        }
+        return c;
+      })
+    });
+  }
+
 
   updateUserRef(
     key: string,
@@ -39,6 +62,22 @@ export class SmeStore extends Store<SmeState> {
         ...this.state.smes.map((c) => {
           if (c.key === key) {
             return { ...c, userRef: userRef }
+          }
+          return c;
+        })
+      ]
+    });
+  }
+
+  dropUserRef(
+    key: string,
+  ): void {
+    this.setState({
+      ...this.state,
+      smes: [
+        ...this.state.smes.map((c) => {
+          if (c.key === key) {
+            return { ...c, userRef: null }
           }
           return c;
         })
