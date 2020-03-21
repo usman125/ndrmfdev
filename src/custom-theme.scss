@@ -140,8 +140,15 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
     border-right: 0px;
   }
 
+  .badge-btns .btn-row.active {
+    background-color: #212121 !important;
+  }
+  .heroes {
+    background-color: #212121 !important;
+  }
+
   .hero {
-    height: 100vh !important;
+    height: 100vh;
     background: #262626;
   }
 
@@ -366,7 +373,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 
 .material-base-theme {
   .overlay {
-    background: rgba(102,103,103,0.1);
+    background: rgba(102, 103, 103, 0.1);
     width: 25px;
     height: 20px;
     position: absolute;
@@ -393,7 +400,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 }
 .uni-light-theme {
   .overlay {
-    background: rgba(102,103,103,0.1);
+    background: rgba(102, 103, 103, 0.1);
     width: 25px;
     height: 20px;
     position: absolute;

@@ -1,4 +1,4 @@
-.hero {
+.heroes {
   display: flex;
   flex-direction: column;
   margin: 15px 0px;
@@ -6,7 +6,7 @@
   padding: 10px;
 }
 
-.hero .hero-title {
+.heroes .hero-title {
   margin-bottom: 5px;
 }
 
