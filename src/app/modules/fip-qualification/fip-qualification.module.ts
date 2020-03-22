@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FormioModule } from "angular-formio";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     MatButtonToggleModule,
     FormsModule,
     ReactiveFormsModule,
+    MatProgressBarModule,
     FipQualificationRoutingModule,
     MatTooltipModule,
   ]

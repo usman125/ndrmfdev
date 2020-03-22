@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, AfterViewInit } from '@angular/core';
 import {
-  Router
+  Router,
+  NavigationStart, NavigationCancel, NavigationEnd,
 } from '@angular/router';
 import { Subscription } from "rxjs";
 import { AuthStore } from "../app/stores/auth/auth-store";
@@ -13,7 +14,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
   styleUrls: ['./app.component.css']
 })
 
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   title = 'survey-manager';
   loggedUser: boolean = false;
@@ -32,17 +33,35 @@ export class AppComponent implements OnInit, OnDestroy {
 
   addMobileClasses: boolean = false;
 
+  loading: boolean = false;
+
   constructor(
     private _authStore: AuthStore,
     private _router: Router,
     public breakpointObserver: BreakpointObserver,
     private _overlayContainer: OverlayContainer,
   ) {
+    this.loading = true;
     this.currentUser = JSON.parse(localStorage.getItem('user'));
     if (this.currentUser) {
       this._authStore.setLoginState(true);
       this._authStore.setEligibleFlag(this.currentUser.eligibileFlag);
     }
+  }
+
+  ngAfterViewInit() {
+    this._router.events
+      .subscribe((event) => {
+        if (event instanceof NavigationStart) {
+          this.loading = true;
+        }
+        else if (
+          event instanceof NavigationEnd ||
+          event instanceof NavigationCancel
+        ) {
+          this.loading = false;
+        }
+      });
   }
 
   ngOnInit() {

@@ -76,10 +76,19 @@ mat-button-toggle-group {
     display: flex;
     flex-direction: column;
     line-height: 1.5;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .quali-details .mat-cation {
-    font-size: 15px;
-    color: gray;
+    font-size: 14px;
+    font-weight: 400;
+    /* color: gray; */
+}
+
+span#comment{
+  font-weight: 700;
+}
+
+mat-progress-bar{
+  margin: 8px 0px;
 }

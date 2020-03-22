@@ -83,7 +83,14 @@
     [ngClass]="{'app-content': !loggedUser, 'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
     class="example-container">
     <mat-sidenav #sidenav mode="side" [opened]="sideNavMode" class="example-sidenav">
-      <div class="hero" *ngIf="loggedUserRole === 'admin'">
+
+
+      <div style="display: flex;">
+        <img style="width: 60%;margin: 20px auto;" src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png"
+          alt="Logo">
+      </div>
+
+      <div class="hero" [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'fip'">
         <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
@@ -124,9 +131,23 @@
             </mat-nav-list>
           </mat-expansion-panel>
 
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Project Proposals
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <!-- <a mat-list-item routerLinkActive="active-menu-item" routerLink="/users">Add Sections</a> -->
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/proposal-sections">All Sections</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/add-proposal-section">Add Section</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/create-proposal-form">Create Section Form</a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+
         </mat-accordion>
       </div>
-      <div class="hero" *ngIf="loggedUserRole === 'fip'">
+      <div class="hero" [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'admin'">
         <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
@@ -147,7 +168,7 @@
 
         </mat-accordion>
       </div>
-      <div class="hero" *ngIf="loggedUserRole === 'sme'">
+      <div class="hero" [hidden]="loggedUserRole === 'admin' || loggedUserRole === 'fip'">
         <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
@@ -166,7 +187,14 @@
       </div>
     </mat-sidenav>
     <mat-sidenav-content class="mat-app-background">
-      <router-outlet></router-outlet>
+      <div [hidden]="!loading" class="loader">
+        <!-- <h2>Loading...</h2> -->
+        <!-- <mat-progress-bar mode="indeterminate"></mat-progress-bar> -->
+        <img src="../assets/loading.gif" alt="Loading">
+      </div>
+      <div [hidden]="loading" class="router-output">
+        <router-outlet></router-outlet>
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </ng-container>

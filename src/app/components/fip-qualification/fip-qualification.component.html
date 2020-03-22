@@ -2,12 +2,42 @@
   <mat-toolbar-row>
     <div class="quali-details">
       <span class="subheading-1">Qualification Sections</span>
-      <span *ngIf="submitSectionsCount === allSectionsCount" class="mat-cation">Submitted:
-        <span id="comment">{{submitSectionsCount}}</span></span>
+      <!-- <span *ngIf="submitSectionsCount === allSectionsCount" class="mat-cation">
+        Submitted:
+        <span id="comment">
+          {{submitSectionsCount}}
+        </span>
+      </span>
       <span *ngIf="pendingSectionsCount !== allSectionsCount && submitSectionsCount !== allSectionsCount"
-        class="mat-cation">Submitted: <span id="comment">{{pendingSectionsCount}}</span></span>
-      <span *ngIf="pendingSectionsCount === allSectionsCount" class="mat-cation">Submitted: <span id="comment">{{allSectionsCount}}</span></span>
-      <span class="mat-cation">Total Sections: <span id="comment">{{allSectionsCount}}</span></span>
+        class="mat-cation">Submitted:
+        <span id="comment">{{pendingSectionsCount}}</span>
+      </span>
+      <span *ngIf="pendingSectionsCount === allSectionsCount" class="mat-cation">Submitted:
+        <span id="comment">{{allSectionsCount}}</span>
+      </span>
+      <span class="mat-cation">Total Sections:
+        <span id="comment">{{allSectionsCount}}</span>
+      </span> -->
+      <mat-progress-bar *ngIf="pendingSectionsCount !== allSectionsCount && submitSectionsCount !== allSectionsCount"
+        mode="determinate" color="accent" [value]="(pendingSectionsCount/allSectionsCount)*100"></mat-progress-bar>
+      <mat-progress-bar *ngIf="pendingSectionsCount === allSectionsCount && submitSectionsCount !== allSectionsCount"
+        mode="determinate" color="accent" [value]="(pendingSectionsCount/allSectionsCount)*100"></mat-progress-bar>
+      <mat-progress-bar *ngIf="submitSectionsCount === allSectionsCount" mode="determinate" color="accent"
+        [value]="(submitSectionsCount/allSectionsCount)*100"></mat-progress-bar>
+      <span *ngIf="pendingSectionsCount !== allSectionsCount && submitSectionsCount !== allSectionsCount"
+        class="mat-cation">Submitted:
+        <span id="comment">{{(pendingSectionsCount/allSectionsCount)*100}}%</span>
+      </span>
+      <span *ngIf="pendingSectionsCount === allSectionsCount && submitSectionsCount !== allSectionsCount"
+        class="mat-cation">Submitted:
+        <span id="comment">{{(pendingSectionsCount/allSectionsCount)*100}}%</span>
+      </span>
+      <span *ngIf="submitSectionsCount === allSectionsCount" class="mat-cation">
+        Submitted:
+        <span id="comment">
+          {{(submitSectionsCount/allSectionsCount)*100}}%
+        </span>
+      </span>
     </div>
     <span class="example-spacer"></span>
     <button matTooltip="Application Submitted!" disabled *ngIf="submitSectionsCount === allSectionsCount" mat-button>
@@ -60,9 +90,10 @@
     </mat-card>
   </div>
   <div class="intimation-block" id="get-intimation-block">
+
     <mat-card style="margin: 10px;">
-      <div mat-card-title>Intimations</div>
       <mat-card-content>
+        <div mat-card-title style="margin-bottom: 15px;">Intimations</div>
         <div @pageAnimations class="badge-btns" mat-menu>
           <div (click)="setInitmationSection(item)" [ngClass]="{'active': groupType === item.formIdentity}"
             mat-menu-item class="btn-row" *ngFor="let item of allInitimations.intimations">
@@ -78,10 +109,9 @@
               </mat-icon>
             </div>
           </div>
-          <div @pageAnimations>
+          <div @pageAnimations style="background-color: rgba(102, 103, 103, 0.1);">
             <div class="btn-row">
-              <div mat-menu-item style="background-color: rgba(0, 0, 0, 0.04);padding: 10px;"
-                *ngIf="allInitimations.intimations.length == 0">
+              <div mat-menu-item style="padding: 5px 0px;" *ngIf="allInitimations.intimations.length == 0">
                 <span id="answer">No Data Found</span>
               </div>
             </div>

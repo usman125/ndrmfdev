@@ -43,7 +43,7 @@ import { FormioAppConfig } from 'angular-formio';
 // import { MatSortModule } from '@angular/material/sort';
 // import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 // import { MatSnackBarModule } from '@angular/material/snack-bar';
-// import { MatButtonToggleModule } from '@angular/material/button-toggle';
+// import { MatProgressBarModule } from '@angular/material/progress-bar';
 // import { FormioModule } from 'angular-formio';
 
 import {
@@ -79,9 +79,13 @@ import { AccreditationReviewStore } from "./stores/accreditation-reviews/accredi
 import { AccreditationCommentsMatrixStore } from './stores/accreditation-comments-matrix/accreditation-comments-matrix-store';
 import { fipIntimationsStore } from './stores/fip-intimations/fip-intimations-store';
 import { SectionSelectorStore } from './stores/section-selector/section-selector-store';
+import { ProposalSectionsStore } from './stores/proposal-sections/proposal-sections-store';
 import { IntimateFipModule } from './modules/fip-intimations/fip-intimations.module';
 import { AssigntaskModule } from './modules/assigntask/assigntask.module';
 import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-layout/no-header-layout.component';
+// import { ProposalSectionsComponent } from './components/proposal-sections/proposal-sections.component';
+// import { AddProposalSectionComponent } from './components/add-proposal-section/add-proposal-section.component';
+// import { CreateProposalFormComponent } from './components/create-proposal-form/create-proposal-form.component';
 
 
 
@@ -93,6 +97,9 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     SiteLayout,
     LoginComponent,
     NoHeaderLayoutComponent,
+    // ProposalSectionsComponent,
+    // AddProposalSectionComponent,
+    // CreateProposalFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -119,6 +126,7 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     MatRadioModule,
     MatBadgeModule,
     MatExpansionModule,
+    // MatProgressBarModule,
     LayoutModule,
     IntimateFipModule,
     AssigntaskModule,
@@ -169,6 +177,7 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     AccreditationCommentsMatrixStore,
     fipIntimationsStore,
     SectionSelectorStore,
+    ProposalSectionsStore,
   ],
   bootstrap: [AppComponent],
   exports: [],

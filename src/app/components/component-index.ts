@@ -14,3 +14,6 @@ export { AddSmeComponent } from "./add-sme/add-sme.component";
 export { AddUserComponent } from './add-user/add-user.component';
 export { AccreditationCommentsMatrixComponent } from './accreditation-comments-matrix/accreditation-comments-matrix.component';
 export { EligibilityRequestsComponent } from './eligibility-requests/eligibility-requests.component';
+export { ProposalSectionsComponent } from './proposal-sections/proposal-sections.component';
+export { AddProposalSectionComponent } from './add-proposal-section/add-proposal-section.component';
+export { CreateProposalFormComponent } from './create-proposal-form/create-proposal-form.component';

@@ -244,6 +244,24 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin] }
   },
+  {
+    path: 'proposal-sections',
+    loadChildren: () => import('./modules/proposal-sections/proposal-sections.module').then(m => m.ProposalSectionsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'add-proposal-section',
+    loadChildren: () => import('./modules/add-proposal-section/add-proposal-section.module').then(m => m.AddProposalSectionModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'create-proposal-form',
+    loadChildren: () => import('./modules/create-proposal-form/create-proposal-form.module').then(m => m.CreateProposalFormModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
 ];
 
 @NgModule({

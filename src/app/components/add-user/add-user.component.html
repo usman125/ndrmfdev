@@ -1,9 +1,18 @@
 <ng-container>
+  <mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <small>Add User</small>
+      <span class="example-spacer"></span>
+      <button matTooltip="Go Back!" (click)="goBack()" mat-icon-button aria-label="Go Back">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
   <div style="position: relative;">
     <mat-card style="margin: 20px;">
-      <mat-card-header>
+      <!-- <mat-card-header>
         <mat-card-title>Add User</mat-card-title>
-      </mat-card-header>
+      </mat-card-header> -->
       <mat-card-content>
         <mat-grid-list cols="1" rowHeight="60px">
           <form [formGroup]="addUserForm" (ngSubmit)="addUser(addUserForm.value)">
@@ -71,9 +80,9 @@
               </button>
             </mat-grid-tile>
           </form>
-          <mat-grid-tile>
+          <!-- <mat-grid-tile>
             <button mat-raised-button (click)="goBack()" color="accent" type="submit">Close</button>
-          </mat-grid-tile>
+          </mat-grid-tile> -->
         </mat-grid-list>
       </mat-card-content>
     </mat-card>

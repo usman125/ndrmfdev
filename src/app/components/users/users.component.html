@@ -1,3 +1,13 @@
+<mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <small>Users</small>
+    <span class="example-spacer"></span>
+    <button matTooltip="Add User!" (click)="goToAdd()" mat-icon-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Add User">add
+      </mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
 <mat-card class="example-container mat-elevation-z8" style="padding: 0px;">
   <mat-card-content>
 
@@ -50,8 +60,8 @@
 
   </mat-card-content>
 </mat-card>
-<div class="min-fab-addbtn">
+<!-- <div class="min-fab-addbtn">
   <button (click)="goToAdd()" mat-mini-fab aria-label="Add SME">
     <mat-icon>add</mat-icon>
   </button>
-</div>
+</div> -->

@@ -10,3 +10,7 @@ mat-card{
   right: 50px;
   bottom: 18%;
 }
+
+.example-spacer{
+  flex: 1 1 auto;
+}
