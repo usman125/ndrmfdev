@@ -20,8 +20,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HeaderComponent } from './components/common/header/header.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+// import { MatDatepickerModule } from '@angular/material/datepicker';
+// import { MatNativeDateModule } from '@angular/material/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -29,8 +29,9 @@ import { SiteLayout } from "./components/common/layouts/sitelayout/sitelayout.co
 import { MatExpansionModule } from '@angular/material/expansion';
 import { AppConfig } from './config';
 import { FormioAppConfig } from 'angular-formio';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 // import { FormManagerModule, FormManagerRoutes, FormManagerService, FormManagerConfig } from 'angular-formio/manager';
-// import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // import { FormioAuthService, FormioAuthConfig } from 'angular-formio/auth';
 // import {
 //   FormioResource,
@@ -80,13 +81,15 @@ import { AccreditationCommentsMatrixStore } from './stores/accreditation-comment
 import { fipIntimationsStore } from './stores/fip-intimations/fip-intimations-store';
 import { SectionSelectorStore } from './stores/section-selector/section-selector-store';
 import { ProposalSectionsStore } from './stores/proposal-sections/proposal-sections-store';
+import { ProposalFormsStore } from './stores/proposal-forms/proposal-forms-store';
 import { IntimateFipModule } from './modules/fip-intimations/fip-intimations.module';
 import { AssigntaskModule } from './modules/assigntask/assigntask.module';
 import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-layout/no-header-layout.component';
+
+// import { ProposalFormsComponent } from './components/proposal-forms/proposal-forms.component';
 // import { ProposalSectionsComponent } from './components/proposal-sections/proposal-sections.component';
 // import { AddProposalSectionComponent } from './components/add-proposal-section/add-proposal-section.component';
 // import { CreateProposalFormComponent } from './components/create-proposal-form/create-proposal-form.component';
-
 
 
 @NgModule({
@@ -97,6 +100,8 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     SiteLayout,
     LoginComponent,
     NoHeaderLayoutComponent,
+
+    // ProposalFormsComponent,
     // ProposalSectionsComponent,
     // AddProposalSectionComponent,
     // CreateProposalFormComponent,
@@ -120,18 +125,18 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     MatSliderModule,
     BarRatingModule,
     MatDialogModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
+    // MatDatepickerModule,
+    // MatNativeDateModule,
     MatMenuModule,
     MatRadioModule,
     MatBadgeModule,
     MatExpansionModule,
-    // MatProgressBarModule,
     LayoutModule,
     IntimateFipModule,
     AssigntaskModule,
+    MatProgressSpinnerModule,
     // FormManagerModule,
-    // MatProgressSpinnerModule,
+    // MatProgressBarModule,
     // MatTableModule,
     // MatPaginatorModule,
     // MatSortModule,
@@ -178,6 +183,7 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     fipIntimationsStore,
     SectionSelectorStore,
     ProposalSectionsStore,
+    ProposalFormsStore,
   ],
   bootstrap: [AppComponent],
   exports: [],

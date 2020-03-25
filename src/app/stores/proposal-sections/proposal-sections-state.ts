@@ -35,12 +35,6 @@ const SECTIONS = [
     userRef: null,
     formGenerated: false
   },
-  {
-    name: 'Key Risks and Mitigation Measures',
-    key: 'proposal-riskmitigation',
-    userRef: null,
-    formGenerated: false
-  },
 ]
 
 export class ProposalSectionsState {

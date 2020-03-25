@@ -1,18 +1,19 @@
 import { Component, OnInit, OnDestroy, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
 import { AuthStore } from "../../stores/auth/auth-store";
-import { SurveysStore } from "../../stores/surveys/surveys-store";
+import { ProposalFormsStore } from "../../stores/proposal-forms/proposal-forms-store";
 import { Subscription } from "rxjs";
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { CreateProposalFormService } from "../../services/create-proposal-form.service";
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-surveys',
-  templateUrl: './surveys.component.html',
-  styleUrls: ['./surveys.component.css'],
+  selector: 'app-proposal-forms',
+  templateUrl: './proposal-forms.component.html',
+  styleUrls: ['./proposal-forms.component.css']
 })
-
-export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ProposalFormsComponent implements OnInit {
 
   loggedUser: boolean = false;
   toggle: boolean = false;
@@ -24,7 +25,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   secondForm: any = {};
   formValues: any = null;
 
-  displayedColumns = ['name', 'smeRef', 'min', 'max', 'actions'];
+  displayedColumns = ['name', 'smeRef', 'actions'];
   allForms: any = [];
 
   dataSource: any;
@@ -35,21 +36,36 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    private _surveysStore: SurveysStore,
+    private _proposalFormsStore: ProposalFormsStore,
     private _authStore: AuthStore,
-  ) { }
+    private _router: Router,
+    private _createProposalFormService: CreateProposalFormService,
+  ) {
+    this.Subscription.add(
+      this._proposalFormsStore.state$.subscribe(data => {
+        // if (data.forms.length){
+        this.dataSource = new MatTableDataSource(data.forms);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        // }
+        console.log("DATA FROM ALL PROPOSAL FROMS:--", data.forms);
+      })
+    );
+  }
 
   ngOnInit() {
     setTimeout(() => {
       this._authStore.setRouteName('Surveys');
     }, 1000);
-    this.Subscription.add(
-      this._surveysStore.state$.subscribe(data => {
-        this.dataSource = new MatTableDataSource(data.surveys);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      })
-    );
+    this._createProposalFormService.allForms().subscribe(
+      (result) => {
+        console.log("RESULT FROM ALL FROMS:--", result.response[0].forms);
+        this._proposalFormsStore.setAllForms(result.response[0].forms);
+      },
+      (err) => {
+        console.log(err);
+      }
+    )
   }
 
   trackTask(index: number, item): string {
@@ -63,9 +79,9 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   toogleForm(form) {
-    console.log("FORM TO SHOW:--", form)
     this.toggle = !this.toggle;
     this.secondForm = form;
+    this.secondForm.components = JSON.parse(this.secondForm.components);
     this.refreshForm.emit({
       form: this.secondForm
     })
@@ -74,6 +90,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   editForm(form) {
     this.editFormFlag = !this.editFormFlag;
     this.secondForm = form;
+    this.secondForm.components = JSON.parse(this.secondForm.components);
     this.refreshForm.emit({
       form: this.secondForm
     })
@@ -89,6 +106,10 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
 
   goBack() {
     this.toggle = !this.toggle;
+  }
+
+  goToAdd() {
+    this._router.navigate(['create-proposal-form']);
   }
 
   ngOnDestroy() {

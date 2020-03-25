@@ -2,22 +2,6 @@
   <mat-toolbar-row>
     <div class="quali-details">
       <span class="subheading-1">Qualification Sections</span>
-      <!-- <span *ngIf="submitSectionsCount === allSectionsCount" class="mat-cation">
-        Submitted:
-        <span id="comment">
-          {{submitSectionsCount}}
-        </span>
-      </span>
-      <span *ngIf="pendingSectionsCount !== allSectionsCount && submitSectionsCount !== allSectionsCount"
-        class="mat-cation">Submitted:
-        <span id="comment">{{pendingSectionsCount}}</span>
-      </span>
-      <span *ngIf="pendingSectionsCount === allSectionsCount" class="mat-cation">Submitted:
-        <span id="comment">{{allSectionsCount}}</span>
-      </span>
-      <span class="mat-cation">Total Sections:
-        <span id="comment">{{allSectionsCount}}</span>
-      </span> -->
       <mat-progress-bar *ngIf="pendingSectionsCount !== allSectionsCount && submitSectionsCount !== allSectionsCount"
         mode="determinate" color="accent" [value]="(pendingSectionsCount/allSectionsCount)*100"></mat-progress-bar>
       <mat-progress-bar *ngIf="pendingSectionsCount === allSectionsCount && submitSectionsCount !== allSectionsCount"
@@ -60,7 +44,7 @@
       </mat-icon>
       Locked
     </button>
-    <button matTooltip="Close!" color="accent" (click)="goBack()" mat-icon-button>
+    <button matTooltip="Close!" (click)="goBack()" mat-icon-button>
       <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">
         close
       </mat-icon>
@@ -110,8 +94,8 @@
             </div>
           </div>
           <div @pageAnimations style="background-color: rgba(102, 103, 103, 0.1);">
-            <div class="btn-row">
-              <div mat-menu-item style="padding: 5px 0px;" *ngIf="allInitimations.intimations.length == 0">
+            <div class="btn-row" [hidden]="allInitimations.intimations.length != 0">
+              <div mat-menu-item style="padding: 5px 0px;">
                 <span id="answer">No Data Found</span>
               </div>
             </div>

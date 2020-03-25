@@ -141,6 +141,7 @@
               <!-- <a mat-list-item routerLinkActive="active-menu-item" routerLink="/users">Add Sections</a> -->
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/proposal-sections">All Sections</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/add-proposal-section">Add Section</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/proposal-forms">All Section Forms</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/create-proposal-form">Create Section Form</a>
             </mat-nav-list>
           </mat-expansion-panel>
@@ -189,8 +190,8 @@
     <mat-sidenav-content class="mat-app-background">
       <div [hidden]="!loading" class="loader">
         <!-- <h2>Loading...</h2> -->
-        <!-- <mat-progress-bar mode="indeterminate"></mat-progress-bar> -->
-        <img src="../assets/loading.gif" alt="Loading">
+        <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
+        <!-- <img src="../assets/loading.gif" alt="Loading"> -->
       </div>
       <div [hidden]="loading" class="router-output">
         <router-outlet></router-outlet>

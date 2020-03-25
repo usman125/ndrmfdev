@@ -17,3 +17,4 @@ export { EligibilityRequestsComponent } from './eligibility-requests/eligibility
 export { ProposalSectionsComponent } from './proposal-sections/proposal-sections.component';
 export { AddProposalSectionComponent } from './add-proposal-section/add-proposal-section.component';
 export { CreateProposalFormComponent } from './create-proposal-form/create-proposal-form.component';
+export { ProposalFormsComponent } from './proposal-forms/proposal-forms.component';

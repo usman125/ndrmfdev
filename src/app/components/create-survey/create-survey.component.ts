@@ -168,6 +168,7 @@ export class CreateSurveyComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.Subscription.unsubscribe();
   }
 
 }

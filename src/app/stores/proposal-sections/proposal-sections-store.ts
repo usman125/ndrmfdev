@@ -28,11 +28,8 @@ export class ProposalSectionsStore extends Store<ProposalSectionsState> {
     });
   }
 
-  updateSection(
-    name: string,
+  updateSectionFormgenerated(
     key: string,
-    userRef: string,
-    formGenerated: boolean,
   ): void {
     this.setState({
       ...this.state,
@@ -40,10 +37,25 @@ export class ProposalSectionsStore extends Store<ProposalSectionsState> {
         if (c.key === key) {
           return {
             ...c,
-            name: name,
-            key: key,
-            userRef: userRef,
-            formGenerated: formGenerated
+            formGenerated: true
+          }
+        }
+        return c;
+      })
+    });
+  }
+
+  updateSectionUserRef(
+    key: string,
+    userRef: string,
+  ): void {
+    this.setState({
+      ...this.state,
+      sections: this.state.sections.map((c) => {
+        if (c.key === key) {
+          return {
+            ...c,
+            userRef: userRef
           }
         }
         return c;

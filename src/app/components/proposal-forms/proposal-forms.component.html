@@ -1,0 +1,78 @@
+<mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <small>Proposal Section Forms</small>
+    <span class="example-spacer"></span>
+    <button matTooltip="Add Form!" (click)="goToAdd()" mat-icon-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Add Form!">add
+      </mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-card class="example-container mat-elevation-z8">
+  <mat-card-content>
+    <table mat-table [trackBy]="trackTask" [hidden]="toggle || editFormFlag" [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="display">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef> Type. </th>
+        <td mat-cell *matCellDef="let element"> {{element.display}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let element">
+          <button (click)="toogleForm(element)" matTooltip="View!" mat-icon-button aria-label="View!">
+            <mat-icon>play_arrow</mat-icon>
+          </button>
+          <button (click)="editForm(element)" matTooltip="Edit!" mat-icon-button aria-label="Edit!">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="min">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef> Pass </th>
+        <td mat-cell *matCellDef="let element"> {{element.passScore}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="smeRef">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef> SME </th>
+        <td mat-cell *matCellDef="let element"> {{element.smeRef}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="max">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef> Total </th>
+        <td mat-cell *matCellDef="let element"> {{element.totalScore}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [hidden]="toggle || editFormFlag" #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+    </mat-paginator>
+
+    <mat-toolbar *ngIf="toggle && !editFormFlag" color="primary">
+      <mat-toolbar-row>
+        <span>{{secondForm.name}}</span>
+        <span class="example-spacer"></span>
+        <button mat-icon-button (click)="goBack()">
+          <mat-icon color="warn" class="example-icon" aria-hidden="false" aria-label="Close">close</mat-icon>
+        </button>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div *ngIf="toggle && !editFormFlag" style="margin: 20px 10px;">
+      <formio [form]="secondForm" [refresh]="refreshForm" (submit)="onSubmit($event)"></formio>
+      <pre *ngIf="formValues">{{formValues | json}}</pre>
+    </div>
+
+    <div *ngIf="editFormFlag">
+      <form-builder [form]="secondForm"></form-builder>
+    </div>
+
+  </mat-card-content>
+</mat-card>

@@ -262,6 +262,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin] }
   },
+  {
+    path: 'proposal-forms',
+    loadChildren: () => import('./modules/proposal-forms/proposal-forms.module').then(m => m.ProposalFormsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
 ];
 
 @NgModule({
