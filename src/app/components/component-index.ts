@@ -18,3 +18,5 @@ export { ProposalSectionsComponent } from './proposal-sections/proposal-sections
 export { AddProposalSectionComponent } from './add-proposal-section/add-proposal-section.component';
 export { CreateProposalFormComponent } from './create-proposal-form/create-proposal-form.component';
 export { ProposalFormsComponent } from './proposal-forms/proposal-forms.component';
+export { ProjectPlanComponent } from './project-plan/project-plan.component';
+export { TreeComponent } from './tree/tree.component';

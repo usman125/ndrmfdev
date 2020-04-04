@@ -26,6 +26,8 @@ export class UsersComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+
+
   constructor(
     private _usersStore: UsersStore,
     private _authStore: AuthStore,
@@ -73,5 +75,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._subscription.unsubscribe();
   }
+
+
 
 }

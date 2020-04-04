@@ -29,6 +29,11 @@ export class AddUserComponent implements OnInit, OnDestroy {
   selectedUser: any = null;
   flag: boolean = false;
 
+
+
+
+
+
   constructor(
     private _formBuilder: FormBuilder,
     private _smeStore: SmeStore,
@@ -47,7 +52,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
           console.log("ALL DEPARTMENTS:--", this.allDepartments);
           currentUserReplay.subscribe((data) => {
             this.selectedUser = data;
-            if (this.selectedUser.name){
+            if (this.selectedUser.name) {
               console.log("SELECTED USER:--", data);
               this.flag = true;
             }
@@ -223,5 +228,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
     );
     this._router.navigate(['/users']);
   }
+
+
 
 }

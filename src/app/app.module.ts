@@ -52,6 +52,7 @@ import {
   LoginComponent,
   AssignTask,
   IntimateFip,
+  TreeComponent,
   CoffeeElectionComponent,
   // SurveysComponent,
   // RegisterComponent,
@@ -86,10 +87,14 @@ import { IntimateFipModule } from './modules/fip-intimations/fip-intimations.mod
 import { AssigntaskModule } from './modules/assigntask/assigntask.module';
 import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-layout/no-header-layout.component';
 
+
 // import { ProposalFormsComponent } from './components/proposal-forms/proposal-forms.component';
 // import { ProposalSectionsComponent } from './components/proposal-sections/proposal-sections.component';
 // import { AddProposalSectionComponent } from './components/add-proposal-section/add-proposal-section.component';
 // import { CreateProposalFormComponent } from './components/create-proposal-form/create-proposal-form.component';
+
+// import { DynamicFormComponent } from './dynamic-form.component';
+// import { DynamicFormQuestionComponent } from './dynamic-form-question.component';
 
 
 @NgModule({
@@ -100,6 +105,7 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     SiteLayout,
     LoginComponent,
     NoHeaderLayoutComponent,
+    // ProjectPlanComponent,
 
     // ProposalFormsComponent,
     // ProposalSectionsComponent,
@@ -186,7 +192,9 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     ProposalFormsStore,
   ],
   bootstrap: [AppComponent],
-  exports: [],
+  exports: [
+    // TreeComponent,
+  ],
   entryComponents: [IntimateFip, AssignTask]
 })
 export class AppModule { }

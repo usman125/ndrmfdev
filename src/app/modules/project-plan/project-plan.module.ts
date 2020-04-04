@@ -1,36 +1,37 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddUserComponent } from "../../components/component-index";
-import { AddUserRoutingModule } from "./add-user-routing.module";
+import { ProjectPlanRoutingModule } from "./project-plan-routing.module";
+import { ProjectPlanComponent, TreeComponent } from "../../components/component-index";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatDividerModule } from "@angular/material/divider";
+import { MatTreeModule } from "@angular/material/tree";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatGridListModule } from "@angular/material/grid-list";
 
 @NgModule({
   declarations: [
-    AddUserComponent
+    ProjectPlanComponent,
+    TreeComponent
   ],
   imports: [
     CommonModule,
-    FormsModule, ReactiveFormsModule,
-    AddUserRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatToolbarModule,
-    MatTooltipModule,
     MatDividerModule,
     MatGridListModule,
-  ],
-  exports:[AddUserComponent]
+    MatTreeModule,
+    MatCheckboxModule,
+    ProjectPlanRoutingModule
+  ]
 })
-export class AddUserModule { }
+export class ProjectPlanModule { }

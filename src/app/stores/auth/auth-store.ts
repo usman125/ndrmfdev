@@ -25,11 +25,11 @@ export class AuthStore extends Store<AuthState> {
       }
 
     });
-    console.log("login Called");
+    // console.log("login Called");
   }
   
   setEligibleFlag(eligibaleFlag: boolean): void {
-    console.log("login Called");
+    // console.log("login Called");
     this.setState({
       ...this.state,
       auth: {
@@ -66,7 +66,7 @@ export class AuthStore extends Store<AuthState> {
   }
   
   setRouteName(name: string): void {
-    console.log("login Called");
+    // console.log("login Called");
     this.setState({
       ...this.state,
       auth: {
