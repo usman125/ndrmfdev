@@ -10,6 +10,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatTreeModule } from "@angular/material/tree";
+import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatGridListModule } from "@angular/material/grid-list";
 
@@ -31,6 +32,7 @@ import { MatGridListModule } from "@angular/material/grid-list";
     MatGridListModule,
     MatTreeModule,
     MatCheckboxModule,
+    MatToolbarModule,
     ProjectPlanRoutingModule
   ]
 })

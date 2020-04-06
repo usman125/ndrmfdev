@@ -1,3 +1,11 @@
+<mat-toolbar color="primary" class="header" style="padding: 15px 0px;margin-bottom: 20px;">
+  <mat-toolbar-row>
+    <span>
+      Add Main Costings
+    </span>
+  </mat-toolbar-row>
+</mat-toolbar>
+
 <mat-card style="margin: 15px;">
   <mat-card-content>
 
@@ -18,7 +26,7 @@
 
     <mat-grid-list cols="1" rowHeight="100px">
       <mat-grid-tile>
-        <div style="display:flex;flex-direction:column;width:100%;padding:10px;">
+        <div style="display:flex;flex-direction:column;width:100%;padding: 10px;">
           <mat-form-field>
             <mat-label for="cost">Cost Title</mat-label>
             <input placeholder="e.g. HR" [(ngModel)]="cost" id="cost" type="text" matInput />
@@ -58,75 +66,96 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card style="margin: 15px;padding: 20px 0px;">
-  <mat-card-title>
+<mat-card style="margin: 15px;padding:0px;">
+  <!-- <mat-card-title>
     <div class="header">
       <span>
-        Category Name
+        Name
       </span>
       <div class="example-spacer"></div>
-      <span style="margin:0px 10px;">
-        Total: <span id="comment">{{totalCostSummary}}</span>
-      </span>
       <span>
         Procurement: <span id="comment">{{procurementCost}}</span>
       </span>
+      <div class="example-spacer"></div>
+      <span>
+        Total: <span id="comment">{{totalCostSummary}}</span>
+      </span>
     </div>
   </mat-card-title>
+  <mat-divider></mat-divider> -->
   <mat-card-content>
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-      <mat-tree-node *matTreeNodeDef="let node;" matTreeNodePadding>
-        <button mat-icon-button disabled></button>
-        <mat-checkbox class="checklist-leaf-node node-title" [checked]="node.procurement"
-          (change)="todoLeafItemSelectionToggle(node)">{{node.name}}</mat-checkbox>
-        <!-- <div class="node-title">{{node.name}}</div> -->
-        <div class="main-container">
-          <div class="quarters">
-            <div *ngFor="let month of node.financers; let i =index;">
-              <div *ngIf="getDivider(i)">
-                Year
-              </div>
-            </div>
-          </div>
-          <div class="financers">
-            <div *ngFor="let month of node.financers;let mI = index;">
-              <div class="months">
-                <div *ngFor="let item of month.financers;let i =index;">
-                  <div *ngIf="getMonth(i);">M {{mI + 1}}</div>
-                  <!-- <div class="example-spacer"></div> -->
-                </div>
-              </div>
-              <div class="inputs">
-                <div *ngFor="let item of month.financers;let i =index;">
-                  <mat-form-field>
-                    <input (ngModelChange)="costChnaged(node, month)" [placeholder]="item.title" [(ngModel)]="item.cost"
-                      matInput type="number" />
-                  </mat-form-field>
-                  <div *ngIf="(mI+1)%4 === 0" class="spacer"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <span id="answer">Total: {{node.totalCost}}</span>
-      </mat-tree-node>
-
-      <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
-          <mat-icon class="mat-icon-rtl-mirror">
-            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-          </mat-icon>
-        </button>
-        <!-- <mat-checkbox disabled [checked]="descendantsAllSelected(node)"
-          [indeterminate]="descendantsPartiallySelected(node)" (change)="todoItemSelectionToggle(node)">{{node.name}}
-        </mat-checkbox> -->
-        {{node.name}}
+    <mat-toolbar color="primary" class="header">
+      <mat-toolbar-row>
+        <span>
+          Name
+        </span>
         <div class="example-spacer"></div>
-        <span id="comment"> Total: {{node.totalCost}}</span>
-      </mat-tree-node>
+        <span>
+          <!-- Procurement: <span id="comment">{{procurementCost}}</span> -->
+          Procurement: <span>{{procurementCost}}</span>
+        </span>
+        <div class="example-spacer"></div>
+        <span>
+          <!-- Total: <span id="comment">{{totalCostSummary}}</span> -->
+          Total: <span>{{totalCostSummary}}</span>
+        </span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div class="tree-containter">
+      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+        <mat-tree-node *matTreeNodeDef="let node;" matTreeNodePadding matTreeNodePaddingIndent="10">
+          <button color="primary" mat-icon-button disabled></button>
+          <mat-checkbox class="checklist-leaf-node node-title" [checked]="node.procurement"
+            (change)="todoLeafItemSelectionToggle(node)">{{node.name}}</mat-checkbox>
+          <div class="main-container">
+            <!-- <div class="quarters">
+              <div *ngFor="let month of node.financers; let i =index;">
+                <div *ngIf="getDivider(i)" style="font-weight: 500;">
+                  Year
+                </div>
+              </div>
+            </div> -->
+            <div class="financers">
+              <div *ngFor="let month of node.financers;let mI = index;">
+                <div class="months">
+                  <div *ngFor="let item of month.financers;let i =index;">
+                    <div *ngIf="getMonth(i);" style="font-weight: 500;color:#B00020;">Q{{mI + 1}}</div>
+                  </div>
+                </div>
+                <div class="inputs">
+                  <div *ngFor="let item of month.financers;let i =index;">
+                    <mat-form-field>
+                      <input (ngModelChange)="costChnaged(node, month)" [placeholder]="item.title"
+                        [(ngModel)]="item.cost" matInput type="number" />
+                    </mat-form-field>
+                    <div *ngIf="(mI+1)%4 === 0" class="spacer"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span id="answer">{{node.totalCost}}</span>
+        </mat-tree-node>
 
-    </mat-tree>
+        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="10">
+          <button color="primary" mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+          </button>
+          <div class="parent-title" style="font-weight: 500;">{{node.name}}</div>
+          <div class="example-spacer"></div>
+          <span *ngIf="node.procurementCost" style="font-weight: 500;">Procurement:
+            <span id="answer">{{node.procurementCost}}</span>
+          </span>
+          <div class="example-spacer"></div>
+          <span style="margin-right: 20px;font-weight: 500;">Total:
+            <span id="answer">{{node.totalCost}}</span>
+          </span>
+        </mat-tree-node>
 
+      </mat-tree>
+    </div>
   </mat-card-content>
 </mat-card>
 

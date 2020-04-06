@@ -1,12 +1,10 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, Injectable } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import * as _ from "lodash";
 import { CostSummaryStore } from '../../stores/cost-summary/cost-summary-store';
 import { Subscription } from "rxjs";
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { SelectionModel } from '@angular/cdk/collections';
-import { BehaviorSubject } from 'rxjs';
-// import { NODES } from './../tree/mock-nodes';
 
 export class FoodNode {
   title: string;
@@ -32,83 +30,13 @@ export class ExampleFlatNode {
   mainCostId: string;
 }
 
-/**
- * Checklist database, it can build a tree structured Json object.
- * Each node in Json object represents a to-do item or a category.
- * If a node is a category, it has children items and new items can be added under the category.
- */
-@Injectable()
-export class ChecklistDatabase {
-  dataChange = new BehaviorSubject<FoodNode[]>([]);
-
-  get data(): FoodNode[] { return this.dataChange.value; }
-
-  constructor() {
-    // this.initialize();
-  }
-
-  initialize() {
-    // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
-    //     file node as children.
-    // const data = this.buildFileTree(TREE_DATA, 0);
-
-    // Notify the change.
-    // this.dataChange.next(data);
-  }
-
-  /**
-   * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
-   * The return value is the list of `TodoItemNode`.
-   */
-  buildFileTree(obj: { [key: string]: any }, level: number): FoodNode[] {
-    return Object.keys(obj).reduce<FoodNode[]>((accumulator, key) => {
-      const value = obj[key];
-      const node = new FoodNode();
-      node.title = key;
-
-      if (value != null) {
-        if (typeof value === 'object') {
-          node.children = this.buildFileTree(value, level + 1);
-        } else {
-          node.title = value;
-        }
-      }
-      // console.log("VALUE FROM BUILD TREE:---", node, accumulator);
-
-      return accumulator.concat(node);
-    }, []);
-  }
-
-  /** Add an item to to-do list */
-  insertItem(parent: FoodNode, cost: any) {
-    if (parent && parent.children) {
-      parent.children.push(cost as FoodNode);
-      this.dataChange.next(this.data);
-    }
-  }
-
-  setParentNode(parent: FoodNode) {
-    var result = this.data;
-    result.push(parent);
-    this.dataChange.next(result);
-  }
-
-  setState(nextState): void {
-    this.dataChange.next(nextState);
-  }
-
-  updateItem(node: FoodNode, name: string) {
-    node.title = name;
-    this.dataChange.next(this.data);
-  }
-}
 
 
 @Component({
   selector: 'app-project-plan',
   templateUrl: './project-plan.component.html',
   styleUrls: ['./project-plan.component.css'],
-  providers: [CostSummaryStore, ChecklistDatabase]
+  providers: [CostSummaryStore]
 })
 export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   allFinancers: any = [
@@ -132,7 +60,6 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   subcost = null;
   totalSummaryCost = 0;
   mainCostId: any = null;
-  dummyCosts: FoodNode[] = [];
   Subscription: Subscription = new Subscription();
   financersMonthsArray = [];
   nodeLevelMap = {};
@@ -144,12 +71,15 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   checklistSelection = new SelectionModel<ExampleFlatNode>(true /* multiple */);
   procurementCost: number = 0;
   totalCostSummary: number = 0;
-  
+
   testingCosts = [];
+
+  parentToCheck: any = null;
+  dummyCosts: any = [];
 
   constructor(
     public _CostSummaryStore: CostSummaryStore,
-    public _checklistDatabase: ChecklistDatabase,
+    // public _checklistDatabase: ChecklistDatabase,
   ) {
 
     // this.testingCosts = NODES;
@@ -223,21 +153,13 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.Subscription.add(
-      this._CostSummaryStore.state$.subscribe((data) => {
-        // console.log("DATA FROM STORE:--", data.costs);
-        // this.dataSource.data = data.costs;
-        // this.treeControl.expandAll();
-      })
-    );
-    this.Subscription.add(
-      this._checklistDatabase.dataChange.subscribe((data) => {
-        // this.dataSource.data = data;
-        console.log("DATA AFTER ADDING SUBSCRIPTION:---", this.dataSource);
-        this.testingCosts = data;
-        // this.treeControl.expandAll();
-      })
-    );
+    // this.Subscription.add(
+    // this._CostSummaryStore.state$.subscribe((data) => {
+    // console.log("DATA FROM STORE:--", data.costs);
+    // this.dataSource.data = data.costs;
+    // this.treeControl.expandAll();
+    //   })
+    // );
   }
 
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
@@ -268,7 +190,12 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   mainCostChanged($event) {
-    console.log("MAIN COST ID:---", this.mainCostId);
+    // for (let i = 0; i < this.allCosts.length; i++) {
+    //   if ($event === this.allCosts[i]._id) {
+    //     console.log("SELECTED COST:---", this.allCosts[i]);
+    //     break;
+    //   }
+    // }
   }
 
 
@@ -331,9 +258,6 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     this.allCosts.push(cost);
     this.cost = null;
     this.prepareForm(cost);
-    this.procurementCost = 0;
-    // this.findCost(cost);
-    this.totalProcurementCost();
   }
 
   AddSubcost() {
@@ -349,13 +273,17 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       showInput: true,
     }
 
-
-    for (let i=0; i< this.allCosts.length;i++){
-      if (this.mainCostId === this.allCosts[i]._id){
+    for (let i = 0; i < this.allCosts.length; i++) {
+      if (this.mainCostId === this.allCosts[i]._id) {
         this.allCosts[i].showInput = false;
         this.allCosts[i].totalCost = 0;
-        if (this.allCosts[i].procurement){
+        if (this.allCosts[i].procurement) {
           this.allCosts[i].procurement = false;
+          this.allCosts[i].procurementCost = 0;
+          this.totalProcurementCost();
+        }
+        if (this.allCosts[i].mainCostId) {
+          this.fixParentCosts(this.allCosts[i]);
         }
         break;
       }
@@ -391,13 +319,22 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     this.allSubCosts.push(subcost);
     this.allCosts.push(subcost);
     this.prepareForm(subcost);
-    // this._checklistDatabase.setParentNode(subcost);
 
-    // var result = this.treeControl.getLevel(subcost);
-    this.procurementCost = 0;
-    // this.findCost(subcost);
-    this.totalProcurementCost();
+    // this.costChnaged(subcost, null);
+  }
 
+  fixParentCosts(cost) {
+    for (let i = 0; i < this.allCosts.length; i++) {
+      if (this.allCosts[i]._id === cost.mainCostId) {
+        this.allCosts[i].procurementCost = 0;
+        this.allCosts[i].totalCost = 0;
+        if (this.allCosts[i].mainCostId) {
+          this.fixParentCosts(this.allCosts[i])
+        } else {
+          this.allCosts[i].procurementCost = this.allCosts[i].totalCost;
+        }
+      }
+    }
   }
 
 
@@ -422,8 +359,29 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     var test2 = _.filter(this.allCosts, { mainCostId: null })
     this.dataSource.data = test2;
     this.treeControl.expandAll();
-    // this.allCosts = test2;
-    // this._checklistDatabase.dataChange.next(test2);
+    this.dummyCosts = test2;
+    this.allParentTotal();
+  }
+
+  checkParentTotal(node) {
+    var parentTotal = 0;
+    var mainNode = null;
+    for (let i = 0; i < this.allCosts.length; i++) {
+      if (this.allCosts[i]._id === node._id) {
+        mainNode = this.allCosts[i];
+      }
+      if (this.allCosts[i].mainCostId === node._id) {
+        parentTotal = parentTotal + this.allCosts[i].totalCost;
+      }
+    }
+    node.totalCost = parentTotal;
+    mainNode.totalCost = parentTotal;
+    console.log("NODE TO ADDED:--", node, mainNode);
+    if (node.mainCostId) {
+      var mainNode2 = this.getParentNode(node);
+      console.log("NODE 2 TO ADDED:--", mainNode2);
+      this.checkParentTotal(mainNode2);
+    }
   }
 
   costChnaged(node, item) {
@@ -437,10 +395,11 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     node.totalCost = count;
     result.totalCost = count;
 
-    if (node.procurement){
+    if (node.procurement) {
       node.procurementCost = count;
       result.procurementCost = count;
-      this.findCost(node);
+      this.findProcuremntCost(node);
+      // this.totalProcurementCost();
     }
 
     var leafTotal = 0;
@@ -467,6 +426,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
         this.calculateParentTotal(parent2);
       }
     }
+    this.allParentTotal();
 
   }
 
@@ -475,11 +435,14 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.allCosts[i]._id === parent._id) {
         var allCount = 0;
         var procurementCount = 0;
-        for (let j = 0; j < this.allCosts[i].children.length; j++) {
-          allCount = allCount + this.allCosts[i].children[j].totalCost;
+        if (this.allCosts[i].children) {
+
+          for (let j = 0; j < this.allCosts[i].children.length; j++) {
+            allCount = allCount + this.allCosts[i].children[j].totalCost;
+          }
+          parent.totalCost = allCount;
+          this.allCosts[i].totalCost = allCount;
         }
-        parent.totalCost = allCount;
-        this.allCosts[i].totalCost = allCount;
       }
     }
     if (parent.mainCostId) {
@@ -602,22 +565,21 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
   todoLeafItemSelectionToggle(node: ExampleFlatNode): void {
     node.procurement = !node.procurement;
-    // if (node.procurement === false){
-    //   node.procurement = true;
-    // }else {
-    //   node.procurement = false;
-    // }
     console.log("NODE TO ADD IN PROCUREMENT:---", node);
-    this.findCost(node);
+    this.findProcuremntCost(node);
     // this.checklistSelection.toggle(node);
     // this.checkAllParentsSelection(node);
   }
 
 
-  findCost = (node) => {
+  findProcuremntCost = (node) => {
     var result = null;
     for (let i = 0; i < this.allCosts.length; i++) {
       if (this.allCosts[i]._id === node._id) {
+        if (!node.procurement) {
+          node.procurementCost = 0;
+          this.allCosts[i].procurementCost = 0;
+        }
         this.allCosts[i].procurement = node.procurement;
         this.calculateProcurement(node);
         console.log("COST BE ADDED:--", this.allCosts[i], node.procurement);
@@ -629,37 +591,75 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
 
   calculateProcurement(node) {
     var procurementCost = 0;
-    var parent = this.getParentNode(node);
+    var parent = this.getParentCost(node);
     for (let i = 0; i < this.allCosts.length; i++) {
       if (this.allCosts[i].procurement) {
         procurementCost = procurementCost + this.allCosts[i].totalCost;
+        this.allCosts[i].procurementCost = this.allCosts[i].totalCost;
       }
-      this.allCosts[i].procurementCost = procurementCost;
     }
-    // if (parent) this.calculateParentTotal(parent);
+
+    if (parent) {
+      parent.procurementCost = this.getChildProcurementCosts(parent)
+    }
+    var testNode = this.getParentNode(node);
+    if (testNode) {
+      testNode.procurementCost = parent.procurementCost
+    } else {
+      parent.procurementCost = 0
+    }
     this.procurementCost = procurementCost;
   }
 
-  getChilds(cost){
-    var result = [];
-    for (let i = 0; i< this.allCosts.length;i++){
-      if (this.allCosts[i].mainCostId === cost._id){
-        result.push(this.allCosts[i]);
+  getParentCost(cost) {
+    var result = null;
+    for (let i = 0; i < this.allCosts.length; i++) {
+      if (this.allCosts[i]._id === cost.mainCostId) {
+        result = this.allCosts[i];
       }
     }
     return result;
   }
-  
-  totalProcurementCost(){
-    var result =0;
-    for (let i = 0; i< this.allCosts.length;i++){
-      if (this.allCosts[i].procurement){
+
+  getChildProcurementCosts(cost) {
+    var result = [];
+    var count = 0;
+    for (let i = 0; i < this.allCosts.length; i++) {
+      if (this.allCosts[i].mainCostId === cost._id) {
+        count = count + this.allCosts[i].procurementCost;
+      }
+    }
+    return count;
+  }
+
+  totalProcurementCost() {
+    var result = 0;
+    for (let i = 0; i < this.allCosts.length; i++) {
+      console.log(this.allCosts[i].title, this.allCosts[i].procurementCost)
+      if (this.allCosts[i].procurement) {
         result = result + this.allCosts[i].procurementCost;
       }
     }
     this.procurementCost = result;
   }
 
+
+  allParentTotal() {
+    const stack = [this.dummyCosts];
+    let count = 0;
+    while (stack.length) {
+      const node = stack.pop();
+      let i = 0;
+      while (i < node.length) {
+        count = count + node[i].totalCost;
+        i++;
+      }
+      node.children && stack.push(...node.children);
+    }
+    console.log("ALL PARENTS COUNT:--", count);
+    this.totalCostSummary = count;
+    return stack.pop() || null;
+  }
 }
 
 

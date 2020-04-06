@@ -86,7 +86,7 @@
 
 
       <div style="display: flex;">
-        <img style="width: 60%;margin: 20px auto;" src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png"
+        <img style="width: 85%;padding: 25px;" src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png"
           alt="Logo">
       </div>
 
@@ -190,9 +190,7 @@
     </mat-sidenav>
     <mat-sidenav-content class="mat-app-background">
       <div [hidden]="!loading" class="loader">
-        <!-- <h2>Loading...</h2> -->
         <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
-        <!-- <img src="../assets/loading.gif" alt="Loading"> -->
       </div>
       <div [hidden]="loading" class="router-output">
         <router-outlet></router-outlet>
