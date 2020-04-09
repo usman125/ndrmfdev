@@ -95,7 +95,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.quarters = quarters;
     this.financersMonthsArray = [];
-    for (let i = 0; i < quarters; i++) {
+    for (let i = 0; i < months; i++) {
       var monthsData = [];
       var object = {
         title: '',
@@ -355,7 +355,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     }
-    console.log("ALL COSTS FROM PREPARE FORM:--\n:--", this.allCosts);
+    // console.log("ALL COSTS FROM PREPARE FORM:--\n:--", this.allCosts);
     var test2 = _.filter(this.allCosts, { mainCostId: null })
     this.dataSource.data = test2;
     this.treeControl.expandAll();
@@ -376,10 +376,10 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     node.totalCost = parentTotal;
     mainNode.totalCost = parentTotal;
-    console.log("NODE TO ADDED:--", node, mainNode);
+    // console.log("NODE TO ADDED:--", node, mainNode);
     if (node.mainCostId) {
       var mainNode2 = this.getParentNode(node);
-      console.log("NODE 2 TO ADDED:--", mainNode2);
+      // console.log("NODE 2 TO ADDED:--", mainNode2);
       this.checkParentTotal(mainNode2);
     }
   }
@@ -565,7 +565,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
   todoLeafItemSelectionToggle(node: ExampleFlatNode): void {
     node.procurement = !node.procurement;
-    console.log("NODE TO ADD IN PROCUREMENT:---", node);
+    // console.log("NODE TO ADD IN PROCUREMENT:---", node);
     this.findProcuremntCost(node);
     // this.checklistSelection.toggle(node);
     // this.checkAllParentsSelection(node);
@@ -582,7 +582,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this.allCosts[i].procurement = node.procurement;
         this.calculateProcurement(node);
-        console.log("COST BE ADDED:--", this.allCosts[i], node.procurement);
+        // console.log("COST BE ADDED:--", this.allCosts[i], node.procurement);
         break;
       }
     }
@@ -598,9 +598,9 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
         this.allCosts[i].procurementCost = this.allCosts[i].totalCost;
       }
     }
-
+    
     if (parent) {
-      parent.procurementCost = this.getChildProcurementCosts(parent)
+      parent.procurementCost = this.getChildProcurementCosts(parent);
     }
     var testNode = this.getParentNode(node);
     if (testNode) {
@@ -610,6 +610,18 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.procurementCost = procurementCost;
   }
+
+
+  // fixParentProcure(parent, node){
+  //   var testNode = this.getParentNode(node);
+  //   if (testNode) {
+  //     testNode.procurementCost = parent.procurementCost
+  //     var testNode2 = this.getParentNode(testNode2);
+  //     this.fixParentProcure()
+  //   } else {
+  //     parent.procurementCost = 0
+  //   }
+  // }
 
   getParentCost(cost) {
     var result = null;
@@ -656,7 +668,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       node.children && stack.push(...node.children);
     }
-    console.log("ALL PARENTS COUNT:--", count);
+    // console.log("ALL PARENTS COUNT:--", count);
     this.totalCostSummary = count;
     return stack.pop() || null;
   }
