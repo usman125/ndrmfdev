@@ -96,13 +96,15 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
   }
 
   ngAfterViewChecked() { 
-    this._changeDetectorRef.detectChanges();
+    // this._changeDetectorRef.detectChanges();
   }
+
   ngAfterViewInit() {
 
     currentUserReplay.subscribe((data) => {
       this.selectedUser = data;
       if (this.selectedUser.email) {
+        this.flag = true;
         this._changeDetectorRef.detectChanges();
         if (this.selectedUser.role === 'sme') {
           this.addUserForm.patchValue({
@@ -156,6 +158,7 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
       }
     });
   }
+
   ngAfterContentChecked() {
     // this._changeDetectorRef.detectChanges();
   }
@@ -164,7 +167,7 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
     this.addUserForm = this._formBuilder.group({
       name: [null, Validators.required],
       email: [null, [Validators.required, Validators.email]],
-      username: [null],
+      username: [null, Validators.required],
       password: [null],
       department: [null, Validators.required],
       role: [null, Validators.required],
@@ -236,52 +239,53 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
   }
 
   addUser(values) {
-    console.log("VALUES TO ADD USER:--", values, this.flag);
     if (!this.flag) {
-      this._usersStore.addUser(
-        values.name,
-        values.role,
-        values.department,
-        values.smeRef,
-        values.email,
-        values.username,
-        values.password,
-        values.active,
-        false,
-        false,
-      );
-      this.addUserForm.reset();
-    } else {
-      this._usersStore.editUser(
-        this.selectedUser.email,
-        values.name,
-        values.email,
-        values.role,
-        values.smeRef,
-        values.department,
-        values.username,
-        values.password,
-      );
-      if (values.smeRef === "none" && this.selectedUser.role === 'sme') {
-        this._smeStore.dropUserRef(this.selectedUser.smeRef);
-      }
-      setCurrentUser(
-        values.name,
-        values.email,
-        values.role,
-        values.smeRef,
-        values.department,
-        values.username,
-        values.password,
-        this.selectedUser.active,
-        this.selectedUser.eligibileFlag,
-        this.selectedUser.qualificationFlag,
-      );
+      console.log("ADD NEW USER:--", values, this.flag);
+      //   this._usersStore.addUser(
+        //     values.name,
+        //     values.role,
+        //     values.department,
+        //     values.smeRef,
+        //     values.email,
+        //     values.username,
+        //     values.password,
+        //     values.active,
+        //     false,
+        //     false,
+        //   );
+        //   this.addUserForm.reset();
+      } else {
+        console.log("EDIT THIS USER:--", values, this.flag);
+    //   this._usersStore.editUser(
+    //     this.selectedUser.email,
+    //     values.name,
+    //     values.email,
+    //     values.role,
+    //     values.smeRef,
+    //     values.department,
+    //     values.username,
+    //     values.password,
+    //   );
+    //   if (values.smeRef === "none" && this.selectedUser.role === 'sme') {
+    //     this._smeStore.dropUserRef(this.selectedUser.smeRef);
+    //   }
+    //   setCurrentUser(
+    //     values.name,
+    //     values.email,
+    //     values.role,
+    //     values.smeRef,
+    //     values.department,
+    //     values.username,
+    //     values.password,
+    //     this.selectedUser.active,
+    //     this.selectedUser.eligibileFlag,
+    //     this.selectedUser.qualificationFlag,
+    //   );
 
     }
-    if (values.smeRef != "none") {
-      this._smeStore.updateUserRef(values.smeRef, values.email);
-    }
+    // if (values.smeRef != "none") {
+    //   this._smeStore.updateUserRef(values.smeRef, values.email);
+    // }
     // console.log("THIS SMES;--", this.allSmes);
   }
 
@@ -302,6 +306,7 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
       false,
     );
     this.addUserForm.reset();
+    this.flag = false;
     this._router.navigate(['/users']);
   }
 

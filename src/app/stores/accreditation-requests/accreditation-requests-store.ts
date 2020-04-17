@@ -177,13 +177,15 @@ export class AccreditationRequestStore extends Store<AccreditationRequestState> 
     return false;
   }
 
-  submitAllRequests(): void {
+  submitAllRequests(username, formIdentity): void {
     this.setState({
       ...this.state,
       requests: this.state.requests.map((c) => {
-        return {
-          ...c,
-          status: 'submit'
+        if (c.userRef === username && c.formIdentity === formIdentity){
+          return {
+            ...c,
+            status: 'submit'
+          }
         }
         return c;
       })

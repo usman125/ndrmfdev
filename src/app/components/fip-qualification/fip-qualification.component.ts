@@ -148,6 +148,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
               })
             }
             this._accreditationRequestStore.addAllRequests(tempRequestsArray);
+            // this.getRequestsFromApi();
             this.setDefaults();
           },
           error => {
@@ -170,7 +171,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
         console.log("ALL SURVEYS:--", this.allProfiles);
       })
     );
-    
+
     this.Subscription.add(
       this._smeStore.state$.subscribe(data => {
         this.allSmes = data.smes;
@@ -184,7 +185,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       this._accreditationRequestStore.state$.subscribe(data => {
         var count1 = 0;
         var count2 = 0;
-        // this.allRequests = [];
+        this.allRequests = [];
         this.allRequests = data.requests;
         console.log("ALL REQUESTS IN SUBSCRIBE:--", this.allRequests, data);
         if (data.requests.length) {
@@ -402,7 +403,34 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   }
 
   submitAllSections() {
-    this._accreditationRequestStore.submitAllRequests();
+    
+    this.allRequests.forEach(element => {
+      var object = {
+        currentReview: element.currentReview,
+        endDate: element.endDate,
+        formData: "string",
+        formSubmitData: JSON.stringify(element.formSubmitData),
+        prevReview: element.previousReview,
+        ratings: element.rating,
+        sectionKey: element.formIdentity,
+        startDate: element.startDate,
+        status: "submit",
+        userName: element.userRef,
+        userUpdateFlag: element.userUpdateFlag,
+      }
+      // console.log(object)
+      this._accreditationRequestService.updateAccreditationRequest(object).subscribe(
+        result => {
+          console.log("RESULT FROM UPDATE ACCREDTITAION:--", result);
+          this._accreditationRequestStore.submitAllRequests(this.loggedUser.username, object.sectionKey);
+        },
+        error => {
+          console.log("ERROR FROM UPDATE ACCREDTITAION:--", error);
+        }
+      );
+      // tempRequestsArray.push(object);
+    });
+
   }
 
   // @HostListener('window:resize', ['$event'])

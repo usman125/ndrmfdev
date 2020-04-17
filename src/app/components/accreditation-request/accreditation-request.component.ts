@@ -16,7 +16,8 @@ import { setValue } from "../../stores/fip-intimations/intimate-fip";
 import { SurveysService } from "../../services/surveys.service";
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-
+import { AccreditationRequestService } from "../../services/accreditation-request.service";
+import { SmeService } from "../../services/sme.service";
 declare var $: any;
 
 export interface DialogData {
@@ -144,6 +145,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     private _smeStore: SmeStore,
     private _surveysStore: SurveysStore,
     private _surveysService: SurveysService,
+    private _accreditationRequestService: AccreditationRequestService,
+    private _smeService: SmeService,
     public dialog: MatDialog,
   ) {
 
@@ -178,16 +181,65 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
           });
           this._surveysStore.addAllForms(surveysArray);
         }
-        this.Subscription.add(
-          this._surveysStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-            this.allSurveys = data.surveys;
-          })
+        this._accreditationRequestService.getAllAccreditationRequests().subscribe(
+          result => {
+            console.log("RESULT FROM ALL API REQUESTS:--", result['accreditationInfos']);
+            let tempRequestsArray = [];
+            if (result['accreditationInfos']) {
+              result['accreditationInfos'].forEach(element => {
+                var object = {
+                  userRef: element.userName,
+                  formSubmitData: JSON.parse(element.formSubmitData),
+                  formData: element.formData,
+                  status: element.status,
+                  formIdentity: element.sectionKey,
+                  startDate: element.startDate,
+                  endDate: element.endDate,
+                  previousReview: element.prevReview,
+                  currentReview: element.currentReview,
+                  requestKey: element.requestKey,
+                  userUpdateFlag: element.userUpdateFlag,
+                  rating: element.ratings,
+                }
+                tempRequestsArray.push(object);
+              })
+            }
+            this._accreditationRequestStore.addAllRequests(tempRequestsArray);
+            this._smeService.getAllSmes().subscribe(
+              result => {
+                console.log("ALL SMES FROM APi:--", result);
+                let smesArray = [];
+                if (result['sectionInfos']) {
+                  result['sectionInfos'].forEach(element => {
+                    var object = {
+                      name: element.sectionName,
+                      userRef: element.username,
+                      formGenerated: element.formGenerated,
+                      key: element.sectionKey,
+                      formIdentity: element.formIdentity,
+                    }
+                    if (element.formIdentity === 'qualification') smesArray.push(object);
+                  });
+                  this._smeStore.addAllSmes(smesArray);
+                }
+              },
+              error => { }
+            )
+          },
+          error => {
+            console.log("ERROR FROM ALL REQUESTS:--", error);
+          }
         );
       },
       error => {
         console.log("ERROR SURVEYS API:--", error);
       }
     )
+    this.Subscription.add(
+      this._surveysStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
+        this.allSurveys = data.surveys;
+      })
+    );
 
 
 
@@ -234,6 +286,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         this.userRequests = [];
         this.dataSource = [];
         this.userRequests = data.requests;
+        console.log("ALL ADDED INTIMATIONS:--", data.requests);
         if (this.currentUser.role !== 'sme') {
           this.checkForAllTasks();
           this.adminDefaults();
@@ -350,7 +403,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     // this.formKeys = keys;
 
     this.selectedRequest = request;
-    // console.log("REQUEST TO CHECK:--", this.selectedRequest);
+    console.log("REQUEST TO CHECK:--", this.selectedRequest);
 
     var count = 0;
     var passCount = 0;

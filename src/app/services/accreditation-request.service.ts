@@ -52,13 +52,12 @@ export class AccreditationRequestService {
         "formData": 'values',
         "formIdentity": values.formIdentity,
         "formSubmitData": values.formSubmitData,
-        "prevReview": values.previousReview,
-        "ratings": values.ratings,
-        "requestKey": values.requestKey,
-        "sectionKey": values.smeRef,
+        "prevReview": values.prevReview,
+        "ratings": values.ratings,  
+        "sectionKey": values.sectionKey,
         "startDate": values.startDate,
         "status": values.status,
-        "userName": values.userRef,
+        "userName": values.userName,
         "userUpdateFlag": values.userUpdateFlag
       }
     );

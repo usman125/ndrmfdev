@@ -18,7 +18,7 @@ export class UserService {
       url
     );
   }
-  
+
   getAllUserTypes() {
     const url = `${AppConfig.apiUrl}/user/getTypes`;
     return this._httpClient.get(
@@ -30,6 +30,17 @@ export class UserService {
     const url = `${AppConfig.apiUrl}/user/getRoles`;
     return this._httpClient.get(
       url
+    );
+  }
+
+  updateEligibleStatus(username) {
+    const url = `${AppConfig.apiUrl}/user/updateEligibleStatus`;
+    return this._httpClient.put(
+      url,
+      {
+        "eligible": true,
+        "username": username
+      }
     );
   }
 

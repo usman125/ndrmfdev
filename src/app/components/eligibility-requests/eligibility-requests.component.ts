@@ -7,6 +7,7 @@ import { Subscription } from "rxjs";
 import { UsersStore } from 'src/app/stores/users/users-store';
 import { AccreditationRequestService } from "../../services/accreditation-request.service";
 import { SurveysService } from "../../services/surveys.service";
+import { UserService } from "../../services/user.service";
 
 @Component({
   selector: 'app-eligibility-requests',
@@ -42,6 +43,7 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
     private _accreditationRequestStore: AccreditationRequestStore,
     private _accreditationRequestService: AccreditationRequestService,
     private _surveysService: SurveysService,
+    private _userService: UserService,
   ) { }
 
   ngOnInit() {
@@ -143,6 +145,7 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
     this.selectedRequest = element;
     this.toggle = !this.toggle;
     this.toggleBtn = this._usersStore.findEligibleUser(this.selectedRequest.user);
+    console.log("THIS>TOGGLEBUTTON:--", this.toggleBtn);
     var array = this.selectedRequest.val.map((c) => {
       var result = _.find(this.allSurveys, { smeRef: c.formIdentity })
       if (result) {
@@ -160,9 +163,17 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
 
   markEligibleFlag() {
     console.log("MARK ELIGIBLE CALLED:--", this.selectedRequest.user);
-    this._usersStore.updateUserEligibleFlag(true, this.selectedRequest.user);
-    this._authStore.setEligibleFlag(true);
-    this.toggleBtn = this._usersStore.findEligibleUser(this.selectedRequest.user);
+    this._userService.updateEligibleStatus(this.selectedRequest.user).subscribe(
+      result => {
+        console.log("RESULR FROM MARKING ELIGIBLE:--", result);
+        this._usersStore.updateUserEligibleFlag(true, this.selectedRequest.user);
+        this._authStore.setEligibleFlag(true);
+        this.toggleBtn = this._usersStore.findEligibleUser(this.selectedRequest.user);
+      },
+      error => {
+        console.log("ERROR FROM MARKING ELIGIBLE:--", error);
+      }
+    );
   }
 
   intimateFip() { }

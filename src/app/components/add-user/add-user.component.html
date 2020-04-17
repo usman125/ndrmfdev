@@ -1,21 +1,21 @@
 <ng-container>
-  <mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
-    <mat-toolbar-row>
-      <span>{{flag ? 'Edit User' : 'Add User'}}</span>
-      <span class="example-spacer"></span>
-      <button matTooltip="All Users!" (click)="goBack()" mat-icon-button aria-label="All Users">
-        <mat-icon>view_list</mat-icon>
-      </button>
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <div style="position: relative;">
-    <mat-card style="margin: 20px;">
-      <!-- <mat-card-header>
+  <form [formGroup]="addUserForm" (ngSubmit)="addUser(addUserForm.value)">
+    <mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
+      <mat-toolbar-row>
+        <span>{{flag ? 'Edit User' : 'Add User'}}</span>
+        <span class="example-spacer"></span>
+        <button matTooltip="All Users!" (click)="goBack()" mat-icon-button aria-label="All Users">
+          <mat-icon>view_list</mat-icon>
+        </button>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div style="position: relative;">
+      <mat-card style="margin: 20px;">
+        <!-- <mat-card-header>
         <mat-card-title>Add User</mat-card-title>
       </mat-card-header> -->
-      <mat-card-content>
-        <mat-grid-list cols="1" rowHeight="60px">
-          <form [formGroup]="addUserForm" (ngSubmit)="addUser(addUserForm.value)">
+        <mat-card-content>
+          <mat-grid-list cols="1" rowHeight="60px">
             <mat-grid-tile>
               <mat-form-field>
                 <mat-label>Type</mat-label>
@@ -81,17 +81,14 @@
                 {{flag ? 'Update' : 'Add'}}
               </button>
             </mat-grid-tile>
-          </form>
-          <!-- <mat-grid-tile>
-            <button mat-raised-button (click)="goBack()" color="accent" type="submit">Close</button>
-          </mat-grid-tile> -->
-        </mat-grid-list>
-      </mat-card-content>
-    </mat-card>
-  </div>
+            <!-- <mat-grid-tile>
+              <button mat-raised-button (click)="goBack()" color="accent" type="submit">Close</button>
+            </mat-grid-tile> -->
+          </mat-grid-list>
+        </mat-card-content>
+      </mat-card>
+    </div>
 
-
-  <form [formGroup]="addUserForm">
     <mat-grid-list cols="4">
       <mat-grid-tile colspan="1">
         <mat-card style="width: 90%;">
@@ -99,9 +96,9 @@
             <mat-card-title>Select Type</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <mat-radio-group class="example-radio-group">
-              <mat-radio-button class="example-radio-button" [checked]="getChecked(type)"
-                [value]="type" *ngFor="let type of allUserTypes">
+            <mat-radio-group class="example-radio-group" [formControl]="addUserForm.controls['role']">
+              <mat-radio-button class="example-radio-button" [checked]="getChecked(type)" [value]="type"
+                *ngFor="let type of allUserTypes">
                 {{type}}
               </mat-radio-button>
             </mat-radio-group>
@@ -128,14 +125,14 @@
             <mat-card-title>Set Active</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <mat-slide-toggle class="example-margin" color="primary" [checked]="addUserForm.controls['active'].value">
+            <mat-slide-toggle [formControl]="addUserForm.controls['active']" class="example-margin" color="primary" [checked]="addUserForm.controls['active'].value">
               Active
             </mat-slide-toggle>
           </mat-card-content>
         </mat-card>
       </mat-grid-tile>
     </mat-grid-list>
+
+
   </form>
-
-
 </ng-container>

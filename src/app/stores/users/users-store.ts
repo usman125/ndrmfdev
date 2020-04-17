@@ -108,7 +108,7 @@ updateUserEligibleFlag(
   this.setState({
     ...this.state,
     users: this.state.users.map((c) => {
-      if (c.email === email) {
+      if (c.username === email) {
         return { ...c, eligibileFlag: eligibileFlag }
       }
       return c;
@@ -123,7 +123,7 @@ updateUserQualificationFlag(
   this.setState({
     ...this.state,
     users: this.state.users.map((c) => {
-      if (c.email === email) {
+      if (c.username === email) {
         return { ...c, qualificationFlag: qualificationFlag }
       }
       return c;
@@ -136,7 +136,8 @@ findEligibleUser(
 ): boolean {
   var flag: any = false;
   this.state.users.forEach((c) => {
-    if (c.email === email && c.eligibileFlag === true) {
+    console.log(c, email);
+    if (c.username === email && c.eligibileFlag === true) {
       flag = true;
     }
   });

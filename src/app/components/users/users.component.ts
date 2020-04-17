@@ -63,7 +63,7 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
             username: result['userInfoList'][i].username,
             password: null,
             active: result['userInfoList'][i].active,
-            eligibileFlag: result['userInfoList'][i].eligibile,
+            eligibileFlag: result['userInfoList'][i].eligible,
             qualificationFlag: result['userInfoList'][i].qualified,
           }
           usersArray.push(object);

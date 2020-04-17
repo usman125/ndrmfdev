@@ -62,7 +62,7 @@
       <mat-card-content>
         <div class="top-controls">
           <div class="fullbtn">
-            <button (click)="markEligibleFlag()" [color]="!toggleBtn ? 'primary' : 'warn'" class="control-btn" mat-flat-button>
+            <button [disabled]="toggleBtn" (click)="markEligibleFlag()" [color]="!toggleBtn ? 'primary' : 'warn'" class="control-btn" mat-flat-button>
               {{!toggleBtn ? "Mark Eligible" : "Mark Un-eligible"}}
             </button>
           </div>
