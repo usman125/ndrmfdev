@@ -121,6 +121,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           role: result['userInfo']['typeName'],
           eligibileFlag: result['userInfo']['eligible'],
           qualificationFlag: result['userInfo']['qualified'],
+          typeNames: result['userInfo']['typeNames'],
+          groupNames: result['userInfo']['groupNames'],
+          typeName: result['userInfo']['typeName'],
         }
         if (result['userInfo']['typeName'] === 'ndrmf') {
           if (result['userInfo']['roleNames']) {

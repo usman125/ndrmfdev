@@ -136,7 +136,6 @@ findEligibleUser(
 ): boolean {
   var flag: any = false;
   this.state.users.forEach((c) => {
-    console.log(c, email);
     if (c.username === email && c.eligibileFlag === true) {
       flag = true;
     }

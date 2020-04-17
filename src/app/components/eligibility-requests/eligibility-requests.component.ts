@@ -102,6 +102,45 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
               })
             }
             this._accreditationRequestStore.addAllRequests(tempRequestsArray);
+            this._userService.getAllUsers().subscribe(
+              result => {
+                this._authStore.removeLoading();
+                let usersArray = [];
+                if (result['userInfoList']) {
+                  for (let i = 0; i < result['userInfoList'].length; i++) {
+                    var object = {
+                      name: result['userInfoList'][i].firstName,
+                      email: result['userInfoList'][i].email,
+                      role: result['userInfoList'][i].typeName,
+                      smeRef: result['userInfoList'][i].roleName,
+                      department: null,
+                      username: result['userInfoList'][i].username,
+                      password: null,
+                      active: result['userInfoList'][i].active,
+                      eligibileFlag: result['userInfoList'][i].eligible,
+                      qualificationFlag: result['userInfoList'][i].qualified,
+                    }
+                    if (result['userInfoList'][i].typeName === 'ndrmf') {
+                      if (result['userInfoList'][i].roleNames) {
+                        object.role = result['userInfoList'][i].roleNames[0];
+                      }
+                    }
+                    usersArray.push(object);
+                  }
+                  this._usersStore.setAllUsers(usersArray);
+                }
+                this.Subscription.add(
+                  this._usersStore.state$.subscribe((data) => {
+                    // this.allSurveys = data.users;
+                    console.log("ALL USERS:--", data.users);
+                  })
+                )
+              },
+              error => {
+                this._authStore.removeLoading();
+                console.log("ERROR FROM ALL USERS:--", error);
+              }
+            );
             this.Subscription.add(
               this._accreditationRequestStore.state$.subscribe((data) => {
                 this.allRequests = _.chain(data.requests)

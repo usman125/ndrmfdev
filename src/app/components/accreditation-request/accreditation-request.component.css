@@ -268,4 +268,10 @@ button {
 .mobile-class.view-block .activity-items {
   width: auto;
 }
+
+.title-details {
+    text-overflow: clip;
+    white-space: nowrap;
+    overflow: hidden;
+}
   

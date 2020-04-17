@@ -95,7 +95,7 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
     );
   }
 
-  ngAfterViewChecked() { 
+  ngAfterViewChecked() {
     // this._changeDetectorRef.detectChanges();
   }
 
@@ -165,7 +165,7 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
 
   private _buildAddUserForm() {
     this.addUserForm = this._formBuilder.group({
-      name: [null, Validators.required],
+      name: [null],
       email: [null, [Validators.required, Validators.email]],
       username: [null, Validators.required],
       password: [null],
@@ -242,45 +242,50 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
     if (!this.flag) {
       console.log("ADD NEW USER:--", values, this.flag);
       //   this._usersStore.addUser(
-        //     values.name,
-        //     values.role,
-        //     values.department,
-        //     values.smeRef,
-        //     values.email,
-        //     values.username,
-        //     values.password,
-        //     values.active,
-        //     false,
-        //     false,
-        //   );
-        //   this.addUserForm.reset();
-      } else {
-        console.log("EDIT THIS USER:--", values, this.flag);
-    //   this._usersStore.editUser(
-    //     this.selectedUser.email,
-    //     values.name,
-    //     values.email,
-    //     values.role,
-    //     values.smeRef,
-    //     values.department,
-    //     values.username,
-    //     values.password,
-    //   );
-    //   if (values.smeRef === "none" && this.selectedUser.role === 'sme') {
-    //     this._smeStore.dropUserRef(this.selectedUser.smeRef);
-    //   }
-    //   setCurrentUser(
-    //     values.name,
-    //     values.email,
-    //     values.role,
-    //     values.smeRef,
-    //     values.department,
-    //     values.username,
-    //     values.password,
-    //     this.selectedUser.active,
-    //     this.selectedUser.eligibileFlag,
-    //     this.selectedUser.qualificationFlag,
-    //   );
+      //     values.name,
+      //     values.role,
+      //     values.department,
+      //     values.smeRef,
+      //     values.email,
+      //     values.username,
+      //     values.password,
+      //     values.active,
+      //     false,
+      //     false,
+      //   );
+      //   this.addUserForm.reset();
+    } else {
+      console.log("EDIT THIS USER:--", values, this.flag);
+      if (this.selectedUser.active === false && values.active) {
+        this.setActiveStatus();
+      } else if (this.selectedUser.active && values.active === false) {
+        this.unSetActiveStatus();
+      }
+      //   this._usersStore.editUser(
+      //     this.selectedUser.email,
+      //     values.name,
+      //     values.email,
+      //     values.role,
+      //     values.smeRef,
+      //     values.department,
+      //     values.username,
+      //     values.password,
+      //   );
+      //   if (values.smeRef === "none" && this.selectedUser.role === 'sme') {
+      //     this._smeStore.dropUserRef(this.selectedUser.smeRef);
+      //   }
+      //   setCurrentUser(
+      //     values.name,
+      //     values.email,
+      //     values.role,
+      //     values.smeRef,
+      //     values.department,
+      //     values.username,
+      //     values.password,
+      //     this.selectedUser.active,
+      //     this.selectedUser.eligibileFlag,
+      //     this.selectedUser.qualificationFlag,
+      //   );
 
     }
     // if (values.smeRef != "none") {
@@ -290,7 +295,31 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
   }
 
   ngOnDestroy() {
+    this.Subscription.unsubscribe();
   }
+
+  setActiveStatus() {
+    this._userService.updateActiveStatus(this.selectedUser.username).subscribe(
+      result => {
+        console.log("RESULT FROM ACTIVATING USER:--", result);
+      },
+      error => {
+        console.log("ERROR FROM ACTIVATING USER:--", error);
+      }
+    );
+  }
+
+  unSetActiveStatus() {
+    this._userService.unSetActiveStatus(this.selectedUser.username).subscribe(
+      result => {
+        console.log("RESULT FROM DE-ACTIVATING USER:--", result);
+      },
+      error => {
+        console.log("ERROR FROM DE-ACTIVATING USER:--", error);
+      }
+    );
+  }
+
 
   goBack() {
     setCurrentUser(

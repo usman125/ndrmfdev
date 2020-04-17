@@ -45,7 +45,7 @@ export class LoginService {
     let params = {
       "email": values.email,
       "password": values.password,
-      "typeName": 'FIP',
+      "typeName": 'fip',
       "username": values.username,
       "firstName": values.firstName,
     }

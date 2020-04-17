@@ -44,4 +44,26 @@ export class UserService {
     );
   }
 
+  updateActiveStatus(username) {
+    const url = `${AppConfig.apiUrl}/user/updateActiveStatus`;
+    return this._httpClient.put(
+      url,
+      {
+        "active": true,
+        "username": username
+      }
+    );
+  }
+
+  unSetActiveStatus(username) {
+    const url = `${AppConfig.apiUrl}/user/updateActiveStatus`;
+    return this._httpClient.put(
+      url,
+      {
+        "active": false,
+        "username": username
+      }
+    );
+  }
+
 }
