@@ -1,4 +1,15 @@
-<mat-card style="padding:0px;">
+<mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>Create Template</span>
+    <span class="example-spacer"></span>
+    <button matTooltip="All Templates!" (click)="goBack()" mat-icon-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="All Templates">view_list
+      </mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-card style="padding:0px;margin-top:20px;">
   <mat-card-content>
     <button mat-raised-button style="margin: 10px 10px;" color="primary" (click)="toggleBuilder()">Toggle
       Builder</button>
@@ -12,12 +23,12 @@
               <input matInput placeholder="Ex. Form 1" formControlName="name"
                 [formControl]="createProfileForm.controls['name']">
             </mat-form-field>
-            <mat-form-field class="col-md-2">
+            <mat-form-field class="col-md-2" *ngIf="createProfileForm.controls['formIdentity'].value === 'qualification'">
               <mat-label>Pass Score</mat-label>
               <input matInput type="number" placeholder="100" formControlName="passScore"
                 [formControl]="createProfileForm.controls['passScore']">
             </mat-form-field>
-            <mat-form-field class="col-md-2">
+            <mat-form-field class="col-md-2" *ngIf="createProfileForm.controls['formIdentity'].value === 'qualification'">
               <mat-label>Total Score</mat-label>
               <input matInput type="number" placeholder="150" formControlName="totalScore"
                 [formControl]="createProfileForm.controls['totalScore']">
@@ -34,6 +45,13 @@
               <mat-select (ngModelChange)="typeChanged($event)" [formControl]="createProfileForm.controls['type']">
                 <mat-option value="form">Form</mat-option>
                 <mat-option value="wizard">Wizard</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col-md-2">
+              <mat-label>Identity</mat-label>
+              <mat-select (ngModelChange)="identityChanged($event)" [formControl]="createProfileForm.controls['formIdentity']">
+                <mat-option value="qualification">Qualification</mat-option>
+                <mat-option value="eligibilty">Eligibility</mat-option>
               </mat-select>
             </mat-form-field>
             <button [disabled]="!createProfileForm.valid" class="col-md-1" mat-raised-button color="primary">

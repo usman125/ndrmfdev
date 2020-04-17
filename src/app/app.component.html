@@ -82,7 +82,7 @@
   <mat-sidenav-container
     [ngClass]="{'app-content': !loggedUser, 'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
     class="example-container">
-    <mat-sidenav #sidenav mode="side" [opened]="sideNavMode" class="example-sidenav">
+    <mat-sidenav  *ngIf="loggedUser" #sidenav mode="side" [opened]="sideNavMode" class="example-sidenav">
 
 
       <div style="display: flex;">
@@ -96,13 +96,13 @@
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
-                Profiles
+                Templates
               </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-nav-list>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/create-survey">Create
-                Profile</a>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/surveys">All Profiles</a>
+                Templates</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/surveys">All Templates</a>
             </mat-nav-list>
           </mat-expansion-panel>
           <mat-expansion-panel [expanded]="true">
@@ -189,7 +189,7 @@
       </div>
     </mat-sidenav>
     <mat-sidenav-content class="mat-app-background">
-      <div [hidden]="!loading" class="loader">
+      <div [hidden]="!loading" class="loadingCircle">
         <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
       </div>
       <div [hidden]="loading" class="router-output">

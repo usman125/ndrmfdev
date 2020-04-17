@@ -9,6 +9,13 @@ export class AccreditationRequestStore extends Store<AccreditationRequestState> 
     super(new AccreditationRequestState());
   }
 
+  addAllRequests(requests){
+    this.setState({
+      ...this.state,
+      requests: requests
+    })
+  }
+
   addRequest(
     userRef: string,
     formSubmitData: any,

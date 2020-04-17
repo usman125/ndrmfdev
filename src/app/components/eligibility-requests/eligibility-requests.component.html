@@ -33,7 +33,7 @@
   <mat-toolbar-row>
     <small>{{selectedRequest?.user}}</small>
     <span class="example-spacer"></span>
-    <button color="accent" (click)="hideRequest()" mat-icon-button>
+    <button (click)="hideRequest()" mat-icon-button>
       <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
       </mat-icon>
     </button>
@@ -50,7 +50,9 @@
               <span class="example-spacer"></span>
             </mat-toolbar-row>
           </mat-toolbar>
-          <formio [form]="item.formData" [options]="options" readOnly="true" [submission]="{data: item.formSubmitData}"></formio>
+          <div style="padding: 15px;">
+            <formio [form]="item.formData" [options]="options" readOnly="true" [submission]="{data: item.formSubmitData}"></formio>
+          </div>
         </div>
       </mat-card-content>
     </mat-card>

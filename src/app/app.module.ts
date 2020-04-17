@@ -27,10 +27,10 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatBadgeModule } from '@angular/material/badge';
 import { SiteLayout } from "./components/common/layouts/sitelayout/sitelayout.component";
 import { MatExpansionModule } from '@angular/material/expansion';
-import { AppConfig } from './config';
+import { AppConfig } from './services/config';
 import { FormioAppConfig } from 'angular-formio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
+import { HttpClientModule } from "@angular/common/http";
 // import { FormManagerModule, FormManagerRoutes, FormManagerService, FormManagerConfig } from 'angular-formio/manager';
 // import { FormioAuthService, FormioAuthConfig } from 'angular-formio/auth';
 // import {
@@ -54,6 +54,7 @@ import {
   IntimateFip,
   TreeComponent,
   CoffeeElectionComponent,
+  ConfirmDialogComponent,
   // SurveysComponent,
   // RegisterComponent,
   // UsersComponent,
@@ -85,7 +86,9 @@ import { ProposalSectionsStore } from './stores/proposal-sections/proposal-secti
 import { ProposalFormsStore } from './stores/proposal-forms/proposal-forms-store';
 import { IntimateFipModule } from './modules/fip-intimations/fip-intimations.module';
 import { AssigntaskModule } from './modules/assigntask/assigntask.module';
+import { ConfirmDialogModule } from './modules/confirm-dialog/confirm-dialog.module';
 import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-layout/no-header-layout.component';
+
 
 
 // import { ProposalFormsComponent } from './components/proposal-forms/proposal-forms.component';
@@ -105,6 +108,7 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     SiteLayout,
     LoginComponent,
     NoHeaderLayoutComponent,
+    // ConfirmDialogComponent,
     // ProjectPlanComponent,
 
     // ProposalFormsComponent,
@@ -115,6 +119,7 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     ReactiveFormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -140,6 +145,7 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     LayoutModule,
     IntimateFipModule,
     AssigntaskModule,
+    ConfirmDialogModule,
     MatProgressSpinnerModule,
     // FormManagerModule,
     // MatProgressBarModule,
@@ -195,6 +201,6 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
   exports: [
     // TreeComponent,
   ],
-  entryComponents: [IntimateFip, AssignTask]
+  entryComponents: [IntimateFip, AssignTask, ConfirmDialogComponent]
 })
 export class AppModule { }

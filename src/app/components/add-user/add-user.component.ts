@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, AfterViewInit, AfterViewChecked, AfterContentChecked } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AuthStore } from "../../stores/auth/auth-store";
 import { UsersStore } from "../../stores/users/users-store";
@@ -7,13 +7,16 @@ import { DepartmentsStore } from "../../stores/departments/departments-store";
 import { currentUserReplay, setCurrentUser } from "../../stores/users/user-replay";
 import { Subscription } from "rxjs";
 import { Router } from "@angular/router";
+import { UserService } from "../../services/user.service";
+import { SmeService } from "../../services/sme.service";
 
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
-  styleUrls: ['./add-user.component.css']
+  styleUrls: ['./add-user.component.css'],
+  providers: [UserService, SmeService]
 })
-export class AddUserComponent implements OnInit, OnDestroy {
+export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked, AfterContentChecked {
 
   addUserForm: FormGroup;
   allSmes: any = [];
@@ -28,10 +31,11 @@ export class AddUserComponent implements OnInit, OnDestroy {
 
   selectedUser: any = null;
   flag: boolean = false;
+  allUserRoles: any = []
+  allUserTypes: any = []
 
-
-
-
+  singleRole: any = '';
+  singleActive: any = false;
 
 
   constructor(
@@ -40,26 +44,120 @@ export class AddUserComponent implements OnInit, OnDestroy {
     private _departmentsStore: DepartmentsStore,
     private _authStore: AuthStore,
     private _usersStore: UsersStore,
+    private _userService: UserService,
+    private _changeDetectorRef: ChangeDetectorRef,
     private _router: Router,
+    private _smeService: SmeService,
   ) {
-    this._buildAddUserForm();
-    this.Subscription.add(
-      this._smeStore.state$.subscribe((data) => {
-        this.allSmes = data.smes;
-        console.log("ALL SMES:--", this.allSmes);
-        this._departmentsStore.state$.subscribe((data) => {
-          this.allDepartments = data.departments;
-          console.log("ALL DEPARTMENTS:--", this.allDepartments);
-          currentUserReplay.subscribe((data) => {
-            this.selectedUser = data;
-            if (this.selectedUser.name) {
-              console.log("SELECTED USER:--", data);
-              this.flag = true;
-            }
-          }).unsubscribe();
-        });
-      })
+
+
+  }
+
+  getRolesAndTypes() {
+    this._userService.getAllUserRoles().subscribe(
+      result => {
+        console.log("ALL ROLES:--", result);
+        this.allUserRoles = result['roles'];
+      },
+      error => {
+        console.log("ERROR FROM ALL ROLES:--", error);
+      }
     );
+    this._userService.getAllUserTypes().subscribe(
+      result => {
+        console.log("ALL TYPES:--", result);
+        this.allUserTypes = result['typeNames'];
+      },
+      error => {
+        console.log("ERROR FROM ALL TYPES:--", error);
+      }
+    );
+    this._smeService.getAllSmes().subscribe(
+      result => {
+        console.log("ALL SMES FROM APi:--", result);
+        let smesArray = [];
+        if (result['sectionInfos']) {
+          result['sectionInfos'].forEach(element => {
+            var object = {
+              name: element.sectionName,
+              userRef: element.userName,
+              formGenerated: element.formGenerated,
+              key: element.sectionKey,
+            }
+            smesArray.push(object);
+          });
+          this._smeStore.addAllSmes(smesArray);
+        }
+      },
+      error => {
+        console.log("ERROR FROM ALL SMES:--", error);
+      }
+    );
+  }
+
+  ngAfterViewChecked() { 
+    this._changeDetectorRef.detectChanges();
+  }
+  ngAfterViewInit() {
+
+    currentUserReplay.subscribe((data) => {
+      this.selectedUser = data;
+      if (this.selectedUser.email) {
+        this._changeDetectorRef.detectChanges();
+        if (this.selectedUser.role === 'sme') {
+          this.addUserForm.patchValue({
+            name: this.selectedUser.name,
+            email: this.selectedUser.email,
+            smeRef: this.selectedUser.smeRef,
+            department: 'none',
+            role: this.selectedUser.role,
+            type: 'roleSme',
+            username: this.selectedUser.username,
+            password: this.selectedUser.password,
+            active: this.selectedUser.active,
+          }, { onlySelf: true })
+        } else if (this.selectedUser.role === 'ndrmf') {
+          this.addUserForm.patchValue({
+            name: this.selectedUser.name,
+            email: this.selectedUser.email,
+            smeRef: 'none',
+            department: this.selectedUser.department,
+            role: this.selectedUser.role,
+            type: 'roleDept',
+            username: this.selectedUser.username,
+            password: this.selectedUser.password,
+            active: this.selectedUser.active,
+          }, { onlySelf: true })
+        } else if (this.selectedUser.role === 'other') {
+          this.addUserForm.patchValue({
+            name: this.selectedUser.name,
+            email: this.selectedUser.email,
+            smeRef: 'none',
+            department: 'none',
+            role: this.selectedUser.role,
+            type: 'other',
+            username: this.selectedUser.username,
+            password: this.selectedUser.password,
+            active: this.selectedUser.active,
+          }, { onlySelf: true })
+        } else if (this.selectedUser.role === 'fip') {
+          this.addUserForm.patchValue({
+            name: this.selectedUser.name,
+            email: this.selectedUser.email,
+            smeRef: 'none',
+            department: 'none',
+            role: this.selectedUser.role,
+            type: 'roleFip',
+            active: this.selectedUser.active,
+            username: this.selectedUser.username,
+            password: this.selectedUser.password,
+          }, { onlySelf: true })
+        }
+      }
+    });
+  }
+  ngAfterContentChecked() {
+    // this._changeDetectorRef.detectChanges();
   }
 
   private _buildAddUserForm() {
@@ -72,61 +170,37 @@ export class AddUserComponent implements OnInit, OnDestroy {
       role: [null, Validators.required],
       type: [null, Validators.required],
       smeRef: [null, Validators.required],
-      active: [true],
-    })
+      active: [false],
+    });
+  }
+
+  getChecked(type) {
+    if (this.addUserForm.controls['role'].value === type) {
+      return true;
+    }
+    return false;
   }
 
   ngOnInit() {
     setTimeout(() => {
       this._authStore.setRouteName('Users');
     });
-    if (this.flag) {
-      if (this.selectedUser.role === 'sme') {
-        this.addUserForm.patchValue({
-          name: this.selectedUser.name,
-          email: this.selectedUser.email,
-          smeRef: this.selectedUser.smeRef,
-          department: 'none',
-          role: this.selectedUser.role,
-          type: 'roleSme',
-          username: this.selectedUser.username,
-          password: this.selectedUser.password,
-        }, { onlySelf: true })
-      } else if (this.selectedUser.role === 'ndrmf') {
-        this.addUserForm.patchValue({
-          name: this.selectedUser.name,
-          email: this.selectedUser.email,
-          smeRef: 'none',
-          department: this.selectedUser.department,
-          role: this.selectedUser.role,
-          type: 'roleDept',
-          username: this.selectedUser.username,
-          password: this.selectedUser.password,
-        }, { onlySelf: true })
-      } else if (this.selectedUser.role === 'other') {
-        this.addUserForm.patchValue({
-          name: this.selectedUser.name,
-          email: this.selectedUser.email,
-          smeRef: 'none',
-          department: 'none',
-          role: this.selectedUser.role,
-          type: 'other',
-          username: this.selectedUser.username,
-          password: this.selectedUser.password,
-        }, { onlySelf: true })
-      } else if (this.selectedUser.role === 'fip') {
-        this.addUserForm.patchValue({
-          name: this.selectedUser.name,
-          email: this.selectedUser.email,
-          smeRef: 'none',
-          department: 'none',
-          role: this.selectedUser.role,
-          type: 'roleFip',
-          username: this.selectedUser.username,
-          password: this.selectedUser.password,
-        }, { onlySelf: true })
-      }
-    }
+
+    this._buildAddUserForm();
+    this.getRolesAndTypes();
+    this.Subscription.add(
+      this._smeStore.state$.subscribe((data) => {
+        this.allSmes = data.smes;
+        console.log("ALL SMES:--", this.allSmes);
+      })
+    );
+    this.Subscription.add(
+      this._departmentsStore.state$.subscribe((data) => {
+        this.allDepartments = data.departments;
+        console.log("ALL DEPARTMENTS:--", this.allDepartments);
+      })
+    );
+
   }
 
   roleChanged($event) {
@@ -203,6 +277,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
         this.selectedUser.eligibileFlag,
         this.selectedUser.qualificationFlag,
       );
+
     }
     if (values.smeRef != "none") {
       this._smeStore.updateUserRef(values.smeRef, values.email);
@@ -226,6 +301,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
       false,
       false,
     );
+    this.addUserForm.reset();
     this._router.navigate(['/users']);
   }
 

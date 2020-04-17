@@ -94,7 +94,7 @@ mat-sidenav .mat-menu-item {
   right: 0;
 }
 
-.loader {
+.loadingCircle {
   z-index: 99;
   display: flex;
   flex-direction: column;
@@ -108,15 +108,15 @@ mat-sidenav .mat-menu-item {
   top: 0;
 }
 
-.loader h2 {
+.loadingCircle h2 {
   color: #fff;
 }
 
-.loader mat-progress-bar{
+.loadingCircle mat-progress-bar{
   width: 20%;
 }
 
-.loader img {
+.loadingCircle img {
   position: relative;
   width: 15%;
   /* position: absolute; */

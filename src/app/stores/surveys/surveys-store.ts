@@ -7,19 +7,7 @@ export class SurveysStore extends Store<SurveysState> {
   constructor() {
     super(new SurveysState());
   }
-
-  // addVote (candidate: {name: string, votes: number}): void {
-  //   this.setState({
-  //     ...this.state,
-  //     candidates: this.state.candidates.map(c => {
-  //       if (c === candidate) {
-  //         return {...c, votes: c.votes + 1};
-  //       }
-  //       return c;
-  //     })
-  //   });
-  // }
-
+  
   addForm(
     name: string,
     smeRef: string,
@@ -48,5 +36,12 @@ export class SurveysStore extends Store<SurveysState> {
         }
       ]
     });
+  }
+
+  addAllForms(surveys){
+    this.setState({
+      ...this.state,
+      surveys: surveys
+    })
   }
 }

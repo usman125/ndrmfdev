@@ -2699,5 +2699,5 @@ export class SurveysState {
     refreshOn: string,
     numPages: number,
     components: any
-  }[] = SURVEYS;
+  }[] = [];
 }

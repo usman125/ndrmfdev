@@ -5,11 +5,12 @@ import { RegisterRoutingModule } from "./register-routing.module";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
-    RegisterComponent
+    RegisterComponent,
   ],
   imports: [
     CommonModule,
@@ -18,7 +19,9 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     RegisterRoutingModule,
     MatCardModule,
     FormsModule,
+    MatProgressSpinnerModule,
     ReactiveFormsModule,
-  ]
+  ],
+  entryComponents:[]
 })
 export class RegisterModule { }

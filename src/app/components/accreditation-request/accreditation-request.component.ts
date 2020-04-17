@@ -13,7 +13,7 @@ import { AccreditationReviewStore } from 'src/app/stores/accreditation-reviews/a
 import { SectionSelectorStore } from "../../stores/section-selector/section-selector-store";
 import { fipIntimationsStore } from "../../stores/fip-intimations/fip-intimations-store";
 import { setValue } from "../../stores/fip-intimations/intimate-fip";
-
+import { SurveysService } from "../../services/surveys.service";
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 
@@ -40,7 +40,8 @@ interface FoodNode {
 @Component({
   selector: 'app-accreditation-request',
   templateUrl: './accreditation-request.component.html',
-  styleUrls: ['./accreditation-request.component.css']
+  styleUrls: ['./accreditation-request.component.css'],
+  providers: [SurveysService]
 })
 
 export class AccreditationRequestComponent implements OnInit, OnDestroy {
@@ -142,8 +143,11 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     private _authStore: AuthStore,
     private _smeStore: SmeStore,
     private _surveysStore: SurveysStore,
+    private _surveysService: SurveysService,
     public dialog: MatDialog,
   ) {
+
+
   }
 
   ngOnInit() {
@@ -151,6 +155,41 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this._authStore.setRouteName('ACCREDITATION-REQUESTS');
     });
+
+
+    this._surveysService.getAllSurveys().subscribe(
+      result => {
+        let surveysArray = []
+        console.log("ALL SURVEYS FROM API:--", result['formInfoList']);
+        if (result['formInfoList']) {
+          result['formInfoList'].forEach(element => {
+            var object = {
+              name: element.sectionName,
+              smeRef: element.sectionKey,
+              formIdentity: element.formIdentity,
+              passScore: element.passingScore,
+              totalScore: element.totalScore,
+              display: element.displayType,
+              page: element.page,
+              numPages: element.numOfPages,
+              components: JSON.parse(element.component),
+            }
+            surveysArray.push(object)
+          });
+          this._surveysStore.addAllForms(surveysArray);
+        }
+        this.Subscription.add(
+          this._surveysStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
+            this.allSurveys = data.surveys;
+          })
+        );
+      },
+      error => {
+        console.log("ERROR SURVEYS API:--", error);
+      }
+    )
+
+
 
     this.Subscription.add(
       this._authStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
@@ -166,13 +205,10 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._accreditationReviewStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
         this.allRequestReviews = data.reviews;
+        console.log("ALL RE+QEST REVIEWS:---", this.allRequestReviews);
       })
     );
-    this.Subscription.add(
-      this._surveysStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-        this.allSurveys = data.surveys;
-      })
-    );
+
     this.Subscription.add(
       this._singleAccreditationRequestStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
         this.userReviewRequests = data.requests;
@@ -530,14 +566,22 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       )
     } else {
       console.log("VALUE EXISTS:--");
-      this._accreditationReviewStore.udpateReview(
+      // this._accreditationReviewStore.udpateReview(
+      //   this.formReviewObjects,
+      //   Math.ceil(count1 / count2),
+      //   requestStatus,
+      //   item.userRef,
+      //   item.formIdentity,
+      //   this.generalComments,
+      // )
+      this._accreditationReviewStore.addReview(
         this.formReviewObjects,
         Math.ceil(count1 / count2),
         requestStatus,
         item.userRef,
         item.formIdentity,
         this.generalComments,
-      )
+      );
       this._accreditationRequestStore.markRequestReview(
         item.userRef,
         item.formIdentity,

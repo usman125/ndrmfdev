@@ -1,10 +1,10 @@
 <ng-container>
   <mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
     <mat-toolbar-row>
-      <small>Add User</small>
+      <span>{{flag ? 'Edit User' : 'Add User'}}</span>
       <span class="example-spacer"></span>
-      <button matTooltip="Go Back!" (click)="goBack()" mat-icon-button aria-label="Go Back">
-        <mat-icon>close</mat-icon>
+      <button matTooltip="All Users!" (click)="goBack()" mat-icon-button aria-label="All Users">
+        <mat-icon>view_list</mat-icon>
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
@@ -23,6 +23,7 @@
                   <mat-option *ngFor="let item of allRoles" [value]="item.key">{{item.name}}</mat-option>
                 </mat-select>
               </mat-form-field>
+
             </mat-grid-tile>
             <div *ngIf="addUserForm.controls['type'].value !== 'other'">
               <mat-grid-tile *ngIf="addUserForm.controls['type'].value === 'roleSme'">
@@ -85,19 +86,56 @@
             <button mat-raised-button (click)="goBack()" color="accent" type="submit">Close</button>
           </mat-grid-tile> -->
         </mat-grid-list>
-
-
-
-
-
-
-
       </mat-card-content>
     </mat-card>
   </div>
 
 
-
+  <form [formGroup]="addUserForm">
+    <mat-grid-list cols="4">
+      <mat-grid-tile colspan="1">
+        <mat-card style="width: 90%;">
+          <mat-card-header>
+            <mat-card-title>Select Type</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-radio-group class="example-radio-group">
+              <mat-radio-button class="example-radio-button" [checked]="getChecked(type)"
+                [value]="type" *ngFor="let type of allUserTypes">
+                {{type}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1">
+        <mat-card style="width: 90%;">
+          <mat-card-header>
+            <mat-card-title>Select Role</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-radio-group class="example-radio-group">
+              <mat-radio-button class="example-radio-button" *ngFor="let role of allUserRoles" [value]="role">
+                {{role}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1">
+        <mat-card style="width: 90%;">
+          <mat-card-header>
+            <mat-card-title>Set Active</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-slide-toggle class="example-margin" color="primary" [checked]="addUserForm.controls['active'].value">
+              Active
+            </mat-slide-toggle>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </form>
 
 
 </ng-container>

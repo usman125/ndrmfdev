@@ -1,6 +1,7 @@
 export { LoginComponent } from "./login/login.component";
 export { SurveysComponent } from "./surveys/surveys.component";
 export { CoffeeElectionComponent } from "./coffee-election/coffee-election.component";
+// export { RegisterComponent, ConfirmDialogComponent } from "./register/register.component";
 export { RegisterComponent } from "./register/register.component";
 export { AuthGuard } from '../_gaurds/auth.gaurd';
 export { UsersComponent } from "./users/users.component";
@@ -20,3 +21,4 @@ export { CreateProposalFormComponent } from './create-proposal-form/create-propo
 export { ProposalFormsComponent } from './proposal-forms/proposal-forms.component';
 export { ProjectPlanComponent } from './project-plan/project-plan.component';
 export { TreeComponent } from './tree/tree.component';
+export { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';

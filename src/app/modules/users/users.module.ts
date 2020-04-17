@@ -10,8 +10,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from "@angular/material/card";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
-// import { MatInputModule } from '@angular/material/input';
+import { MatChipsModule } from '@angular/material/chips';
 // import { MatInputModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 
 @NgModule({
@@ -28,7 +29,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatButtonModule,
     UsersRoutingModule,
     MatTooltipModule,
+    MatChipsModule,
     MatToolbarModule,
+    MatProgressSpinnerModule,
     // MatInputModule,
   ]
 })

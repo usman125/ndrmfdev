@@ -11,7 +11,9 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatDividerModule } from "@angular/material/divider";
+import { MatRadioModule } from "@angular/material/radio";
 import { MatGridListModule } from "@angular/material/grid-list";
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { MatGridListModule } from "@angular/material/grid-list";
     MatToolbarModule,
     MatTooltipModule,
     MatDividerModule,
+    MatRadioModule,
+    MatSlideToggleModule,
     MatGridListModule,
   ],
   exports:[AddUserComponent]

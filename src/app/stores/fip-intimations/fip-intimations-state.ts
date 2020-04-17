@@ -135,5 +135,5 @@ export class fipIntimationsState {
     }[],
     endDate: string,
     intimation_status: string,
-  }[] = INTIMATIONS;
+  }[] = [];
 }

@@ -17,14 +17,16 @@ import {
   query,
   stagger
 } from '@angular/animations';
-
+import { SurveysService } from "../../services/surveys.service";
 import { Router } from "@angular/router";
-
+import { SmeService } from "../../services/sme.service";
+import { AccreditationRequestService } from "../../services/accreditation-request.service";
 
 @Component({
   selector: 'app-fip-qualification',
   templateUrl: './fip-qualification.component.html',
   styleUrls: ['./fip-qualification.component.css'],
+  providers: [SurveysService, AccreditationRequestService],
   animations: [
     trigger('pageAnimations', [
       transition(':enter', [
@@ -69,99 +71,222 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     private _authStore: AuthStore,
     private _smeStore: SmeStore,
     private _router: Router,
+    private _surveysService: SurveysService,
     private _fipIntimationsStore: fipIntimationsStore,
+    private _smeService: SmeService,
     private _accreditationRequestStore: AccreditationRequestStore,
-  ) { }
+    private _accreditationRequestService: AccreditationRequestService,
+  ) {
+  }
 
   ngOnInit() {
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
+    console.log(this.loggedUser.username)
+    this._smeService.getAllSmes().subscribe(
+      result => {
+        // console.log("ALL SMES FROM APi:--", result);
+        let smesArray = [];
+        if (result['sectionInfos']) {
+          result['sectionInfos'].forEach(element => {
+            var object = {
+              name: element.sectionName,
+              userRef: element.userName,
+              formGenerated: element.formGenerated,
+              key: element.sectionKey,
+              formIdentity: element.formIdentity,
+            }
+            if (object.formIdentity && object.formIdentity != 'eligibilty')
+              smesArray.push(object);
+          });
+          this._smeStore.addAllSmes(smesArray);
+        }
+      },
+      error => { }
+    );
+    this._surveysService.getAllSurveys().subscribe(
+      result => {
+        let surveysArray = []
+        // console.log("ALL SURVEYS FROM API:--", result['formInfoList']);
+        if (result['formInfoList']) {
+          result['formInfoList'].forEach(element => {
+            var object = {
+              name: element.sectionName,
+              smeRef: element.sectionKey,
+              formIdentity: element.formIdentity,
+              passScore: element.passingScore,
+              totalScore: element.totalScore,
+              display: element.displayType,
+              page: element.page,
+              numPages: element.numOfPages,
+              components: JSON.parse(element.component),
+            }
+            surveysArray.push(object)
+          });
+          this._surveysStore.addAllForms(surveysArray);
+        }
+        this._accreditationRequestService.getAllAccreditationRequests().subscribe(
+          result => {
+            console.log("RESULT FROM ALL API REQUESTS:--", result['accreditationInfos']);
+            let tempRequestsArray = [];
+            if (result['accreditationInfos']) {
+              result['accreditationInfos'].forEach(element => {
+                var object = {
+                  userRef: element.userName,
+                  formSubmitData: JSON.parse(element.formSubmitData),
+                  formData: element.formData,
+                  status: element.status,
+                  formIdentity: element.sectionKey,
+                  startDate: element.startDate,
+                  endDate: element.endDate,
+                  previousReview: element.prevReview,
+                  currentReview: element.currentReview,
+                  requestKey: element.requestKey,
+                  userUpdateFlag: element.userUpdateFlag,
+                  rating: element.ratings,
+                }
+                tempRequestsArray.push(object);
+              })
+            }
+            this._accreditationRequestStore.addAllRequests(tempRequestsArray);
+            this.setDefaults();
+          },
+          error => {
+            console.log("ERROR FROM ALL REQUESTS:--", error);
+          }
+        );
+      },
+      error => {
+        console.log("ERROR SURVEYS API:--", error);
+      }
+    );
 
     setTimeout(() => {
       this._authStore.setRouteName('FIP-QUALIFICATION');
     });
+
     this.Subscription.add(
       this._surveysStore.state$.subscribe(data => {
         this.allProfiles = data.surveys;
+        console.log("ALL SURVEYS:--", this.allProfiles);
       })
     );
+    
+    this.Subscription.add(
+      this._smeStore.state$.subscribe(data => {
+        this.allSmes = data.smes;
+        console.log("ALL SECTiONS:--", this.allSmes);
+        // this.groupType = this.allSmes[0].key;
+        this.allSectionsCount = this.allSmes.length;
+      })
+    );
+
+    this.Subscription.add(
+      this._accreditationRequestStore.state$.subscribe(data => {
+        var count1 = 0;
+        var count2 = 0;
+        // this.allRequests = [];
+        this.allRequests = data.requests;
+        console.log("ALL REQUESTS IN SUBSCRIBE:--", this.allRequests, data);
+        if (data.requests.length) {
+          from(data.requests).pipe(
+            filter((request: any) =>
+              request.status === 'pending' &&
+              request.requestKey === 'qualification' &&
+              request.userRef === this.loggedUser.username
+            ),
+          ).subscribe((request) => {
+            // this.pendingSectionsCount = this.pendingSectionsCount + 1;
+            count1 = count1 + 1;
+            console.log(request);
+            // this.allRequests.push(request);
+            // console.log("PENDING REQESTED:---", this.pendingSectionsCount);
+          }).unsubscribe();
+          from(data.requests).pipe(
+            filter((request: any) =>
+              request.status === 'submit' &&
+              request.requestKey === 'qualification' &&
+              request.userRef === this.loggedUser.username
+            ),
+          ).subscribe((request) => {
+            // this.submitSectionsCount = this.submitSectionsCount + 1;
+            count2 = count2 + 1;
+            console.log(request);
+          }).unsubscribe();
+          this.pendingSectionsCount = count1;
+          this.submitSectionsCount = count2;
+          console.log("SUBMITTED REQESTED:---", this.submitSectionsCount, this.pendingSectionsCount);
+        }
+      })
+
+    );
+
+
     this.Subscription.add(
       this._fipIntimationsStore.state$.subscribe(data => {
         // this.allInitimations['intimations'] = data.intimations;
         const result = _.filter(data.intimations, { intimation_status: 'pending', userRef: this.loggedUser.email });
         this.allInitimations['intimations'] = result;
-        console.log("ALL INTIMATIONS FROM USER:--", this.allInitimations.intimations);
+        // console.log("ALL INTIMATIONS FROM USER:--", this.allInitimations.intimations);
       })
     );
-    this.Subscription.add(
-      this._accreditationRequestStore.state$.subscribe(data => {
-        var count1 = 0;
-        var count2 = 0;
-        this.allRequests = data.requests;
-        console.log("ALL REQUESTS:--", this.allRequests);
-        from(data.requests).pipe(
-          filter((request: any) =>
-            request.status === 'pending' &&
-            request.requestKey === 'qualification' &&
-            request.userRef === this.loggedUser.email
-          ),
-        ).subscribe((request) => {
-          this.pendingSectionsCount = this.pendingSectionsCount + 1;
-          count1 = count1 + 1;
-          // console.log("PENDING REQESTED:---", this.pendingSectionsCount);
-        }).unsubscribe();
-        from(data.requests).pipe(
-          filter((request: any) =>
-          request.status === 'submit' &&
-          request.requestKey === 'qualification' &&
-          request.userRef === this.loggedUser.email
-          ),
-          ).subscribe((request) => {
-            this.submitSectionsCount = this.submitSectionsCount + 1;
-            count2 = count2 + 1;
-          }).unsubscribe();
-          this.pendingSectionsCount = count1;
-          this.submitSectionsCount = count2;
-          console.log("SUBMITTED REQESTED:---", this.submitSectionsCount, this.pendingSectionsCount);
-      })
-    );
-    this.Subscription.add(
-      this._smeStore.state$.subscribe(data => {
-        this.allSmes = data.smes;
-        // console.log("ALL REQUESTS:--", this.allRequests);
-        this.allSectionsCount = this.allSmes.length;
-      })
-    );
+
     shareStoreReplay.subscribe((c) => {
       this.currentIntimation = c;
     })
-    this.setDefaults();
+
+
   }
 
   ngAfterViewInit() {
-    console.log("FIP QUALIFICATION STARTED:---", this.loggedUser)
-    if (!this.loggedUser.eligibileFlag) {
-      this._router.navigate(['fip-home']);
-    }
+    // console.log("FIP QUALIFICATION STARTED:---", this.loggedUser)
+    // if (!this.loggedUser.eligibileFlag) {
+    //   this._router.navigate(['fip-home']);
+    // }
+
+  }
+
+  getRequestsFromApi() {
+    this._accreditationRequestService.getAllAccreditationRequests().subscribe(
+      result => {
+        console.log("RESULT FROM ALL API REQUESTS:--", result['accreditationInfos']);
+        let tempRequestsArray = [];
+        if (result['accreditationInfos']) {
+          result['accreditationInfos'].forEach(element => {
+            var object = {
+              userRef: element.userName,
+              formSubmitData: JSON.parse(element.formSubmitData),
+              formData: element.formData,
+              status: element.status,
+              formIdentity: element.sectionKey,
+              startDate: element.startDate,
+              endDate: element.endDate,
+              previousReview: element.prevReview,
+              currentReview: element.currentReview,
+              requestKey: element.requestKey,
+              userUpdateFlag: element.userUpdateFlag,
+              rating: element.ratings,
+            }
+            tempRequestsArray.push(object);
+          })
+        }
+        this._accreditationRequestStore.addAllRequests(tempRequestsArray);
+      },
+      error => {
+        console.log("ERROR FROM ALL REQUESTS:--", error);
+      }
+    );
   }
 
   setDefaults() {
-    // console.log("SET DEFAULTS CALLED");
     if (this.groupType == null) {
       this.secondForm = null;
       this.groupType = this.allSmes[0].key;
-      var resultForm = _.find(this.allProfiles, { 'smeRef': this.allSmes[0].key });
-      var request = _.find(this.allRequests, { 'formIdentity': this.allSmes[0].key, 'userRef': this.loggedUser.email });
+      var resultForm = _.find(this.allProfiles, { 'smeRef': this.groupType });
+      var request = _.find(this.allRequests, { 'formIdentity': this.groupType, 'userRef': this.loggedUser.username });
       this.form = resultForm;
       if (request) {
-        // const example = from(this.allInitimations.intimations)
-        //   .pipe(
-        //     filter(
-        //       person => person.userRef === this.loggedUser.email && person.formIdentity === this.groupType
-        //     )
-        //   );
         const flag = _.find(this.allInitimations.intimations, { userRef: this.loggedUser.email, formIdentity: this.groupType })
         if (flag) {
-          console.log("FILTER RESULT FROM PIEPL__:--", flag);
           setCommentValue(flag.endDate, flag.formIdentity, flag.comments);
         } else {
           setCommentValue('', '', []);
@@ -178,12 +303,11 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     } else {
       this.secondForm = null;
       var resultForm = _.find(this.allProfiles, { 'smeRef': this.groupType });
-      var request = _.find(this.allRequests, { 'formIdentity': this.groupType, 'userRef': this.loggedUser.email });
+      var request = _.find(this.allRequests, { 'formIdentity': this.groupType, 'userRef': this.loggedUser.username });
       this.form = resultForm;
       if (request) {
         const flag = _.find(this.allInitimations.intimations, { userRef: this.loggedUser.email, formIdentity: this.groupType })
         if (flag) {
-          console.log("FILTER RESULT FROM PIEPL__:--", flag);
           setCommentValue(flag.endDate, flag.formIdentity, flag.comments);
         } else {
           setCommentValue('', '', []);
@@ -194,7 +318,6 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
         } else {
           this.form.exists = false;
         }
-        // this.form.exists = true;
       } else {
         this.form.exists = false;
       }
@@ -204,22 +327,47 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   onSubmit($event) {
     // console.log("FORM AFTER SUBMIT:---", $event.data, $event, this.form.formIdentity);
     this.secondForm = $event.data;
-    var flag: any = _.find(this.allRequests, { userRef: this.loggedUser.email, formIdentity: this.groupType })
+    var flag: any = _.find(this.allRequests, { userRef: this.loggedUser.username, formIdentity: this.groupType })
     if (!flag) {
       this.form.exists = true;
-      this._accreditationRequestStore.addRequest(
-        this.loggedUser.email,
-        $event.data,
-        this.form,
-        'pending',
-        this.groupType,
-        null,
-        null,
-        null,
-        null,
-        'qualification',
-        false,
-        0
+      var values = {
+        "currentReview": null,
+        "endDate": null,
+        "formData": 'values',
+        "formIdentity": this.form.formIdentity,
+        "formSubmitData": this.secondForm,
+        "prevReview": null,
+        "ratings": 0,
+        "requestKey": 'qualification',
+        "sectionKey": this.groupType,
+        "startDate": null,
+        "status": 'pending',
+        "userName": this.loggedUser.username,
+        "userUpdateFlag": false
+      }
+      console.log("T+REQUEST FOR API:---", values);
+      this._accreditationRequestService.addAccreditationRequest(values).subscribe(
+        result => {
+          console.log("RESULT AFTER ADDING REQUEST:--", result);
+          this._accreditationRequestStore.addRequest(
+            this.loggedUser.email,
+            $event.data,
+            this.form,
+            'pending',
+            this.groupType,
+            null,
+            null,
+            null,
+            null,
+            'qualification',
+            false,
+            0
+          );
+          this.getRequestsFromApi();
+        },
+        error => {
+          console.log("ERROR AFTER ADDING REQUEST:--", error);
+        }
       );
     } else {
       var object = {
@@ -253,7 +401,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     this._router.navigate(['fip-home']);
   }
 
-  submitAllSections(){
+  submitAllSections() {
     this._accreditationRequestStore.submitAllRequests();
   }
 

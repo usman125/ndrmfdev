@@ -4,7 +4,8 @@ interface CurrentSmeState {
   name: string,
   key: string,
   userRef: string,
-  formGenerated: boolean
+  formGenerated: boolean,
+  formIdentity: string,
 }
 
 const routeEnd = new Subject<CurrentSmeState>();
@@ -15,12 +16,14 @@ export const setCurrentSme = (
   name: string,
   key: string,
   userRef: string,
-  formGenerated: boolean
+  formGenerated: boolean,
+  formIdentity: string,
 ) => {
   routeEnd.next({
     name: name,
     key: key,
     userRef: userRef,
-    formGenerated: formGenerated
+    formGenerated: formGenerated,
+    formIdentity: formIdentity,
   });
 }

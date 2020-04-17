@@ -13,6 +13,7 @@ export class SmeStore extends Store<SmeState> {
     key: string,
     userRef: string,
     formGenerated: boolean,
+    formIdentity: string,
   ): void {
     this.setState({
       ...this.state,
@@ -23,9 +24,18 @@ export class SmeStore extends Store<SmeState> {
           key: key,
           userRef: userRef,
           formGenerated: formGenerated,
+          formIdentity: formIdentity,
         }
       ]
     });
+  }
+
+
+  addAllSmes(smes){
+    this.setState({
+      ...this.state,
+      smes: smes
+    })
   }
 
   updateSme(
@@ -33,6 +43,7 @@ export class SmeStore extends Store<SmeState> {
     key: string,
     userRef: string,
     formGenerated: boolean,
+    formIdentity: string,
   ): void {
     this.setState({
       ...this.state,
@@ -43,7 +54,8 @@ export class SmeStore extends Store<SmeState> {
             name: name,
             key: key,
             userRef: userRef,
-            formGenerated: formGenerated
+            formGenerated: formGenerated,
+            formIdentity: formIdentity,
           }
         }
         return c;

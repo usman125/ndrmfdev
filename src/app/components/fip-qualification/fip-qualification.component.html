@@ -24,14 +24,14 @@
       </span>
     </div>
     <span class="example-spacer"></span>
-    <button matTooltip="Application Submitted!" disabled *ngIf="submitSectionsCount === allSectionsCount" mat-button>
+    <button matTooltip="Application Submitted!" disabled *ngIf="submitSectionsCount && submitSectionsCount === allSectionsCount" mat-button>
       <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">
         cancel_schedule_send
       </mat-icon>
       Submitted
     </button>
     <button (click)="submitAllSections()" matTooltip="Submit Application!"
-      *ngIf="pendingSectionsCount === allSectionsCount" mat-button>
+      *ngIf="pendingSectionsCount && pendingSectionsCount === allSectionsCount" mat-button>
       <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">
         send
       </mat-icon>
@@ -64,9 +64,9 @@
           </mat-button-toggle-group>
         </div>
         <div style="margin: 20px 10px;" [ngClass]="{'update-btn': secondForm}">
-          <formio disableAlerts="true" readOnly="true" [hidden]="!form.exists" [form]="form"
+          <formio disableAlerts="true" readOnly="true" [hidden]="!form?.exists" [form]="form"
             [submission]="{data:secondForm}" [refresh]="refreshForm" (submit)="onSubmit($event)"></formio>
-          <formio [hidden]="form.exists" [form]="form" [submission]="{data:secondForm}" [refresh]="refreshForm"
+          <formio [hidden]="form?.exists" [form]="form" [submission]="{data:secondForm}" [refresh]="refreshForm"
             (submit)="onSubmit($event)"></formio>
           <div *ngIf="secondForm">{{secondForm | json}}</div>
         </div>

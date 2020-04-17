@@ -22,9 +22,17 @@
               [formControl]="addSmeForm.controls['key']" />
           </mat-form-field>
         </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Select Type</mat-label>
+            <mat-select [formControl]="addSmeForm.controls['formIdentity']">
+              <mat-option *ngFor="let type of formIdentity" [value]="type">{{type}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
         <mat-grid-tile  *ngIf="!selectedSme?.userRef">
           <mat-form-field>
-            <mat-label>User</mat-label>
+            <mat-label>Select User</mat-label>
             <mat-select [formControl]="addSmeForm.controls['userRef']" (ngModelChange)="userChanged($event)">
               <mat-option *ngFor="let user of allUsers" [value]="user.email">{{user.name}}</mat-option>
             </mat-select>

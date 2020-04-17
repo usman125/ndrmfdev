@@ -53,16 +53,16 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     this.themeInputForm = this._formBuilder.group({
       theme: ['']
     });
-    this.themeInputForm.patchValue({ theme: 'material-base-theme' }, { onlySelf: true })
   }
-
-
+  
+  
   ngOnInit() {
     this.Subscription.add(
       this._authStore.state$.subscribe((auth) => {
         this.routeName = auth.auth.routeName;
         this.checked = auth.auth.checked;
         this.sideNavMode = auth.auth.sideNavMode;
+        this.themeInputForm.patchValue({ theme: auth.auth.checkedThemeName }, { onlySelf: true })
         setTimeout(() => {
           this.themeName = auth.auth.checkedThemeName;
         })

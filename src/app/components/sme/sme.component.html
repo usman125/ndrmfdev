@@ -1,4 +1,11 @@
-<div class="example-container mat-elevation-z8">
+<mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>SMEs</span>
+    <span class="example-spacer"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div style="margin:20px;" class="example-container mat-elevation-z8">
   <table mat-table [dataSource]="dataSource">
 
     <!-- Position Column -->
@@ -11,6 +18,11 @@
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Name </th>
       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef> Type </th>
+      <td mat-cell *matCellDef="let element"> {{element.formIdentity}} </td>
     </ng-container>
 
     <!-- <ng-container matColumnDef="role">

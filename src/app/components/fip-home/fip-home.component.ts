@@ -25,7 +25,7 @@ export class FipHomeComponent implements OnInit, OnDestroy {
       this._authStore.state$.subscribe((data) => {
         this.eligibilityFlag = data.auth.eligibaleFlag;
         this.qualificationFlag = data.auth.qualifiationFlag;
-        console.log("FLAGS FROM FIP HOME:--", data.auth.eligibaleFlag)
+        // console.log("FLAGS FROM FIP HOME:--", data.auth.eligibaleFlag)
       })
     )
   }

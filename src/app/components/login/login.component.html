@@ -16,14 +16,21 @@
           <input matInput type="password" placeholder="johndoe" formControlName="password"
             [formControl]="loginForm.controls['password']" />
         </mat-form-field>
-        <button mat-raised-button class="col col-md-12" color="primary" type="submit">Login</button>
+        <button mat-raised-button class="col col-md-12" color="primary" type="submit">
+          Login
+        </button>
+        <div class="spinner">
+          <mat-progress-spinner *ngIf="loading" diameter="30" mode="indeterminate"></mat-progress-spinner>
+        </div>
       </form>
     </mat-card-content>
     <mat-card-actions class="login-actions">
       <a id="answer" class="reset-pass cursor forgot-pass" routerLink="/register">Forgot Password?</a>
       <div class="bottom-line">
         <p class="reset-pass">Not a member?</p>
-        <a id="answer" class="register-link cursor" routerLink="/register">Register</a>
+        <a id="answer" class="register-link cursor" routerLink="/register">
+          <span>Register</span>
+        </a>
       </div>
     </mat-card-actions>
   </mat-card>

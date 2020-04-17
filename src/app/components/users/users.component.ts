@@ -1,27 +1,30 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { UsersStore } from "../../stores/users/users-store";
 import { AuthStore } from "../../stores/auth/auth-store";
-import { Subscription } from "rxjs";
+import { Subscription, from } from "rxjs";
 import { Router } from "@angular/router";
 import { setCurrentUser } from '../../stores/users/user-replay';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { UserService } from "../../services/user.service";
+import { map, flatMap, mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
-  // providers: [UsersStore]
+  providers: [UserService]
 })
-export class UsersComponent implements OnInit, OnDestroy {
+export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private _subscription: Subscription = new Subscription();
   public allUsers: any = [];
 
-  displayedColumns = ['name', 'email', 'smeRef', 'department', 'role', 'action'];
+  displayedColumns = ['email', 'smeRef', 'department', 'active', 'role', 'action'];
   dataSource;
   loggedUser: any = null;
+  loading: boolean;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -32,6 +35,8 @@ export class UsersComponent implements OnInit, OnDestroy {
     private _usersStore: UsersStore,
     private _authStore: AuthStore,
     private _router: Router,
+    // private _changeDetectorRef: ChangeDetectorRef,
+    private _userService: UserService,
   ) { }
 
   ngOnInit() {
@@ -39,15 +44,53 @@ export class UsersComponent implements OnInit, OnDestroy {
       this._authStore.setRouteName('Users');
     });
     this._subscription.add(
-      this._usersStore.state$.subscribe(data => {
-        // this.allUsers = data.users;
-        this.dataSource = new MatTableDataSource(data.users);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        console.log("ALL USERS ARE:--", data.users);
+      this._authStore.state$.subscribe(data => {
+        this.loading = data.auth.apiCall;
       })
     );
-    this.loggedUser = JSON.parse(localStorage.getItem('user'));
+    this._authStore.setLoading();
+    this._userService.getAllUsers().subscribe(
+      result => {
+        this._authStore.removeLoading();
+        let usersArray = [];
+        for (let i = 0; i < result['userInfoList'].length; i++) {
+          var object = {
+            name: result['userInfoList'][i].firstName,
+            email: result['userInfoList'][i].email,
+            role: result['userInfoList'][i].typeName,
+            smeRef: result['userInfoList'][i].roleName,
+            department: null,
+            username: result['userInfoList'][i].username,
+            password: null,
+            active: result['userInfoList'][i].active,
+            eligibileFlag: result['userInfoList'][i].eligibile,
+            qualificationFlag: result['userInfoList'][i].qualified,
+          }
+          usersArray.push(object);
+        }
+        this._usersStore.setAllUsers(usersArray);
+
+        this._subscription.add(
+          this._usersStore.state$.subscribe(data => {
+            this.allUsers = data.users;
+            console.log("ALL USERS ARE:--", this.allUsers);
+            this.dataSource = new MatTableDataSource(data.users);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+          })
+        );
+        this.loggedUser = JSON.parse(localStorage.getItem('user'));
+      },
+      error => {
+        this._authStore.removeLoading();
+        console.log("ERROR FROM ALL USERS:--", error);
+      }
+    );
+  }
+
+  ngAfterViewInit() {
+    if (!this.allUsers.length) {
+    }
   }
 
   eidtUser(user) {
@@ -65,6 +108,7 @@ export class UsersComponent implements OnInit, OnDestroy {
       user.qualificationFlag,
     );
     this._router.navigate(['/add-user']);
+    // this._changeDetectorRef.detectChanges();
   }
 
 
@@ -76,6 +120,10 @@ export class UsersComponent implements OnInit, OnDestroy {
     this._subscription.unsubscribe();
   }
 
+  trackTask(index: number, item): string {
+    // console.log("TRACK BY CALLED:---", index, item)
+    return `${item.email}`;
+  }
 
 
 }

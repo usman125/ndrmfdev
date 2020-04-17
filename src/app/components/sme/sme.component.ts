@@ -6,16 +6,18 @@ import { Router } from "@angular/router";
 import {
   setCurrentSme
 } from "../../stores/sme/sme-replay";
+import { SmeService } from "../../services/sme.service";
 
 @Component({
   selector: 'app-sme',
   templateUrl: './sme.component.html',
-  styleUrls: ['./sme.component.css']
+  styleUrls: ['./sme.component.css'],
+  providers: [SmeService]
 })
 export class SmeComponent implements OnInit, OnDestroy {
 
 
-  public displayedColumns = ['name', 'userRef', 'actions'];
+  public displayedColumns = ['name', 'type', 'userRef', 'actions'];
   public dataSource: any = [];
   public allSmes: any = [];
   public Subscription: Subscription = new Subscription();
@@ -24,19 +26,42 @@ export class SmeComponent implements OnInit, OnDestroy {
     private _smesStore: SmeStore,
     private _authStore: AuthStore,
     private _router: Router,
+    private _smeService: SmeService,
   ) { }
 
   ngOnInit() {
     setTimeout(() => {
       this._authStore.setRouteName('SMES')
     })
+
+    this._smeService.getAllSmes().subscribe(
+      result => {
+        console.log("ALL SMES FROM APi:--", result);
+        let smesArray = [];
+        if (result['sectionInfos']) {
+          result['sectionInfos'].forEach(element => {
+            var object = {
+              name: element.sectionName,
+              userRef: element.username,
+              formGenerated: element.formGenerated,
+              key: element.sectionKey,
+              formIdentity: element.formIdentity,
+            }
+            smesArray.push(object);
+          });
+          this._smesStore.addAllSmes(smesArray);
+        }
+      },
+      error => { }
+    )
     this.Subscription.add(
       this._smesStore.state$.subscribe((data) => {
         this.allSmes = data.smes;
-        console.log("ALL SMES;--", data.smes);
+        console.log("ALL SMES FROM STORE;--", this.allSmes);
         this.dataSource = this.allSmes;
       })
     )
+
   }
 
   editSme(sme) {
@@ -45,7 +70,8 @@ export class SmeComponent implements OnInit, OnDestroy {
       sme.name,
       sme.key,
       sme.userRef,
-      sme.formGenerated
+      sme.formGenerated,
+      sme.formIdentity,
     );
     this._router.navigate(['/add-sme']);
 

@@ -1,3 +1,14 @@
+<mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>Templates</span>
+    <span class="example-spacer"></span>
+    <button matTooltip="Add Template!" (click)="goToAdd()" mat-icon-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Add Template">add
+      </mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
 <mat-card class="example-container mat-elevation-z8">
   <mat-card-content>
     <table mat-table [trackBy]="trackTask" [hidden]="toggle || editFormFlag" [dataSource]="dataSource" matSort>

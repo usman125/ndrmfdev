@@ -149,3 +149,14 @@ body::-webkit-scrollbar-thumb {
   background-color: darkgrey;
   outline: 1px solid slategrey;
 }
+
+
+
+.spinner {
+    display: flex;
+    justify-content: center;
+}
+
+.example-spacer{
+  flex: 1 1 auto;
+}

@@ -8,6 +8,9 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatSelectModule } from "@angular/material/select";
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 import { FormioModule } from "angular-formio";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
@@ -25,7 +28,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     FormioModule,
     MatSelectModule,
     MatButtonModule,
+    MatToolbarModule,
+    MatIconModule,
     MatSelectModule,
+    MatTooltipModule,
     CreateSurveyRoutingModule,
     MatSnackBarModule,
   ]

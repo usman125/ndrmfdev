@@ -10,6 +10,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
 import { FormioModule } from 'angular-formio';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { FormioModule } from 'angular-formio';
     FormioModule,
     MatButtonModule,
     MatSortModule,
+    MatTooltipModule,
   ]
 })
 
