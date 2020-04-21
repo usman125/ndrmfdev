@@ -2,21 +2,21 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {
   LoginComponent,
-  SurveysComponent,
-  CoffeeElectionComponent,
-  RegisterComponent,
+  // SurveysComponent,
+  // CoffeeElectionComponent,
+  // RegisterComponent,
   AuthGuard,
   UsersComponent,
-  CreateSurveyComponent,
+  // CreateSurveyComponent,
   FipHomeComponent,
-  FipEligibilityComponent,
-  FipQualificationComponent,
-  AccreditationRequestComponent,
-  SmeComponent,
-  AddSmeComponent,
-  AddUserComponent,
-  AccreditationCommentsMatrixComponent,
-  EligibilityRequestsComponent,
+  // FipEligibilityComponent,
+  // FipQualificationComponent,
+  // AccreditationRequestComponent,
+  // SmeComponent,
+  // AddSmeComponent,
+  // AddUserComponent,
+  // AccreditationCommentsMatrixComponent,
+  // EligibilityRequestsComponent,
 } from "./components/component-index";
 import { SiteLayout } from "./components/common/layouts/sitelayout/sitelayout.component";
 import { NoHeaderLayoutComponent } from "./components/common/layouts/no-header-layout/no-header-layout.component";
@@ -273,6 +273,18 @@ const routes: Routes = [
     loadChildren: () => import('./modules/project-plan/project-plan.module').then(m => m.ProjectPlanModule),
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'projects',
+    loadChildren: () => import('./modules/projects/projects.module').then(m => m.ProjectsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.Fip] }
+  },
+  {
+    path: 'project-details',
+    loadChildren: () => import('./modules/project-details/project-details.module').then(m => m.ProjectDetailsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.Fip] }
   },
 ];
 

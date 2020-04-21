@@ -1,0 +1,24 @@
+<ng-container>
+
+
+  <mat-grid-list cols="4">
+    <mat-grid-tile (click)="goToDetails(item);" *ngFor="let item of allProjects">
+      <mat-card style="width: 90%;margin: 20px;">
+        <mat-card-content>
+          <div class="inner-content">
+            <div class="content">
+              <div class="icon">
+                <mat-icon color="primary">sync</mat-icon>
+              </div>
+              <div class="info">
+                <h6>{{item.name}}</h6>
+                <span>{{item.status}}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+
+</ng-container>

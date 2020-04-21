@@ -34,7 +34,6 @@ export class CreateSurveyComponent implements OnInit {
     components: [],
     display: "form",
     page: 0,
-    refreshOn: "submit",
     numPages: 2
   };
 

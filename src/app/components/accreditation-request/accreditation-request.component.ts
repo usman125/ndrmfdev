@@ -18,6 +18,7 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { AccreditationRequestService } from "../../services/accreditation-request.service";
 import { SmeService } from "../../services/sme.service";
+import { AccreditationReviewsService } from "../../services/accreditation-reviews.service";
 declare var $: any;
 
 export interface DialogData {
@@ -42,7 +43,7 @@ interface FoodNode {
   selector: 'app-accreditation-request',
   templateUrl: './accreditation-request.component.html',
   styleUrls: ['./accreditation-request.component.css'],
-  providers: [SurveysService]
+  providers: [SurveysService, AccreditationReviewsService]
 })
 
 export class AccreditationRequestComponent implements OnInit, OnDestroy {
@@ -112,6 +113,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   userSectionScore: any = 0;
 
   addMobileClasses: boolean;
+  apiLoading: boolean = false;
 
 
 
@@ -139,6 +141,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     private _accreditationRequestStore: AccreditationRequestStore,
     private _singleAccreditationRequestStore: SingleAccreditationRequestStore,
     private _accreditationReviewStore: AccreditationReviewStore,
+    private _accreditationReviewsService: AccreditationReviewsService,
     private _sectionSelectorStore: SectionSelectorStore,
     private _fipIntimationsStore: fipIntimationsStore,
     private _authStore: AuthStore,
@@ -222,9 +225,34 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
                   });
                   this._smeStore.addAllSmes(smesArray);
                 }
+                this._accreditationReviewsService.getAllReviews().subscribe(
+                  result => {
+                    console.log("ALL REVIEWS FROM APi:--", result);
+                    let reviewsArray = [];
+                    if (result['sectionReviewInfos']) {
+                      result['sectionReviewInfos'].forEach(element => {
+                        var object = {
+                          data: element.componentReviewInfos,
+                          rating: element.rating,
+                          status: element.status,
+                          userRef: element.username,
+                          formIdentity: element.sectionKey,
+                          generalComments: element.comments,
+                        }
+                        reviewsArray.push(object);
+                      });
+                      this._accreditationReviewStore.addAllReviews(reviewsArray);
+                    }
+                  },
+                  error => {
+                    console.log("ERROR SMES FROM APi:--", result);
+                  }
+                );
               },
-              error => { }
-            )
+              error => {
+                console.log("ERROR SMES FROM APi:--", result);
+              }
+            );
           },
           error => {
             console.log("ERROR FROM ALL REQUESTS:--", error);
@@ -234,15 +262,13 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       error => {
         console.log("ERROR SURVEYS API:--", error);
       }
-    )
+    );
+
     this.Subscription.add(
       this._surveysStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
         this.allSurveys = data.surveys;
       })
     );
-
-
-
     this.Subscription.add(
       this._authStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
         // this.allSmes = data.smes;
@@ -257,10 +283,9 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._accreditationReviewStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
         this.allRequestReviews = data.reviews;
-        console.log("ALL RE+QEST REVIEWS:---", this.allRequestReviews);
+        console.log("---:ALL REQEST REVIEWS:---\n", this.allRequestReviews);
       })
     );
-
     this.Subscription.add(
       this._singleAccreditationRequestStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
         this.userReviewRequests = data.requests;
@@ -278,7 +303,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       this._fipIntimationsStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
         // console.log("ALL ADDED INTIMATIONS:--", data.intimations);
       })
-    )
+    );
     this.Subscription.add(
       this._accreditationRequestStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
         // console.log(data);
@@ -288,13 +313,14 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         this.userRequests = data.requests;
         console.log("ALL ADDED INTIMATIONS:--", data.requests);
         if (this.currentUser.role !== 'sme') {
-          this.checkForAllTasks();
+          // this.checkForAllTasks();
           this.adminDefaults();
         } else if (this.currentUser.role === 'sme') {
           this.smeDefaults();
         }
       })
     );
+
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
@@ -323,10 +349,11 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     this.dataSource = this.allRequests;
     console.log("ALL REQUESTS:--", this.allRequests);
   }
-
-  checkForAllTasks() {
-    for (let i = 0; i < this.userRequests.length; i++) {
-      if (this.userRequests[i].currentReview === "in_review") {
+  
+  checkForAllTasks(request) {
+    for (let i = 0; i < request.val.length; i++) {
+      // console.log("CHECK FOR ALL TASKS:--", request.val[i]);
+      if (request.val[i].currentReview === "in_review") {
         this.allTasksAssingedFlag = true;
       } else {
         this.allTasksAssingedFlag = false;
@@ -362,54 +389,95 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   }
 
   addSingleTaskReview() {
-    this._singleAccreditationRequestStore.setTaskReview(
-      this.selectedTask.formIdentity,
-      this.selectedTask.startDate,
-      this.selectedTask.endDate
+    var values = {
+      currentReview: 'in_review',
+      endDate: this.selectedTask.endDate,
+      formData: "string",
+      formSubmitData: JSON.stringify(this.selectedTask.submitData),
+      prevReview: this.selectedTask.previousReview,
+      ratings: this.selectedTask.rating,
+      sectionKey: this.selectedTask.formIdentity,
+      startDate: this.selectedTask.startDate,
+      status: this.selectedTask.status,
+      userName: this.selectedRequest.user,
+      userUpdateFlag: this.selectedTask.userUpdateFlag,
+    }
+    console.log("REQEST FOR SME:---", values, this.selectedTask);
+    this._accreditationRequestService.updateAccreditationRequest(values).subscribe(
+      result => {
+        console.log("RESULT AFTER UPDATING REQUEST:--", result);
+        this._singleAccreditationRequestStore.setTaskReview(
+          this.selectedTask.formIdentity,
+          this.selectedTask.startDate,
+          this.selectedTask.endDate
+        );
+        this._accreditationRequestStore.updateRequestReview(
+          this.selectedTask.formIdentity,
+          this.selectedRequest.user,
+          this.selectedTask.startDate,
+          this.selectedTask.endDate,
+          null,
+          'in_review'
+        );
+      },
+      error => {
+        console.log("ERROR AFTER UPDATING REQUEST:--", error);
+      }
     );
-    this._accreditationRequestStore.updateRequestReview(
-      this.selectedTask.formIdentity,
-      this.selectedRequest.user,
-      this.selectedTask.startDate,
-      this.selectedTask.endDate,
-      null,
-      'in_review'
-    );
-
   }
 
   addAllTaskReview(startDate, endDate) {
+    this.selectedRequest.val.forEach(element => {
+      if (element.currentReview !== 'in_review') {
+        var values = {
+          currentReview: 'in_review',
+          endDate: endDate,
+          formData: "string",
+          formSubmitData: JSON.stringify(element.formSubmitData),
+          prevReview: element.previousReview,
+          ratings: element.rating,
+          sectionKey: element.formIdentity,
+          startDate: startDate,
+          status: element.status,
+          userName: this.selectedRequest.user,
+          userUpdateFlag: element.userUpdateFlag,
+        }
+        this._accreditationRequestService.updateAccreditationRequest(values).subscribe(
+          result => {
+            console.log("RESULT AFTER UPDATING REQUEST:--", result);
+            this._accreditationRequestStore.updateRequestReview(
+              values.sectionKey,
+              this.selectedRequest.user,
+              startDate,
+              endDate,
+              null,
+              'in_review'
+            );
+          },
+          error => {
+            console.log("ERROR AFTER UPDATING REQUEST:--", error);
+          }
+        );
+      }
+    });
     this._singleAccreditationRequestStore.setAllTaskReview(
       startDate,
       endDate
     );
-    this._accreditationRequestStore.updateAllRequestReview(
-      this.selectedRequest.user,
-      startDate,
-      endDate,
-      null,
-      'in_review',
-    );
   }
 
   getRequest(request) {
-
-
-
     this.toggle = !this.toggle;
-
     this.generalComments = null;
     // var keys = Object.keys(request.formSubmitData);
     // this.formKeys = keys;
-
     this.selectedRequest = request;
+    this.checkForAllTasks(this.selectedRequest);
     console.log("REQUEST TO CHECK:--", this.selectedRequest);
-
     var count = 0;
     var passCount = 0;
     var resultedArray = [];
     // this.userReviewRequests = [];
-
     for (let i = 0; i < this.allSmes.length; i++) {
       var object = {
         name: '',
@@ -423,7 +491,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         previousReview: null,
         currentReview: null,
         review: null,
-        // totalScore: 0,
+        allReviews: null,
+        userUpdateFlag: null,
         // rating: 0,
       }
       var resultProfile = _.find(this.allSurveys, { 'smeRef': this.allSmes[i].key });
@@ -441,6 +510,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         object.previousReview = resultRequest.previousReview;
         object.startDate = resultRequest.startDate;
         object.endDate = resultRequest.endDate;
+        object.userUpdateFlag = resultRequest.userUpdateFlag;
       }
 
       count = count + parseInt(object.form.totalScore);
@@ -449,17 +519,32 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       this.totalPassScore = passCount;
       // object.totalScore = this.totalFormScore;
       // object.totalPassScore = this.totalPassScore;
-
-      var reviewe = _.find(this.allRequestReviews, { 'userRef': object.userRef, 'formIdentity': this.allSmes[i].key })
+      var reviewe = null;
+      reviewe = _.filter(this.allRequestReviews, { 'userRef': object.userRef, 'formIdentity': this.allSmes[i].key });
+      // var reviewe = null;
+      // this._accreditationReviewsService.getLastestAccreditationReviews(
+      //   object.userRef,
+      //   this.allSmes[i].key
+      // ).subscribe(
+      //   result => {
+      //     console.log("RESULT FROM ACCREDITATION REVIEWS:---", result, object);
+      //     if (result['sectionReviewInfos']) object.review = result['sectionReviewInfos'][0];           
+      //   },
+      //   error => {
+      //     console.log("RESULT FROM ACCREDITATION REVIEWS:---", error);
+      //   }
+      // );
       // console.log("REVIEW OBJECT:--", reviewe);
-      // console.log("FINAL OBJECT:--", object, resultRequest, resultProfile, count);
       if (reviewe) {
-        object.review = reviewe;
+        object.review = reviewe[reviewe.length - 1] || null;
+        object.allReviews = reviewe;
       }
-
+      // console.log("FINAL OBJECT:--", object, resultRequest, resultProfile, count);
+      console.log("FINAL OBJECT:--", object);
       resultedArray.push(object);
       // this.userReviewRequests = resultedArray;
       this._singleAccreditationRequestStore.addAllRequest(resultedArray);
+
 
       if (this.currentUser.smeRef === this.allSmes[i].key) {
         // console.log("USER DEPARTMENT MATCH:--", this.currentUser.smeRef, this.allSmes[i].key);
@@ -516,20 +601,24 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         }
         // var x = $('.formio-component-submit').css({ "display": "none" });
         // console.log("JAVA SCRIPT OBJECTS:--", x);
-      }
-      if (reviewe) {
-        for (let i = 0; i < reviewe.data.length; i++) {
-          for (let j = 0; j < this.formReviewObjects.length; j++) {
-            if (this.formReviewObjects[j].key === reviewe.data[i].key) {
-              this.formReviewObjects[j].rating = reviewe.data[i].rating;
-              this.formReviewObjects[j].status = reviewe.data[i].status;
-              this.formReviewObjects[j].comments = reviewe.data[i].comments;
+        if (reviewe) {
+          if (reviewe[reviewe.length - 1]) {
+
+            for (let i = 0; i < reviewe[reviewe.length - 1].data.length; i++) {
+              for (let j = 0; j < this.formReviewObjects.length; j++) {
+                if (this.formReviewObjects[j].key === reviewe[reviewe.length - 1].data[i].key) {
+                  this.formReviewObjects[j].rating = reviewe[reviewe.length - 1].data[i].rating;
+                  this.formReviewObjects[j].status = reviewe[reviewe.length - 1].data[i].status;
+                  this.formReviewObjects[j].comments = reviewe[reviewe.length - 1].data[i].comments;
+                }
+              }
             }
+            console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects);
+            this.generalComments = reviewe[reviewe.length - 1].generalComments;
           }
         }
-        console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects);
-        this.generalComments = reviewe.generalComments;
       }
+
       // }
     }
   }
@@ -542,7 +631,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   }
 
   addRequestReview(item) {
-    this.reviewAdded = true;
+    this.apiLoading = true;
     // this.currentReviewItem = item;
     // console.log("REVIEW ITWM:--", item);
     var rating = {
@@ -585,76 +674,116 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       "\nCOUNT 2 :--", count2,
       "\nRATING RAW:--", count1 / count2,
       "\nRATING :--", Math.ceil(count1 / count2),
+      "\nGENERAL COMMENTS :--", this.generalComments,
       "\REQUEST STATUS :--", requestStatus,
     );
     var flag = _.find(this.allRequestReviews, { userRef: item.userRef, formIdentity: item.formIdentity });
-    if (!flag) {
-      console.log("FLAG FROM ANOTHER FIND:-", flag);
-      this._accreditationReviewStore.addReview(
-        this.formReviewObjects,
-        Math.ceil(count1 / count2),
-        requestStatus,
-        item.userRef,
-        item.formIdentity,
-        this.generalComments,
-      );
-      this._accreditationRequestStore.markRequestReview(
-        item.userRef,
-        item.formIdentity,
-        "reviewed",
-        "done",
-        requestStatus,
-        Math.ceil(count1 / count2),
-      );
-      this._singleAccreditationRequestStore.updateSingleReviewStatus(
-        item.userRef,
-        item.formIdentity,
-        {
-          data: this.formReviewObjects,
-          rating: Math.ceil(count1 / count2),
-          status: requestStatus,
-          userRef: item.userRef,
-          formIdentity: item.formIdentity
+    // if (!flag) {
+    console.log("FLAG FROM ANOTHER FIND:-", flag);
+    this._accreditationReviewsService.addReview(
+      this.formReviewObjects,
+      Math.ceil(count1 / count2),
+      item.userRef,
+      item.formIdentity,
+      this.generalComments,
+      requestStatus
+    ).subscribe(
+      result => {
+        console.log("RESULT AFTER ADDING REVIEW:--", result);
+        this.apiLoading = false;
+        this.reviewAdded = true;
+        var object = {
+          currentReview: 'reviewed',
+          endDate: item.endDate,
+          formData: "string",
+          formSubmitData: JSON.stringify(item.submitData),
+          prevReview: "done",
+          ratings: Math.ceil(count1 / count2),
+          sectionKey: item.formIdentity,
+          startDate: item.startDate,
+          status: item.status,
+          userName: item.userRef,
+          userUpdateFlag: item.userUpdateFlag,
         }
-      )
-    } else {
-      console.log("VALUE EXISTS:--");
-      // this._accreditationReviewStore.udpateReview(
-      //   this.formReviewObjects,
-      //   Math.ceil(count1 / count2),
-      //   requestStatus,
-      //   item.userRef,
-      //   item.formIdentity,
-      //   this.generalComments,
-      // )
-      this._accreditationReviewStore.addReview(
-        this.formReviewObjects,
-        Math.ceil(count1 / count2),
-        requestStatus,
-        item.userRef,
-        item.formIdentity,
-        this.generalComments,
-      );
-      this._accreditationRequestStore.markRequestReview(
-        item.userRef,
-        item.formIdentity,
-        "reviewed",
-        "done",
-        requestStatus,
-        Math.ceil(count1 / count2),
-      );
-      this._singleAccreditationRequestStore.updateSingleReviewStatus(
-        item.userRef,
-        item.formIdentity,
-        {
-          data: this.formReviewObjects,
-          rating: Math.ceil(count1 / count2),
-          status: requestStatus,
-          userRef: item.userRef,
-          formIdentity: item.formIdentity
-        }
-      )
-    }
+        this._accreditationReviewStore.addReview(
+          this.formReviewObjects,
+          Math.ceil(count1 / count2),
+          requestStatus,
+          item.userRef,
+          item.formIdentity,
+          this.generalComments,
+        );
+        this._accreditationRequestService.updateAccreditationRequest(object).subscribe(
+          result => {
+            console.log("RESULT AFTER UPDATING REQUEST:---", result);
+            this._accreditationRequestStore.markRequestReview(
+              item.userRef,
+              item.formIdentity,
+              "reviewed",
+              "done",
+              requestStatus,
+              Math.ceil(count1 / count2),
+            );
+            this._singleAccreditationRequestStore.updateSingleReviewStatus(
+              item.userRef,
+              item.formIdentity,
+              {
+                data: this.formReviewObjects,
+                rating: Math.ceil(count1 / count2),
+                status: requestStatus,
+                userRef: item.userRef,
+                formIdentity: item.formIdentity
+              }
+            );
+          },
+          error => {
+            console.log("RESULT AFTER UPDATING REQUEST:---", error);
+          }
+        );
+      },
+      error => {
+        this.apiLoading = false;
+        console.log("RESULT AFTER ADDING REVIEW:--", error);
+      }
+    )
+    // } else {
+    console.log("VALUE EXISTS:--");
+    // this._accreditationReviewStore.udpateReview(
+    //   this.formReviewObjects,
+    //   Math.ceil(count1 / count2),
+    //   requestStatus,
+    //   item.userRef,
+    //   item.formIdentity,
+    //   this.generalComments,
+    // )
+    // this._accreditationReviewStore.addReview(
+    //   this.formReviewObjects,
+    //   Math.ceil(count1 / count2),
+    //   requestStatus,
+    //   item.userRef,
+    //   item.formIdentity,
+    //   this.generalComments,
+    // );
+    // this._accreditationRequestStore.markRequestReview(
+    //   item.userRef,
+    //   item.formIdentity,
+    //   "reviewed",
+    //   "done",
+    //   requestStatus,
+    //   Math.ceil(count1 / count2),
+    // );
+    // this._singleAccreditationRequestStore.updateSingleReviewStatus(
+    //   item.userRef,
+    //   item.formIdentity,
+    //   {
+    //     data: this.formReviewObjects,
+    //     rating: Math.ceil(count1 / count2),
+    //     status: requestStatus,
+    //     userRef: item.userRef,
+    //     formIdentity: item.formIdentity
+    //   }
+    // )
+    // }
   }
 
 

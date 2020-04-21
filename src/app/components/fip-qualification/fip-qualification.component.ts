@@ -330,7 +330,6 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     this.secondForm = $event.data;
     var flag: any = _.find(this.allRequests, { userRef: this.loggedUser.username, formIdentity: this.groupType })
     if (!flag) {
-      this.form.exists = true;
       var values = {
         "currentReview": null,
         "endDate": null,
@@ -349,6 +348,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       console.log("T+REQUEST FOR API:---", values);
       this._accreditationRequestService.addAccreditationRequest(values).subscribe(
         result => {
+          this.form.exists = true;
           console.log("RESULT AFTER ADDING REQUEST:--", result);
           this._accreditationRequestStore.addRequest(
             this.loggedUser.email,
@@ -403,7 +403,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   }
 
   submitAllSections() {
-    
+
     this.allRequests.forEach(element => {
       var object = {
         currentReview: element.currentReview,

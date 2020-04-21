@@ -22,3 +22,6 @@ export { ProposalFormsComponent } from './proposal-forms/proposal-forms.componen
 export { ProjectPlanComponent } from './project-plan/project-plan.component';
 export { TreeComponent } from './tree/tree.component';
 export { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+export { ProjectsComponent } from './projects/projects.component';
+export { AddProjectComponent } from './add-project/add-project.component';
+export { ProjectDetailsComponent } from './project-details/project-details.component';

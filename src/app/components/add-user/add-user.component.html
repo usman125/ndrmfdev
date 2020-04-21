@@ -16,7 +16,7 @@
       </mat-card-header> -->
         <mat-card-content>
           <mat-grid-list cols="1" rowHeight="60px">
-            <mat-grid-tile>
+            <!-- <mat-grid-tile>
               <mat-form-field>
                 <mat-label>Type</mat-label>
                 <mat-select [formControl]="addUserForm.controls['type']" (ngModelChange)="roleChanged($event)">
@@ -24,9 +24,9 @@
                 </mat-select>
               </mat-form-field>
 
-            </mat-grid-tile>
+            </mat-grid-tile> -->
             <div *ngIf="addUserForm.controls['type'].value !== 'other'">
-              <mat-grid-tile *ngIf="addUserForm.controls['type'].value === 'roleSme'">
+              <mat-grid-tile *ngIf="addUserForm.controls['type'].value === 'sme'">
                 <mat-form-field>
                   <mat-label>Sme Refrence</mat-label>
                   <mat-select [formControl]="addUserForm.controls['smeRef']" (ngModelChange)="smeChanged($event)">
@@ -92,7 +92,8 @@
                   <mat-card-title>Select Type</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                  <mat-radio-group class="example-radio-group" [formControl]="addUserForm.controls['role']">
+                  <mat-radio-group class="example-radio-group" (change)="roleChanged($event)"
+                    [formControl]="addUserForm.controls['role']">
                     <mat-radio-button class="example-radio-button" [checked]="getChecked(type)" [value]="type"
                       *ngFor="let type of allUserTypes">
                       {{type}}
@@ -107,11 +108,17 @@
                   <mat-card-title>Select Role</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                  <mat-radio-group class="example-radio-group">
-                    <mat-radio-button class="example-radio-button" *ngFor="let role of allUserRoles" [value]="role">
+                  <mat-radio-group [formControl]="addUserForm.controls['type']" class="example-radio-group">
+                    <mat-radio-button [checked]="addUserForm.controls['type'] === role" class="example-radio-button"
+                      *ngFor="let role of allUserRoles" [value]="role">
                       {{role}}
                     </mat-radio-button>
                   </mat-radio-group>
+                  <!-- <section class="example-section">
+                    <mat-checkbox [checked]="addUserForm.controls['type'] === role" *ngFor="let role of allUserRoles" [value]="role" class="example-margin" [formControl]="addUserForm.controls['type']">
+                      {{role}}
+                    </mat-checkbox>
+                  </section> -->
                 </mat-card-content>
               </mat-card>
             </mat-grid-tile>

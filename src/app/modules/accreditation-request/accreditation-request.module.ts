@@ -16,8 +16,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-// import { MatTreeModule } from "@angular/material/tree";
-// import { M } from "@angular/cdk";
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -40,7 +39,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    // MatTreeModule,
+    MatProgressSpinnerModule,
     AccreditationRequestRoutingModule,
   ],
   entryComponents: [AssignTask]

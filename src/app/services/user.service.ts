@@ -66,4 +66,29 @@ export class UserService {
     );
   }
 
+  
+  addRole(username, role) {
+    const url = `${AppConfig.apiUrl}/user/addRole`;
+    return this._httpClient.put(
+      url,
+      {
+        "name": role,
+        "username": username
+      }
+    );
+  }
+
+  addType(username, type) {
+    const url = `${AppConfig.apiUrl}/user/addRole`;
+    return this._httpClient.put(
+      url,
+      {
+        "name": type,
+        "username": username
+      }
+    );
+  }
+
+
+
 }

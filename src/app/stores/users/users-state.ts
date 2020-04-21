@@ -10,6 +10,8 @@ const USERS = [
     active: true,
     eligibileFlag: false,
     qualificationFlag: false,
+    typeNames: [],
+    roleNames: [],
   },
   {
     name: 'Arslan Ali Khan',
@@ -22,6 +24,8 @@ const USERS = [
     active: true,
     eligibileFlag: false,
     qualificationFlag: false,
+    roleNames: [],
+    typeNames: [],
   },
   // {
   //   name: 'Test Fip 1',
@@ -58,6 +62,8 @@ const USERS = [
     active: true,
     eligibileFlag: true,
     qualificationFlag: false,
+    roleNames: [],
+    typeNames: [],
   },
   {
     name: 'Usman Ali Khan',
@@ -70,6 +76,8 @@ const USERS = [
     active: true,
     eligibileFlag: false,
     qualificationFlag: false,
+    roleNames: [],
+    typeNames: [],
   },
   // {
   //   name: 'Test Sme 1',
@@ -97,5 +105,7 @@ export class UsersState {
     active: boolean,
     eligibileFlag: boolean,
     qualificationFlag: boolean,
+    roleNames: string[],
+    typeNames: string[],
   }[] = USERS;
 }

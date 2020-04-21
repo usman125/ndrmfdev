@@ -82,12 +82,12 @@
   <mat-sidenav-container
     [ngClass]="{'app-content': !loggedUser, 'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
     class="example-container">
-    <mat-sidenav  *ngIf="loggedUser" #sidenav mode="side" [opened]="sideNavMode" class="example-sidenav">
+    <mat-sidenav *ngIf="loggedUser" #sidenav mode="side" [opened]="sideNavMode" class="example-sidenav">
 
 
       <div style="display: flex;">
-        <img style="width: 85%;padding: 25px;" src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png"
-          alt="Logo">
+        <img style="width: 85%;padding: 25px;"
+          src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png" alt="Logo">
       </div>
 
       <div class="hero" [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'fip'">
@@ -142,8 +142,11 @@
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/proposal-sections">All Sections</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/add-proposal-section">Add Section</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/proposal-forms">All Section Forms</a>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/create-proposal-form">Create Section Form</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/create-proposal-form">Create Section
+                Form</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/project-plan">Project Plan</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/projects">Add a
+                new project</a>
             </mat-nav-list>
           </mat-expansion-panel>
 
@@ -165,6 +168,17 @@
                 Management</a>
               <a *ngIf="userEligibleStatus" mat-list-item routerLinkActive="active-menu-item"
                 routerLink="/fip-qualification">Qualification Management</a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Projects
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/projects">Add a
+                new project</a>
             </mat-nav-list>
           </mat-expansion-panel>
 

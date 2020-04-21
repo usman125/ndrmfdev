@@ -71,25 +71,14 @@ export class AccreditationReviewStore extends Store<AccreditationReviewState> {
     });
   }
 
-  // addAllRequest(
-  //   requests: {
-  //     name: string,
-  //     userRef: string,
-  //     submitData: any,
-  //     form: any,
-  //     status: string,
-  //     formIdentity: string,
-  //     startDate: string,
-  //     endDate: string,
-  //     previousReview: string,
-  //     currentReview: string,
-  //   }[]
-  // ): void {
-  //   this.setState({
-  //     ...this.state,
-  //     requests: requests
-  //   });
-  // }
+  addAllReviews(
+    reviews
+  ): void {
+    this.setState({
+      ...this.state,
+      reviews: reviews
+    });
+  }
 
   // setTaskReview(
   //   formIdentity: string,

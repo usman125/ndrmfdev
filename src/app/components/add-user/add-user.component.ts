@@ -1,4 +1,12 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, AfterViewInit, AfterViewChecked, AfterContentChecked } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ChangeDetectorRef,
+  AfterViewInit,
+  AfterViewChecked,
+  AfterContentChecked
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AuthStore } from "../../stores/auth/auth-store";
 import { UsersStore } from "../../stores/users/users-store";
@@ -30,6 +38,7 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
   ]
 
   selectedUser: any = null;
+  selectedSme: any = null;
   flag: boolean = false;
   allUserRoles: any = []
   allUserTypes: any = []
@@ -83,8 +92,9 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
               userRef: element.userName,
               formGenerated: element.formGenerated,
               key: element.sectionKey,
+              formIdentity: element.formIdentity,
             }
-            smesArray.push(object);
+            if (object.formIdentity === 'qualification') smesArray.push(object);
           });
           this._smeStore.addAllSmes(smesArray);
         }
@@ -105,7 +115,7 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
       this.selectedUser = data;
       if (this.selectedUser.email) {
         this.flag = true;
-        this._changeDetectorRef.detectChanges();
+        // this._changeDetectorRef.detectChanges();
         if (this.selectedUser.role === 'sme') {
           this.addUserForm.patchValue({
             name: this.selectedUser.name,
@@ -169,10 +179,10 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
       email: [null, [Validators.required, Validators.email]],
       username: [null, Validators.required],
       password: [null],
-      department: [null, Validators.required],
+      department: [null],
       role: [null, Validators.required],
-      type: [null, Validators.required],
-      smeRef: [null, Validators.required],
+      type: [null],
+      smeRef: [null],
       active: [false],
     });
   }
@@ -231,7 +241,12 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
   }
 
   smeChanged($event) {
-    console.log("SME CHANGED:--", $event);
+    for (let i = 0; i < this.allSmes.length; i++) {
+      if (this.allSmes[i].key === $event) {
+        this.selectedSme = this.allSmes[i];
+        console.log("SME CHANGED:--", $event, this.allSmes[i]);
+      }
+    }
   }
 
   departmentChanged($event) {
@@ -260,6 +275,32 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
         this.setActiveStatus();
       } else if (this.selectedUser.active && values.active === false) {
         this.unSetActiveStatus();
+      }
+      if (values.role === 'ndrmf' && values.type === 'sme') {
+        this._userService.addRole(this.selectedUser.username, values.type).subscribe(
+          result => {
+            if (this.selectedSme) {
+              console.log("RESULT AFTER ADDING ROLE:--", result, this.selectedSme);
+              this._smeService.updateSme(
+                this.selectedSme.name,
+                this.selectedSme.key,
+                this.selectedUser.username,
+                this.selectedSme.formGenerated,
+                this.selectedSme.formIdentity
+              ).subscribe(
+                result => {
+                  console.log("RESULT AFTER UPDATING SME:--", result);
+                },
+                error => {
+                  console.log("ERROR AFTER UPDATING SME:--", error);
+                }
+              );
+            }
+          },
+          error => {
+            console.log("ERROR AFTER ADDING ROLE:--", error);
+          }
+        );
       }
       //   this._usersStore.editUser(
       //     this.selectedUser.email,

@@ -119,6 +119,7 @@ export class SingleAccreditationRequestStore extends Store<SingleAccreditationRe
             ...c,
             currentReview: "reviewed",
             review: data,
+            // review: {...this.state.requests['review'], data},
           };
         }
         return c;

@@ -453,15 +453,15 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
   }
 }
 
-@media screen and (max-width: 1000px) {
-  .main-block {
-    width: 50%;
-  }
+// @media screen and (max-width: 1000px) {
+//   .main-block {
+//     width: 50%;
+//   }
 
-  .intimation-block {
-    width: 20%;
-  }
-}
+//   .intimation-block {
+//     width: 20%;
+//   }
+// }
 
 // .hero button {
 //   padding: 10px 15px;

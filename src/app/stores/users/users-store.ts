@@ -27,6 +27,8 @@ addUser(
   active: boolean,
   eligibileFlag: boolean,
   qualificationFlag: boolean,
+  roleNames: string[],
+  typeNames: string[],
 ): void {
   this.setState({
     ...this.state,
@@ -43,6 +45,8 @@ addUser(
         department: department,
         eligibileFlag: eligibileFlag,
         qualificationFlag: qualificationFlag,
+        roleNames: roleNames,
+        typeNames: typeNames,
       }
     ]
   });

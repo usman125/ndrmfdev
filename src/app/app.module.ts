@@ -78,6 +78,7 @@ import { AuthStore } from './stores/auth/auth-store';
 import { CoffeeElectionStore } from "./stores/coffee-election/coffee-election.store";
 import { SmeStore } from "./stores/sme/sme-store";
 import { DepartmentsStore } from "./stores/departments/departments-store";
+import { ProjectsStore } from "./stores/projects/projects-store";
 import { AccreditationReviewStore } from "./stores/accreditation-reviews/accreditation-reviews-store";
 import { AccreditationCommentsMatrixStore } from './stores/accreditation-comments-matrix/accreditation-comments-matrix-store';
 import { fipIntimationsStore } from './stores/fip-intimations/fip-intimations-store';
@@ -91,10 +92,12 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
 
 
 
+
 // import { ProposalFormsComponent } from './components/proposal-forms/proposal-forms.component';
 // import { ProposalSectionsComponent } from './components/proposal-sections/proposal-sections.component';
 // import { AddProposalSectionComponent } from './components/add-proposal-section/add-proposal-section.component';
-// import { CreateProposalFormComponent } from './components/create-proposal-form/create-proposal-form.component';
+import { AddProjectComponent } from './components/component-index';
+// import { ProjectDetailsComponent } from './components/project-details/project-details.component';
 
 // import { DynamicFormComponent } from './dynamic-form.component';
 // import { DynamicFormQuestionComponent } from './dynamic-form-question.component';
@@ -108,6 +111,9 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     SiteLayout,
     LoginComponent,
     NoHeaderLayoutComponent,
+    // ProjectsComponent,
+    AddProjectComponent,
+    // ProjectDetailsComponent,
     // ConfirmDialogComponent,
     // ProjectPlanComponent,
 
@@ -196,6 +202,7 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     SectionSelectorStore,
     ProposalSectionsStore,
     ProposalFormsStore,
+    ProjectsStore,
   ],
   bootstrap: [AppComponent],
   exports: [

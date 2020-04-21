@@ -53,20 +53,20 @@
               <span id="date" class="request-status" *ngIf="item.currentReview === 'in_review'">Pending:
                 {{item.endDate | date:'shortDate'}}</span>
               <span id="stars" *ngIf="item.currentReview === 'reviewed'">
-                <bar-rating [(rate)]="item.review.rating" [max]="max"></bar-rating>
+                <bar-rating [(rate)]="item?.review.rating" [max]="max"></bar-rating>
               </span>
             </div>
           </div>
           <span class="example-spacer"></span>
           <div *ngIf="currentUser?.role !== 'sme'">
             <button matTooltip="Assign Task" (click)="openDialog(item)"
-              *ngIf="item.previousReview === null && item.submitData" [disabled]="item.currentReview" mat-icon-button
+              *ngIf="item.previousReview === null && item.submitData" [disabled]="item.currentReview" mat-button
               color="basic">
-              <mat-icon>assignment</mat-icon>
+              <mat-icon>assignment</mat-icon>Assign-Task
             </button>
             <button matTooltip="Re-evaluate Task" [disabled]="item.currentReview === 'in_review'"
-              (click)="openDialog(item)" *ngIf="item.previousReview && item.submitData" mat-icon-button color="basic">
-              <mat-icon>redo</mat-icon>
+              (click)="openDialog(item)" *ngIf="item.previousReview && item.submitData" mat-button color="basic">
+              <mat-icon>redo</mat-icon> Re-Evaluate
             </button>
           </div>
           <div class="profile-details">
@@ -87,9 +87,10 @@
 
           <formio *ngIf="(currentUser?.smeRef !== item.form.smeRef) && currentUser?.role === 'sme'" [form]="item.form"
             readOnly="true" [submission]="{data: item.submitData}"></formio>
-          <formio *ngIf="currentUser?.role !== 'sme' && item.review === null" [form]="item.form" readOnly="true"
+          <formio *ngIf="currentUser?.role !== 'sme' && !item.review" [form]="item.form" readOnly="true"
             [submission]="{data: item.submitData}"></formio>
 
+          <!-- <button *ngIf="item.allReviews.length" mat-raised-button>View Previous</button> -->
           <div *ngIf="currentUser?.smeRef === item.form.smeRef && currentUser?.role === 'sme'">
             <div class="form-comments" *ngFor="let item of formReviewObjects">
               <div class="details">
@@ -123,9 +124,9 @@
                 <mat-label>Comments</mat-label>
                 <textarea [(ngModel)]="generalComments" value="generalComments" matInput></textarea>
               </mat-form-field>
-              <div>
-                <button style="padding: 5px;" [disabled]="reviewAdded" (click)="addRequestReview(item)" mat-mini-fab
-                  color="accent">
+              <div style="padding: 15px;">
+                <mat-spinner *ngIf="apiLoading" diameter="40"></mat-spinner>
+                <button *ngIf="!apiLoading" [disabled]="reviewAdded" (click)="addRequestReview(item)" mat-mini-fab color="accent">
                   <mat-icon>send</mat-icon>
                 </button>
               </div>
@@ -133,38 +134,45 @@
           </div>
 
           <div *ngIf="currentUser?.role !== 'sme' && item.review">
-            <div class="form-comments" *ngFor="let obj of item.review?.data">
-              <div class="details">
-                <span>{{obj.title}}</span>
-                <span *ngIf="obj.value === true">{{"true"}}</span>
-                <span id="answer">{{obj.value}}</span>
-                <span>
-                  <mat-form-field>
-                    <mat-label>Comments</mat-label>
-                    <input disabled matInput placeholder="Write any comments" [(ngModel)]="obj.comments"
-                      value="obj.comments" />
-                  </mat-form-field>
-                </span>
+            <div *ngFor="let review of item.allReviews; let i=index;">
+
+              <div class="form-comments" *ngFor="let obj of review?.data">
+                <div class="details">
+                  <span>{{obj.title}}</span>
+                  <span *ngIf="obj.value === true">{{"true"}}</span>
+                  <span id="answer">{{obj.value}}</span>
+                  <span>
+                    <mat-form-field>
+                      <mat-label>Comments</mat-label>
+                      <input disabled matInput placeholder="Write any comments" [(ngModel)]="obj.comments"
+                        value="obj.comments" />
+                    </mat-form-field>
+                  </span>
+                </div>
+                <div class="controls admin-controls">
+                  <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
+                  <mat-button-toggle-group disabled [(ngModel)]="obj.status" #group="matButtonToggleGroup">
+                    <mat-button-toggle *ngIf="obj.status === 'satisfy'" color="primary" (change)="onValChange($event)"
+                      value="satisfy" aria-label="Text align left">
+                      <mat-icon style="color:green;">thumb_up</mat-icon>
+                    </mat-button-toggle>
+                    <mat-button-toggle *ngIf="obj.status === 'un-satisfy'" (change)="onValChange($event)"
+                      value="un-satisfy" aria-label="Text align center">
+                      <mat-icon color="warn">thumb_down</mat-icon>
+                    </mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div>
               </div>
-              <div class="controls admin-controls">
-                <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
-                <mat-button-toggle-group disabled [(ngModel)]="obj.status" #group="matButtonToggleGroup">
-                  <mat-button-toggle *ngIf="obj.status === 'satisfy'" color="primary" (change)="onValChange($event)"
-                    value="satisfy" aria-label="Text align left">
-                    <mat-icon style="color:green;">thumb_up</mat-icon>
-                  </mat-button-toggle>
-                  <mat-button-toggle *ngIf="obj.status === 'un-satisfy'" (change)="onValChange($event)"
-                    value="un-satisfy" aria-label="Text align center">
-                    <mat-icon color="warn">thumb_down</mat-icon>
-                  </mat-button-toggle>
-                </mat-button-toggle-group>
+              <div class="comment-box">
+                <mat-form-field appearance="outline">
+                  <mat-label>Comments</mat-label>
+                  <textarea disabled [(ngModel)]="generalComments" value="generalComments" matInput></textarea>
+                </mat-form-field>
               </div>
-            </div>
-            <div class="comment-box">
-              <mat-form-field appearance="outline">
-                <mat-label>Comments</mat-label>
-                <textarea disabled [(ngModel)]="generalComments" value="generalComments" matInput></textarea>
-              </mat-form-field>
+              <div *ngIf="i !== item.allReviews.length-1" style="padding: 15px;">
+
+                <mat-divider></mat-divider>
+              </div>
             </div>
           </div>
 
@@ -195,7 +203,7 @@
                   <textarea matInput [(ngModel)]="commentsForFip" placeholder="write your comments..."></textarea>
                 </mat-form-field>
                 <button (click)="intimateFip()" [disabled]="allTasksAssingedFlag || !commentsForFip" color="accent"
-                  mat-raised-button>Intimate Fip</button>
+                mat-raised-button>Intimate Fip</button>
               </div>
             </div>
           </div>
@@ -211,7 +219,8 @@
                   <mat-label>Comments for others</mat-label>
                   <textarea matInput placeholder="write your comments..."></textarea>
                 </mat-form-field>
-                <button [disabled]="reviewAdded" color="accent" (click)="completeTask()" mat-raised-button>Complete
+                <mat-spinner *ngIf="apiLoading" diameter="40"></mat-spinner>
+                <button *ngIf="!apiLoading" [disabled]="reviewAdded" color="accent" (click)="completeTask()" mat-raised-button>Complete
                   Task</button>
               </div>
             </div>

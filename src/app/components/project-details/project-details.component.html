@@ -1,0 +1,22 @@
+<ng-container>
+  <mat-card style="margin: 20px;">
+    <mat-card-content>
+      <mat-tab-group dynamicHeight>
+        <mat-tab *ngFor="let item of proposalSections; let i = index;" [label]="item.name">
+          <div class="example-small-box mat-elevation-z4">
+            {{item.name}}
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+
+
+  <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
+    <mat-button-toggle *ngFor="let item of proposalSections; let i = index;" [value]="item.name">
+      <span>{{item.name}}</span>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+
+
+</ng-container>
