@@ -1,0 +1,18 @@
+.dialog{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px;
+}
+.dialog p{
+  text-align: center;
+}
+
+.example-section {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  align-items: flex-start;
+  /* height: 60px; */
+}

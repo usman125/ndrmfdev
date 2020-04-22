@@ -1,0 +1,17 @@
+.tabs mat-button-toggle-group {
+  position: sticky;
+  top: 50px;
+}
+.form {
+  padding: 0 30px;
+}
+
+.tabs-container {
+  display: flex;
+  justify-content: flex-start;
+  padding: 15px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}

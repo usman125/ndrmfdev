@@ -1,22 +1,48 @@
 <ng-container>
-  <mat-card style="margin: 20px;">
+  <mat-card style="margin: 20px;padding: 0px;">
     <mat-card-content>
-      <mat-tab-group dynamicHeight>
-        <mat-tab *ngFor="let item of proposalSections; let i = index;" [label]="item.name">
-          <div class="example-small-box mat-elevation-z4">
-            {{item.name}}
-          </div>
-        </mat-tab>
-      </mat-tab-group>
+      <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+        <mat-toolbar-row>
+          <span>Descriptive Information</span>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <div class="tabs-container">
+        <div class="tabs">
+          <mat-button-toggle-group vertical="true" [(ngModel)]="groupType" #group="matButtonToggleGroup">
+            <mat-button-toggle (change)="tabChanged(item)" *ngFor="let item of proposalSections; let i = index;"
+              [value]="item.name">
+              <span>{{item.name}}</span>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="form">
+          <formio *ngIf="form" [form]="form" (submit)="onSubmit($event)"></formio>
+        </div>
+      </div>
     </mat-card-content>
   </mat-card>
 
-
-  <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
-    <mat-button-toggle *ngFor="let item of proposalSections; let i = index;" [value]="item.name">
-      <span>{{item.name}}</span>
-    </mat-button-toggle>
-  </mat-button-toggle-group>
-
+  <mat-card style="margin: 20px;padding: 0px;">
+    <mat-card-content>
+      <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+        <mat-toolbar-row>
+          <span>Cost & RF Information</span>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <div class="tabs-container">
+        <div class="tabs">
+          <mat-button-toggle-group vertical="true" [(ngModel)]="costTabsType" #group="matButtonToggleGroup">
+            <mat-button-toggle (change)="costTabChanged(item)" *ngFor="let item of costSections; let i = index;"
+              [value]="item.name">
+              <span>{{item.name}}</span>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div *ngIf="costTabsType === 'pip'">
+          <!-- <app-project-plan></app-project-plan>  -->
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
 </ng-container>

@@ -1,0 +1,20 @@
+<div class="dialog">
+  <div mat-dialog-content>
+    <mat-form-field>
+      <mat-label for="#">Peoject Name</mat-label>
+      <input matInput type="text" [(ngModel)]="projectName" placeholder="eg. New Project">
+    </mat-form-field>
+
+    <mat-radio-group class="example-section" [(ngModel)]="projectTypeSingle">
+      <mat-radio-button value="jv">Single</mat-radio-button>
+      <mat-radio-button value="single">JV</mat-radio-button>
+    </mat-radio-group>
+
+
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-raised-button color="warn" style="margin-right:10px;" (click)="cancel()">{{ data.cancelText }}</button>
+    <button mat-raised-button color="primary" (click)="confirm()">{{ data.confirmText }}</button>
+  </div>
+</div>

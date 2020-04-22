@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-export interface DialogData {
+export interface ConfirmData {
   cancelText: string;
   confirmText: string;
   message: string;
@@ -19,7 +19,7 @@ export class ConfirmDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmData) {
   }
 
   ngOnInit() { }
@@ -37,6 +37,7 @@ export class ConfirmDialogComponent implements OnInit {
   public confirm() {
     this.close(true);
   }
+  
   @HostListener("keydown.esc")
   public onEsc() {
     this.close(false);

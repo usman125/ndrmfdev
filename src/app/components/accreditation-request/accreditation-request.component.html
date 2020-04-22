@@ -52,7 +52,7 @@
                 {{item.endDate | date:'shortDate'}}</span>
               <span id="date" class="request-status" *ngIf="item.currentReview === 'in_review'">Pending:
                 {{item.endDate | date:'shortDate'}}</span>
-              <span id="stars" *ngIf="item.currentReview === 'reviewed'">
+              <span id="stars" *ngIf="item.currentReview === 'reviewed' && item?.review">
                 <bar-rating [(rate)]="item?.review.rating" [max]="max"></bar-rating>
               </span>
             </div>

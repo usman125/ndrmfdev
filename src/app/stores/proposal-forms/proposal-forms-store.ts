@@ -13,8 +13,8 @@ export class ProposalFormsStore extends Store<ProposalFormsState> {
     smeRef: string,
     components: {}[],
     type: string,
-    page: string,
-    numPages: string,
+    page: number,
+    numPages: number,
   ): void {
     this.setState({
       ...this.state,

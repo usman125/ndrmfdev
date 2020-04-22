@@ -25,3 +25,4 @@ export { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 export { ProjectsComponent } from './projects/projects.component';
 export { AddProjectComponent } from './add-project/add-project.component';
 export { ProjectDetailsComponent } from './project-details/project-details.component';
+export { AddProjectDialogComponent } from './add-project-dialog/add-project-dialog.component';

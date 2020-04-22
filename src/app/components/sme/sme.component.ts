@@ -42,7 +42,7 @@ export class SmeComponent implements OnInit, OnDestroy {
           result['sectionInfos'].forEach(element => {
             var object = {
               name: element.sectionName,
-              userRef: element.username,
+              userRef: element.userName,
               formGenerated: element.formGenerated,
               key: element.sectionKey,
               formIdentity: element.formIdentity,

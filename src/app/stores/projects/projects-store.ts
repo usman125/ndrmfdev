@@ -8,7 +8,7 @@ export class ProjectsStore extends Store<ProjectsState> {
     super(new ProjectsState());
   }
   
-  addForm(
+  addProject(
     name: string,
     type: string,
     status: string,
@@ -20,13 +20,13 @@ export class ProjectsStore extends Store<ProjectsState> {
         {
           name: name,
           type: type,
-          status: 'none',
+          status: status,
         }
       ]
     });
   }
 
-  addAllForms(projects){
+  addAllProjects(projects){
     this.setState({
       ...this.state,
       peojects: projects

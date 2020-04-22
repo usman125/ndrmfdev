@@ -277,7 +277,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     );
     this.Subscription.add(
       this._smeStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-        this.allSmes = _.filter(data.smes, { formGenerated: true });
+        this.allSmes = data.smes;
+        // this.allSmes = _.filter(data.smes, { formGenerated: true });
       })
     );
     this.Subscription.add(
@@ -519,8 +520,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       this.totalPassScore = passCount;
       // object.totalScore = this.totalFormScore;
       // object.totalPassScore = this.totalPassScore;
-      var reviewe = null;
-      reviewe = _.filter(this.allRequestReviews, { 'userRef': object.userRef, 'formIdentity': this.allSmes[i].key });
+      // var reviewe = null;
+      var reviewe = _.filter(this.allRequestReviews, { 'userRef': object.userRef, 'formIdentity': this.allSmes[i].key });
       // var reviewe = null;
       // this._accreditationReviewsService.getLastestAccreditationReviews(
       //   object.userRef,
@@ -602,7 +603,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         // var x = $('.formio-component-submit').css({ "display": "none" });
         // console.log("JAVA SCRIPT OBJECTS:--", x);
         if (reviewe) {
-          if (reviewe[reviewe.length - 1]) {
+          // if (reviewe[reviewe.length - 1]) {
 
             for (let i = 0; i < reviewe[reviewe.length - 1].data.length; i++) {
               for (let j = 0; j < this.formReviewObjects.length; j++) {
@@ -615,7 +616,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
             }
             console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects);
             this.generalComments = reviewe[reviewe.length - 1].generalComments;
-          }
+          // }
         }
       }
 
