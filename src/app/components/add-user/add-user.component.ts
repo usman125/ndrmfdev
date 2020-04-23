@@ -81,6 +81,10 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
         console.log("ERROR FROM ALL TYPES:--", error);
       }
     );
+    this.getAllSmes();
+  }
+
+  getAllSmes(){
     this._smeService.getAllSmes().subscribe(
       result => {
         console.log("ALL SMES FROM APi:--", result);
@@ -94,7 +98,7 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
               key: element.sectionKey,
               formIdentity: element.formIdentity,
             }
-            if (object.formIdentity === 'qualification') smesArray.push(object);
+            if (object.formIdentity === 'qualification' && !object.userRef) smesArray.push(object);
           });
           this._smeStore.addAllSmes(smesArray);
         }
@@ -122,12 +126,18 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
             email: this.selectedUser.email,
             smeRef: this.selectedUser.smeRef,
             department: 'none',
-            role: this.selectedUser.role,
-            type: 'roleSme',
+            role: 'ndrmf',
+            type: 'sme',
             username: this.selectedUser.username,
             password: this.selectedUser.password,
             active: this.selectedUser.active,
           }, { onlySelf: true })
+          for (let i = 0; i < this.allSmes.length; i++) {
+            if (this.allSmes[i].userRef === this.selectedUser.username) {
+              this.addUserForm.patchValue({ 'smeRef': this.allSmes[i].key })
+              break;
+            }
+          }
         } else if (this.selectedUser.role === 'ndrmf') {
           this.addUserForm.patchValue({
             name: this.selectedUser.name,
@@ -290,6 +300,7 @@ export class AddUserComponent implements OnInit, OnDestroy, AfterViewInit, After
               ).subscribe(
                 result => {
                   console.log("RESULT AFTER UPDATING SME:--", result);
+                  this.getAllSmes();
                 },
                 error => {
                   console.log("ERROR AFTER UPDATING SME:--", error);

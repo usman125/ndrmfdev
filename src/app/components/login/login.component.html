@@ -3,8 +3,9 @@
     <mat-card-content>
       <p class="col-md-12" style="display: flex;">
         <img style="margin:0 auto;" style="width: 50%; min-width: 60%; margin: 0 auto;" mat-card-image
-          src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png" alt="NDRMF">
+        src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png" alt="NDRMF">
       </p>
+      <span class="error-msg" *ngIf="errorMsg">{{errorMsg}}</span>
       <form [formGroup]="loginForm" (ngSubmit)="setLoggedUser(loginForm.value)">
         <mat-form-field class="col col-md-12">
           <mat-label>Username</mat-label>
@@ -16,7 +17,7 @@
           <input matInput type="password" placeholder="johndoe" formControlName="password"
             [formControl]="loginForm.controls['password']" />
         </mat-form-field>
-        <button mat-raised-button class="col col-md-12" color="primary" type="submit">
+        <button *ngIf="!loading" mat-raised-button class="col col-md-12" color="primary" type="submit">
           Login
         </button>
         <div class="spinner">

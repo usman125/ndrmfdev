@@ -350,7 +350,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     this.dataSource = this.allRequests;
     console.log("ALL REQUESTS:--", this.allRequests);
   }
-  
+
   checkForAllTasks(request) {
     for (let i = 0; i < request.val.length; i++) {
       // console.log("CHECK FOR ALL TASKS:--", request.val[i]);
@@ -605,17 +605,17 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         if (reviewe) {
           // if (reviewe[reviewe.length - 1]) {
 
-            for (let i = 0; i < reviewe[reviewe.length - 1].data.length; i++) {
-              for (let j = 0; j < this.formReviewObjects.length; j++) {
-                if (this.formReviewObjects[j].key === reviewe[reviewe.length - 1].data[i].key) {
-                  this.formReviewObjects[j].rating = reviewe[reviewe.length - 1].data[i].rating;
-                  this.formReviewObjects[j].status = reviewe[reviewe.length - 1].data[i].status;
-                  this.formReviewObjects[j].comments = reviewe[reviewe.length - 1].data[i].comments;
-                }
+          for (let i = 0; i < reviewe[reviewe.length - 1].data.length; i++) {
+            for (let j = 0; j < this.formReviewObjects.length; j++) {
+              if (this.formReviewObjects[j].key === reviewe[reviewe.length - 1].data[i].key) {
+                this.formReviewObjects[j].rating = reviewe[reviewe.length - 1].data[i].rating;
+                this.formReviewObjects[j].status = reviewe[reviewe.length - 1].data[i].status;
+                this.formReviewObjects[j].comments = reviewe[reviewe.length - 1].data[i].comments;
               }
             }
-            console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects);
-            this.generalComments = reviewe[reviewe.length - 1].generalComments;
+          }
+          console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects);
+          this.generalComments = reviewe[reviewe.length - 1].generalComments;
           // }
         }
       }
@@ -687,7 +687,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       item.userRef,
       item.formIdentity,
       this.generalComments,
-      requestStatus
+      requestStatus,
+      this.currentUser.username
     ).subscribe(
       result => {
         console.log("RESULT AFTER ADDING REVIEW:--", result);

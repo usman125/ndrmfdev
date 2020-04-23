@@ -10,10 +10,12 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FormioModule } from "angular-formio";
+import { ProjectPlanModule } from "../project-plan/project-plan.module";
 
 @NgModule({
   declarations: [
     ProjectDetailsComponent,
+    // ProjectPlanComponent,
   ],
   imports: [
     CommonModule,
@@ -26,6 +28,7 @@ import { FormioModule } from "angular-formio";
     MatGridListModule,
     MatIconModule,
     MatToolbarModule,
+    // ProjectPlanModule,
     ProjectDetailsRoutingModule,
   ],
   exports: [ProjectDetailsComponent]

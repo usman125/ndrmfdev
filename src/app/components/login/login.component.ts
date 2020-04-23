@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   public Subscription: Subscription = new Subscription();
 
   themeName: any = null;
+  errorMsg: any = null;
   loading: boolean;
 
   constructor(
@@ -135,6 +136,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   setLoggedUser(values) {
     // var dummyuser = _.find(this.allUsers, { 'username': values.username, 'password': values.password });
+    this.errorMsg = null;
     this._authStore.setLoading();
     this._loginService.loginUser(values).subscribe(
       result => {
@@ -183,7 +185,8 @@ export class LoginComponent implements OnInit, OnDestroy {
           this._router.navigate(['accreditation-requests']);
         }
       }, error => {
-        console.log("ERROR:--", error);
+        this.errorMsg = error.error.responseDesc;
+        // console.log("ERROR:--", error.error.responseDesc, this.errorMsg);
         this._authStore.removeLoading();
       }
     );

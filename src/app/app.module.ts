@@ -57,7 +57,7 @@ import { ProposalFormsStore } from './stores/proposal-forms/proposal-forms-store
 import { IntimateFipModule } from './modules/fip-intimations/fip-intimations.module';
 import { AssigntaskModule } from './modules/assigntask/assigntask.module';
 import { ConfirmDialogModule } from './modules/confirm-dialog/confirm-dialog.module';
-// import { ProjectPlanModule } from './modules/project-plan/project-plan.module';
+import { ProjectPlanModule } from './modules/project-plan/project-plan.module';
 import { AddProjectDialogModule } from './modules/add-project-dialog/add-project-dialog.module';
 import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-layout/no-header-layout.component';
 
@@ -104,7 +104,7 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     AssigntaskModule,
     ConfirmDialogModule,
     AddProjectDialogModule,
-    // ProjectPlanModule,
+    ProjectPlanModule,
     MatProgressSpinnerModule,
   ],
   providers: [
@@ -151,7 +151,7 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
   bootstrap: [AppComponent],
   exports: [
     // TreeComponent,
-    ProjectPlanComponent
+    // ProjectPlanComponent
   ],
   entryComponents: [IntimateFip, AssignTask]
 })

@@ -40,14 +40,14 @@ export class AccreditationReviewsService {
     );
   }
 
-  addReview(formList, ratings, username, sectionKey, generalComments, status) {
+  addReview(formList, ratings, username, sectionKey, generalComments, status, reviewer) {
     const url = `${AppConfig.apiUrl}/accreditation/addReview`;
     console.log("ADD REVIEW IN SERVICE:--", {
       "comments": generalComments,
       "compReviewCreateRequestList": formList,
       "rating": ratings,
       "sectionKey": sectionKey,
-      "sectionReviewer": null,
+      "sectionReviewer": reviewer,
       "status": status,
       "username": username,
     })
@@ -58,7 +58,7 @@ export class AccreditationReviewsService {
         "compReviewCreateRequestList": formList,
         "rating": ratings,
         "sectionKey": sectionKey,
-        "sectionReviewer": null,
+        "sectionReviewer": reviewer,
         "status": status,
         "username": username,
       }

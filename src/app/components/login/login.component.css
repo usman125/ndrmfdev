@@ -39,3 +39,8 @@ mat-sidenav-conatiner {
   top: 0;
 }
 
+.error-msg {
+    padding: 15px;
+    display: block;
+    text-align: center;
+}
