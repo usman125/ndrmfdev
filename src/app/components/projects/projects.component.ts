@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {Subscription} from 'rxjs';
-import {ProjectsStore} from '../../stores/projects/projects-store';
+import { Subscription } from 'rxjs';
+import { ProjectsStore } from '../../stores/projects/projects-store';
 import { Router } from "@angular/router";
 import { AddProjectModelService } from "../../services/add-project-model.service";
+import { setCurrentProject } from "../../stores/projects/project-replay";
 
 @Component({
   selector: 'app-projects',
@@ -24,18 +25,26 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.Subscriptions.add(
       this._projectsStore.state$.subscribe(data => {
-        this.allProjects = data.peojects;
+        console.log(data.projects);
+        this.allProjects = data.projects;
       })
     );
   }
 
-  goToDetails(item){
+  goToDetails(item) {
     console.log("PROJECT TO VIEW:---", item);
-    this._router.navigate(['/project-details']);
+    setCurrentProject(
+      item.name,
+      item.type,
+      item.status,
+      item.userRef,
+      item.key,
+    );
+    this._router.navigate(['/project-details', item.key]);
   }
-  
 
-  addNewProject(){
+
+  addNewProject() {
     const options = {
       title: 'Leave page?',
       message: 'By leaving this page you will permanently lose your form changes.',

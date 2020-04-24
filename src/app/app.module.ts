@@ -114,7 +114,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     MatBadgeModule,
     MatExpansionModule,
     LayoutModule,
-    // ProjectPlanModule,
+    ProjectPlanModule,
     IntimateFipModule,
     AssigntaskModule,
     ConfirmDialogModule,

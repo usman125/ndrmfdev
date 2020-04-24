@@ -5,6 +5,7 @@ interface CurrentProjectState {
   type: string,
   status: string,
   userRef: string,
+  key: string,
 }
 
 const routeEnd = new Subject<CurrentProjectState>();
@@ -16,11 +17,13 @@ export const setCurrentProject = (
   type: string,
   status: string,
   userRef: string,
+  key: string,
 ) => {
   routeEnd.next({
     name: name,
     type: type,
     status: status,
     userRef: userRef,
+    key: key,
   });
 }

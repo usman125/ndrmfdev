@@ -10,8 +10,8 @@ import { AdminPipComponent } from "../../components/component-index";
   ],
   imports: [
     CommonModule,
-    ProjectPlanModule,
     AdminPipRoutingModule,
+    ProjectPlanModule,
   ]
 })
 export class AdminPipModule { }

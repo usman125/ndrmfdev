@@ -281,7 +281,7 @@ const routes: Routes = [
     data: { roles: [Role.Admin, Role.Fip] }
   },
   {
-    path: 'project-details',
+    path: 'project-details/:projectId',
     loadChildren: () => import('./modules/project-details/project-details.module').then(m => m.ProjectDetailsModule),
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin, Role.Fip] }

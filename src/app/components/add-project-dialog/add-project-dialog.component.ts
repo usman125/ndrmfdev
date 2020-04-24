@@ -51,7 +51,8 @@ export class AddProjectDialogComponent implements OnInit {
       this.projectName,
       this.projectTypeSingle,
       'none',
-      null
+      null,
+      new Date().toDateString(),
     );
     this.close(
       {

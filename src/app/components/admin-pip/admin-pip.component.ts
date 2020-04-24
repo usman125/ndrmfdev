@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-admin-pip',
@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminPipComponent implements OnInit {
 
+  @Output() show: any = null;
+
   constructor() { }
 
   ngOnInit(): void {
+    this.show = 'pip';
   }
 
 }

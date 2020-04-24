@@ -10,13 +10,16 @@
         <div class="top-tabs">
           <mat-button-toggle-group vertical="true" [(ngModel)]="groupType" #group="matButtonToggleGroup">
             <mat-button-toggle (change)="tabChanged(item)" *ngFor="let item of proposalSections; let i = index;"
-              [value]="item.name">
+              [value]="item.key">
               <span>{{item.name}}</span>
             </mat-button-toggle>
           </mat-button-toggle-group>
         </div>
         <div class="top-form">
-          <formio *ngIf="form" [form]="form" (submit)="onSubmit($event)"></formio>
+          <formio *ngIf="form && !formSubmitData" [form]="form" (submit)="onSubmit($event)"></formio>
+          <formio *ngIf="form && formSubmitData" readOnly="true" [submission]="{data: formSubmitData}" [form]="form"></formio>
+          <!-- <formio *ngIf="form" [form]="form" (submit)="onSubmit($event)"></formio> -->
+          <span *ngIf="formSubmitData">{{formSubmitData | json}}</span>
         </div>
       </div>
     </mat-card-content>
