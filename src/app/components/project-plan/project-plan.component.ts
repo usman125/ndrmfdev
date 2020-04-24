@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, Input } from '@angular/core';
 import * as _ from "lodash";
 import { CostSummaryStore } from '../../stores/cost-summary/cost-summary-store';
 import { Subscription } from "rxjs";
@@ -43,13 +43,13 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       "title": "ndrmf",
       "cost": 0,
-      "_id": "cost2020-03-30T10:29:11.964Z",
+      "_id": "cost2020-03-30T10:29:11.96Z",
       "totalCost": 0
     },
     {
       "title": "fip",
       "cost": 0,
-      "_id": "cost2020-03-30T10:29:14.293Z",
+      "_id": "cost2020-03-30T10:29:14.93Z",
       "totalCost": 0
     }
   ];
@@ -76,6 +76,9 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
 
   parentToCheck: any = null;
   dummyCosts: any = [];
+
+
+  @Input() show: any = null;
 
   constructor(
     public _CostSummaryStore: CostSummaryStore,

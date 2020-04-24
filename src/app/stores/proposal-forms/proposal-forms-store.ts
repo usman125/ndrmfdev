@@ -15,18 +15,20 @@ export class ProposalFormsStore extends Store<ProposalFormsState> {
     type: string,
     page: number,
     numPages: number,
-  ): void {
-    this.setState({
-      ...this.state,
-      forms: [
-        ...this.state.forms,
-        {
-          name: name,
-          smeRef: smeRef,
-          components: components,
-          type: type,
-          page: page,
-          numPages: numPages,
+    formIdentity: string,
+    ): void {
+      this.setState({
+        ...this.state,
+        forms: [
+          ...this.state.forms,
+          {
+            name: name,
+            smeRef: smeRef,
+            components: components,
+            type: type,
+            page: page,
+            numPages: numPages,
+            formIdentity: formIdentity,
         }
       ]
     });

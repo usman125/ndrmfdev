@@ -270,7 +270,7 @@ const routes: Routes = [
   },
   {
     path: 'project-plan',
-    loadChildren: () => import('./modules/project-plan/project-plan.module').then(m => m.ProjectPlanModule),
+    loadChildren: () => import('./modules/admin-pip/admin-pip.module').then(m => m.AdminPipModule),
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin] }
   },

@@ -136,6 +136,11 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 .unicorn-dark-theme {
   @include angular-material-theme($dark-theme);
 
+  // .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+  //   color: #fff;
+  //   background: mat-color($dark-accent);
+  // }
+
   .mat-drawer-side {
     border-right: 0px;
   }
@@ -270,6 +275,11 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 
 .unicorn-light-theme {
   @include angular-material-theme($light-theme);
+
+  // .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+  //   color: #fff !important;
+  //   background: mat-color($light-accent) !important;
+  // }
 
   .hero
     .mat-expansion-panel
@@ -566,3 +576,29 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 .hero .mat-accordion .mat-expansion-panel {
   box-shadow: none;
 }
+
+// .mat-button-toggle-checked {
+//   color: #fff !important;
+//   background: mat-color($candy-app-accent) !important;
+// }
+
+// .mat-button-toggle-appearance-standard:not(.mat-button-toggle-disabled):hover .mat-button-toggle-focus-overlay {
+//   opacity: 0.01;
+// }
+
+@mixin mix-app-theme($candy-app-theme) {
+  $primary: map-get($candy-app-theme, accent);
+
+  .mat-button-toggle-checked {
+    background-color: mat-color($primary);
+    font-weight: bold;
+    outline: none !important;
+    .mat-button-toggle-label-content{
+        color: #fff;
+    }
+  }
+}
+
+
+// Include the mixin
+@include mix-app-theme($candy-app-theme);

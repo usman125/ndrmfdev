@@ -5,8 +5,10 @@ const FORMS = [
     "type": "form",
     "page": 0,
     "numPages": 2,
+    "formIdentity": 'proposal-form',
     "components": [
       {
+        
         "html": "<p>B. Regulatory and Legal Regimes</p>",
         "label": "Content",
         "refreshOnChange": false,
@@ -435,6 +437,150 @@ const FORMS = [
         "tableView": false
       }
     ]
+  },
+  {
+    "name": "Project at a glance",
+    "display": "form",
+    "smeRef": 'proposal-os',
+    "type": "form",
+    "page": 0,
+    "numPages": 0,
+    "formIdentity": 'proposal-form',
+    "components": [
+      {
+        "label": "Project Name",
+        "spellcheck": true,
+        "tableView": true,
+        "calculateServer": false,
+        "key": "projec",
+        "type": "textfield",
+        "input": true
+      },
+      {
+        "label": "Company Name",
+        "spellcheck": true,
+        "tableView": true,
+        "calculateServer": false,
+        "key": "companyName",
+        "type": "textfield",
+        "input": true
+      },
+      {
+        "label": "Duration",
+        "spellcheck": true,
+        "tableView": true,
+        "calculateServer": false,
+        "key": "duration",
+        "type": "textfield",
+        "input": true
+      },
+      {
+        "label": "Budget",
+        "optionsLabelPosition": "right",
+        "inline": false,
+        "tableView": false,
+        "values": [
+          {
+            "label": "Small",
+            "value": "small",
+            "shortcut": ""
+          },
+          {
+            "label": "Medium",
+            "value": "medium",
+            "shortcut": ""
+          },
+          {
+            "label": "Large",
+            "value": "large",
+            "shortcut": ""
+          }
+        ],
+        "calculateServer": false,
+        "key": "budget",
+        "type": "radio",
+        "input": true
+      },
+      {
+        "label": "Start Date",
+        "tableView": false,
+        "datePicker": {
+          "disableWeekends": false,
+          "disableWeekdays": false
+        },
+        "calculateServer": false,
+        "key": "startDate",
+        "type": "datetime",
+        "input": true,
+        "suffix": "<i ref=\"icon\" class=\"fa fa-calendar\" style=\"\"></i>",
+        "widget": {
+          "type": "calendar",
+          "displayInTimezone": "viewer",
+          "language": "en",
+          "useLocaleSettings": false,
+          "allowInput": true,
+          "mode": "single",
+          "enableTime": true,
+          "noCalendar": false,
+          "format": "yyyy-MM-dd hh:mm a",
+          "hourIncrement": 1,
+          "minuteIncrement": 1,
+          "time_24hr": false,
+          "minDate": null,
+          "disableWeekends": false,
+          "disableWeekdays": false,
+          "maxDate": null
+        }
+      },
+      {
+        "label": "End Date",
+        "tableView": false,
+        "datePicker": {
+          "disableWeekends": false,
+          "disableWeekdays": false
+        },
+        "calculateServer": false,
+        "key": "endDate",
+        "type": "datetime",
+        "input": true,
+        "suffix": "<i ref=\"icon\" class=\"fa fa-calendar\" style=\"\"></i>",
+        "widget": {
+          "type": "calendar",
+          "displayInTimezone": "viewer",
+          "language": "en",
+          "useLocaleSettings": false,
+          "allowInput": true,
+          "mode": "single",
+          "enableTime": true,
+          "noCalendar": false,
+          "format": "yyyy-MM-dd hh:mm a",
+          "hourIncrement": 1,
+          "minuteIncrement": 1,
+          "time_24hr": false,
+          "minDate": null,
+          "disableWeekends": false,
+          "disableWeekdays": false,
+          "maxDate": null
+        }
+      },
+      {
+        "label": "Address",
+        "spellcheck": true,
+        "tableView": true,
+        "calculateServer": false,
+        "key": "a",
+        "type": "textfield",
+        "input": true
+      },
+      {
+        "type": "button",
+        "label": "Submit",
+        "key": "submit",
+        "disableOnInvalid": true,
+        "input": true,
+        "tableView": false
+      }
+    ]
   }
 ];
 
@@ -446,5 +592,6 @@ export class ProposalFormsState {
     type: string,
     page: number,
     numPages: number,
+    formIdentity: string,
   }[] = FORMS;
 }

@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProjectDetailsComponent, ProjectPlanComponent } from "../../components/component-index";
+import { ProjectDetailsComponent } from "../../components/component-index";
 import { ProjectDetailsRoutingModule } from "./project-details-routing.module";
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from "@angular/material/card";
@@ -10,15 +10,17 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FormioModule } from "angular-formio";
+
 import { ProjectPlanModule } from "../project-plan/project-plan.module";
 
 @NgModule({
   declarations: [
     ProjectDetailsComponent,
-    // ProjectPlanComponent,
   ],
   imports: [
     CommonModule,
+    ProjectDetailsRoutingModule,
+    ProjectPlanModule,
     FormioModule,
     MatTabsModule,
     MatCardModule,
@@ -28,8 +30,7 @@ import { ProjectPlanModule } from "../project-plan/project-plan.module";
     MatGridListModule,
     MatIconModule,
     MatToolbarModule,
-    // ProjectPlanModule,
-    ProjectDetailsRoutingModule,
+
   ],
   exports: [ProjectDetailsComponent]
 })

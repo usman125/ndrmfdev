@@ -22,16 +22,6 @@
               <input matInput placeholder="Ex. Form 1" formControlName="name"
                 [formControl]="createProfileForm.controls['name']">
             </mat-form-field>
-            <!-- <mat-form-field class="col-md-2">
-              <mat-label>Pass Score</mat-label>
-              <input matInput type="number" placeholder="100" formControlName="passScore"
-                [formControl]="createProfileForm.controls['passScore']">
-            </mat-form-field>
-            <mat-form-field class="col-md-2">
-              <mat-label>Total Score</mat-label>
-              <input matInput type="number" placeholder="150" formControlName="totalScore"
-                [formControl]="createProfileForm.controls['totalScore']">
-            </mat-form-field> -->
             <mat-form-field class="col-md-3">
               <mat-label>Select Sme</mat-label>
               <mat-select (ngModelChange)="smeChanged($event)" [formControl]="createProfileForm.controls['smeRef']">

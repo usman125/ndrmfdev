@@ -35,6 +35,7 @@ import { MatGridListModule } from "@angular/material/grid-list";
     MatToolbarModule,
     ProjectPlanRoutingModule
   ],
+  entryComponents: [],
   exports: [ProjectPlanComponent]
 })
 export class ProjectPlanModule { }

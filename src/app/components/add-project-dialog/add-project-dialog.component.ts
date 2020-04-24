@@ -50,7 +50,8 @@ export class AddProjectDialogComponent implements OnInit {
     this._projectsStore.addProject(
       this.projectName,
       this.projectTypeSingle,
-      'none'
+      'none',
+      null
     );
     this.close(
       {

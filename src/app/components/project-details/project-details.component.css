@@ -15,3 +15,22 @@
 .example-spacer {
   flex: 1 1 auto;
 }
+
+
+.tabs-container {
+    display: flex;
+}
+
+.tabs {
+    width: 30%;
+}
+
+.form {
+    width: 70%;
+    padding-right: 0 !important;
+    padding-left: 15px !important;
+}
+
+.top-form{
+  padding: 0 30px;
+}

@@ -54,6 +54,7 @@ import { fipIntimationsStore } from './stores/fip-intimations/fip-intimations-st
 import { SectionSelectorStore } from './stores/section-selector/section-selector-store';
 import { ProposalSectionsStore } from './stores/proposal-sections/proposal-sections-store';
 import { ProposalFormsStore } from './stores/proposal-forms/proposal-forms-store';
+import { ProposalRequestsStore } from './stores/proposal-requests/proposal-requests-store';
 import { IntimateFipModule } from './modules/fip-intimations/fip-intimations.module';
 import { AssigntaskModule } from './modules/assigntask/assigntask.module';
 import { ConfirmDialogModule } from './modules/confirm-dialog/confirm-dialog.module';
@@ -61,6 +62,18 @@ import { ProjectPlanModule } from './modules/project-plan/project-plan.module';
 import { AddProjectDialogModule } from './modules/add-project-dialog/add-project-dialog.module';
 import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-layout/no-header-layout.component';
 
+
+// import { MatInputModule } from "@angular/material/input";
+// import { MatSelectModule } from "@angular/material/select";
+// import { MatButtonModule } from "@angular/material/button";
+// import { MatCardModule } from "@angular/material/card";
+// import { MatIconModule } from "@angular/material/icon";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatTreeModule } from "@angular/material/tree";
+// import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+// import { AdminPipComponent } from './components/admin-pip/admin-pip.component';
+// import { MatGridListModule } from "@angular/material/grid-list";
 
 
 
@@ -73,6 +86,7 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     LoginComponent,
     NoHeaderLayoutComponent,
     AddProjectComponent,
+    // AdminPipComponent,
     // ProjectPlanComponent,
   ],
   imports: [
@@ -100,12 +114,16 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     MatBadgeModule,
     MatExpansionModule,
     LayoutModule,
+    // ProjectPlanModule,
     IntimateFipModule,
     AssigntaskModule,
     ConfirmDialogModule,
     AddProjectDialogModule,
-    ProjectPlanModule,
     MatProgressSpinnerModule,
+
+    MatDividerModule,
+    MatTreeModule,
+    MatCheckboxModule,
   ],
   providers: [
 
@@ -147,12 +165,18 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
     ProposalSectionsStore,
     ProposalFormsStore,
     ProjectsStore,
+    ProposalRequestsStore,
   ],
   bootstrap: [AppComponent],
   exports: [
     // TreeComponent,
     // ProjectPlanComponent
+    // ProjectPlanModule
   ],
-  entryComponents: [IntimateFip, AssignTask]
+  entryComponents: [
+    IntimateFip,
+    AssignTask,
+    ProjectPlanComponent,
+  ]
 })
 export class AppModule { }

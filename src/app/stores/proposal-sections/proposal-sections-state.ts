@@ -3,13 +3,13 @@ const SECTIONS = [
     name: 'Project at a glance',
     key: 'proposal-os',
     userRef: null,
-    formGenerated: false
+    formGenerated: true
   },
   {
     name: 'Organisational Experience ',
     key: 'proposal-rlr',
     userRef: null,
-    formGenerated: false
+    formGenerated: true
   },
   {
     name: 'Project Beneficiaries',

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output} from '@angular/core';
 import { ProposalSectionsStore } from "../../stores/proposal-sections/proposal-sections-store";
 import { ProposalFormsStore } from "../../stores/proposal-forms/proposal-forms-store";
 import { Subscription } from "rxjs";
@@ -6,7 +6,7 @@ import { Subscription } from "rxjs";
 @Component({
   selector: 'app-project-details',
   templateUrl: './project-details.component.html',
-  styleUrls: ['./project-details.component.css']
+  styleUrls: ['./project-details.component.css'],
 })
 export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
@@ -26,6 +26,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       key: 'rf'
     },
   ]
+
+  @Output() show: any = null;
 
   constructor(
     private _proposalSectionsStore: ProposalSectionsStore,
@@ -57,7 +59,15 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           }
         }
         this.proposalSections = dummySections;
-        if (this.proposalSections.length) this.groupType = this.proposalSections[0].name;
+        if (this.proposalSections.length) {
+          this.groupType = this.proposalSections[0].name;
+          for (let i=0;i<this.proposalForms.length;i++){
+            if (this.proposalForms[i].smeRef === this.proposalSections[0].key){
+              this.proposalSections[0].form = this.proposalForms[i];
+              this.form = this.proposalForms[i];
+            }
+          }
+        }
         console.log("PROPOSALS:---", this.proposalSections);
       })
     );
@@ -70,6 +80,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   costTabChanged(item) {
     console.log("COST TAB CHANGED:--", item);
+    this.show = item.key
   }
 
   tabChanged($event) {

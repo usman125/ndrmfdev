@@ -12,6 +12,7 @@ export class ProjectsStore extends Store<ProjectsState> {
     name: string,
     type: string,
     status: string,
+    userRef: string,
   ): void {
     this.setState({
       ...this.state,
@@ -21,6 +22,7 @@ export class ProjectsStore extends Store<ProjectsState> {
           name: name,
           type: type,
           status: status,
+          userRef: userRef,
         }
       ]
     });

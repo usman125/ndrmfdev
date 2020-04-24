@@ -1,16 +1,19 @@
-<mat-toolbar color="primary" class="header" style="padding: 15px 0px;margin-bottom: 20px;">
-  <mat-toolbar-row>
-    <span>
-      Add Main Costings
-    </span>
-  </mat-toolbar-row>
-</mat-toolbar>
-
-<mat-card style="margin: 15px;">
-  <mat-card-content>
+<ng-container *ngIf="show === 'pip'">
 
 
-    <!-- <mat-grid-list cols="1" rowHeight="130px">
+  <mat-toolbar color="primary" class="header" style="padding: 15px 0px;margin-bottom: 20px;">
+    <mat-toolbar-row>
+      <span>
+        Add Main Costings
+      </span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <mat-card style="margin: 15px;">
+    <mat-card-content>
+
+
+      <!-- <mat-grid-list cols="1" rowHeight="130px">
       <mat-grid-tile>
         <div style="display: flex; flex-direction: column;width:100%;padding: 10px;">
           <mat-form-field>
@@ -24,50 +27,50 @@
       </mat-grid-tile>
     </mat-grid-list> -->
 
-    <mat-grid-list cols="1" rowHeight="100px">
-      <mat-grid-tile>
-        <div style="display:flex;flex-direction:column;width:100%;padding: 10px;">
-          <mat-form-field>
-            <mat-label for="cost">Cost Title</mat-label>
-            <input placeholder="e.g. HR" [(ngModel)]="cost" id="cost" type="text" matInput />
-          </mat-form-field>
-          <button [disabled]="cost === null" color="primary" (click)=" AddCost()" mat-raised-button>
-            Add Cost
-          </button>
-        </div>
-      </mat-grid-tile>
-    </mat-grid-list>
+      <mat-grid-list cols="1" rowHeight="100px">
+        <mat-grid-tile>
+          <div style="display:flex;flex-direction:column;width:100%;padding: 10px;">
+            <mat-form-field>
+              <mat-label for="cost">Cost Title</mat-label>
+              <input placeholder="e.g. HR" [(ngModel)]="cost" id="cost" type="text" matInput />
+            </mat-form-field>
+            <button [disabled]="cost === null" color="primary" (click)=" AddCost()" mat-raised-button>
+              Add Cost
+            </button>
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
 
 
-    <mat-grid-list cols="1" rowHeight="170px">
-      <mat-grid-tile>
-        <div style="display: flex; flex-direction: column;width:100%;padding: 10px;">
-          <mat-form-field>
-            <mat-label for="subcost">Subcost Title</mat-label>
-            <input placeholder="e.g. School" [(ngModel)]="subcost" id="subcost" type="text" matInput />
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Select Main Cost</mat-label>
-            <mat-select (ngModelChange)="mainCostChanged($event)" [(ngModel)]="mainCostId">
-              <mat-option *ngFor="let item of allCosts" [value]="item._id">
-                {{item.title}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <button [disabled]="subcost === null || mainCostId === null" color="primary" (click)="AddSubcost()"
-            mat-raised-button>
-            Add Subcost
-          </button>
-        </div>
-      </mat-grid-tile>
+      <mat-grid-list cols="1" rowHeight="170px">
+        <mat-grid-tile>
+          <div style="display: flex; flex-direction: column;width:100%;padding: 10px;">
+            <mat-form-field>
+              <mat-label for="subcost">Subcost Title</mat-label>
+              <input placeholder="e.g. School" [(ngModel)]="subcost" id="subcost" type="text" matInput />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Select Main Cost</mat-label>
+              <mat-select (ngModelChange)="mainCostChanged($event)" [(ngModel)]="mainCostId">
+                <mat-option *ngFor="let item of allCosts" [value]="item._id">
+                  {{item.title}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button [disabled]="subcost === null || mainCostId === null" color="primary" (click)="AddSubcost()"
+              mat-raised-button>
+              Add Subcost
+            </button>
+          </div>
+        </mat-grid-tile>
 
 
-    </mat-grid-list>
+      </mat-grid-list>
 
-  </mat-card-content>
-</mat-card>
+    </mat-card-content>
+  </mat-card>
 
-<mat-card style="margin: 15px;padding:0px;">
-  <!-- <mat-card-title>
+  <mat-card style="margin: 15px;padding:0px;">
+    <!-- <mat-card-title>
     <div class="header">
       <span>
         Name
@@ -83,82 +86,82 @@
     </div>
   </mat-card-title>
   <mat-divider></mat-divider> -->
-  <mat-card-content>
-    <mat-toolbar color="primary" class="header">
-      <mat-toolbar-row>
-        <span>
-          Name
-        </span>
-        <div class="example-spacer"></div>
-        <span>
-          <!-- Procurement: <span id="comment">{{procurementCost}}</span> -->
-          Procurement: <span>{{procurementCost}}</span>
-        </span>
-        <div class="example-spacer"></div>
-        <span>
-          <!-- Total: <span id="comment">{{totalCostSummary}}</span> -->
-          Total: <span>{{totalCostSummary}}</span>
-        </span>
-      </mat-toolbar-row>
-    </mat-toolbar>
-    <div class="tree-containter">
-      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-        <mat-tree-node *matTreeNodeDef="let node;" matTreeNodePadding matTreeNodePaddingIndent="10">
-          <button color="primary" mat-icon-button disabled></button>
-          <mat-checkbox class="checklist-leaf-node node-title" [checked]="node.procurement"
-            (change)="todoLeafItemSelectionToggle(node)">{{node.name}}</mat-checkbox>
-          <div class="main-container">
-            <!-- <div class="quarters">
+    <mat-card-content>
+      <mat-toolbar color="primary" class="header">
+        <mat-toolbar-row>
+          <span>
+            Name
+          </span>
+          <div class="example-spacer"></div>
+          <span>
+            <!-- Procurement: <span id="comment">{{procurementCost}}</span> -->
+            Procurement: <span>{{procurementCost}}</span>
+          </span>
+          <div class="example-spacer"></div>
+          <span>
+            <!-- Total: <span id="comment">{{totalCostSummary}}</span> -->
+            Total: <span>{{totalCostSummary}}</span>
+          </span>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <div class="tree-containter">
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+          <mat-tree-node *matTreeNodeDef="let node;" matTreeNodePadding matTreeNodePaddingIndent="10">
+            <button color="primary" mat-icon-button disabled></button>
+            <mat-checkbox class="checklist-leaf-node node-title" [checked]="node.procurement"
+              (change)="todoLeafItemSelectionToggle(node)">{{node.name}}</mat-checkbox>
+            <div class="main-container">
+              <!-- <div class="quarters">
               <div *ngFor="let month of node.financers; let i =index;">
                 <div *ngIf="getDivider(i)" style="font-weight: 500;">
                   Year
                 </div>
               </div>
             </div> -->
-            <div class="financers">
-              <div *ngFor="let month of node.financers;let mI = index;">
-                <div class="months">
-                  <div *ngFor="let item of month.financers;let i =index;">
-                    <div *ngIf="getMonth(i);" style="font-weight: 500;color:#B00020;">M{{mI + 1}}</div>
+              <div class="financers">
+                <div *ngFor="let month of node.financers;let mI = index;">
+                  <div class="months">
+                    <div *ngFor="let item of month.financers;let i =index;">
+                      <div *ngIf="getMonth(i);" style="font-weight: 500;color:#B00020;">M{{mI + 1}}</div>
+                    </div>
                   </div>
-                </div>
-                <div class="inputs">
-                  <div *ngFor="let item of month.financers;let i =index;">
-                    <mat-form-field>
-                      <input (ngModelChange)="costChnaged(node, month)" [placeholder]="item.title"
-                        [(ngModel)]="item.cost" matInput type="number" />
-                    </mat-form-field>
-                    <div *ngIf="(mI+1)%4 === 0" class="spacer"></div>
+                  <div class="inputs">
+                    <div *ngFor="let item of month.financers;let i =index;">
+                      <mat-form-field>
+                        <input (ngModelChange)="costChnaged(node, month)" [placeholder]="item.title"
+                          [(ngModel)]="item.cost" matInput type="number" />
+                      </mat-form-field>
+                      <div *ngIf="(mI+1)%4 === 0" class="spacer"></div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <span id="answer">{{node.totalCost}}</span>
-        </mat-tree-node>
+            <span id="answer">{{node.totalCost}}</span>
+          </mat-tree-node>
 
-        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="10">
-          <button color="primary" mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
-            <mat-icon class="mat-icon-rtl-mirror">
-              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-            </mat-icon>
-          </button>
-          <div class="parent-title" style="font-weight: 500;">{{node.name}}</div>
-          <div class="example-spacer"></div>
-          <!-- <span *ngIf="node.procurementCost" style="font-weight: 500;">Procurement:
+          <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="10">
+            <button color="primary" mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+              </mat-icon>
+            </button>
+            <div class="parent-title" style="font-weight: 500;">{{node.name}}</div>
+            <div class="example-spacer"></div>
+            <!-- <span *ngIf="node.procurementCost" style="font-weight: 500;">Procurement:
             <span id="answer">{{node.procurementCost}}</span>
           </span>
           <div class="example-spacer"></div> -->
-          <span style="margin-right: 20px;font-weight: 500;">Total:
-            <span id="answer">{{node.totalCost}}</span>
-          </span>
-        </mat-tree-node>
+            <span style="margin-right: 20px;font-weight: 500;">Total:
+              <span id="answer">{{node.totalCost}}</span>
+            </span>
+          </mat-tree-node>
 
-      </mat-tree>
-    </div>
-  </mat-card-content>
-</mat-card>
-
+        </mat-tree>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-container>
 <!-- <mat-card style="margin: 15px;padding: 5px;">
   <mat-card-content>
     <app-tree (calculateTotal)="calculateTotal($event)" [treeData]="testingCosts"></app-tree>

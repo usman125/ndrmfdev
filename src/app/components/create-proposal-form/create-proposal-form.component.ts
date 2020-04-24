@@ -144,16 +144,14 @@ export class CreateProposalFormComponent implements OnInit, OnDestroy {
     // "\nform", this.form
     // );
     // if (this.formName) {
-    // this._surveysStore.addForm(
+    // this._proposalFormsStore.addProposalForm(
     //   values.name,
     //   values.smeRef,
-    //   values.passScore,
-    //   values.totalScore,
+    //   this.form.components,
     //   values.type,
     //   this.form.page,
-    //   'submit',
     //   this.form.numPages,
-    //   this.form.components
+    //   'proposal-form',
     // )
     // } else {
     // this.openSnackBar();
@@ -172,32 +170,43 @@ export class CreateProposalFormComponent implements OnInit, OnDestroy {
     //   form: this.form
     // });
 
-    this._createProposalFormService.addForm(
+    this._proposalFormsStore.addProposalForm(
       values.name,
       values.smeRef,
       this.form.components,
       values.type,
       this.form.page,
       this.form.numPages,
-    ).subscribe(
-      (result) => {
-        console.log("RESULT IN COMPONENT:--", result.response[0]);
-        // return result.response[0];
-        this._proposalFormsStore.addProposalForm(
-          values.name,
-          values.smeRef,
-          this.form.components,
-          values.type,
-          this.form.page,
-          this.form.numPages,
-        );
-        this._proposalSectionsStore.updateSectionFormgenerated(values.smeRef);
-        this.resetForm();
-      },
-      (error) => {
-        console.log(error);
-      }
+      'proposal-form',
     );
+    this._proposalSectionsStore.updateSectionFormgenerated(values.smeRef);
+    this.resetForm();
+    // this._createProposalFormService.addForm(
+    //   values.name,
+    //   values.smeRef,
+    //   this.form.components,
+    //   values.type,
+    //   this.form.page,
+    //   this.form.numPages,
+    // ).subscribe(
+    //   (result) => {
+    //     console.log("RESULT IN COMPONENT:--", result.response[0]);
+    //     // return result.response[0];
+    //     this._proposalFormsStore.addProposalForm(
+    //       values.name,
+    //       values.smeRef,
+    //       this.form.components,
+    //       values.type,
+    //       this.form.page,
+    //       this.form.numPages,
+    //     );
+    //     this._proposalSectionsStore.updateSectionFormgenerated(values.smeRef);
+    //     this.resetForm();
+    //   },
+    //   (error) => {
+    //     console.log(error);
+    //   }
+    // );
   }
 
   resetForm() {

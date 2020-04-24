@@ -7,7 +7,7 @@
         </mat-toolbar-row>
       </mat-toolbar>
       <div class="tabs-container">
-        <div class="tabs">
+        <div class="top-tabs">
           <mat-button-toggle-group vertical="true" [(ngModel)]="groupType" #group="matButtonToggleGroup">
             <mat-button-toggle (change)="tabChanged(item)" *ngFor="let item of proposalSections; let i = index;"
               [value]="item.name">
@@ -15,7 +15,7 @@
             </mat-button-toggle>
           </mat-button-toggle-group>
         </div>
-        <div class="form">
+        <div class="top-form">
           <formio *ngIf="form" [form]="form" (submit)="onSubmit($event)"></formio>
         </div>
       </div>
@@ -38,9 +38,11 @@
             </mat-button-toggle>
           </mat-button-toggle-group>
         </div>
-        <div *ngIf="costTabsType === 'pip'">
-          <!-- <app-project-plan></app-project-plan> -->
-        </div>
+        <!-- <div [hidden]="costTabsType?.key !== 'pip'"> -->
+          <div class="form">
+            <app-project-plan [show]="show"></app-project-plan>
+          </div>
+        <!-- </div> -->
       </div>
     </mat-card-content>
   </mat-card>
