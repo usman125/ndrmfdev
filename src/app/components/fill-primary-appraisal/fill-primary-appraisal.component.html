@@ -1,0 +1,68 @@
+<ng-container>
+
+  <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>{{preAppViewType === 'fill' ? 'Submit Primary Appresial' : 'View Primary Appraisal'}}</span>
+      <div class="example-spacer"></div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-card class="m-20" *ngIf="preAppViewType === 'fill'">
+    <mat-card-title>
+    </mat-card-title>
+    <mat-card-content>
+      <div class="project-info m-1">
+        <div class="info-box">
+          <mat-icon style="margin:0 5px;">work</mat-icon>
+          <span>{{selectedProject.name}}</span>
+        </div>
+        <div class="info-box">
+          <mat-icon style="margin:0 5px;">account_circle</mat-icon>
+          <span>{{selectedProject.userRef}}</span>
+        </div>
+        <div class="info-box">
+          <mat-icon style="margin:0 5px;">alarm</mat-icon>
+          <span *ngIf="selectedProject?.primaryAppraisalStatus === 'pending'">Pending:
+            {{selectedProject.primaryAppraisalEndDate | date:'fullDate'}}</span>
+          <span *ngIf="selectedProject?.primaryAppraisalStatus === 'submitted'">Submitted:
+            {{selectedProject.primaryAppraisalEndDate | date:'fullDate'}}</span>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button class="m-1" (click)="completeTask()" mat-button color="accent"
+        *ngIf="apprasialRequest?.status === 'pending'">COMPLETE TASK</button>
+      <button class="m-1" mat-button color="warn" disabled *ngIf="apprasialRequest?.status === 'done'">TASK
+        SUBMITTED</button>
+      <button class="m-1" mat-button color="primary">ASSIGN PROPOSAL REQUESTS TO DESK</button>
+      <button class="m-1" mat-button color="primary">ASSIGN EXTENDED APPRAISAL TO DESK</button>
+    </mat-card-actions>
+  </mat-card>
+  <!-- <div *ngFor="let form of apprasialForm">
+          <mat-card class="m-20">
+            <mat-card-title>
+              <span>{{form.name}}</span>
+            </mat-card-title>
+            <mat-card-content>
+              <formio *ngIf="form.submitData === null" [form]="form" (submit)="onSubmit($event)"></formio>
+              <formio *ngIf="form.submitData !== null" readyOnly="true" [submission]="{data:form.submitData}" [form]="form"></formio>
+            </mat-card-content>
+          </mat-card> -->
+  <!-- </div> -->
+  <mat-card class="m-20">
+    <mat-card-title>
+      <span>{{form.name}}</span>
+    </mat-card-title>
+    <mat-card-content>
+      <formio *ngIf="!form.exists" [form]="form" (submit)="onSubmit($event)"></formio>
+      <formio *ngIf="form.exists" readOnly="true" [submission]="{data:submitData}" [form]="form"></formio>
+    </mat-card-content>
+    <mat-card-actions>
+      <button (click)="completeTask()" class="m-1" mat-button color="accent" *ngIf="apprasialRequest?.status === 'pending'">COMPLETE
+        TASK</button>
+      <button class="m-1" mat-button color="warn" disabled *ngIf="apprasialRequest?.status === 'done'">TASK
+        SUBMITTED</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <app-project-details [showFillApprasialBtn]="showFillApprasialBtn"></app-project-details>
+</ng-container>

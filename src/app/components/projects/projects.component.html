@@ -11,7 +11,7 @@
     </mat-toolbar-row>
   </mat-toolbar>
   <mat-grid-list cols="4" rowHeight="130px">
-    <mat-grid-tile colspan="4" rowspan="1">
+    <mat-grid-tile colspan="4" rowspan="1" *ngIf="showAddBtn">
       <mat-card style="margin: 20px;">
         <mat-card-content>
           <button color="primary" mat-raised-button (click)="addNewProject();">Add new Project</button>
@@ -29,6 +29,12 @@
               <div class="info">
                 <h6>{{item.name}}</h6>
                 <span>{{item.status}}</span>
+                <div *ngIf="item.primaryAppraisalStatus === 'pending'">
+                  Pending: <span id="comment">Pre-Appraisal</span>
+                </div>
+                <div *ngIf="item.primaryAppraisalStatus === 'submitted'">
+                  Submitted: <span id="comment">Pre-Appraisal</span>
+                </div>
               </div>
             </div>
           </div>

@@ -12,26 +12,29 @@ export class ProposalRequestsStore extends Store<ProposalRequests> {
     userRef: string,
     formSubmitData: any,
     formIdentity: string,
-  ): void {
-    this.setState({
-      ...this.state,
-      proposals: [
-        ...this.state.proposals,
-        {
-          userRef: userRef,
-          formSubmitData: formSubmitData,
-          status: 'pending',
-          formIdentity: formIdentity,
-          startDate: null,
-          endDate: null,
-          previousReview: null,
-          currentReview: null,
-          requestKey: 'proposal-form',
-          userUpdateFlag: false,
+    projectRef: string,
+    ): void {
+      this.setState({
+        ...this.state,
+        proposals: [
+          ...this.state.proposals,
+          {
+            userRef: userRef,
+            formSubmitData: formSubmitData,
+            status: 'pending',
+            formIdentity: formIdentity,
+            startDate: null,
+            endDate: null,
+            previousReview: null,
+            currentReview: null,
+            requestKey: 'proposal-form',
+            userUpdateFlag: false,
+            projectRef: projectRef,
         }
       ]
     });
   }
+
 
   // updateSectionFormgenerated(
   //   key: string,

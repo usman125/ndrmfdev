@@ -174,6 +174,7 @@ const routes: Routes = [
   },
   {
     path: 'register',
+    // component: SiteLayout,
     loadChildren: () => import('./modules/register/register.module').then(m => m.RegisterModule)
   },
   {
@@ -275,10 +276,94 @@ const routes: Routes = [
     data: { roles: [Role.Admin] }
   },
   {
-    path: 'projects',
-    loadChildren: () => import('./modules/projects/projects.module').then(m => m.ProjectsModule),
+    path: 'user-projects',
+    loadChildren: () => import('./modules/user-projects/user-projects.module').then(m => m.UserProjectsModule),
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin, Role.Fip] }
+  },
+  {
+    path: 'prepare-gia',
+    loadChildren: () => import('./modules/prepare-gia/prepare-gia.module').then(m => m.PrepareGiaModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'gia-appraisal/:projectId',
+    loadChildren: () => import('./modules/gia-projects/gia-projects.module').then(m => m.GiaProjectsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'primary-appraisal',
+    loadChildren: () => import('./modules/primary-appraisal/primary-appraisal.module').then(m => m.PrimaryAppraisalModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'primary-appraisal-projects',
+    loadChildren: () => import('./modules/primary-appraisal-projects/primary-appraisal-projects.module').then(m => m.PrimaryAppraisalProjectsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'create-primary-appraisal/:projectId',
+    loadChildren: () => import('./modules/create-primary-appraisal/create-primary-appraisal.module').then(m => m.CreatePrimaryAppraisalModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'fill-primary-appraisal/:projectId',
+    loadChildren: () => import('./modules/fill-primary-appraisal/fill-primary-appraisal.module').then(m => m.FillPrimaryAppraisalModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'view-primary-appraisal/:projectId',
+    loadChildren: () => import('./modules/view-primary-appraisal/view-primary-appraisal.module').then(m => m.ViewPrimaryAppraisalModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'primary-appraisal-forms',
+    loadChildren: () => import('./modules/primary-appraisal-forms/primary-appraisal-forms.module').then(m => m.PrimaryAppraisalFormsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'add-primary-appraisal-form',
+    loadChildren: () => import('./modules/add-primary-appraisal-form/add-primary-appraisal-form.module').then(m => m.AddPrimaryAppraisalFormModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'extended-appraisals',
+    loadChildren: () => import('./modules/extended-appraisal/extended-appraisal.module').then(m => m.ExtendedAppraisalModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'extended-appraisal-forms',
+    loadChildren: () => import('./modules/extended-appraisal-forms/extended-appraisal-forms.module').then(m => m.ExtendedAppraisalFormsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'add-extended-appraisal-form',
+    loadChildren: () => import('./modules/add-extended-appraisal-form/add-extended-appraisal-form.module').then(m => m.AddExtendedAppraisalFormModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'extended-appraisal-smes',
+    loadChildren: () => import('./modules/extended-appraisal-smes/extended-appraisal-smes.module').then(m => m.ExtendedAppraisalSmesModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'add-extended-appraisal-sme',
+    loadChildren: () => import('./modules/add-extended-appraisal-sme/add-extended-appraisal-sme.module').then(m => m.AddExtendedAppraisalSmeModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
   },
   {
     path: 'project-details/:projectId',

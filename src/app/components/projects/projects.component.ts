@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ProjectsStore } from '../../stores/projects/projects-store';
 import { Router } from "@angular/router";
@@ -16,6 +16,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   allProjects: any = [];
   Subscriptions: Subscription = new Subscription();
 
+  @Input() showAddBtn: boolean = true;
+  @Input() viewType: string = null;
+
+
   constructor(
     private _projectsStore: ProjectsStore,
     private _AddProjectModelService: AddProjectModelService,
@@ -23,6 +27,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    console.log("SHOW BUTTON VALUE:--", this.showAddBtn, this.viewType);
     this.Subscriptions.add(
       this._projectsStore.state$.subscribe(data => {
         console.log(data.projects);
@@ -39,8 +44,21 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       item.status,
       item.userRef,
       item.key,
+      item.primaryAppraisalStatus,
+      item.primaryAppraisalStartDate,
+      item.primaryAppraisalEndDate,
+      item.extendedAppraisalStatus,
+      item.extendedAppraisalExpiry,
     );
-    this._router.navigate(['/project-details', item.key]);
+    if (this.viewType == 'gia') {
+      this._router.navigate(['/gia-appraisal', item.key]);
+    } else if (this.viewType == 'po') {
+      this._router.navigate(['/create-primary-appraisal', item.key]);
+    } else if (this.viewType == 'dm') {
+      this._router.navigate(['/fill-primary-appraisal', item.key]);
+    } else {
+      this._router.navigate(['/project-details', item.key]);
+    }
   }
 
 

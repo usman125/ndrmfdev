@@ -19,6 +19,7 @@ const PROPOSALS = [
     currentReview: null,
     requestKey: 'proposal-form',
     userUpdateFlag: false,
+    projectRef: 'ajskhdkjahsd',
   },
 ]
 

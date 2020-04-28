@@ -1,21 +1,30 @@
 <div class="dialog">
+  <div class="header">
+    <h1 mat-dialog-title>{{ data.title  }}</h1>
+  </div>
   <div mat-dialog-content>
-    <p>Request Submitted Successfully!</p>
+    <p class="dialog-message">{{ data.message }}</p>
+
+    <div class="controls" *ngIf="data?.confirm">
+      <mat-form-field>
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="data.startDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="picker2" [(ngModel)]="data.endDate">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+    </div>
   </div>
   <div mat-dialog-actions>
-    <button mat-icon-button color="accent" (click)="onNoClick()">
-      <mat-icon>check</mat-icon>  
-    </button>
+    <button *ngIf="data?.add" color="primary" mat-raised-button style="margin-right:10px;"
+      (click)="cancel()">{{ data.confirmText }}</button>
+    <button *ngIf="data?.confirm" color="warn" mat-raised-button style="margin-right:10px;"
+      (click)="cancel()">{{ data.cancelText }}</button>
+    <button [disabled]="!data.startDate || !data.endDate" *ngIf="data?.confirm" color="primary" mat-raised-button (click)="confirm()">{{ data.confirmText }}</button>
   </div>
 </div>
-
-<!-- <div class="header">
-  <h1 mat-dialog-title>{{ data.title  }}</h1>
-</div>
-<div mat-dialog-content>
-  <p class="dialog-message">{{ data.message }}</p>
-</div>
-<div mat-dialog-actions>
-  <button class="btn btn-cancel" style="margin-right:10px;" (click)="cancel()">{{ data.cancelText }}</button>
-  <button class="btn" (click)="confirm()">{{ data.confirmText }}</button>
-</div> -->

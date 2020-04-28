@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this._userService.getAllUsers().subscribe(
       result => {
         this._authStore.removeLoading();
+        console.log(result);
         let usersArray = [];
         if (result['userInfoList']) {
           for (let i = 0; i < result['userInfoList'].length; i++) {
@@ -185,8 +186,8 @@ export class LoginComponent implements OnInit, OnDestroy {
           this._router.navigate(['accreditation-requests']);
         }
       }, error => {
-        this.errorMsg = error.error.responseDesc;
-        // console.log("ERROR:--", error.error.responseDesc, this.errorMsg);
+        // this.errorMsg = error.error.responseDesc;
+        console.log("ERROR:--", error);
         this._authStore.removeLoading();
       }
     );

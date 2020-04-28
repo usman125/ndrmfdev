@@ -11,7 +11,6 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-// import {MatButtonModule} from '@angular/material/button';
 import { MatToolbarModule } from "@angular/material/toolbar";
 
 @NgModule({
@@ -29,6 +28,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
     MatIconModule,
     FormsModule,
     ReactiveFormsModule,
-  ]
+  ],
+  exports: [ProjectsComponent]
 })
 export class ProjectsModule { }

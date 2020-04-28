@@ -112,7 +112,7 @@ mat-card-header .mat-card-header-text {
 
 mat-sidenav-container ::-webkit-scrollbar {
   width: 0.3em;
-  height: 0.3em; 
+  height: 0.3em;
 }
 
 mat-sidenav-container ::-webkit-scrollbar-track {
@@ -150,13 +150,34 @@ body::-webkit-scrollbar-thumb {
   outline: 1px solid slategrey;
 }
 
-
-
 .spinner {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
-.example-spacer{
+.example-spacer {
   flex: 1 1 auto;
+}
+
+.m-20 {
+  margin: 20px;
+}
+.m-5 {
+  margin: 5px !important;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.appraisal-box .form .formio-component .formio-form .formio-component-submit button {
+  display: none !important;
+}
+
+
+.second-toolbar #logo {
+    float: left;
+    outline: none;
+    opacity: 0;
+    pointer-events: none;
 }

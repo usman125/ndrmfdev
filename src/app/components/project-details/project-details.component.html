@@ -1,14 +1,61 @@
 <ng-container>
-  <mat-card style="margin: 20px;padding: 0px;">
+  <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>Project Information</span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <!-- <app-view-primary-appraisal></app-view-primary-appraisal> -->
+  <mat-card class="m-20" style="padding: 30px;" *ngIf="loggedUser.role !== 'fip'">
     <mat-card-content>
-      <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
-        <mat-toolbar-row>
-          <span>Descriptive Information</span>
-        </mat-toolbar-row>
-      </mat-toolbar>
-      <div class="tabs-container">
+      <div class="project-details">
+        <div class="field">
+          <div class="title">Name</div>
+          <div class="value">Azat Foundation</div>
+        </div>
+        <div class="field">
+          <div class="title">Company</div>
+          <div class="value">Azat Foundation</div>
+        </div>
+        <div class="field">
+          <div class="title">Amount</div>
+          <div class="value">100M</div>
+        </div>
+        <div class="field">
+          <div class="title">Address</div>
+          <div class="value">Samndabad, Lahore</div>
+        </div>
+      </div>
+      <div class="gia-link" *ngIf="viewType === 'po'">
+        <div class="appraisal-block"
+          *ngIf="selectedProject.primaryAppraisalStatus === null || selectedProject.primaryAppraisalStatus === 'pending'">
+          <button [disabled]="selectedProject.primaryAppraisalStatus === 'pending'" mat-button color="primary"
+            (click)="confirmApprasial()">
+            Prepare Preliminary appraisal <mat-icon style="margin-left: 5px;">description</mat-icon>
+          </button>
+          <small *ngIf="selectedProject.primaryAppraisalStatus === 'pending'">
+            Pending Date: {{selectedProject.primaryAppraisalEndDate | date:'fullDate'}}
+          </small>
+        </div>
+        <div class="appraisal-block" *ngIf="selectedProject.primaryAppraisalStatus === 'submitted'">
+          <button mat-button color="primary" (click)="viewPreApprasial()">
+            View Preliminary appraisal <mat-icon style="margin-left: 5px;">description</mat-icon>
+          </button>
+          <small>
+            Submitted: {{selectedProject.primaryAppraisalEndDate | date:'fullDate'}}
+          </small>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions *ngIf="viewType === 'po'">
+      <button class="m-1" mat-button color="primary">MARK TO GM</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="m-20">
+    <mat-card-content>
+      <div class="tabs-top-container">
         <div class="top-tabs">
-          <mat-button-toggle-group vertical="true" [(ngModel)]="groupType" #group="matButtonToggleGroup">
+          <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
             <mat-button-toggle (change)="tabChanged(item)" *ngFor="let item of proposalSections; let i = index;"
               [value]="item.key">
               <span>{{item.name}}</span>
@@ -16,38 +63,37 @@
           </mat-button-toggle-group>
         </div>
         <div class="top-form">
-          <formio *ngIf="form && !formSubmitData" [form]="form" (submit)="onSubmit($event)"></formio>
-          <formio *ngIf="form && formSubmitData" readOnly="true" [submission]="{data: formSubmitData}" [form]="form"></formio>
+          <formio *ngIf="form && !formSubmitData && loggedUser.role !== 'admin'" [form]="form"
+            (submit)="onSubmit($event)"></formio>
+          <formio *ngIf="form && formSubmitData && loggedUser.role !== 'admin'" readOnly="true"
+            [submission]="{data: formSubmitData}" [form]="form"></formio>
+          <formio *ngIf="form && loggedUser.role === 'admin'" readOnly="true" [submission]="{data: formSubmitData}"
+            [form]="form"></formio>
           <!-- <formio *ngIf="form" [form]="form" (submit)="onSubmit($event)"></formio> -->
-          <span *ngIf="formSubmitData">{{formSubmitData | json}}</span>
+          <!-- <span *ngIf="formSubmitData">{{formSubmitData | json}}</span> -->
         </div>
       </div>
     </mat-card-content>
   </mat-card>
 
-  <mat-card style="margin: 20px;padding: 0px;">
+  <mat-card class="m-20">
     <mat-card-content>
-      <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
-        <mat-toolbar-row>
-          <span>Cost & RF Information</span>
-        </mat-toolbar-row>
-      </mat-toolbar>
-      <div class="tabs-container">
-        <div class="tabs">
-          <mat-button-toggle-group vertical="true" [(ngModel)]="costTabsType" #group="matButtonToggleGroup">
+      <div class="tabs-top-container">
+        <div class="top-tabs">
+          <mat-button-toggle-group [(ngModel)]="costTabsType" #group="matButtonToggleGroup">
             <mat-button-toggle (change)="costTabChanged(item)" *ngFor="let item of costSections; let i = index;"
               [value]="item.name">
               <span>{{item.name}}</span>
             </mat-button-toggle>
           </mat-button-toggle-group>
         </div>
-        <!-- <div [hidden]="costTabsType?.key !== 'pip'"> -->
-          <div class="form">
-            <app-project-plan [show]="show"></app-project-plan>
-          </div>
-        <!-- </div> -->
+        <div class="top-form">
+          <app-project-plan [show]="show"></app-project-plan>
+        </div>
       </div>
     </mat-card-content>
   </mat-card>
+
+  <!-- <app-fill-primary-appraisal [viewType]="viewType2"></app-fill-primary-appraisal> -->
 
 </ng-container>

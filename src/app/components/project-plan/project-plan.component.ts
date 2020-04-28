@@ -609,7 +609,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     if (testNode) {
       testNode.procurementCost = parent.procurementCost
     } else {
-      parent.procurementCost = 0
+      if (parent) parent.procurementCost = 0
     }
     this.procurementCost = procurementCost;
   }

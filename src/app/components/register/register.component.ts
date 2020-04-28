@@ -91,10 +91,12 @@ export class RegisterComponent implements OnInit {
 
   handleClick() {
     const options = {
-      title: 'Leave page?',
-      message: 'By leaving this page you will permanently lose your form changes.',
+      title: 'Success!',
+      message: 'Registartion Received, we will review your application.',
       cancelText: 'CANCEL',
-      confirmText: 'YES, LEAVE PAGE'
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
     };
 
     this._confirmModelService.open(options);

@@ -15,7 +15,11 @@ export class ConfirmModelService {
         title: options.title,
         message: options.message,
         cancelText: options.cancelText,
-        confirmText: options.confirmText
+        confirmText: options.confirmText,
+        add: options.add,
+        confirm: options.confirm,
+        startDate: options.startDate,
+        endDate: options.endDate,
       }
     });
   }

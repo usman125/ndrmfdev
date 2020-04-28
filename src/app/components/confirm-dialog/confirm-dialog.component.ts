@@ -6,6 +6,10 @@ export interface ConfirmData {
   confirmText: string;
   message: string;
   title: string;
+  add: boolean;
+  confirm: boolean;
+  startDate: string;
+  endDate: string;
 }
 
 @Component({
@@ -27,19 +31,26 @@ export class ConfirmDialogComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
-  public cancel() {
-    this.close(false);
-  }
-  public close(value) {
+  close(value) {
     this.dialogRef.close(value);
   }
-  public confirm() {
-    this.close(true);
+
+  confirm() {
+    if (this.data.add) {
+      this.close(true);
+    } else if (this.data.confirm) {
+      this.close({
+        startDate: this.data.startDate,
+        endDate: this.data.endDate,
+      });
+    }
   }
-  
+  cancel() {
+    this.close(false);
+  }
+
   @HostListener("keydown.esc")
-  public onEsc() {
+  onEsc() {
     this.close(false);
   }
 

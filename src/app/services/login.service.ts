@@ -35,7 +35,7 @@ export class LoginService {
     };
     const url = `${AppConfig.apiUrl}/login`;
     console.log("LOGIN USER CALLED:--", values, url)
-    return this._httpClient.put(
+    return this._httpClient.post(
       url,
       params
     );

@@ -1,15 +1,19 @@
-import { Component, OnInit, OnDestroy, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, Input } from '@angular/core';
 import { ProposalSectionsStore } from "../../stores/proposal-sections/proposal-sections-store";
 import { ProposalFormsStore } from "../../stores/proposal-forms/proposal-forms-store";
 import { ProposalRequestsStore } from "../../stores/proposal-requests/proposal-requests-store";
+import { ProjectsStore } from "../../stores/projects/projects-store";
 import { Subscription } from "rxjs";
+import { switchMap } from "rxjs/operators";
 import { setCurrentProject, currentProjectReplay } from "../../stores/projects/project-replay";
 import { Router, ActivatedRoute } from "@angular/router";
+import { ConfirmModelService } from "../../services/confirm-model.service";
 
 @Component({
   selector: 'app-project-details',
   templateUrl: './project-details.component.html',
   styleUrls: ['./project-details.component.css'],
+  providers: [ConfirmModelService],
 })
 export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
@@ -37,26 +41,46 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   ]
 
   @Output() show: any = null;
+  @Input() showFillApprasialBtn: boolean = true;
+  @Input() viewType: string = 'user';
+  @Output() viewType2: string = 'view';
+  // @Output() preAppViewType: string = 'view';
+
+  
 
   constructor(
     private _proposalSectionsStore: ProposalSectionsStore,
     private _proposalFormsStore: ProposalFormsStore,
     private _proposalRequestsStore: ProposalRequestsStore,
+    private _projectsStore: ProjectsStore,
+    private _confirmModelService: ConfirmModelService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-  ) { 
-    
+  ) {
+
   }
 
-  ngOnInit(): void {
-    this.sub = this._activatedRoute
-      .queryParams
-      .subscribe(params => {
-        console.log(params);
-        // Defaults to 0 if no query param provided.
-        this.selectedProjectId = params['projectId'] || null;
-        console.log("SELCTED PROJECT ID IS:--", this.selectedProjectId);
-      });
+  ngOnInit() {
+    this._activatedRoute.paramMap.subscribe(params => {
+      this.selectedProjectId = params.get("projectId");
+      const project = this._projectsStore.getProject(this.selectedProjectId);
+      setCurrentProject(
+        project.name,
+        project.type,
+        project.status,
+        project.userRef,
+        project.key,
+        project.primaryAppraisalStatus,
+        project.primaryAppraisalStartDate,
+        project.primaryAppraisalEndDate,
+        project.extendedAppraisalStatus,
+        project.extendedAppraisalExpiry,
+      );
+    });
+    currentProjectReplay.subscribe((data) => {
+      this.selectedProject = data;
+    })
+    console.log("SELCTED PROJECT ID IS:--", this.selectedProjectId, this.selectedProject);
 
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
     this.Subscription.add(
@@ -70,14 +94,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       this._proposalRequestsStore.state$.subscribe(data => {
         this.proposalRequests = data.proposals;
         console.log("PROPOSAL Requests:---", this.proposalRequests);
-        // this.groupType = this.proposalSections[0].name;
-        // for (let i = 0; i < this.proposalRequests.length; i++) {
-        //   if (this.proposalRequests[i].formIdentity === this.groupType &&
-        //     this.loggedUser.username === this.proposalRequests[i].userRef
-        //   ) {
-        //     this.formSubmitData = this.proposalRequests[i].formSubmitData;
-        //   }
-        // }
       })
     );
     this.Subscription.add(
@@ -105,21 +121,36 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
               this.form = this.proposalForms[i];
             }
           }
-          for (let i = 0; i < this.proposalRequests.length; i++) {
-            if (this.proposalRequests[i].formIdentity === this.proposalSections[0].key &&
-              this.loggedUser.username === this.proposalRequests[i].userRef
-            ) {
-              this.formSubmitData = this.proposalRequests[i].formSubmitData;
+          if (this.loggedUser.role === 'fip') {
+
+            for (let i = 0; i < this.proposalRequests.length; i++) {
+              if (this.proposalRequests[i].formIdentity === this.proposalSections[0].key &&
+                this.loggedUser.username === this.proposalRequests[i].userRef &&
+                this.proposalRequests[i].projectRef === this.selectedProjectId
+              ) {
+                this.formSubmitData = this.proposalRequests[i].formSubmitData;
+              }
             }
+          } else {
+
+            for (let i = 0; i < this.proposalRequests.length; i++) {
+              if (this.proposalRequests[i].formIdentity === this.proposalSections[0].key &&
+                this.selectedProject.userRef === this.proposalRequests[i].userRef &&
+                this.proposalRequests[i].projectRef === this.selectedProjectId
+              ) {
+                this.formSubmitData = this.proposalRequests[i].formSubmitData;
+              }
+            }
+
           }
         }
         console.log("PROPOSALS:---", this.proposalSections);
       })
     );
-    currentProjectReplay.subscribe(data => {
-      this.selectedProject = data;
-      console.log("SELECTED PROJECT:---", this.selectedProject)
-    });
+    // currentProjectReplay.subscribe(data => {
+    //   this.selectedProject = data;
+    //   console.log("SELECTED PROJECT:---", this.selectedProject)
+    // });
   }
 
   getSelectedValues(item) {
@@ -138,12 +169,25 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.proposalForms.length; i++) {
       if (this.proposalForms[i].smeRef === $event.key) {
         this.form = this.proposalForms[i];
-        for (let j = 0; j < this.proposalRequests.length; j++) {
-          if (this.proposalRequests[j].formIdentity === $event.key &&
-            this.loggedUser.username === this.proposalRequests[j].userRef
-          ) {
-            this.formSubmitData = this.proposalRequests[j].formSubmitData;
-            break;
+        if (this.loggedUser.role !== 'admin') {
+          for (let j = 0; j < this.proposalRequests.length; j++) {
+            if (this.proposalRequests[j].formIdentity === $event.key &&
+              this.loggedUser.username === this.proposalRequests[j].userRef &&
+              this.proposalRequests[j].projectRef === this.selectedProjectId
+            ) {
+              this.formSubmitData = this.proposalRequests[j].formSubmitData;
+              break;
+            }
+          }
+        } else {
+          for (let j = 0; j < this.proposalRequests.length; j++) {
+            if (this.proposalRequests[j].formIdentity === $event.key &&
+              this.selectedProject.userRef === this.proposalRequests[j].userRef &&
+              this.proposalRequests[j].projectRef === this.selectedProjectId
+            ) {
+              this.formSubmitData = this.proposalRequests[j].formSubmitData;
+              break;
+            }
           }
         }
         break;
@@ -152,16 +196,59 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     console.log(this.groupType);
   }
 
+  confirmApprasial() {
+    const options = {
+      title: 'Are you sure?',
+      message: 'By clicking yes appraisal request will be generated.',
+      cancelText: 'CANCEL',
+      confirmText: 'YES',
+      confirm: true,
+      add: false
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      if (confirmed) {
+        console.log("CONFIRMED FROM MODEL", confirmed);
+        this._projectsStore.markPrimaryAppraisal(
+          confirmed.startDate,
+          confirmed.endDate,
+          this.selectedProjectId
+        );
+        setCurrentProject(
+          this.selectedProject.name,
+          this.selectedProject.type,
+          this.selectedProject.status,
+          this.selectedProject.userRef,
+          this.selectedProject.key,
+          'pending',
+          confirmed.startDate,
+          confirmed.endDate,
+          this.selectedProject.extendedAppraisalStatus,
+          this.selectedProject.extendedAppraisalExpiry,
+        );
+      }
+    });
+  }
+
+  fillApprasial() {
+    this._router.navigate(['/fill-primary-appraisal', this.selectedProjectId]);
+  }
+
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
     this.Subscription.unsubscribe();
   }
 
   onSubmit($event) {
     console.log("FORM SUBMIT:---", $event);
-
-
     this.formSubmitData = $event.data;
+    this._proposalRequestsStore.addProposalRequest(
+      this.loggedUser.username,
+      $event.data,
+      this.groupType,
+      this.selectedProjectId,
+    );
     // var flag: any = _.find(this.allRequests, { userRef: this.loggedUser.username, formIdentity: this.groupType })
     // if (!flag) {
     //   var values = {
@@ -184,17 +271,16 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     //     result => {
     //       this.form.exists = true;
     //       console.log("RESULT AFTER ADDING REQUEST:--", result);
-          this._proposalRequestsStore.addProposalRequest(
-            this.loggedUser.username,
-            $event.data,
-            this.groupType,
-          );
-          // this.getRequestsFromApi();
-      //   },
-      //   error => {
-      //     console.log("ERROR AFTER ADDING REQUEST:--", error);
-      //   }
-      // );
+    // this.getRequestsFromApi();
+    //   },
+    //   error => {
+    //     console.log("ERROR AFTER ADDING REQUEST:--", error);
+    //   }
+    // );
+  }
+
+  viewPreApprasial(){
+    this._router.navigate(['/view-primary-appraisal', this.selectedProjectId]);
   }
 
 }

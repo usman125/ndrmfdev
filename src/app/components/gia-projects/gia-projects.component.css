@@ -1,0 +1,32 @@
+.appraisal-box {
+  background-color: #f8f8f8;
+  padding: 20px;
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.remove-btn {
+  display: flex;
+  justify-content: flex-end;
+  /* align-items: flex-end; */
+  /* padding: 10px; */
+}
+
+
+.card-header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-info{
+  display: flex;
+  flex-direction: column;
+}
+.project-info .info-box{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* justify-content: space-between; */
+}

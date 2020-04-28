@@ -55,6 +55,11 @@ import { SectionSelectorStore } from './stores/section-selector/section-selector
 import { ProposalSectionsStore } from './stores/proposal-sections/proposal-sections-store';
 import { ProposalFormsStore } from './stores/proposal-forms/proposal-forms-store';
 import { ProposalRequestsStore } from './stores/proposal-requests/proposal-requests-store';
+import { PrimaryAppraisalFormsStore } from './stores/primary-appraisal-forms/primary-appraisal-forms-store';
+import { PrimaryAppraisalRequestsStore } from './stores/primary-appraisal-requests/primary-appraisal-requests-store';
+
+
+
 import { IntimateFipModule } from './modules/fip-intimations/fip-intimations.module';
 import { AssigntaskModule } from './modules/assigntask/assigntask.module';
 import { ConfirmDialogModule } from './modules/confirm-dialog/confirm-dialog.module';
@@ -72,9 +77,24 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatTreeModule } from "@angular/material/tree";
 // import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+// import { ViewPrimaryAppraisalComponent } from './components/view-primary-appraisal/view-primary-appraisal.component';
+// import { PrimaryAppraisalProjectsComponent } from './components/primary-appraisal-projects/primary-appraisal-projects.component';
+// import { CreatePrimaryAppraisalComponent } from './components/create-primary-appraisal/create-primary-appraisal.component';
+// import { FillPrimaryAppraisalComponent } from './components/fill-primary-appraisal/fill-primary-appraisal.component';
+// import { PrimaryAppraisalComponent } from './components/primary-appraisal/primary-appraisal.component';
+// import { ExtendedAppraisalComponent } from './components/extended-appraisal/extended-appraisal.component';
+// import { ExtendedAppraisalSmesComponent } from './components/extended-appraisal-smes/extended-appraisal-smes.component';
+// import { ExtendedAppraisalFormsComponent } from './components/extended-appraisal-forms/extended-appraisal-forms.component';
+// import { AddExtendedAppraisalSmeComponent } from './components/add-extended-appraisal-sme/add-extended-appraisal-sme.component';
+// import { AddExtendedAppraisalFormComponent } from './components/add-extended-appraisal-form/add-extended-appraisal-form.component';
+// import { AddPrimaryAppraisalFormComponent } from './components/add-primary-appraisal-form/add-primary-appraisal-form.component';
+// import { PrimaryAppraisalFormsComponent } from './components/primary-appraisal-forms/primary-appraisal-forms.component';
+// import { GiaProjectsComponent } from './components/gia-projects/gia-projects.component';
+// import { UserProjectsComponent } from './components/user-projects/user-projects.component';
+// import { PrepareGiaComponent } from './components/prepare-gia/prepare-gia.component';
 // import { AdminPipComponent } from './components/admin-pip/admin-pip.component';
 // import { MatGridListModule } from "@angular/material/grid-list";
-
+// import { GiaProjectsModule } from "./modules/gia-projects/gia-projects.module";
 
 
 @NgModule({
@@ -86,6 +106,21 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     LoginComponent,
     NoHeaderLayoutComponent,
     AddProjectComponent,
+    // ViewPrimaryAppraisalComponent,
+    // PrimaryAppraisalProjectsComponent,
+    // CreatePrimaryAppraisalComponent,
+    // FillPrimaryAppraisalComponent,
+    // PrimaryAppraisalComponent,
+    // ExtendedAppraisalComponent,
+    // ExtendedAppraisalSmesComponent,
+    // ExtendedAppraisalFormsComponent,
+    // AddExtendedAppraisalSmeComponent,
+    // AddExtendedAppraisalFormComponent,
+    // AddPrimaryAppraisalFormComponent,
+    // PrimaryAppraisalFormsComponent,
+    // GiaProjectsComponent,
+    // UserProjectsComponent,
+    // PrepareGiaComponent,
     // AdminPipComponent,
     // ProjectPlanComponent,
   ],
@@ -121,6 +156,8 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     AddProjectDialogModule,
     MatProgressSpinnerModule,
 
+    // GiaProjectsModule,
+
     MatDividerModule,
     MatTreeModule,
     MatCheckboxModule,
@@ -150,6 +187,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 
     AuthGuard,
     LoginService,
+    
     AuthStore,
     SurveysStore,
     AccreditationRequestStore,
@@ -166,6 +204,8 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     ProposalFormsStore,
     ProjectsStore,
     ProposalRequestsStore,
+    PrimaryAppraisalFormsStore,
+    PrimaryAppraisalRequestsStore,
   ],
   bootstrap: [AppComponent],
   exports: [

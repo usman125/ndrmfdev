@@ -6,6 +6,11 @@ interface CurrentProjectState {
   status: string,
   userRef: string,
   key: string,
+  primaryAppraisalStatus: string,
+  primaryAppraisalStartDate: string,
+  primaryAppraisalEndDate: string,
+  extendedAppraisalStatus: string,
+  extendedAppraisalExpiry: string,
 }
 
 const routeEnd = new Subject<CurrentProjectState>();
@@ -18,6 +23,11 @@ export const setCurrentProject = (
   status: string,
   userRef: string,
   key: string,
+  primaryAppraisalStatus: string,
+  primaryAppraisalStartDate: string,
+  primaryAppraisalEndDate: string,
+  extendedAppraisalStatus: string,
+  extendedAppraisalExpiry: string,
 ) => {
   routeEnd.next({
     name: name,
@@ -25,5 +35,10 @@ export const setCurrentProject = (
     status: status,
     userRef: userRef,
     key: key,
+    primaryAppraisalStatus: primaryAppraisalStatus,
+    primaryAppraisalStartDate: primaryAppraisalStartDate,
+    primaryAppraisalEndDate: primaryAppraisalEndDate,
+    extendedAppraisalStatus: extendedAppraisalStatus,
+    extendedAppraisalExpiry: extendedAppraisalExpiry,
   });
 }

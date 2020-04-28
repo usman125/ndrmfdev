@@ -27,3 +27,20 @@ export { AddProjectComponent } from './add-project/add-project.component';
 export { ProjectDetailsComponent } from './project-details/project-details.component';
 export { AddProjectDialogComponent } from './add-project-dialog/add-project-dialog.component';
 export { AdminPipComponent } from './admin-pip/admin-pip.component';
+export { PrepareGiaComponent } from './prepare-gia/prepare-gia.component';
+export { GiaProjectsComponent } from './gia-projects/gia-projects.component';
+export { UserProjectsComponent } from './user-projects/user-projects.component';
+
+export { PrimaryAppraisalComponent } from './primary-appraisal/primary-appraisal.component';
+export { ExtendedAppraisalComponent } from './extended-appraisal/extended-appraisal.component';
+export { ExtendedAppraisalSmesComponent } from './extended-appraisal-smes/extended-appraisal-smes.component';
+export { ExtendedAppraisalFormsComponent } from './extended-appraisal-forms/extended-appraisal-forms.component';
+export { AddExtendedAppraisalSmeComponent } from './add-extended-appraisal-sme/add-extended-appraisal-sme.component';
+export { AddExtendedAppraisalFormComponent } from './add-extended-appraisal-form/add-extended-appraisal-form.component';
+export { AddPrimaryAppraisalFormComponent } from './add-primary-appraisal-form/add-primary-appraisal-form.component';
+export { PrimaryAppraisalFormsComponent } from './primary-appraisal-forms/primary-appraisal-forms.component';
+
+export { FillPrimaryAppraisalComponent } from './fill-primary-appraisal/fill-primary-appraisal.component';
+export { CreatePrimaryAppraisalComponent } from './create-primary-appraisal/create-primary-appraisal.component';
+export { PrimaryAppraisalProjectsComponent } from './primary-appraisal-projects/primary-appraisal-projects.component';
+export { ViewPrimaryAppraisalComponent } from './view-primary-appraisal/view-primary-appraisal.component';
