@@ -29,7 +29,6 @@ export class LoginService {
 
   loginUser(values) {
     let params = {
-      email: "abc@abc.com",
       username: values.username,
       password: values.password
     };
