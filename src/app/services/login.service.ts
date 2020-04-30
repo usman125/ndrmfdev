@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from "./config";
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-
+import { HttpClient } from '@angular/common/http';
 
 
 @Injectable()
 export class LoginService {
 
+  authToken: any = null;
+  httpOptions: any = null;
+
   constructor(
     private _router: Router,
     private _httpClient: HttpClient,
-  ) { }
+  ) {
+  }
 
   loggedIn() {
     if (localStorage.getItem('user') !== null) {
@@ -39,22 +42,21 @@ export class LoginService {
       params
     );
   }
-  
+
   registerUser(values) {
     let params = {
       "email": values.email,
       "password": values.password,
-      "typeName": 'fip',
-      "username": values.username,
+      "lastName": values.lastName,
       "firstName": values.firstName,
     }
-    const url = `${AppConfig.apiUrl}/signup`;
+    const url = `${AppConfig.apiUrl}/user/signup`;
     console.log("REGISTER USER CALLED:--", values, url)
     return this._httpClient.post(
       url,
-      params
+      params,
     );
-    
+
   }
 
 }

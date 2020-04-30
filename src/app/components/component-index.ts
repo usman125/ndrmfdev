@@ -44,3 +44,4 @@ export { FillPrimaryAppraisalComponent } from './fill-primary-appraisal/fill-pri
 export { CreatePrimaryAppraisalComponent } from './create-primary-appraisal/create-primary-appraisal.component';
 export { PrimaryAppraisalProjectsComponent } from './primary-appraisal-projects/primary-appraisal-projects.component';
 export { ViewPrimaryAppraisalComponent } from './view-primary-appraisal/view-primary-appraisal.component';
+export { EditUserComponent } from './edit-user/edit-user.component';

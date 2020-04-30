@@ -1,8 +1,8 @@
 <ng-container>
-  <form [formGroup]="addUserForm" (ngSubmit)="addUser(addUserForm.value)">
+  <form [formGroup]="editUserForm">
     <mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
       <mat-toolbar-row>
-        <span>{{'Add User'}}</span>
+        <span>{{'Edit User'}}</span>
         <span class="example-spacer"></span>
         <button matTooltip="All Users!" (click)="goBack()" mat-icon-button aria-label="All Users">
           <mat-icon>view_list</mat-icon>
@@ -30,37 +30,37 @@
               <mat-form-field>
                 <mat-label>First Name</mat-label>
                 <input matInput type="text" placeholder="e.g. Legal" formControlName="firstName"
-                  [formControl]="addUserForm.controls['firstName']" />
+                  [formControl]="editUserForm.controls['firstName']" />
               </mat-form-field>
             </mat-grid-tile>
             <mat-grid-tile>
               <mat-form-field>
                 <mat-label>Last Name</mat-label>
                 <input matInput type="text" placeholder="e.g. Legal" formControlName="lastName"
-                  [formControl]="addUserForm.controls['lastName']" />
+                  [formControl]="editUserForm.controls['lastName']" />
               </mat-form-field>
             </mat-grid-tile>
             <mat-grid-tile>
               <mat-form-field>
                 <mat-label>Email</mat-label>
                 <input matInput type="text" placeholder="e.g. abc124" formControlName="email"
-                  [formControl]="addUserForm.controls['email']" />
+                  [formControl]="editUserForm.controls['email']" />
               </mat-form-field>
             </mat-grid-tile>
             <mat-grid-tile>
               <mat-form-field>
                 <mat-label>Username</mat-label>
                 <input matInput type="text" placeholder="e.g. abc124" formControlName="username"
-                  [formControl]="addUserForm.controls['username']" />
+                  [formControl]="editUserForm.controls['username']" />
               </mat-form-field>
             </mat-grid-tile>
-            <mat-grid-tile>
+            <!-- <mat-grid-tile>
               <mat-form-field>
                 <mat-label>Password</mat-label>
                 <input matInput type="text" placeholder="Password" formControlName="password"
-                  [formControl]="addUserForm.controls['password']" />
+                  [formControl]="editUserForm.controls['password']" />
               </mat-form-field>
-            </mat-grid-tile>
+            </mat-grid-tile> -->
           </mat-grid-list>
           <mat-grid-list cols="4">
             <mat-grid-tile colspan="1">
@@ -69,9 +69,11 @@
                   <mat-card-title>Select Org</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                  <mat-radio-group [formControl]="addUserForm.controls['org']" (change)="orgChanged($event)"
+                  <mat-radio-group [formControl]="editUserForm.controls['org']" (change)="orgChanged($event)"
                     class="example-radio-group">
-                    <mat-radio-button class="example-radio-button" *ngFor="let item of allUserTypes" [value]="item">
+                    <mat-radio-button
+                      [checked]="selectedUser.org[0].id === item.id && selectedUser.org[0].name === item.name"
+                      class="example-radio-button" *ngFor="let item of allUserTypes" [value]="item">
                       {{item.name}}
                     </mat-radio-button>
                   </mat-radio-group>
@@ -84,9 +86,11 @@
                   <mat-card-title>Select Role</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                  <mat-radio-group *ngIf="addUserForm.controls['org']" class="example-radio-group"
-                    (change)="roleChanged($event)" [formControl]="addUserForm.controls['role']">
-                    <mat-radio-button class="example-radio-button" [value]="type" *ngFor="let type of allRoles">
+                  <mat-radio-group *ngIf="editUserForm.controls['org']" class="example-radio-group"
+                    (change)="roleChanged($event)" [formControl]="editUserForm.controls['role']">
+                    <mat-radio-button
+                      [checked]="selectedUser.roles[0].id === type.id && selectedUser.roles[0].name === type.name"
+                      class="example-radio-button" [value]="type" *ngFor="let type of allRoles">
                       {{type.name}}
                     </mat-radio-button>
                   </mat-radio-group>
@@ -94,9 +98,13 @@
               </mat-card>
             </mat-grid-tile>
             <mat-grid-tile>
-              <button [disabled]="!addUserForm.valid" mat-raised-button color="primary"
-                type="submit">
-                {{'Add' | uppercase}}
+              <button mat-raised-button color="warn" type="submit">
+                {{'Reset' | uppercase}}
+              </button>
+            </mat-grid-tile>
+            <mat-grid-tile>
+              <button [disabled]="!editUserForm.valid" mat-raised-button color="accent" type="submit">
+                {{'Update' | uppercase}}
               </button>
             </mat-grid-tile>
           </mat-grid-list>

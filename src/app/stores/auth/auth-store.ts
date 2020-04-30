@@ -170,4 +170,13 @@ export class AuthStore extends Store<AuthState> {
     })
   }
 
+  setAuthToken(token) {
+    this.setState({
+      ...this.state,
+      auth: {
+        ...this.state.auth, authToken: token,
+      }
+    });
+  }
+
 }

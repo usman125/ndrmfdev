@@ -39,68 +39,68 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) {
     this._buildLoginForm();
 
-    this._userService.getAllUsers().subscribe(
-      result => {
-        this._authStore.removeLoading();
-        console.log(result);
-        let usersArray = [];
-        if (result['userInfoList']) {
-          for (let i = 0; i < result['userInfoList'].length; i++) {
-            var object = {
-              name: result['userInfoList'][i].firstName,
-              email: result['userInfoList'][i].email,
-              role: result['userInfoList'][i].typeName,
-              smeRef: result['userInfoList'][i].roleName,
-              department: null,
-              username: result['userInfoList'][i].username,
-              password: null,
-              active: result['userInfoList'][i].active,
-              eligibileFlag: result['userInfoList'][i].eligible,
-              qualificationFlag: result['userInfoList'][i].qualified,
-              roleNames: result['userInfoList'][i].roleNames,
-              groupNames: result['userInfoList'][i].groupNames,
-            }
-            if (result['userInfoList'][i].typeName === 'ndrmf') {
-              if (result['userInfoList'][i].roleNames.length) {
-                object.role = result['userInfoList'][i].roleNames[0];
-              }
-            }
-            if (result['userInfoList'][i].typeName === 'fip') {
-              if (result['userInfoList'][i].roleNames.length) {
-                object.role = result['userInfoList'][i].roleNames[0];
-              }
-            }
-            if (object.role === 'sme') {
-              this._smeService.getAllSmes().subscribe(
-                result => {
-                  console.log("ALL SMES FROM APi:--", result);
-                  if (result['sectionInfos']) {
-                    this.allSections = result['sectionInfos']
-                    result['sectionInfos'].forEach(element => {
-                      console.log(element.userName)
-                      if (element.userName === object.username) object.smeRef = element.sectionKey || null;
-                    });
-                  }
-                },
-                error => { }
-              )
-            }
-            usersArray.push(object);
-          }
-          this._usersStore.setAllUsers(usersArray);
-        }
-        this.Subscription.add(
-          this._usersStore.state$.subscribe(data => {
-            this.allUsers = data.users;
-            console.log(this.allUsers)
-          })
-        );
-      },
-      error => {
-        this._authStore.removeLoading();
-        console.log("ERROR FROM ALL USERS:--", error);
-      }
-    );
+    // this._userService.getAllUsers().subscribe(
+    //   result => {
+    //     this._authStore.removeLoading();
+    //     console.log(result);
+    //     let usersArray = [];
+    //     if (result['userInfoList']) {
+    //       for (let i = 0; i < result['userInfoList'].length; i++) {
+    //         var object = {
+    //           name: result['userInfoList'][i].firstName,
+    //           email: result['userInfoList'][i].email,
+    //           role: result['userInfoList'][i].typeName,
+    //           smeRef: result['userInfoList'][i].roleName,
+    //           department: null,
+    //           username: result['userInfoList'][i].username,
+    //           password: null,
+    //           active: result['userInfoList'][i].active,
+    //           eligibileFlag: result['userInfoList'][i].eligible,
+    //           qualificationFlag: result['userInfoList'][i].qualified,
+    //           roleNames: result['userInfoList'][i].roleNames,
+    //           groupNames: result['userInfoList'][i].groupNames,
+    //         }
+    //         if (result['userInfoList'][i].typeName === 'ndrmf') {
+    //           if (result['userInfoList'][i].roleNames.length) {
+    //             object.role = result['userInfoList'][i].roleNames[0];
+    //           }
+    //         }
+    //         if (result['userInfoList'][i].typeName === 'fip') {
+    //           if (result['userInfoList'][i].roleNames.length) {
+    //             object.role = result['userInfoList'][i].roleNames[0];
+    //           }
+    //         }
+    //         if (object.role === 'sme') {
+    //           this._smeService.getAllSmes().subscribe(
+    //             result => {
+    //               console.log("ALL SMES FROM APi:--", result);
+    //               if (result['sectionInfos']) {
+    //                 this.allSections = result['sectionInfos']
+    //                 result['sectionInfos'].forEach(element => {
+    //                   console.log(element.userName)
+    //                   if (element.userName === object.username) object.smeRef = element.sectionKey || null;
+    //                 });
+    //               }
+    //             },
+    //             error => { }
+    //           )
+    //         }
+    //         usersArray.push(object);
+    //       }
+    //       this._usersStore.setAllUsers(usersArray);
+    //     }
+    //     this.Subscription.add(
+    //       this._usersStore.state$.subscribe(data => {
+    //         this.allUsers = data.users;
+    //         console.log(this.allUsers)
+    //       })
+    //     );
+    //   },
+    //   error => {
+    //     this._authStore.removeLoading();
+    //     console.log("ERROR FROM ALL USERS:--", error);
+    //   }
+    // );
   }
 
   _buildLoginForm() {
@@ -144,21 +144,22 @@ export class LoginComponent implements OnInit, OnDestroy {
         console.log("RESULT AFTER CALIING LOGIN API:---", result);
         this._authStore.removeLoading();
         var user = {
-          username: result['userInfo']['username'],
-          email: result['userInfo']['email'],
-          role: result['userInfo']['typeName'],
-          eligibileFlag: result['userInfo']['eligible'],
-          qualificationFlag: result['userInfo']['qualified'],
-          roleNames: result['userInfo']['roleNames'],
-          groupNames: result['userInfo']['groupNames'],
-          typeName: result['userInfo']['typeName'],
+          username: result['user']['username'],
+          email: result['user']['email'],
+          role: result['user']['roles'][0].toLowerCase(),
+          eligibileFlag: false,
+          qualificationFlag: false,
+          roleNames: null,
+          groupNames: null,
+          typeName: null,
           smeRef: null,
+          authToken: result['accessToken']
         }
-        if (user.role === 'ndrmf' || user.role === 'fip') {
-          if (result['userInfo']['roleNames'].length) {
-            user.role = result['userInfo']['roleNames'][0];
-          }
-        }
+        // if (user.role === 'ndrmf' || user.role === 'fip') {
+        //   if (result['user']['roleNames'].length) {
+        //     user.role = result['user']['roleNames'][0];
+        //   }
+        // }
 
 
         if (user.role === 'sme') {
@@ -167,6 +168,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           });
         }
 
+        this._authStore.setAuthToken(user.authToken);
         this._authStore.setLoginState(true);
         this._authStore.setUserRole(user.role);
         this._authStore.setEligibleFlag(user.eligibileFlag);

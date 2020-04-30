@@ -10,6 +10,7 @@ const AUTH = {
   applyMobileClasses: false,
   checkedThemeName: 'material-base-theme',
   apiCall: false,
+  authToken: null,
 }
 
 export class AuthState {
@@ -25,5 +26,6 @@ export class AuthState {
     applyMobileClasses: boolean,
     checkedThemeName: string,
     apiCall: boolean,
+    authToken: string,
   } = AUTH;
 }

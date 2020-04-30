@@ -77,6 +77,8 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatTreeModule } from "@angular/material/tree";
 // import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+// import { EditUserComponent } from './components/edit-user/edit-user.component';
+import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
 // import { ViewPrimaryAppraisalComponent } from './components/view-primary-appraisal/view-primary-appraisal.component';
 // import { PrimaryAppraisalProjectsComponent } from './components/primary-appraisal-projects/primary-appraisal-projects.component';
 // import { CreatePrimaryAppraisalComponent } from './components/create-primary-appraisal/create-primary-appraisal.component';
@@ -106,6 +108,8 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     LoginComponent,
     NoHeaderLayoutComponent,
     AddProjectComponent,
+    // EditUserComponent,
+    EditSmeComponent,
     // ViewPrimaryAppraisalComponent,
     // PrimaryAppraisalProjectsComponent,
     // CreatePrimaryAppraisalComponent,

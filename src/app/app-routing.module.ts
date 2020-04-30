@@ -240,6 +240,12 @@ const routes: Routes = [
     data: { roles: [Role.Admin] }
   },
   {
+    path: 'edit-user/:userId',
+    loadChildren: () => import('./modules/edit-user/edit-user.module').then(m => m.EditUserModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
     path: 'eligibility-requests',
     loadChildren: () => import('./modules/eligibility-requests/eligibility-requests.module').then(m => m.EligibilityRequestsModule),
     canActivate: [AuthGuard],

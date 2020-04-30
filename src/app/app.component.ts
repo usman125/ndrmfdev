@@ -46,6 +46,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.currentUser) {
       this._authStore.setLoginState(true);
       this._authStore.setEligibleFlag(this.currentUser.eligibileFlag);
+      this._authStore.setAuthToken(this.currentUser.authToken);
     }
   }
 

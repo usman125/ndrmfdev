@@ -1,35 +1,73 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from "./config";
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthStore } from '../stores/auth/auth-store';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
+  authToken: string = null;
+  httpOptions: any = null;
+
   constructor(
     private _httpClient: HttpClient,
-  ) { }
+    private _authStore: AuthStore,
+  ) {
+    this._authStore.state$.subscribe((data) => {
+      this.authToken = data.auth.authToken;
+      this.httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': this.authToken,
+        })
+      }
+    }).unsubscribe();
+  }
 
 
-  getAllUsers() {
-    const url = `${AppConfig.apiUrl}/user/getAllUsers`;
-    return this._httpClient.get(
-      url
+  addUser(values) {
+    const url = `${AppConfig.apiUrl}/user/create`;
+    return this._httpClient.post(
+      url,
+      {
+        "departmentId": values.department,
+        "designationId": null,
+        "email": values.email,
+        "firstName": values.firstName,
+        "lastName": values.lastName,
+        "orgId": values.org.id,
+        "password": values.password,
+        "roleId": values.role.id,
+        "username":values.username 
+      },
+      this.httpOptions,
     );
   }
 
-  getAllUserTypes() {
-    const url = `${AppConfig.apiUrl}/user/getTypes`;
+  getAllUsers() {
+    console.log("AUTH TOKEN IN USER SERVICE:--", this.authToken);
+    const url = `${AppConfig.apiUrl}/user/`;
     return this._httpClient.get(
-      url
+      url,
+      this.httpOptions,
+    );
+  }
+
+  getAllUserOrgs() {
+    const url = `${AppConfig.apiUrl}/user/orgs`;
+    return this._httpClient.get(
+      url,
+      this.httpOptions,
     );
   }
 
   getAllUserRoles() {
     const url = `${AppConfig.apiUrl}/user/getRoles`;
     return this._httpClient.get(
-      url
+      url,
+      this.httpOptions,
     );
   }
 
@@ -40,7 +78,8 @@ export class UserService {
       {
         "eligible": true,
         "username": username
-      }
+      },
+      this.httpOptions,
     );
   }
 
@@ -62,11 +101,12 @@ export class UserService {
       {
         "active": false,
         "username": username
-      }
+      },
+      this.httpOptions,
     );
   }
 
-  
+
   addRole(username, role) {
     const url = `${AppConfig.apiUrl}/user/addRole`;
     return this._httpClient.put(
@@ -74,7 +114,8 @@ export class UserService {
       {
         "name": role,
         "username": username
-      }
+      },
+      this.httpOptions,
     );
   }
 
@@ -85,7 +126,8 @@ export class UserService {
       {
         "name": type,
         "username": username
-      }
+      },
+      this.httpOptions,
     );
   }
 

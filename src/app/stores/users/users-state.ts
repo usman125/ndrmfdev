@@ -95,7 +95,8 @@ const USERS = [
 
 export class UsersState {
   users: {
-    name: string,
+    firstName: string,
+    lastName: string,
     email: string,
     role: string,
     smeRef: string,
@@ -105,7 +106,8 @@ export class UsersState {
     active: boolean,
     eligibileFlag: boolean,
     qualificationFlag: boolean,
-    roleNames: string[],
-    typeNames: string[],
-  }[] = USERS;
+    roles: any,
+    orgId: any,
+    orgName: string,
+  }[] = [];
 }

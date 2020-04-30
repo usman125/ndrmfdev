@@ -17,7 +17,7 @@ import { SmeService } from "../../services/sme.service";
 export class SmeComponent implements OnInit, OnDestroy {
 
 
-  public displayedColumns = ['name', 'type', 'userRef', 'actions'];
+  public displayedColumns = ['name', 'type', 'userRef',];
   public dataSource: any = [];
   public allSmes: any = [];
   public Subscription: Subscription = new Subscription();
