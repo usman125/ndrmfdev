@@ -90,7 +90,7 @@ export class ProposalFormsComponent implements OnInit {
   editForm(form) {
     this.editFormFlag = !this.editFormFlag;
     this.secondForm = form;
-    this.secondForm.components = JSON.parse(this.secondForm.components);
+    // this.secondForm.components = JSON.parse(form.components);
     this.refreshForm.emit({
       form: this.secondForm
     })

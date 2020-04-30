@@ -97,6 +97,14 @@ import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
 // import { AdminPipComponent } from './components/admin-pip/admin-pip.component';
 // import { MatGridListModule } from "@angular/material/grid-list";
 // import { GiaProjectsModule } from "./modules/gia-projects/gia-projects.module";
+import { JwtModule } from "@auth0/angular-jwt";
+
+export function tokenGetter() {
+  
+  let user = JSON.parse(localStorage.getItem('user'))
+  console.log("****************USER IN APP MPDULE:*************\n", user.authToken);
+  return user.authToken;
+}
 
 
 @NgModule({
@@ -165,6 +173,13 @@ import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
     MatDividerModule,
     MatTreeModule,
     MatCheckboxModule,
+
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: ["https://ndrmfdev-backend.herokuapp.com"]
+      }
+    })
   ],
   providers: [
 
@@ -191,7 +206,7 @@ import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
 
     AuthGuard,
     LoginService,
-    
+
     AuthStore,
     SurveysStore,
     AccreditationRequestStore,
