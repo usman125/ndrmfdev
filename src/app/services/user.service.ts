@@ -41,8 +41,7 @@ export class UserService {
         "password": values.password,
         "roleId": values.role.id,
         "username":values.username 
-      },
-      this.httpOptions,
+      }
     );
   }
 
