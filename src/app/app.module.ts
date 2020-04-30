@@ -100,7 +100,7 @@ import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
 import { JwtModule } from "@auth0/angular-jwt";
 
 export function tokenGetter() {
-  
+  debugger;
   let user = JSON.parse(localStorage.getItem('user'))
   console.log("****************USER IN APP MPDULE:*************\n", user.authToken);
   return user.authToken;
@@ -174,12 +174,12 @@ export function tokenGetter() {
     MatTreeModule,
     MatCheckboxModule,
 
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: tokenGetter,
-        whitelistedDomains: ["https://ndrmfdev-backend.herokuapp.com"]
-      }
-    })
+    // JwtModule.forRoot({
+    //   config: {
+    //     tokenGetter: tokenGetter,
+    //     whitelistedDomains: ["https://ndrmfdev-backend.herokuapp.com"]
+    //   }
+    // })
   ],
   providers: [
 
