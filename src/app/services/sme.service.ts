@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from "./config";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthStore } from '../stores/auth/auth-store';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -14,17 +13,7 @@ export class SmeService {
 
   constructor(
     private _httpClient: HttpClient,
-    private _authStore: AuthStore,
   ) {
-    this._authStore.state$.subscribe((data) => {
-      this.authToken = data.auth.authToken;
-      this.httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Authorization': this.authToken,
-        })
-      };
-    });
   }
 
 
@@ -41,7 +30,6 @@ export class SmeService {
         "formIdentity": values.formIdentity,
         "active": true
       },
-      this.httpOptions,
     );
   }
 
@@ -49,7 +37,6 @@ export class SmeService {
     const url = `${AppConfig.apiUrl}/accreditation/getAllActiveSections`;
     return this._httpClient.get(
       url,
-      this.httpOptions
     );
   }
 
@@ -64,7 +51,6 @@ export class SmeService {
         "userName": userRef,
         "formIdentity": formIdentity,
       },
-      this.httpOptions,
     );
   }
 }
