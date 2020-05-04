@@ -17,18 +17,14 @@ export class SmeService {
   }
 
 
-  addSme(values) {
-    const url = `${AppConfig.apiUrl}/accreditation/addSection`;
+  addSection(values) {
+    const url = `${AppConfig.apiUrl}/setting/process/${values.formIdentity}/section/add`;
     console.log("VALUES FOR SME IN SERVICE:---", values);
     return this._httpClient.post(
       url,
       {
-        "formGenerated": false,
-        "sectionKey": values.key,
-        "sectionName": values.name,
-        "userName": values.userRef,
-        "formIdentity": values.formIdentity,
-        "active": true
+        "name": values.name,
+        "enabled": true
       },
     );
   }

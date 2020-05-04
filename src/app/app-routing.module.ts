@@ -178,6 +178,11 @@ const routes: Routes = [
     loadChildren: () => import('./modules/register/register.module').then(m => m.RegisterModule)
   },
   {
+    path: 'pending-signups',
+    // component: SiteLayout,
+    loadChildren: () => import('./modules/pending-signups/pending-signups.module').then(m => m.PendingSignupsModule)
+  },
+  {
     path: 'users',
     loadChildren: () => import('./modules/users/users.module').then(m => m.UsersModule),
     canActivate: [AuthGuard],

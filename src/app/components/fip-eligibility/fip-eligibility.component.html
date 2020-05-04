@@ -1,17 +1,22 @@
-<mat-card style="padding: 5px;margin: 20px;">
-  <div class="toggle-btns">
-    <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
-      <mat-button-toggle *ngFor="let item of allSections" MatButtonToggleAppearance="standard" color="primary" (change)="onValChange()" [value]="item.key">
+<mat-card class="p-2 m-4">
+  <!-- <div class="toggle-btns"> -->
+  <!-- <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
+      <mat-button-toggle *ngFor="let item of allSections" MatButtonToggleAppearance="standard" color="primary"
+        (change)="onValChange()" [value]="item.key">
         {{item.name}}
       </mat-button-toggle>
-      <!-- <mat-button-toggle MatButtonToggleAppearance="standard" (change)="onValChange()" value="eligibility-financial" aria-label="Text align center">
-        Financial
-      </mat-button-toggle> -->
-    </mat-button-toggle-group> 
-  </div>
-  <div style="margin: 20px 10px;" [ngClass]="{'update-btn': secondForm}">
-    <formio readOnly="true" *ngIf="form?.exists" [form]="form" [submission]="{data:secondForm}" [refresh]="refreshForm" (submit)="onSubmit($event)"></formio>
-    <formio *ngIf="!form?.exists" [form]="form" [submission]="{data:secondForm}" [refresh]="refreshForm" (submit)="onSubmit($event)"></formio>
-    <div *ngIf="secondForm">{{secondForm | json}}</div>
-  </div>
+    </mat-button-toggle-group> -->
+  <!-- </div> -->
+  <mat-card-content>
+    <div *ngFor="let item of allSections">
+      <h5 style="padding: 10px;"> {{item.sectionName}}</h5>
+      <div style="margin: 20px 10px;" [ngClass]="{'update-btn': secondForm}">
+        <!-- <formio readOnly="true" *ngIf="form?.exists" [form]="form" [submission]="{data:secondForm}"
+          [refresh]="refreshForm" (submit)="onSubmit($event)"></formio> -->
+        <formio [form]="item.template" [submission]="{data:secondForm}" [refresh]="refreshForm"
+          (submit)="onSubmit($event)"></formio>
+        <!-- <div *ngIf="secondForm">{{secondForm | json}}</div> -->
+      </div>
+    </div>
+  </mat-card-content>
 </mat-card>

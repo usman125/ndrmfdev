@@ -93,7 +93,7 @@
       <div class="hero" [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'fip'">
         <mat-accordion multi="true">
 
-          <mat-expansion-panel [expanded]="true">
+          <!-- <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Templates
@@ -104,7 +104,7 @@
                 Templates</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/surveys">All Templates</a>
             </mat-nav-list>
-          </mat-expansion-panel>
+          </mat-expansion-panel> -->
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
@@ -128,6 +128,10 @@
             <mat-nav-list>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/users">Users</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/smes">Sections</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/pending-signups">Pending Signups</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/create-survey">Create
+                Templates</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/surveys">All Templates</a>
             </mat-nav-list>
           </mat-expansion-panel>
 

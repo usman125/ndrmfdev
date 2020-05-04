@@ -181,3 +181,8 @@ mat-form-field {
     opacity: 0;
     pointer-events: none;
 }
+
+
+table {
+  width: 100%;
+}

@@ -7,6 +7,8 @@ import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
+// import { MatListModule } from "@angular/material/list";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatGridListModule } from "@angular/material/grid-list";
 
 @NgModule({
@@ -22,6 +24,7 @@ import { MatGridListModule } from "@angular/material/grid-list";
     MatButtonModule,
     MatCardModule,
     MatGridListModule,
+    MatProgressSpinnerModule,
   ]
 })
 export class AddSmeModule { }

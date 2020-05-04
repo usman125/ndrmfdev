@@ -140,20 +140,44 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.errorMsg = null;
     this._authStore.setLoading();
     this._loginService.loginUser(values).subscribe(
-      result => {
+      (result) => {
         console.log("RESULT AFTER CALIING LOGIN API:---", result);
         this._authStore.removeLoading();
         var user = {
-          username: result['user']['username'],
+          // username: result['user']['username'],
+          // email: result['user']['email'],
+          // role: result['user']['roles'][0].toLowerCase(),
+          // eligibileFlag: false,
+          // qualificationFlag: false,
+          // roleNames: null,
+          // groupNames: null,
+          // typeName: null,
+          // smeRef: null,
+          // authToken: result['accessToken']
+
+
+          firstName: result['user']['firstName'],
+          lastName: result['user']['lastName'],
           email: result['user']['email'],
-          role: result['user']['roles'][0].toLowerCase(),
+          username: result['user']['username'],
+          password: result['user']['password'] || null,
+          role: result['user']['roles'] ?
+            result['user']['roles'][0] ?
+              result['user']['roles'][0].name.toLowerCase() : 'FIP'.toLowerCase()
+            : null,
+          smeRef: null,
+          department: result['user']['departmentId'] || null,
+          active: result['user']['enabled'],
           eligibileFlag: false,
           qualificationFlag: false,
-          roleNames: null,
-          groupNames: null,
-          typeName: null,
-          smeRef: null,
-          authToken: result['accessToken']
+          roles: result['user']['roles'].length ?
+            result['user']['roles'] :
+            [{ id: result['user']['orgId'], name: result['user']['orgName'] }],
+          orgId: result['user']['orgId'],
+          orgName: result['user']['orgName'],
+          org: [{ 'id': result['user']['orgId'], 'name': result['user']['orgName'] }],
+          authToken: result['accessToken'],
+
         }
         // if (user.role === 'ndrmf' || user.role === 'fip') {
         //   if (result['user']['roleNames'].length) {
@@ -161,6 +185,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         //   }
         // }
 
+        console.log("USER:---", user);
 
         if (user.role === 'sme') {
           this.allSections.forEach(element => {

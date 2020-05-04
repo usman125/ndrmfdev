@@ -45,3 +45,4 @@ export { CreatePrimaryAppraisalComponent } from './create-primary-appraisal/crea
 export { PrimaryAppraisalProjectsComponent } from './primary-appraisal-projects/primary-appraisal-projects.component';
 export { ViewPrimaryAppraisalComponent } from './view-primary-appraisal/view-primary-appraisal.component';
 export { EditUserComponent } from './edit-user/edit-user.component';
+export { PendingSignupsComponent } from './pending-signups/pending-signups.component';

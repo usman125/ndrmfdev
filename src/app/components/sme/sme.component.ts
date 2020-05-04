@@ -7,26 +7,34 @@ import {
   setCurrentSme
 } from "../../stores/sme/sme-replay";
 import { SmeService } from "../../services/sme.service";
+import { SettingsService } from "../../services/settings.service";
 
 @Component({
   selector: 'app-sme',
   templateUrl: './sme.component.html',
   styleUrls: ['./sme.component.css'],
-  providers: [SmeService]
+  providers: []
 })
 export class SmeComponent implements OnInit, OnDestroy {
 
 
-  public displayedColumns = ['name', 'type', 'userRef',];
+  public displayedColumns = ['name', 'userRef',];
   public dataSource: any = [];
   public allSmes: any = [];
+  public loadingProcess: boolean = false;
+  public loadingSection: boolean = false;
+  public allProcessTypes: any = [];
   public Subscription: Subscription = new Subscription();
+  public warnMsg: string = "No Process Selected";
+  public listItem: any = null;
+
 
   constructor(
     private _smesStore: SmeStore,
     private _authStore: AuthStore,
     private _router: Router,
     private _smeService: SmeService,
+    private _settingsService: SettingsService,
   ) { }
 
   ngOnInit() {
@@ -34,34 +42,75 @@ export class SmeComponent implements OnInit, OnDestroy {
       this._authStore.setRouteName('SMES')
     })
 
-    this._smeService.getAllSmes().subscribe(
+    this._settingsService.getProcesses().subscribe(
       result => {
-        console.log("ALL SMES FROM APi:--", result);
-        let smesArray = [];
-        if (result['sectionInfos']) {
-          result['sectionInfos'].forEach(element => {
-            var object = {
-              name: element.sectionName,
-              userRef: element.userName,
-              formGenerated: element.formGenerated,
-              key: element.sectionKey,
-              formIdentity: element.formIdentity,
-            }
-            smesArray.push(object);
-          });
-          this._smesStore.addAllSmes(smesArray);
+        console.log("ALL PROCESSES:---", result);
+        this.allProcessTypes = result;
+      },
+      error => {
+        console.log("ALL PROCESSES ERROR:---", error);
+      }
+    );
+    // this._settingsService.getProcesseMeta().subscribe(
+    //   result => {
+    //     console.log("ALL PROCESSES:---", result);
+    //     this.allProcessTypes = result;
+    //   },
+    //   error => {
+    //     console.log("ALL PROCESSES ERROR:---", error);
+    //   }
+    // );
+
+
+    // this._smeService.getAllSmes().subscribe(
+    //   result => {
+    //     console.log("ALL SMES FROM APi:--", result);
+    //     let smesArray = [];
+    //     if (result['sectionInfos']) {
+    //       result['sectionInfos'].forEach(element => {
+    //         var object = {
+    //           name: element.sectionName,
+    //           userRef: element.userName,
+    //           formGenerated: element.formGenerated,
+    //           key: element.sectionKey,
+    //           formIdentity: element.formIdentity,
+    //         }
+    //         smesArray.push(object);
+    //       });
+    //       this._smesStore.addAllSmes(smesArray);
+    //     }
+    //   },
+    //   error => { }
+    // )
+    // this.Subscription.add(
+    //   this._smesStore.state$.subscribe((data) => {
+    //     this.allSmes = data.smes;
+    //     console.log("ALL SMES FROM STORE;--", this.allSmes);
+    //     this.dataSource = this.allSmes;
+    //   })
+    // )
+
+  }
+
+  fetchSectons(item) {
+    this.loadingSection = true;
+    this.dataSource = [];
+    this.listItem = item;
+    this._settingsService.getProcessMeta(item).subscribe(
+      (result: any) => {
+        this.loadingSection = false;
+        console.log("ALL PROCESSES:---", result);
+        if (result.sections){
+          this.dataSource = result.sections;
+        }else{
+          this.warnMsg = "No Data Found."
         }
       },
-      error => { }
-    )
-    this.Subscription.add(
-      this._smesStore.state$.subscribe((data) => {
-        this.allSmes = data.smes;
-        console.log("ALL SMES FROM STORE;--", this.allSmes);
-        this.dataSource = this.allSmes;
-      })
-    )
-
+      error => {
+        this.loadingSection = false;
+        console.log("ALL PROCESSES ERROR:---", error);
+      }
+    );
   }
 
   editSme(sme) {
