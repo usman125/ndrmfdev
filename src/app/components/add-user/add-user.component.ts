@@ -60,7 +60,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
       department: [null],
       role: [null, Validators.required],
       org: [null, Validators.required],
-      active: [true, Validators.required],
+      active: [true],
     });
   }
 

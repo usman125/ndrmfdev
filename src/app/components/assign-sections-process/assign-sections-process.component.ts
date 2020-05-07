@@ -49,7 +49,20 @@ export class AssignSectionsProcessComponent implements OnInit {
     this._settingsService.getProcessMeta($event).subscribe(
       (result: any) => {
         console.log("RESULT FETCHING TYPE:---", result);
-        this.allProcessType = result;
+        // this.allProcessType = result;
+        var object = {
+          processOwner: null,
+          sections: [],
+        }
+        let dummyTypes = [];
+        object.processOwner = result.processOwner;
+        result.sections.forEach(element => {
+          if (element.sme === null){
+            dummyTypes.push(element);
+          }
+        });
+        object.sections = dummyTypes;
+        this.allProcessType = object;
         this.getProcessOwners();
         this.getSMES();
       },
