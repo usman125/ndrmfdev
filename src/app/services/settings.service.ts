@@ -25,7 +25,16 @@ export class SettingsService {
       url,
     );
   }
-  
+
+  updateProcess(type, values) {
+    console.log("VALUES IN API:---", values);
+    const url = `${AppConfig.apiUrl}/setting/process/${type}/meta`;
+    return this._httpClient.put(
+      url,
+      values
+    );
+  }
+
   getProcessTemplate(type) {
     const url = `${AppConfig.apiUrl}/setting/process/${type}/template`;
     return this._httpClient.get(
@@ -49,14 +58,22 @@ export class SettingsService {
   }
 
   addSectionTemplate(sectionId, values){
+    console.log("VALUES IN SERVICE:--", values);
+    var template = {
+      components: values.components,
+      page: values.page,
+      display: values.type,
+      passingScore: values.passingScore,
+      totalScore: values.totalScore
+    }
     const url = `${AppConfig.apiUrl}/setting/section/${sectionId}/template/add`;
     return this._httpClient.post(
       url,
       {
         "enableAndEffective": true,
         "passingScore": values.passingScore,
-        "template": JSON.stringify(values.components),
-        "templateType": values.display,
+        "template": JSON.stringify(template),
+        "templateType": values.type,
         "totalScore": values.totalScore
       }
     );

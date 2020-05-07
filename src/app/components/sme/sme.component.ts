@@ -18,7 +18,7 @@ import { SettingsService } from "../../services/settings.service";
 export class SmeComponent implements OnInit, OnDestroy {
 
 
-  public displayedColumns = ['name', 'userRef',];
+  public displayedColumns = ['name', 'userRef', 'actions'];
   public dataSource: any = [];
   public allSmes: any = [];
   public loadingProcess: boolean = false;

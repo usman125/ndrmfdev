@@ -112,6 +112,20 @@ export class UserService {
     );
   }
 
+  withRoleprocessOwner() {
+    const url = `${AppConfig.apiUrl}/user/withRoleprocessOwner`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  withRoleSME() {
+    const url = `${AppConfig.apiUrl}/user/withRoleSME`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
 
 
 }

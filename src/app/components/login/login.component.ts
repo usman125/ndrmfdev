@@ -1,19 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthStore } from '../../stores/auth/auth-store';
-import { UsersStore } from '../../stores/users/users-store';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { Subscription } from "rxjs";
 import * as _ from 'lodash';
 import { LoginService } from "../../services/login.service";
-import { UserService } from "../../services/user.service";
-import { SmeService } from "../../services/sme.service";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  providers: [LoginService, SmeService]
+  providers: []
 })
 
 export class LoginComponent implements OnInit, OnDestroy {
@@ -26,15 +23,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   themeName: any = null;
   errorMsg: any = null;
+  user: any = null;
   loading: boolean;
 
   constructor(
     private _authStore: AuthStore,
-    private _usersStore: UsersStore,
     private _router: Router,
     private _formBuilder: FormBuilder,
-    private _userService: UserService,
-    private _smeService: SmeService,
     private _loginService: LoginService,
   ) {
     this._buildLoginForm();
@@ -136,26 +131,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   setLoggedUser(values) {
-    // var dummyuser = _.find(this.allUsers, { 'username': values.username, 'password': values.password });
     this.errorMsg = null;
     this._authStore.setLoading();
     this._loginService.loginUser(values).subscribe(
-      (result) => {
+      (result: any) => {
         console.log("RESULT AFTER CALIING LOGIN API:---", result);
         this._authStore.removeLoading();
-        var user = {
-          // username: result['user']['username'],
-          // email: result['user']['email'],
-          // role: result['user']['roles'][0].toLowerCase(),
-          // eligibileFlag: false,
-          // qualificationFlag: false,
-          // roleNames: null,
-          // groupNames: null,
-          // typeName: null,
-          // smeRef: null,
-          // authToken: result['accessToken']
-
-
+        this.user = {
           firstName: result['user']['firstName'],
           lastName: result['user']['lastName'],
           email: result['user']['email'],
@@ -163,7 +145,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           password: result['user']['password'] || null,
           role: result['user']['roles'] ?
             result['user']['roles'][0] ?
-              result['user']['roles'][0].name.toLowerCase() : 'FIP'.toLowerCase()
+              result['user']['roles'][0].toLowerCase() : 'FIP'.toLowerCase()
             : null,
           smeRef: null,
           department: result['user']['departmentId'] || null,
@@ -179,49 +161,64 @@ export class LoginComponent implements OnInit, OnDestroy {
           authToken: result['accessToken'],
 
         }
-        // if (user.role === 'ndrmf' || user.role === 'fip') {
-        //   if (result['user']['roleNames'].length) {
-        //     user.role = result['user']['roleNames'][0];
-        //   }
-        // }
 
-        console.log("USER:---", user);
+        console.log("USER:---", this.user);
+        if (this.user.role !== 'fip') {
 
-        if (user.role === 'sme') {
-          this.allSections.forEach(element => {
-            if (element.userName === user.username) user.smeRef = element.sectionKey;
-          });
-        }
 
-        this._authStore.setAuthToken(user.authToken);
-        this._authStore.setLoginState(true);
-        this._authStore.setUserRole(user.role);
-        this._authStore.setEligibleFlag(user.eligibileFlag);
-        this._authStore.setQualificationFlag(user.qualificationFlag);
-        this._authStore.setThemeName(this.themeName);
-        this._authStore.openSideNav();
-        var newUser = JSON.stringify(user).slice();
-        console.log(newUser);
-        localStorage.setItem('user', newUser);
-        if (user.role === 'admin') {
-          console.log("Login CAlled:--", user);
-          this._router.navigate(['users']);
-          // window.location.href = '/surveys';
-        } else if (user.role === 'fip') {
-          this._router.navigate(['fip-home']);
-        } else if (user.role === 'sme') {
-          this._router.navigate(['accreditation-requests']);
+          this._authStore.setAuthToken(this.user.authToken);
+          this._authStore.setLoginState(true);
+          this._authStore.setUserRole(this.user.role);
+          this._authStore.setEligibleFlag(this.user.eligibileFlag);
+          this._authStore.setQualificationFlag(this.user.qualificationFlag);
+          this._authStore.setThemeName(this.themeName);
+          this._authStore.openSideNav();
+          var newUser = JSON.stringify(this.user);
+          console.log(newUser);
+          localStorage.setItem('user', newUser);
+          if (this.user.role === 'admin') {
+            // console.log("Login CAlled:--", this.user);
+            this._router.navigate(['users']);
+            // } else if (this.user.role === 'fip') {
+            //   this._router.navigate(['fip-home']);
+          } else if (this.user.role === 'sme') {
+            this._router.navigate(['accreditation-requests']);
+          }
+        } else {
+          var newUser = JSON.stringify(this.user);
+          console.log(newUser);
+          localStorage.setItem('user', newUser);
+          this.checkAccrediatedStatus();
         }
       }, error => {
-        // this.errorMsg = error.error.responseDesc;
         console.log("ERROR:--", error);
         this._authStore.removeLoading();
       }
+      );
+    }
+    
+    ngOnDestroy() {
+      this.Subscription.unsubscribe();
+    }
+    
+    checkAccrediatedStatus() {
+      console.log(this.user);
+      this._loginService.checkAccreditationStatus().subscribe(
+        (result: any) => {
+          console.log("RESULT FROM ACCREDIATED SATUS:--", result);
+          this.user.eligibileFlag = result.eligibility;
+          this.user.qualificationFlag = result.qualification;
+          this._authStore.setEligibleFlag(this.user.eligibileFlag);
+          this._authStore.setQualificationFlag(this.user.qualificationFlag);
+          var newUser = JSON.stringify(this.user);
+          console.log(newUser);
+          localStorage.setItem('user', newUser);
+        this._router.navigate(['fip-home']);
+      },
+      error => {
+        console.log("RESULT FROM ACCREDIATED SATUS:--", error);
+      }
     );
-  }
-
-  ngOnDestroy() {
-    this.Subscription.unsubscribe();
   }
 
 }

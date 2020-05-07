@@ -99,7 +99,7 @@ import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
 // import { MatGridListModule } from "@angular/material/grid-list";
 // import { GiaProjectsModule } from "./modules/gia-projects/gia-projects.module";
 import { JwtModule } from "@auth0/angular-jwt";
-import { AssignSectionsProcessComponent } from './components/assign-sections-process/assign-sections-process.component';
+// import { AssignSectionsProcessComponent } from './components/assign-sections-process/assign-sections-process.component';
 // import { PendingSignupsComponent } from './components/pending-signups/pending-signups.component';
 
 export function tokenGetter() {
@@ -119,7 +119,7 @@ export function tokenGetter() {
     AddProjectComponent,
     // EditUserComponent,
     EditSmeComponent,
-    AssignSectionsProcessComponent,
+    // AssignSectionsProcessComponent,
     // PendingSignupsComponent,
     // ViewPrimaryAppraisalComponent,
     // PrimaryAppraisalProjectsComponent,

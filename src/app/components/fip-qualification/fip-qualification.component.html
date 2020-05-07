@@ -57,9 +57,9 @@
       <mat-card-content>
         <div class="toggle-btns">
           <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
-            <mat-button-toggle *ngFor="let item of allSmes" (change)="setDefaults()" [value]="item.key"
+            <mat-button-toggle *ngFor="let item of allSmes" (change)="setDefaults()" [value]="item"
               aria-label="Text align left">
-              {{item.name}}
+              {{item.sectionName}}
             </mat-button-toggle>
           </mat-button-toggle-group>
         </div>

@@ -1,22 +1,22 @@
 <mat-card class="p-2 m-4">
-  <!-- <div class="toggle-btns"> -->
-  <!-- <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
+  <div class="toggle-btns">
+  <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
       <mat-button-toggle *ngFor="let item of allSections" MatButtonToggleAppearance="standard" color="primary"
-        (change)="onValChange()" [value]="item.key">
-        {{item.name}}
+        (change)="onValChange()" [value]="item">
+        {{item.sectionName}}
       </mat-button-toggle>
-    </mat-button-toggle-group> -->
-  <!-- </div> -->
+    </mat-button-toggle-group>
+  </div>
   <mat-card-content>
-    <div *ngFor="let item of allSections">
-      <h5 style="padding: 10px;"> {{item.sectionName}}</h5>
+    <!-- <div *ngFor="let item of allSections"> -->
+      <!-- <h5 style="padding: 10px;"> {{item.sectionName}}</h5> -->
       <div style="margin: 20px 10px;" [ngClass]="{'update-btn': secondForm}">
         <!-- <formio readOnly="true" *ngIf="form?.exists" [form]="form" [submission]="{data:secondForm}"
           [refresh]="refreshForm" (submit)="onSubmit($event)"></formio> -->
-        <formio [form]="item.template" [submission]="{data:secondForm}" [refresh]="refreshForm"
+        <formio [form]="form" [submission]="{data:secondForm}" [refresh]="refreshForm"
           (submit)="onSubmit($event)"></formio>
         <!-- <div *ngIf="secondForm">{{secondForm | json}}</div> -->
       </div>
-    </div>
+    <!-- </div> -->
   </mat-card-content>
 </mat-card>

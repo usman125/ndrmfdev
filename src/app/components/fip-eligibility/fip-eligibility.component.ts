@@ -159,6 +159,8 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
             template: JSON.parse(c.template)
           }
         })
+        this.groupType = this.allSections[0];
+        this.form = this.allSections[0].template;
       },
       error => {
         console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
@@ -166,25 +168,27 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
     );
   }
 
-  setDefaults() {
-    var resultForm = _.find(this.allProfiles, { 'smeRef': this.groupType })
-    this.loggedUser = JSON.parse(localStorage.getItem('user'));
-    this.form = resultForm;
-    this.secondForm = null;
-    // if (this.form) {
+  // setDefaults() {
+  //   var resultForm = _.find(this.allProfiles, { 'smeRef': this.groupType })
+  //   this.loggedUser = JSON.parse(localStorage.getItem('user'));
+  //   this.form = resultForm;
+  //   this.secondForm = null;
+  //   // if (this.form) {
 
-    var request = _.find(this.allRequests, { 'formIdentity': this.form.smeRef, 'userRef': this.loggedUser.username })
-    if (request) {
-      this.secondForm = request.formSubmitData;
-      this.form.exists = true;
-    } else {
-      this.form.exists = false;
-    }
-    // }
-  }
+  //   var request = _.find(this.allRequests, { 'formIdentity': this.form.smeRef, 'userRef': this.loggedUser.username })
+  //   if (request) {
+  //     this.secondForm = request.formSubmitData;
+  //     this.form.exists = true;
+  //   } else {
+  //     this.form.exists = false;
+  //   }
+  //   // }
+  // }
 
   onValChange() {
-    this.setDefaults()
+    // this.setDefaults()
+    // console.log(this.groupType)
+    this.form = this.groupType.template;
   }
 
   onSubmit($event) {

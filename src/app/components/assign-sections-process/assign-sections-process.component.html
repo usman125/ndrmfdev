@@ -1,1 +1,49 @@
-<p>assign-sections-process works!</p>
+<mat-card class="m-4">
+  <mat-card-header class="p-2">
+    <h4>Assign Process & Sections</h4>
+  </mat-card-header>
+  <mat-card-content>
+
+    <mat-form-field class="p-2">
+      <mat-label>Process Type</mat-label>
+      <mat-select [(ngModel)]="process" (ngModelChange)="processChanged($event)">
+        <mat-option *ngFor="let item of allProcess" [value]="item">
+          {{item}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="p-2" *ngIf="process">
+      <div class="po">
+        <!-- {{allProcessType}} -->
+        <div class="po-name">Process Owner</div>
+        <mat-form-field>
+          <mat-label>Select Process Owner</mat-label>
+          <mat-select [compareWith]="comparePoObjects" [(ngModel)]="allProcessType.processOwner" (ngModelChange)="poChanged($event)">
+            <mat-option *ngFor="let po of poUsers;" [value]="po">
+              {{po.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div *ngFor="let obj of allProcessType.sections;">
+        <div class="smes">
+
+          <div class="sme-name">{{obj.name}}</div>
+          <mat-form-field>
+            <mat-label>Select SME</mat-label>
+            <mat-select [compareWith]="compareSmeObjects" [(ngModel)]="obj.sme" (ngModelChange)="smeChanged($event)">
+              <mat-option *ngFor="let sme of smeUsers;" [value]="sme">
+                {{sme.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <mat-card-actions class="p-2">
+      <button *ngIf="process" (click)="updateProcessMeta()" mat-button color="primary">SAVE</button>
+    </mat-card-actions>
+
+  </mat-card-content>
+</mat-card>

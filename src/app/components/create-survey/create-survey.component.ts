@@ -101,18 +101,15 @@ export class CreateSurveyComponent implements OnInit {
           'totalScore': 0,
         }, { onlySelf: true })
       }
-
+      this.allSmes = [];
       this._settingsService.getProcessMeta(item).subscribe(
         (result: any) => {
           console.log("ALL PROCESSES:---", result);
           if (result.sections) {
             this.allSmes = result.sections;
-          }else{
-            this.allSmes = [];
           }
         },
         error => {
-          // this.loadingSection = false;
           console.log("ALL PROCESSES ERROR:---", error);
         }
       );
@@ -158,8 +155,6 @@ export class CreateSurveyComponent implements OnInit {
     values.components = this.form.components
     values.page = this.form.page;
     values.numOfPages = this.form.numPages;
-    values.status = 'active';
-    values.display = this.form.display;
     this._settingsService.addSectionTemplate(this.selectedSme.id, values).subscribe(
       result => {
         console.log("RESULT FROM ADD SURVEY:--", result);

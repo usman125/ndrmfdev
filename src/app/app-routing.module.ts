@@ -183,6 +183,11 @@ const routes: Routes = [
     loadChildren: () => import('./modules/pending-signups/pending-signups.module').then(m => m.PendingSignupsModule)
   },
   {
+    path: 'assign-sections-process',
+    // component: SiteLayout,
+    loadChildren: () => import('./modules/assign-sections-process/assign-sections-process.module').then(m => m.AssignSectionsProcessModule)
+  },
+  {
     path: 'users',
     loadChildren: () => import('./modules/users/users.module').then(m => m.UsersModule),
     canActivate: [AuthGuard],
@@ -235,6 +240,12 @@ const routes: Routes = [
   {
     path: 'add-sme',
     loadChildren: () => import('./modules/add-sme/add-sme.module').then(m => m.AddSmeModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'edit-sme',
+    loadChildren: () => import('./modules/edit-sme/edit-sme.module').then(m => m.EditSmeModule),
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin] }
   },

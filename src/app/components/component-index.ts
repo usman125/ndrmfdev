@@ -46,3 +46,4 @@ export { PrimaryAppraisalProjectsComponent } from './primary-appraisal-projects/
 export { ViewPrimaryAppraisalComponent } from './view-primary-appraisal/view-primary-appraisal.component';
 export { EditUserComponent } from './edit-user/edit-user.component';
 export { PendingSignupsComponent } from './pending-signups/pending-signups.component';
+export { AssignSectionsProcessComponent } from './assign-sections-process/assign-sections-process.component';
