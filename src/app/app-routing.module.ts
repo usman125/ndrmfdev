@@ -228,7 +228,7 @@ const routes: Routes = [
     loadChildren: () => import('./modules/accreditation-request/accreditation-request.module').then(m => m.AccreditationRequestModule),
     canActivate: [AuthGuard],
     data: {
-      roles: [Role.Admin, Role.Sme]
+      roles: [Role.Po, Role.Sme]
     }
   },
   {
@@ -265,7 +265,7 @@ const routes: Routes = [
     path: 'eligibility-requests',
     loadChildren: () => import('./modules/eligibility-requests/eligibility-requests.module').then(m => m.EligibilityRequestsModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Po] }
   },
   {
     path: 'proposal-sections',

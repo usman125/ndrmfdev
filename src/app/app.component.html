@@ -90,7 +90,7 @@
           src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png" alt="Logo">
       </div>
 
-      <div class="hero" [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'fip'">
+      <div class="hero" [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'fip' || loggedUserRole === 'process owner'">
         <mat-accordion multi="true">
 
           <!-- <mat-expansion-panel [expanded]="true">
@@ -105,7 +105,7 @@
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/surveys">All Templates</a>
             </mat-nav-list>
           </mat-expansion-panel> -->
-          <mat-expansion-panel [expanded]="true">
+          <!-- <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Accreditation Requests
@@ -117,7 +117,7 @@
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/accreditation-requests">Qualification
                 Requests</a>
             </mat-nav-list>
-          </mat-expansion-panel>
+          </mat-expansion-panel> -->
 
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
@@ -172,7 +172,8 @@
 
         </mat-accordion>
       </div>
-      <div class="hero" [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'admin'">
+      
+      <div class="hero" [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'admin' || loggedUserRole === 'process owner'">
         <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
@@ -184,9 +185,9 @@
             <mat-nav-list>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/fip-eligibility">Eligibility
                 Management</a>
-              <a *ngIf="!userEligibleStatus" mat-list-item disabled href="javascript: void(0);">Qualification
+              <a *ngIf="userEligibleStatus === 'Not Initiated' || userEligibleStatus === 'Under Review'" mat-list-item disabled href="javascript: void(0);">Qualification
                 Management</a>
-              <a *ngIf="userEligibleStatus" mat-list-item routerLinkActive="active-menu-item"
+              <a *ngIf="userEligibleStatus === 'Approved'" mat-list-item routerLinkActive="active-menu-item"
                 routerLink="/fip-qualification">Qualification Management</a>
             </mat-nav-list>
           </mat-expansion-panel>
@@ -204,7 +205,8 @@
 
         </mat-accordion>
       </div>
-      <div class="hero" [hidden]="loggedUserRole === 'admin' || loggedUserRole === 'fip'">
+
+      <div class="hero" [hidden]="loggedUserRole === 'admin' || loggedUserRole === 'fip' || loggedUserRole === 'process owner'">
         <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
@@ -221,6 +223,27 @@
 
         </mat-accordion>
       </div>
+
+      <div class="hero" [hidden]="loggedUserRole === 'admin' || loggedUserRole === 'fip' || loggedUserRole === 'sme'">
+        <mat-accordion multi="true">
+
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Accreditation Requests
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/eligibility-requests">Eligibility
+                Requests</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/accreditation-requests">Qualification
+                Requests</a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+
+        </mat-accordion>
+      </div>
+
     </mat-sidenav>
     <mat-sidenav-content class="mat-app-background">
       <div [hidden]="!loading" class="loadingCircle">

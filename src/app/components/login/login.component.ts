@@ -136,7 +136,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this._loginService.loginUser(values).subscribe(
       (result: any) => {
         console.log("RESULT AFTER CALIING LOGIN API:---", result);
-        this._authStore.removeLoading();
         this.user = {
           firstName: result['user']['firstName'],
           lastName: result['user']['lastName'],
@@ -150,8 +149,8 @@ export class LoginComponent implements OnInit, OnDestroy {
           smeRef: null,
           department: result['user']['departmentId'] || null,
           active: result['user']['enabled'],
-          eligibileFlag: false,
-          qualificationFlag: false,
+          eligibileFlag: '',
+          qualificationFlag: '',
           roles: result['user']['roles'].length ?
             result['user']['roles'] :
             [{ id: result['user']['orgId'], name: result['user']['orgName'] }],
@@ -161,26 +160,24 @@ export class LoginComponent implements OnInit, OnDestroy {
           authToken: result['accessToken'],
 
         }
-
         console.log("USER:---", this.user);
+        this._authStore.setAuthToken(this.user.authToken);
+        this._authStore.setUserRole(this.user.role);
+        this._authStore.setThemeName(this.themeName);
+        this._authStore.setEligibleFlag(this.user.eligibileFlag);
+        this._authStore.setQualificationFlag(this.user.qualificationFlag);
         if (this.user.role !== 'fip') {
-
-
-          this._authStore.setAuthToken(this.user.authToken);
-          this._authStore.setLoginState(true);
-          this._authStore.setUserRole(this.user.role);
-          this._authStore.setEligibleFlag(this.user.eligibileFlag);
-          this._authStore.setQualificationFlag(this.user.qualificationFlag);
-          this._authStore.setThemeName(this.themeName);
           this._authStore.openSideNav();
+          this._authStore.setLoginState(true);
           var newUser = JSON.stringify(this.user);
           console.log(newUser);
           localStorage.setItem('user', newUser);
+          this._authStore.removeLoading();
           if (this.user.role === 'admin') {
             // console.log("Login CAlled:--", this.user);
             this._router.navigate(['users']);
-            // } else if (this.user.role === 'fip') {
-            //   this._router.navigate(['fip-home']);
+          } else if (this.user.role === 'process owner') {
+            this._router.navigate(['eligibility-requests']);
           } else if (this.user.role === 'sme') {
             this._router.navigate(['accreditation-requests']);
           }
@@ -194,28 +191,32 @@ export class LoginComponent implements OnInit, OnDestroy {
         console.log("ERROR:--", error);
         this._authStore.removeLoading();
       }
-      );
-    }
-    
-    ngOnDestroy() {
-      this.Subscription.unsubscribe();
-    }
-    
-    checkAccrediatedStatus() {
-      console.log(this.user);
-      this._loginService.checkAccreditationStatus().subscribe(
-        (result: any) => {
-          console.log("RESULT FROM ACCREDIATED SATUS:--", result);
-          this.user.eligibileFlag = result.eligibility;
-          this.user.qualificationFlag = result.qualification;
-          this._authStore.setEligibleFlag(this.user.eligibileFlag);
-          this._authStore.setQualificationFlag(this.user.qualificationFlag);
-          var newUser = JSON.stringify(this.user);
-          console.log(newUser);
-          localStorage.setItem('user', newUser);
+    );
+  }
+
+  ngOnDestroy() {
+    this.Subscription.unsubscribe();
+  }
+
+  checkAccrediatedStatus() {
+    console.log(this.user);
+    this._loginService.checkAccreditationStatus().subscribe(
+      (result: any) => {
+        console.log("RESULT FROM ACCREDIATED SATUS:--", result);
+        this.user.eligibileFlag = result.eligibilityStatus;
+        this.user.qualificationFlag = result.qualificationStatus;
+        this._authStore.setEligibleFlag(this.user.eligibileFlag);
+        this._authStore.setQualificationFlag(this.user.qualificationFlag);
+        this._authStore.openSideNav();
+        this._authStore.setLoginState(true);
+        var newUser = JSON.stringify(this.user);
+        console.log(newUser);
+        localStorage.setItem('user', newUser);
+        this._authStore.removeLoading();
         this._router.navigate(['fip-home']);
       },
       error => {
+        this._authStore.removeLoading();
         console.log("RESULT FROM ACCREDIATED SATUS:--", error);
       }
     );

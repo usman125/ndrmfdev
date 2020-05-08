@@ -11,7 +11,7 @@ import { AuthStore } from '../stores/auth/auth-store';
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-  userEligibleStatus: boolean;
+  userEligibleStatus: string;
 
   constructor(
     private _authService: LoginService,

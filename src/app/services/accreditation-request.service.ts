@@ -71,7 +71,7 @@ export class AccreditationRequestService {
         "formIdentity": values.formIdentity,
         "formSubmitData": values.formSubmitData,
         "prevReview": values.prevReview,
-        "ratings": values.ratings,  
+        "ratings": values.ratings,
         "sectionKey": values.sectionKey,
         "startDate": values.startDate,
         "status": values.status,
@@ -79,6 +79,31 @@ export class AccreditationRequestService {
         "userUpdateFlag": values.userUpdateFlag
       },
       this.httpOptions
+    );
+  }
+
+  addEligibilityRequest(data, template) {
+    const url = `${AppConfig.apiUrl}/accreditation/eligibility/add`;
+    return this._httpClient.post(
+      url,
+      {
+        "data": data,
+        "template": template,
+      }
+    );
+  }
+
+  getEligibilityRequest() {
+    const url = `${AppConfig.apiUrl}/accreditation/eligibility`;
+    return this._httpClient.get(
+      url
+    );
+  }
+  
+  getSingleEligibilityRequest(id) {
+    const url = `${AppConfig.apiUrl}/accreditation/eligibility/${id}`;
+    return this._httpClient.get(
+      url
     );
   }
 

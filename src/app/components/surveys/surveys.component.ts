@@ -107,6 +107,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadingSection = true;
     this.toggle = false;
     this.editFormFlag = false;
+    this.dataSource = [];
     this._settingsService.getProcessTemplate(item).subscribe(
       (result: any) => {
         this.loadingSection = false;

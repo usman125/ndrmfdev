@@ -161,6 +161,8 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
         })
         this.groupType = this.allSections[0];
         this.form = this.allSections[0].template;
+        this.form.exists = false;
+        this.getEligibilityRequest();
       },
       error => {
         console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
@@ -184,6 +186,31 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
   //   }
   //   // }
   // }
+
+  getEligibilityRequest(){
+    this._accreditationRequestService.getEligibilityRequest().subscribe(
+      (result: any) => {
+        console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", result);
+        this._accreditationRequestService.getSingleEligibilityRequest(result[0].id).subscribe(
+          (result: any) => {
+            console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", result);
+            // if (result.length){
+              this.form.exists = true;
+              this.secondForm = JSON.parse(result.data);
+            // }
+            console.log(this.form, this.secondForm);
+          },
+          error => {
+            console.log("ERROR SINGLE ELIGIBILITY REQUEST:---", error);
+          }
+        );
+      },
+      error => {
+        console.log("ERROR GEETING ELIGIBILITY REQUESTS:---", error);
+      }
+    );
+
+  }
 
   onValChange() {
     // this.setDefaults()
@@ -211,7 +238,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
     //     "userName": this.loggedUser.username,
     //     "userUpdateFlag": false
     //   }
-      console.log('NEW SUBMITTED:--', $event.data);
+    console.log('NEW SUBMITTED:--', $event.data);
     //   this._accreditationRequestService.addAccreditationRequest(values).subscribe(
     //     result => {
     //       console.log("RESULT AFTER ADDING REQUEST:--", result);
@@ -238,6 +265,17 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
     // } else {
     //   console.log('ALREADY SUBMITTED:--');
     // }
+    this._accreditationRequestService.addEligibilityRequest(
+      JSON.stringify($event.data),
+      JSON.stringify(this.form)
+    ).subscribe(
+      result => {
+        console.log("RESULT AFTER ADDING ELIGIBLITY:--", result);
+      },
+      error => {
+        console.log("ERROR AFTER ADDING ELIGIBLITY:--", error);
+      }
+    );
   }
 
   ngOnDestroy() {

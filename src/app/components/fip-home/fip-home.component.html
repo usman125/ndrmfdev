@@ -1,13 +1,13 @@
 <mat-card style="margin: 20px;">
   <mat-card-content>
-    <pre *ngIf="!eligibilityFlag">
+    <pre *ngIf="eligibilityFlag === 'Under Review' || eligibilityFlag === 'Not Initiated'">
       You must apply for <code><a color="primary" routerLink="/fip-eligibility">Eligibility Accreditation</a></code>
       
       in order to proceed for <code><a color="primary" href="javascript: void(0);">Qualification Accreditation</a></code> 
       
       once your <code id="answer">Accredication Status</code> is set you can to apply for projects.
     </pre>
-    <pre *ngIf="eligibilityFlag">
+    <pre *ngIf="eligibilityFlag === 'Approved'">
     <!-- <pre> -->
       You are eligible for <code><a color="primary" routerLink="/fip-eligibility">Eligibility Accreditation</a></code>
       

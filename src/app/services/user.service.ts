@@ -56,14 +56,11 @@ export class UserService {
     );
   }
 
-  updateEligibleStatus(username) {
-    const url = `${AppConfig.apiUrl}/user/updateEligibleStatus`;
-    return this._httpClient.put(
+  updateEligibleStatus(id) {
+    const url = `${AppConfig.apiUrl}/accreditation/eligibility/${id}/approve`;
+    return this._httpClient.post(
       url,
-      {
-        "eligible": true,
-        "username": username
-      },
+      null
     );
   }
 

@@ -262,9 +262,9 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit() {
     // console.log("FIP QUALIFICATION STARTED:---", this.loggedUser)
-    // if (!this.loggedUser.eligibileFlag) {
-    //   this._router.navigate(['fip-home']);
-    // }
+    if (this.loggedUser.eligibileFlag === 'Not Initiated' || this.loggedUser.eligibileFlag === 'Under Review') {
+      this._router.navigate(['fip-home']);
+    }
 
   }
 
