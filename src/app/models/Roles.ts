@@ -1,5 +1,5 @@
 export enum Role {
-  Fip = 'signatory',
+  Fip = 'fip',
   Admin = 'admin',
   Sme = 'sme',
   Po = 'process owner',
