@@ -9,6 +9,8 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
+import { MatListModule } from "@angular/material/list";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { FormioModule } from 'angular-formio';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -27,7 +29,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FormioModule,
     MatButtonModule,
     MatSortModule,
+    MatListModule,
     MatTooltipModule,
+    MatProgressSpinnerModule,
   ]
 })
 

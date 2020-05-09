@@ -12,23 +12,24 @@
               [formControl]="addSmeForm.controls['name']" />
           </mat-form-field>
         </mat-grid-tile>
-        <mat-grid-tile>
+        <!-- <mat-grid-tile>
           <mat-form-field>
             <mat-label>Key</mat-label>
             <input matInput type="text" placeholder="e.g. abc124" formControlName="key"
               [formControl]="addSmeForm.controls['key']" />
           </mat-form-field>
-        </mat-grid-tile>
+        </mat-grid-tile> -->
         <mat-grid-tile>
           <mat-form-field>
-            <mat-label>Select Type</mat-label>
+            <mat-label>Process Type</mat-label>
             <mat-select [formControl]="addSmeForm.controls['formIdentity']">
-              <mat-option *ngFor="let type of formIdentity" [value]="type">{{type}}</mat-option>
+              <mat-option *ngFor="let type of processTypes" [value]="type">{{type}}</mat-option>
             </mat-select>
           </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile>
-          <button [disabled]="!addSmeForm.valid" mat-raised-button color="primary" type="submit">{{'Add'}}</button>
+          <mat-progress-spinner *ngIf="addingFlag" mode="indeterminate" diameter="35" color="primary"></mat-progress-spinner>
+          <button *ngIf="!addingFlag" [disabled]="!addSmeForm.valid" mat-raised-button color="primary" type="submit">{{'Add'}}</button>
         </mat-grid-tile>
       </form>
       <mat-grid-tile>

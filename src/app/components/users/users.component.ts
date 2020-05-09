@@ -61,7 +61,10 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
             email: result[i].email,
             username: result[i].username,
             password: result[i].password || null,
-            role: result[i].roles ? result[i].roles[0].name.toLowerCase() : null,
+            role: result[i].roles ? 
+                    result[i].roles[0] ? 
+                      result[i].roles[0].name.toLowerCase() : 'FIP'.toLowerCase() 
+                  : null,
             smeRef: null,
             department: result[i].departmentId || null,
             active: result[i].enabled,

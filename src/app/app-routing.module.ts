@@ -178,6 +178,16 @@ const routes: Routes = [
     loadChildren: () => import('./modules/register/register.module').then(m => m.RegisterModule)
   },
   {
+    path: 'pending-signups',
+    // component: SiteLayout,
+    loadChildren: () => import('./modules/pending-signups/pending-signups.module').then(m => m.PendingSignupsModule)
+  },
+  {
+    path: 'assign-sections-process',
+    // component: SiteLayout,
+    loadChildren: () => import('./modules/assign-sections-process/assign-sections-process.module').then(m => m.AssignSectionsProcessModule)
+  },
+  {
     path: 'users',
     loadChildren: () => import('./modules/users/users.module').then(m => m.UsersModule),
     canActivate: [AuthGuard],
@@ -218,7 +228,7 @@ const routes: Routes = [
     loadChildren: () => import('./modules/accreditation-request/accreditation-request.module').then(m => m.AccreditationRequestModule),
     canActivate: [AuthGuard],
     data: {
-      roles: [Role.Admin, Role.Sme]
+      roles: [Role.Po, Role.Sme]
     }
   },
   {
@@ -230,6 +240,12 @@ const routes: Routes = [
   {
     path: 'add-sme',
     loadChildren: () => import('./modules/add-sme/add-sme.module').then(m => m.AddSmeModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'edit-sme',
+    loadChildren: () => import('./modules/edit-sme/edit-sme.module').then(m => m.EditSmeModule),
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin] }
   },
@@ -249,7 +265,7 @@ const routes: Routes = [
     path: 'eligibility-requests',
     loadChildren: () => import('./modules/eligibility-requests/eligibility-requests.module').then(m => m.EligibilityRequestsModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Po] }
   },
   {
     path: 'proposal-sections',

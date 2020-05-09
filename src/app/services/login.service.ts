@@ -59,4 +59,15 @@ export class LoginService {
 
   }
 
+  
+  checkAccreditationStatus() {
+    const url = `${AppConfig.apiUrl}/accreditation/status`;
+    return this._httpClient.get(
+      url,
+    );
+
+  }
+
+
+
 }

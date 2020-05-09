@@ -20,7 +20,7 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
   public allRequests: any = [];
   public allSurveys: any = [];
   public Subscription: Subscription = new Subscription();
-  public displayedColumns = ['user', 'actions'];
+  public displayedColumns = ['user', 'status', 'actions'];
   public dataSource = [];
   public toggle: boolean = false;
   public selectedRequest: any = null;
@@ -50,6 +50,7 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this._authStore.setRouteName('ACCREDITATION-ELIGIBILITY-REQUESTS');
     });
+    this.getEligibilityRequest();
     this.Subscription.add(
       this._authStore.state$.subscribe((data) => {
         this.addMobileClasses = data.auth.applyMobileClasses;
@@ -57,117 +58,117 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
       })
     );
 
-    this._surveysService.getAllSurveys().subscribe(
-      result => {
-        let surveysArray = []
-        // console.log("ALL SURVEYS FROM API:--", result['formInfoList']);
-        if (result['formInfoList']) {
-          result['formInfoList'].forEach(element => {
-            var object = {
-              name: element.sectionName,
-              smeRef: element.sectionKey,
-              formIdentity: element.formIdentity,
-              passScore: element.passingScore,
-              totalScore: element.totalScore,
-              display: element.displayType,
-              page: element.page,
-              numPages: element.numOfPages,
-              components: JSON.parse(element.component),
-            }
-            surveysArray.push(object)
-          });
-          this._surveysStore.addAllForms(surveysArray);
-        }
-        this._accreditationRequestService.getAllAccreditationRequests().subscribe(
-          result => {
-            // console.log("RESULT FROM ALL API REQUESTS:--", result['accreditationInfos']);
-            let tempRequestsArray = [];
-            if (result['accreditationInfos']) {
-              result['accreditationInfos'].forEach(element => {
-                var object = {
-                  userRef: element.userName,
-                  formSubmitData: JSON.parse(element.formSubmitData),
-                  formData: element.formData,
-                  status: element.status,
-                  formIdentity: element.sectionKey,
-                  startDate: element.startDate,
-                  endDate: element.endDate,
-                  previousReview: element.prevReview,
-                  currentReview: element.currentReview,
-                  requestKey: element.requestKey,
-                  userUpdateFlag: element.userUpdateFlag,
-                  rating: element.ratings,
-                }
-                tempRequestsArray.push(object);
-              })
-            }
-            this._accreditationRequestStore.addAllRequests(tempRequestsArray);
-            this._userService.getAllUsers().subscribe(
-              result => {
-                this._authStore.removeLoading();
-                let usersArray = [];
-                if (result['userInfoList']) {
-                  for (let i = 0; i < result['userInfoList'].length; i++) {
-                    var object = {
-                      name: result['userInfoList'][i].firstName,
-                      email: result['userInfoList'][i].email,
-                      role: result['userInfoList'][i].typeName,
-                      smeRef: result['userInfoList'][i].roleName,
-                      department: null,
-                      username: result['userInfoList'][i].username,
-                      password: null,
-                      active: result['userInfoList'][i].active,
-                      eligibileFlag: result['userInfoList'][i].eligible,
-                      qualificationFlag: result['userInfoList'][i].qualified,
-                    }
-                    if (result['userInfoList'][i].typeName === 'ndrmf') {
-                      if (result['userInfoList'][i].roleNames) {
-                        object.role = result['userInfoList'][i].roleNames[0];
-                      }
-                    }
-                    usersArray.push(object);
-                  }
-                  this._usersStore.setAllUsers(usersArray);
-                }
-                this.Subscription.add(
-                  this._usersStore.state$.subscribe((data) => {
-                    // this.allSurveys = data.users;
-                    console.log("ALL USERS:--", data.users);
-                  })
-                )
-              },
-              error => {
-                this._authStore.removeLoading();
-                console.log("ERROR FROM ALL USERS:--", error);
-              }
-            );
-            this.Subscription.add(
-              this._accreditationRequestStore.state$.subscribe((data) => {
-                this.allRequests = _.chain(data.requests)
-                  .filter({ requestKey: 'eligibilty' })
-                  .groupBy('userRef')
-                  .map((val, user) => {
-                    return { val, user }
-                  })
-                  .value();
-                this.dataSource = this.allRequests;
-              })
-            )
-            this.Subscription.add(
-              this._surveysStore.state$.subscribe((data) => {
-                this.allSurveys = data.surveys;
-              })
-            )
-          },
-          error => {
-            console.log("ERROR FROM ALL REQUESTS:--", error);
-          }
-        );
-      },
-      error => {
-        console.log("ERROR SURVEYS API:--", error);
-      }
-    );
+    // this._surveysService.getAllSurveys().subscribe(
+    //   result => {
+    //     let surveysArray = []
+    //     // console.log("ALL SURVEYS FROM API:--", result['formInfoList']);
+    //     if (result['formInfoList']) {
+    //       result['formInfoList'].forEach(element => {
+    //         var object = {
+    //           name: element.sectionName,
+    //           smeRef: element.sectionKey,
+    //           formIdentity: element.formIdentity,
+    //           passScore: element.passingScore,
+    //           totalScore: element.totalScore,
+    //           display: element.displayType,
+    //           page: element.page,
+    //           numPages: element.numOfPages,
+    //           components: JSON.parse(element.component),
+    //         }
+    //         surveysArray.push(object)
+    //       });
+    //       this._surveysStore.addAllForms(surveysArray);
+    //     }
+    //     this._accreditationRequestService.getAllAccreditationRequests().subscribe(
+    //       result => {
+    //         // console.log("RESULT FROM ALL API REQUESTS:--", result['accreditationInfos']);
+    //         let tempRequestsArray = [];
+    //         if (result['accreditationInfos']) {
+    //           result['accreditationInfos'].forEach(element => {
+    //             var object = {
+    //               userRef: element.userName,
+    //               formSubmitData: JSON.parse(element.formSubmitData),
+    //               formData: element.formData,
+    //               status: element.status,
+    //               formIdentity: element.sectionKey,
+    //               startDate: element.startDate,
+    //               endDate: element.endDate,
+    //               previousReview: element.prevReview,
+    //               currentReview: element.currentReview,
+    //               requestKey: element.requestKey,
+    //               userUpdateFlag: element.userUpdateFlag,
+    //               rating: element.ratings,
+    //             }
+    //             tempRequestsArray.push(object);
+    //           })
+    //         }
+    //         this._accreditationRequestStore.addAllRequests(tempRequestsArray);
+    //         this._userService.getAllUsers().subscribe(
+    //           result => {
+    //             this._authStore.removeLoading();
+    //             let usersArray = [];
+    //             if (result['userInfoList']) {
+    //               for (let i = 0; i < result['userInfoList'].length; i++) {
+    //                 var object = {
+    //                   name: result['userInfoList'][i].firstName,
+    //                   email: result['userInfoList'][i].email,
+    //                   role: result['userInfoList'][i].typeName,
+    //                   smeRef: result['userInfoList'][i].roleName,
+    //                   department: null,
+    //                   username: result['userInfoList'][i].username,
+    //                   password: null,
+    //                   active: result['userInfoList'][i].active,
+    //                   eligibileFlag: result['userInfoList'][i].eligible,
+    //                   qualificationFlag: result['userInfoList'][i].qualified,
+    //                 }
+    //                 if (result['userInfoList'][i].typeName === 'ndrmf') {
+    //                   if (result['userInfoList'][i].roleNames) {
+    //                     object.role = result['userInfoList'][i].roleNames[0];
+    //                   }
+    //                 }
+    //                 usersArray.push(object);
+    //               }
+    //               this._usersStore.setAllUsers(usersArray);
+    //             }
+    //             this.Subscription.add(
+    //               this._usersStore.state$.subscribe((data) => {
+    //                 // this.allSurveys = data.users;
+    //                 console.log("ALL USERS:--", data.users);
+    //               })
+    //             )
+    //           },
+    //           error => {
+    //             this._authStore.removeLoading();
+    //             console.log("ERROR FROM ALL USERS:--", error);
+    //           }
+    //         );
+    //       },
+    //       error => {
+    //         console.log("ERROR FROM ALL REQUESTS:--", error);
+    //       }
+    //     );
+    //   },
+    //   error => {
+    //     console.log("ERROR SURVEYS API:--", error);
+    //   }
+    // );
+    // this.Subscription.add(
+    //   this._accreditationRequestStore.state$.subscribe((data) => {
+    //     this.allRequests = _.chain(data.requests)
+    //       .filter({ requestKey: 'eligibilty' })
+    //       .groupBy('userRef')
+    //       .map((val, user) => {
+    //         return { val, user }
+    //       })
+    //       .value();
+    //     this.dataSource = this.allRequests;
+    //   })
+    // );
+    // this.Subscription.add(
+    //   this._surveysStore.state$.subscribe((data) => {
+    //     this.allSurveys = data.surveys;
+    //   })
+    // );
 
 
 
@@ -180,20 +181,55 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
 
   }
 
+  getEligibilityRequest() {
+    this._accreditationRequestService.getEligibilityRequest().subscribe(
+      (result: any) => {
+        console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", result);
+        this.allRequests = result;
+        this.dataSource = this.allRequests;
+      },
+      error => {
+        console.log("ERROR GEETING ELIGIBILITY REQUESTS:---", error);
+      }
+    );
+
+  }
+
   getRequest(element) {
     this.selectedRequest = element;
     this.toggle = !this.toggle;
     this.toggleBtn = this._usersStore.findEligibleUser(this.selectedRequest.user);
-    console.log("THIS>TOGGLEBUTTON:--", this.toggleBtn);
-    var array = this.selectedRequest.val.map((c) => {
-      var result = _.find(this.allSurveys, { smeRef: c.formIdentity })
-      if (result) {
-        return { ...c, formData: result }
-      } else {
-        return { ...c, formData: {} }
+    this._accreditationRequestService.getSingleEligibilityRequest(element.id).subscribe(
+      (result: any) => {
+        // this.selectedRequestItems = result;
+        var object = {
+          data: JSON.parse(result.data),
+          initiatedBy: result.initiatedBy,
+          processOwner: result.processOwner,
+          status: result.status,
+          submittedAt: result.submittedAt,
+          template: JSON.parse(result.template),
+        }
+        this.selectedRequestItems = object;
+        console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", this.selectedRequestItems);
+        if (this.selectedRequestItems.status == "Approved") {
+          this.toggleBtn = true;
+        }
+      },
+      error => {
+        console.log("ERROR SINGLE ELIGIBILITY REQUEST:---", error);
       }
-    })
-    this.selectedRequestItems = array;
+    );
+    // console.log("THIS>TOGGLEBUTTON:--", this.toggleBtn);
+    // var array = this.selectedRequest.val.map((c) => {
+    //   var result = _.find(this.allSurveys, { smeRef: c.formIdentity })
+    //   if (result) {
+    //     return { ...c, formData: result }
+    //   } else {
+    //     return { ...c, formData: {} }
+    //   }
+    // })
+    // this.selectedRequestItems = array;
   }
 
   hideRequest() {
@@ -201,13 +237,14 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
   }
 
   markEligibleFlag() {
-    console.log("MARK ELIGIBLE CALLED:--", this.selectedRequest.user);
-    this._userService.updateEligibleStatus(this.selectedRequest.user).subscribe(
+    console.log("MARK ELIGIBLE CALLED:--", this.selectedRequest);
+    this._userService.updateEligibleStatus(this.selectedRequest.id).subscribe(
       result => {
         console.log("RESULR FROM MARKING ELIGIBLE:--", result);
-        this._usersStore.updateUserEligibleFlag(true, this.selectedRequest.user);
-        this._authStore.setEligibleFlag(true);
-        this.toggleBtn = this._usersStore.findEligibleUser(this.selectedRequest.user);
+        // this._usersStore.updateUserEligibleFlag('Approved', this.selectedRequestItems.initiatedBy.id);
+        // this._authStore.setEligibleFlag('Approved');
+        // this.toggleBtn = this._usersStore.findEligibleUser(this.selectedRequest.user);
+        this.toggleBtn = true;
       },
       error => {
         console.log("ERROR FROM MARKING ELIGIBLE:--", error);

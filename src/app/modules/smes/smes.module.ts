@@ -4,9 +4,16 @@ import { SmeComponent } from "../../components/component-index";
 import { SmesRoutingModule } from "./smes-routing.module";
 import { MatTableModule } from "@angular/material/table";
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatSortModule } from "@angular/material/sort";
+import {
+  MatListModule,
+} from "@angular/material/list";
 
 @NgModule({
   declarations: [
@@ -19,8 +26,13 @@ import { MatToolbarModule } from "@angular/material/toolbar";
     MatTooltipModule,
     MatButtonModule,
     MatToolbarModule,
-    SmesRoutingModule
+    SmesRoutingModule,
+    MatCardModule,
+    MatListModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
+    MatSortModule,
   ]
-  
+
 })
 export class SmesModule { }

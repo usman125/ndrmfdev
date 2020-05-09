@@ -1,20 +1,16 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthStore } from "../../stores/auth/auth-store";
-import { SurveysStore } from '../../stores/surveys/surveys-store';
-import { SmeStore } from "../../stores/sme/sme-store";
-import { SmeService } from "../../services/sme.service";
 import { Subscription } from "rxjs";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { SurveysService } from "../../services/surveys.service";
-import { ConfirmModelService } from "../../services/confirm-model.service";
+import { SettingsService } from "../../services/settings.service";
 
 @Component({
   selector: 'app-create-survey',
   templateUrl: './create-survey.component.html',
   styleUrls: ['./create-survey.component.css'],
-  providers: [SurveysService, ConfirmModelService, SmeService]
+  providers:[]
 })
 export class CreateSurveyComponent implements OnInit {
 
@@ -44,20 +40,17 @@ export class CreateSurveyComponent implements OnInit {
   allSmes: any = [];
   selectedSme: any = null;
 
-  apiSmeResult = [];
+  apiSmeResult: any = [];
+  allProcessTypes: any = [];
 
   Subscription: Subscription = new Subscription();
 
   constructor(
     private _router: Router,
-    private _surveysStore: SurveysStore,
     private _authStore: AuthStore,
-    private _smeStore: SmeStore,
     private _snackBar: MatSnackBar,
     private _formBuilder: FormBuilder,
-    private _surveysService: SurveysService,
-    private _smeService: SmeService,
-    private _confirmModelService: ConfirmModelService,
+    private _settingsService: SettingsService,
   ) {
     this._buildCreateProfileForm();
   }
@@ -65,10 +58,10 @@ export class CreateSurveyComponent implements OnInit {
   private _buildCreateProfileForm() {
     this.createProfileForm = this._formBuilder.group({
       name: ['', Validators.required],
-      passScore: ['', Validators.required],
+      passingScore: ['', Validators.required],
       totalScore: ['', Validators.required],
       smeRef: ['', Validators.required],
-      type: ['qualification', Validators.required],
+      type: ['', Validators.required],
       formIdentity: ['', Validators.required],
     })
   }
@@ -89,91 +82,45 @@ export class CreateSurveyComponent implements OnInit {
       this._authStore.setRouteName('Create-Survey');
     });
 
-    this.getAllSmes();
-
-    this.Subscription.add(
-      this._smeStore.state$.subscribe(data => {
-        this.allSmes = data.smes;
-        console.log("ALL SMES:---", data.smes);
-      })
+    this._settingsService.getProcesses().subscribe(
+      result => {
+        console.log("ALL PROCESSES:---", result);
+        this.allProcessTypes = result;
+      },
+      error => {
+        console.log("ALL PROCESSES ERROR:---", error);
+      }
     );
-    // this.Subscription.add(
-    //   this._surveysStore.state$.subscribe(data => {
-    //     // this.allSmes = data.surveys;
-    //     console.log("ALL SURVEYS:---", data.surveys);
-    //   })
-    // );
-    // Formio.setProjectUrl('http://localhost:9000/form');
+  }
+
+  fetchSectons(item) {
+    if (item) {
+      if (item !== 'QUALIFICATION') {
+        this.createProfileForm.patchValue({
+          'passingScore': 0,
+          'totalScore': 0,
+        }, { onlySelf: true })
+      }
+      this.allSmes = [];
+      this._settingsService.getProcessMeta(item).subscribe(
+        (result: any) => {
+          console.log("ALL PROCESSES:---", result);
+          if (result.sections) {
+            this.allSmes = result.sections;
+          }
+        },
+        error => {
+          console.log("ALL PROCESSES ERROR:---", error);
+        }
+      );
+    }
   }
 
   toggleBuilder() {
     this.toggle = !this.toggle;
   }
 
-
-  getAllSmes() {
-    this._smeService.getAllSmes().subscribe(
-      result => {
-        let smesArray = [];
-        console.log("RESULT FROM ALL SMES:---", result);
-        if (result['sectionInfos']) {
-          this.apiSmeResult = result['sectionInfos'];
-          result['sectionInfos'].forEach(element => {
-            var object = {
-              name: element.sectionName,
-              userRef: element.username,
-              formGenerated: element.formGenerated,
-              key: element.sectionKey,
-            }
-            if (element.formIdentity === 'qualification' && !element.formGenerated)
-              smesArray.push(object);
-          });
-        }
-        this._smeStore.addAllSmes(smesArray);
-      },
-      error => {
-        console.log("ERROR FROM ALL SMES:---", error);
-      }
-    );
-  }
-
-
-  identityChanged($event) {
-    let smesArray = [];
-    if ($event === 'eligibilty') {
-      this.apiSmeResult.forEach(element => {
-        var object = {
-          name: element.sectionName,
-          userRef: element.userName,
-          formGenerated: element.formGenerated,
-          key: element.sectionKey,
-          formIdentity: element.formIdentity,
-        }
-        if (element.formIdentity === 'eligibilty' && !element.formGenerated)
-          smesArray.push(object);
-      });
-      this.createProfileForm.patchValue({ 'smeRef': null, 'totalScore': 0, 'passScore': 0 }, { onlySelf: true })
-    }
-    if ($event === 'qualification') {
-      this.apiSmeResult.forEach(element => {
-        var object = {
-          name: element.sectionName,
-          userRef: element.userName,
-          formGenerated: element.formGenerated,
-          key: element.sectionKey,
-          formIdentity: element.formIdentity,
-        }
-        if (element.formIdentity === 'qualification' && !element.formGenerated)
-          smesArray.push(object);
-      });
-      this.createProfileForm.patchValue({ 'smeRef': null, 'totalScore': null, 'passScore': null }, { onlySelf: true })
-    }
-    this._smeStore.addAllSmes(smesArray);
-  }
-
-
   typeChanged($event) {
-    // console.log("TYPE CHANGED:--", $event);
     if ($event === 'wizard') {
       this.form.display = 'wizard';
       this.form.page = 0;
@@ -187,14 +134,9 @@ export class CreateSurveyComponent implements OnInit {
       form: this.form
     })
   }
-  smeChanged($event) {
-    for (let i = 0; i < this.allSmes.length; i++) {
 
-      if (this.allSmes[i].key === $event) {
-        this.selectedSme = this.allSmes[i];
-        break;
-      }
-    }
+  smeChanged($event) {
+    this.selectedSme = $event;
     console.log("SME CHANGED:--", this.selectedSme);
   }
 
@@ -210,65 +152,23 @@ export class CreateSurveyComponent implements OnInit {
   }
 
   saveForm(values) {
-    // console.log("FORM TO SAVE:--", values, "\nform", this.form);
-    values.components = this.form.components;
+    values.components = this.form.components
     values.page = this.form.page;
     values.numOfPages = this.form.numPages;
-    values.status = 'active';
-    values.display = this.form.display;
-    console.log("VALUES TO UPDATE SECTION:--", {
-      name: this.selectedSme.name,
-      key: values.smeRef,
-      userRef: this.selectedSme.userRef,
-      formGenerated: true
-    });
-    this._surveysService.addSurvey(values).subscribe(
+    this._settingsService.addSectionTemplate(this.selectedSme.id, values).subscribe(
       result => {
-        console.log("RESULT FROM ADD SURVEY:--", result, {
-          name: this.selectedSme.name,
-          smeRef: values.smeRef,
-          userRef: this.selectedSme.userRef,
-          formGenerated: true,
-          formIdentity: this.selectedSme.formIdentity,
+        console.log("RESULT FROM ADD SURVEY:--", result);
+        this.createProfileForm.reset();
+        this.form = {
+          components: [],
+          display: "form",
+          page: 0,
+          refreshOn: "submit",
+          numPages: 2
+        };
+        this.refreshForm.emit({
+          form: this.form
         });
-        this._smeService.updateSme(
-          this.selectedSme.name,
-          values.smeRef,
-          this.selectedSme.userRef,
-          true,
-          this.selectedSme.formIdentity
-        ).subscribe(
-          result => {
-            console.log("RSULT AFTER UPDATING SME:---", result);
-            this._surveysStore.addForm(
-              values.name,
-              values.smeRef,
-              values.passScore,
-              values.totalScore,
-              values.type,
-              this.form.page,
-              'submit',
-              this.form.numPages,
-              JSON.stringify(this.form.components)
-            )
-            this._smeStore.updateFormGenrated(values.smeRef);
-            this.createProfileForm.reset();
-            this.form = {
-              components: [],
-              display: "form",
-              page: 0,
-              refreshOn: "submit",
-              numPages: 2
-            };
-            this.refreshForm.emit({
-              form: this.form
-            });
-            this.getAllSmes();
-          },
-          error => {
-            console.log("ERROR UPDATING SME:---", error);
-          }
-        );
       },
       error => {
         console.log("ERROR FROM ADD SURVEY:--", error);

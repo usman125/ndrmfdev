@@ -25,8 +25,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   currentUser: any = null;
   appRouteName: any = null;
-  userEligibleStatus: boolean;
-  userQualificationStatus: boolean;
+  userEligibleStatus: string;
+  userQualificationStatus: string;
   appRouteActive: any = null;
   themeName: any = null;
   checked: boolean = false;

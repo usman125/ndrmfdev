@@ -57,6 +57,7 @@ import { ProposalFormsStore } from './stores/proposal-forms/proposal-forms-store
 import { ProposalRequestsStore } from './stores/proposal-requests/proposal-requests-store';
 import { PrimaryAppraisalFormsStore } from './stores/primary-appraisal-forms/primary-appraisal-forms-store';
 import { PrimaryAppraisalRequestsStore } from './stores/primary-appraisal-requests/primary-appraisal-requests-store';
+import { PendingSignupsStore } from './stores/pending-signups/pending-signups-store';
 
 
 
@@ -97,6 +98,14 @@ import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
 // import { AdminPipComponent } from './components/admin-pip/admin-pip.component';
 // import { MatGridListModule } from "@angular/material/grid-list";
 // import { GiaProjectsModule } from "./modules/gia-projects/gia-projects.module";
+import { JwtModule } from "@auth0/angular-jwt";
+// import { AssignSectionsProcessComponent } from './components/assign-sections-process/assign-sections-process.component';
+// import { PendingSignupsComponent } from './components/pending-signups/pending-signups.component';
+
+export function tokenGetter() {
+  let user = JSON.parse(localStorage.getItem('user'));
+  return user?.authToken;
+}
 
 
 @NgModule({
@@ -110,6 +119,8 @@ import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
     AddProjectComponent,
     // EditUserComponent,
     EditSmeComponent,
+    // AssignSectionsProcessComponent,
+    // PendingSignupsComponent,
     // ViewPrimaryAppraisalComponent,
     // PrimaryAppraisalProjectsComponent,
     // CreatePrimaryAppraisalComponent,
@@ -165,6 +176,14 @@ import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
     MatDividerModule,
     MatTreeModule,
     MatCheckboxModule,
+
+
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: ["ndrmfdev-backend.herokuapp.com"]
+      }
+    })
   ],
   providers: [
 
@@ -191,7 +210,7 @@ import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
 
     AuthGuard,
     LoginService,
-    
+
     AuthStore,
     SurveysStore,
     AccreditationRequestStore,
@@ -210,6 +229,7 @@ import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
     ProposalRequestsStore,
     PrimaryAppraisalFormsStore,
     PrimaryAppraisalRequestsStore,
+    PendingSignupsStore,
   ],
   bootstrap: [AppComponent],
   exports: [

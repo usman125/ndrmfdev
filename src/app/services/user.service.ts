@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from "./config";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthStore } from '../stores/auth/auth-store';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +12,7 @@ export class UserService {
 
   constructor(
     private _httpClient: HttpClient,
-    private _authStore: AuthStore,
   ) {
-    this._authStore.state$.subscribe((data) => {
-      this.authToken = data.auth.authToken;
-      this.httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Authorization': this.authToken,
-        })
-      }
-    }).unsubscribe();
   }
 
 
@@ -40,9 +29,8 @@ export class UserService {
         "orgId": values.org.id,
         "password": values.password,
         "roleId": values.role.id,
-        "username":values.username 
-      },
-      this.httpOptions,
+        "username": values.username
+      }
     );
   }
 
@@ -51,7 +39,6 @@ export class UserService {
     const url = `${AppConfig.apiUrl}/user/`;
     return this._httpClient.get(
       url,
-      this.httpOptions,
     );
   }
 
@@ -59,7 +46,6 @@ export class UserService {
     const url = `${AppConfig.apiUrl}/user/orgs`;
     return this._httpClient.get(
       url,
-      this.httpOptions,
     );
   }
 
@@ -67,19 +53,14 @@ export class UserService {
     const url = `${AppConfig.apiUrl}/user/getRoles`;
     return this._httpClient.get(
       url,
-      this.httpOptions,
     );
   }
 
-  updateEligibleStatus(username) {
-    const url = `${AppConfig.apiUrl}/user/updateEligibleStatus`;
-    return this._httpClient.put(
+  updateEligibleStatus(id) {
+    const url = `${AppConfig.apiUrl}/accreditation/eligibility/${id}/approve`;
+    return this._httpClient.post(
       url,
-      {
-        "eligible": true,
-        "username": username
-      },
-      this.httpOptions,
+      null
     );
   }
 
@@ -102,7 +83,6 @@ export class UserService {
         "active": false,
         "username": username
       },
-      this.httpOptions,
     );
   }
 
@@ -115,7 +95,6 @@ export class UserService {
         "name": role,
         "username": username
       },
-      this.httpOptions,
     );
   }
 
@@ -127,7 +106,20 @@ export class UserService {
         "name": type,
         "username": username
       },
-      this.httpOptions,
+    );
+  }
+
+  withRoleprocessOwner() {
+    const url = `${AppConfig.apiUrl}/user/withRoleprocessOwner`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  withRoleSME() {
+    const url = `${AppConfig.apiUrl}/user/withRoleSME`;
+    return this._httpClient.get(
+      url
     );
   }
 

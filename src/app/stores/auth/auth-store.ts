@@ -18,7 +18,7 @@ export class AuthStore extends Store<AuthState> {
     });
   }
 
-  setEligibleFlag(eligibaleFlag: boolean): void {
+  setEligibleFlag(eligibaleFlag: string): void {
     this.setState({
       ...this.state,
       auth: {
@@ -28,7 +28,7 @@ export class AuthStore extends Store<AuthState> {
     });
   }
 
-  setQualificationFlag(qualifiationFlag: boolean): void {
+  setQualificationFlag(qualifiationFlag: string): void {
     this.setState({
       ...this.state,
       auth: {

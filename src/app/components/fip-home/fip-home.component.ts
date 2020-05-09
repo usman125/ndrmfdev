@@ -9,8 +9,8 @@ import { AuthStore } from "../../stores/auth/auth-store";
 })
 export class FipHomeComponent implements OnInit, OnDestroy {
 
-  eligibilityFlag: boolean;
-  qualificationFlag: boolean;
+  eligibilityFlag: string;
+  qualificationFlag: string;
   Subscription: Subscription = new Subscription();
 
   constructor(

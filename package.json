@@ -23,6 +23,7 @@
     "@angular/platform-browser": "~9.0.6",
     "@angular/platform-browser-dynamic": "~9.0.6",
     "@angular/router": "~9.0.6",
+    "@auth0/angular-jwt": "^4.0.0",
     "angular-formio": "^4.6.10",
     "angular-froala-wysiwyg": "^3.1.1",
     "bootstrap": "^4.4.1",

@@ -15,6 +15,17 @@ $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
 // Include the default theme styles.
 @include angular-material-theme($candy-app-theme);
 
+.processes .active {
+  color: mat-color($candy-app-primary);
+}
+
+.processes .process .mat-list-item-content {
+  overflow-wrap: anywhere;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 15px;
+}
+
 .active-menu-item {
   color: mat-color($candy-app-primary);
 }
@@ -593,12 +604,11 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
     background-color: mat-color($primary);
     font-weight: bold;
     outline: none !important;
-    .mat-button-toggle-label-content{
-        color: #fff;
+    .mat-button-toggle-label-content {
+      color: #fff;
     }
   }
 }
-
 
 // Include the mixin
 @include mix-app-theme($candy-app-theme);
