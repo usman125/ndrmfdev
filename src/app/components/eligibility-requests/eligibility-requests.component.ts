@@ -29,12 +29,15 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
 
   toggleBtn: boolean = false;
   addMobileClasses: boolean = false;
+  loadingApi: boolean = false;
 
   options: Object = {
     submitMessage: "",
     disableAlerts: true,
     noAlerts: true
   }
+
+  // values: any = { "CO1984CA2017": true, "SRA1860": false, "VSWOO1961": true, "TA1882": false, "EADGOP": false, "BTUN": false, "submit": true, "CO1984CA2017-status": "active", "VSWOO1961-status": "inactive" };
 
   constructor(
     private _authStore: AuthStore,
@@ -182,13 +185,16 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
   }
 
   getEligibilityRequest() {
+    this.loadingApi = true;
     this._accreditationRequestService.getEligibilityRequest().subscribe(
       (result: any) => {
+        this.loadingApi = false;
         console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", result);
         this.allRequests = result;
         this.dataSource = this.allRequests;
       },
       error => {
+        this.loadingApi = false;
         console.log("ERROR GEETING ELIGIBILITY REQUESTS:---", error);
       }
     );
@@ -199,6 +205,7 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
     this.selectedRequest = element;
     this.toggle = !this.toggle;
     this.toggleBtn = this._usersStore.findEligibleUser(this.selectedRequest.user);
+    this.loadingApi = true;
     this._accreditationRequestService.getSingleEligibilityRequest(element.id).subscribe(
       (result: any) => {
         // this.selectedRequestItems = result;
@@ -211,12 +218,15 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
           template: JSON.parse(result.template),
         }
         this.selectedRequestItems = object;
+
         console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", this.selectedRequestItems);
         if (this.selectedRequestItems.status == "Approved") {
           this.toggleBtn = true;
         }
+        this.loadingApi = false;
       },
       error => {
+        this.loadingApi = false;
         console.log("ERROR SINGLE ELIGIBILITY REQUEST:---", error);
       }
     );

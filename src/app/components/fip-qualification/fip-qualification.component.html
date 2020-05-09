@@ -10,11 +10,11 @@
         [value]="(submitSectionsCount/allSectionsCount)*100"></mat-progress-bar>
       <span *ngIf="pendingSectionsCount !== allSectionsCount && submitSectionsCount !== allSectionsCount"
         class="mat-cation">Submitted:
-        <span id="comment">{{(pendingSectionsCount/allSectionsCount)*100}}%</span>
+        <span id="comment">{{(submitSectionsCount/allSectionsCount)*100}}%</span>
       </span>
       <span *ngIf="pendingSectionsCount === allSectionsCount && submitSectionsCount !== allSectionsCount"
         class="mat-cation">Submitted:
-        <span id="comment">{{(pendingSectionsCount/allSectionsCount)*100}}%</span>
+        <span id="comment">{{(submitSectionsCount/allSectionsCount)*100}}%</span>
       </span>
       <span *ngIf="submitSectionsCount === allSectionsCount" class="mat-cation">
         Submitted:

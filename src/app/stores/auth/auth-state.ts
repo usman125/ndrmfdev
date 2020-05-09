@@ -8,7 +8,7 @@ const AUTH = {
   qualifiationFlag: '',
   checked: false,
   applyMobileClasses: false,
-  checkedThemeName: 'material-base-theme',
+  checkedThemeName: 'unicorn-light-theme',
   apiCall: false,
   authToken: null,
 }

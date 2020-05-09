@@ -58,6 +58,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   public allSmes: any = [];
   public allInitimations: fipIntimationsState = new fipIntimationsState();
   public loggedUser: any = null;
+  public loadingApi: boolean = false;
 
   panelOpenState = false;
 
@@ -238,7 +239,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     //   this.currentIntimation = c;
     // })
 
-
+    this.loadingApi = true;
     this._settingsService.getProcessTemplate('QUALIFICATION').subscribe(
       (result: any) => {
         console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
@@ -251,12 +252,16 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
         })
         this.groupType = this.allSmes[0];
         this.form = this.allSmes[0].template;
+        this.allSectionsCount = this.allSmes.length;
+        // this.loadingApi = false;
+        this.getRequestsFromApi();
       },
       error => {
+        this.loadingApi = false;
         console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
       }
     );
-  
+
 
   }
 
@@ -269,32 +274,25 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   }
 
   getRequestsFromApi() {
-    this._accreditationRequestService.getAllAccreditationRequests().subscribe(
-      result => {
-        console.log("RESULT FROM ALL API REQUESTS:--", result['accreditationInfos']);
-        let tempRequestsArray = [];
-        if (result['accreditationInfos']) {
-          result['accreditationInfos'].forEach(element => {
-            var object = {
-              userRef: element.userName,
-              formSubmitData: JSON.parse(element.formSubmitData),
-              formData: element.formData,
-              status: element.status,
-              formIdentity: element.sectionKey,
-              startDate: element.startDate,
-              endDate: element.endDate,
-              previousReview: element.prevReview,
-              currentReview: element.currentReview,
-              requestKey: element.requestKey,
-              userUpdateFlag: element.userUpdateFlag,
-              rating: element.ratings,
-            }
-            tempRequestsArray.push(object);
-          })
-        }
-        this._accreditationRequestStore.addAllRequests(tempRequestsArray);
-      },
-      error => {
+    // this.loadingApi = true;
+    this._accreditationRequestService.getQulificationRequests().subscribe(
+      (result: any) => {
+        this.submitSectionsCount = result.length;
+        this.pendingSectionsCount = this.allSectionsCount - this.submitSectionsCount;
+        console.log("RESULT FROM ALL API REQUESTS:--", result, this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);
+        this._accreditationRequestService.getSingleQualificationRequest(result[0].id).subscribe(
+          (result: any) => {
+            this.loadingApi = false;
+            console.log("RESULT FROM ONE REQUEST:---", result);
+          },
+          error => {
+            this.loadingApi = false;
+            console.log("ERROR FROM ONE REQUEST:---", error);
+          }
+          );
+        },
+        error => {
+          this.loadingApi = false;
         console.log("ERROR FROM ALL REQUESTS:--", error);
       }
     );
@@ -324,26 +322,26 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     //     this.form.exists = false;
     //   }
     // } else {
-      // this.secondForm = null;
-      // var resultForm = _.find(this.allProfiles, { 'smeRef': this.groupType });
-      // var request = _.find(this.allRequests, { 'formIdentity': this.groupType, 'userRef': this.loggedUser.username });
-      // this.form = resultForm;
-      // if (request) {
-      //   const flag = _.find(this.allInitimations.intimations, { userRef: this.loggedUser.email, formIdentity: this.groupType })
-      //   if (flag) {
-      //     setCommentValue(flag.endDate, flag.formIdentity, flag.comments);
-      //   } else {
-      //     setCommentValue('', '', []);
-      //   }
-      //   this.secondForm = request.formSubmitData;
-      //   if (!request.userUpdateFlag) {
-      //     this.form.exists = true;
-      //   } else {
-      //     this.form.exists = false;
-      //   }
-      // } else {
-      //   this.form.exists = false;
-      // }
+    // this.secondForm = null;
+    // var resultForm = _.find(this.allProfiles, { 'smeRef': this.groupType });
+    // var request = _.find(this.allRequests, { 'formIdentity': this.groupType, 'userRef': this.loggedUser.username });
+    // this.form = resultForm;
+    // if (request) {
+    //   const flag = _.find(this.allInitimations.intimations, { userRef: this.loggedUser.email, formIdentity: this.groupType })
+    //   if (flag) {
+    //     setCommentValue(flag.endDate, flag.formIdentity, flag.comments);
+    //   } else {
+    //     setCommentValue('', '', []);
+    //   }
+    //   this.secondForm = request.formSubmitData;
+    //   if (!request.userUpdateFlag) {
+    //     this.form.exists = true;
+    //   } else {
+    //     this.form.exists = false;
+    //   }
+    // } else {
+    //   this.form.exists = false;
+    // }
     // }
     this.form = this.groupType.template;
   }
@@ -351,62 +349,88 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   onSubmit($event) {
     // console.log("FORM AFTER SUBMIT:---", $event.data, $event, this.form.formIdentity);
     this.secondForm = $event.data;
-    var flag: any = _.find(this.allRequests, { userRef: this.loggedUser.username, formIdentity: this.groupType })
-    if (!flag) {
-      var values = {
-        "currentReview": null,
-        "endDate": null,
-        "formData": 'values',
-        "formIdentity": this.form.formIdentity,
-        "formSubmitData": this.secondForm,
-        "prevReview": null,
-        "ratings": 0,
-        "requestKey": 'qualification',
-        "sectionKey": this.groupType,
-        "startDate": null,
-        "status": 'pending',
-        "userName": this.loggedUser.username,
-        "userUpdateFlag": false
-      }
-      console.log("T+REQUEST FOR API:---", values);
-      this._accreditationRequestService.addAccreditationRequest(values).subscribe(
-        result => {
-          this.form.exists = true;
-          console.log("RESULT AFTER ADDING REQUEST:--", result);
-          this._accreditationRequestStore.addRequest(
-            this.loggedUser.email,
-            $event.data,
-            this.form,
-            'pending',
-            this.groupType,
-            null,
-            null,
-            null,
-            null,
-            'qualification',
-            false,
-            0
-          );
-          this.getRequestsFromApi();
-        },
-        error => {
-          console.log("ERROR AFTER ADDING REQUEST:--", error);
-        }
-      );
-    } else {
-      var object = {
-        userRef: this.loggedUser.email,
-        submitData: $event.data,
-        formIdentity: this.groupType,
-        userUpdateFlag: false,
-        endDate: new Date(),
-      }
-      console.log('ALREADY SUBMITTED:--', object, this.currentIntimation);
-      this._accreditationRequestStore.unSetUserUpdateFlag(this.loggedUser.email, this.currentIntimation.formIdentity, $event.data);
-      this._fipIntimationsStore.updateIntimationStatus(this.loggedUser.email, this.currentIntimation.formIdentity);
-      setCommentValue(null, null, []);
-      this.form.exists = true;
+    // var flag: any = _.find(this.allRequests, { userRef: this.loggedUser.username, formIdentity: this.groupType })
+    // if (!flag) {
+    //   var values = {
+    //     "currentReview": null,
+    //     "endDate": null,
+    //     "formData": 'values',
+    //     "formIdentity": this.form.formIdentity,
+    //     "formSubmitData": this.secondForm,
+    //     "prevReview": null,
+    //     "ratings": 0,
+    //     "requestKey": 'qualification',
+    //     "sectionKey": this.groupType,
+    //     "startDate": null,
+    //     "status": 'pending',
+    //     "userName": this.loggedUser.username,
+    //     "userUpdateFlag": false
+    //   }
+    //   console.log("T+REQUEST FOR API:---", values);
+    //   this._accreditationRequestService.addAccreditationRequest(values).subscribe(
+    //     result => {
+    //       this.form.exists = true;
+    //       console.log("RESULT AFTER ADDING REQUEST:--", result);
+    //       this._accreditationRequestStore.addRequest(
+    //         this.loggedUser.email,
+    //         $event.data,
+    //         this.form,
+    //         'pending',
+    //         this.groupType,
+    //         null,
+    //         null,
+    //         null,
+    //         null,
+    //         'qualification',
+    //         false,
+    //         0
+    //       );
+    //       this.getRequestsFromApi();
+    //     },
+    //     error => {
+    //       console.log("ERROR AFTER ADDING REQUEST:--", error);
+    //     }
+    //   );
+    // } else {
+    //   var object = {
+    //     userRef: this.loggedUser.email,
+    //     submitData: $event.data,
+    //     formIdentity: this.groupType,
+    //     userUpdateFlag: false,
+    //     endDate: new Date(),
+    //   }
+    //   console.log('ALREADY SUBMITTED:--', object, this.currentIntimation);
+    //   this._accreditationRequestStore.unSetUserUpdateFlag(this.loggedUser.email, this.currentIntimation.formIdentity, $event.data);
+    //   this._fipIntimationsStore.updateIntimationStatus(this.loggedUser.email, this.currentIntimation.formIdentity);
+    //   setCommentValue(null, null, []);
+    //   this.form.exists = true;
+    // }
+
+    let object = {
+      sections: [{
+        data: JSON.stringify($event.data),
+        id: this.groupType.id
+      }]
     }
+
+    console.log("OBJECT TO STORE:--", object);
+    this._accreditationRequestService.addQulificationRequest(object).subscribe(
+      result => {
+        console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
+      },
+      error => {
+        console.log("ERROR AFTER ADDING QUALIFICATION:--", error);
+      }
+    );
+
+    // {
+    //   "sections": [
+    //     {
+    //       "data": "string",
+    //       "id": "string"
+    //     }
+    //   ]
+    // }
 
   }
 

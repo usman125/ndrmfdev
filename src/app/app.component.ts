@@ -83,10 +83,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           this.addMobileClasses = auth.auth.applyMobileClasses;
           if (this.themeName === 'unicorn-dark-theme') {
             this._overlayContainer.getContainerElement().classList.remove('unicorn-light-theme');
+            this._overlayContainer.getContainerElement().classList.remove('material-base-theme');
             this._overlayContainer.getContainerElement().classList.add('unicorn-dark-theme');
           } else if (this.themeName === 'unicorn-light-theme') {
             this._overlayContainer.getContainerElement().classList.add('unicorn-light-theme');
             this._overlayContainer.getContainerElement().classList.remove('unicorn-dark-theme');
+            this._overlayContainer.getContainerElement().classList.remove('material-base-theme');
+            
           } else if (this.themeName === 'material-base-theme') {
             this._overlayContainer.getContainerElement().classList.remove('unicorn-light-theme');
             this._overlayContainer.getContainerElement().classList.remove('unicorn-dark-theme');

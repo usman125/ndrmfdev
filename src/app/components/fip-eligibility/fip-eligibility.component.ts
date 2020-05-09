@@ -31,6 +31,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
   public secondForm: any = null;
   public loggedUser: any = null;
   public readOnly: boolean = false;
+  public apiLoading: boolean = false;
 
   @ViewChild('group') group;
 
@@ -148,9 +149,10 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
     //   },
     //   error => { }
     // );
-
+    this.apiLoading = true;
     this._settingsService.getProcessTemplate('ELIGIBILITY').subscribe(
       (result: any) => {
+        // this.apiLoading = false;
         console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
         // this.allSections = result.sections;
         this.allSections = result.sections.map((c) => {
@@ -162,6 +164,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
         this.groupType = this.allSections[0];
         this.form = this.allSections[0].template;
         this.form.exists = false;
+        // this.apiLoading = false;
         this.getEligibilityRequest();
       },
       error => {
@@ -187,25 +190,28 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
   //   // }
   // }
 
-  getEligibilityRequest(){
+  getEligibilityRequest() {
     this._accreditationRequestService.getEligibilityRequest().subscribe(
       (result: any) => {
         console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", result);
         this._accreditationRequestService.getSingleEligibilityRequest(result[0].id).subscribe(
           (result: any) => {
+            this.apiLoading = false;
             console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", result);
-            // if (result.length){
+            if (result) {
               this.form.exists = true;
               this.secondForm = JSON.parse(result.data);
-            // }
+            }
             console.log(this.form, this.secondForm);
           },
           error => {
+            this.apiLoading = false;
             console.log("ERROR SINGLE ELIGIBILITY REQUEST:---", error);
           }
         );
       },
       error => {
+        this.apiLoading = false;
         console.log("ERROR GEETING ELIGIBILITY REQUESTS:---", error);
       }
     );
@@ -222,7 +228,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
     this.secondForm = $event.data;
     // var flag: any = _.find(this.allRequests, { userRef: this.loggedUser.email, formIdentity: this.form.smeRef })
     // if (!flag) {
-    //   this.form.exists = true;
+    this.form.exists = true;
     //   var values = {
     //     "currentReview": null,
     //     "endDate": null,

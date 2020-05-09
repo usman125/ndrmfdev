@@ -71,7 +71,8 @@
           </mat-toolbar-row>
         </mat-toolbar>
         <div style="padding: 15px;">
-          <formio [form]="selectedRequestItems?.template" [options]="options" readOnly="true" [submission]="{data: selectedRequestItems?.data}"></formio>
+          <formio [form]="selectedRequestItems.template" readOnly="true" [submission]="{data: selectedRequestItems.data}"></formio>
+          {{selectedRequestItems.data | json}}
         </div>
       </mat-card-content>
     </mat-card>

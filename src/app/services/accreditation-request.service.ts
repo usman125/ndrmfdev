@@ -99,7 +99,7 @@ export class AccreditationRequestService {
       url
     );
   }
-  
+
   getSingleEligibilityRequest(id) {
     const url = `${AppConfig.apiUrl}/accreditation/eligibility/${id}`;
     return this._httpClient.get(
@@ -107,4 +107,25 @@ export class AccreditationRequestService {
     );
   }
 
+  getQulificationRequests() {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  addQulificationRequest(values) {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification/add/?action=SAVE`;
+    return this._httpClient.post(
+      url,
+      values
+    );
+  }
+
+  getSingleQualificationRequest(id) {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}`;
+    return this._httpClient.get(
+      url
+    );
+  }
 }
