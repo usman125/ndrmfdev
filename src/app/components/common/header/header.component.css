@@ -22,7 +22,11 @@ button {
   position: relative;
   width: 200px;
 }
-
+.mat-toolbar-row{
+  position: fixed;
+  z-index: 9999999;
+  background-color: #bdd2e7;
+}
 /* .overlay {
   width: 25px;
   height: 26px;

@@ -121,7 +121,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (this.loggedUser.role === 'admin') {
         this._router.navigate(['surveys']);
       }
-      if (this.loggedUser.role === 'fip') {
+      if (this.loggedUser.role === 'signatory') {
         this._router.navigate(['fip-home']);
       }
       if (this.loggedUser.role === 'sme') {
@@ -164,6 +164,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this._authStore.setAuthToken(this.user.authToken);
         this._authStore.setUserRole(this.user.role);
         this._authStore.setThemeName(this.themeName);
+
         this._authStore.setEligibleFlag(this.user.eligibileFlag);
         this._authStore.setQualificationFlag(this.user.qualificationFlag);
         if (this.user.role !== 'fip') {

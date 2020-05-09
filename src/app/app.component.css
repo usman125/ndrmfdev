@@ -38,7 +38,7 @@ button {
 
 .example-container {
   position: absolute;
-  top: 64px;
+  /* top: 64px; */
   /* top: 128px; */
   /* bottom: 60px; */
   left: 0;
@@ -47,8 +47,8 @@ button {
 }
 
 mat-sidenav {
-  position: fixed;
-  top: 9%;
+  /* position: fixed;
+  top: 9%; */
 }
 
 mat-sidenav .mat-menu-item {
@@ -71,13 +71,23 @@ mat-sidenav .mat-menu-item {
   /* margin-top: 11px; */
   /* background: rgba(255, 0, 0, 0.5); */
 }
-
+    /* color: #e4f0fe;
+    color: #eff4fa;
+    color: #2a3c48;
+    color: #ccdceb;
+    color: #666e71;
+    color: #8cb5d3;
+    background-color: #009de0; */
 .example-header {
-  position: fixed;
+  /* position: fixed;
   top: 0;
   left: 0;
-  right: 0;
+  right: 0; */
   z-index: 111;
+}
+.example-header .mat-toolbar-row{
+  position: fixed;
+  z-index: 9999999;
 }
 .example-header2 {
   position: absolute;
