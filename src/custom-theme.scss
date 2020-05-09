@@ -7,7 +7,7 @@
 @include mat-core();
 
 // Define the default theme (same as the example above).
-$candy-app-primary: mat-palette($mat-indigo);
+$candy-app-primary: mat-palette($mat-light-blue, 600, 500, 400);
 // $candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
 $candy-app-accent: mat-palette($mat-green);
 $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);

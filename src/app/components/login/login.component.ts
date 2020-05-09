@@ -126,7 +126,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (this.loggedUser.role === 'admin') {
         this._router.navigate(['surveys']);
       }
-      if (this.loggedUser.role === 'fip') {
+      if (this.loggedUser.role === 'signatory') {
         this._router.navigate(['fip-home']);
       }
       if (this.loggedUser.role === 'sme') {
@@ -182,7 +182,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           console.log("Login CAlled:--", user);
           this._router.navigate(['users']);
           // window.location.href = '/surveys';
-        } else if (user.role === 'fip') {
+        } else if (user.role === 'signatory') {
           this._router.navigate(['fip-home']);
         } else if (user.role === 'sme') {
           this._router.navigate(['accreditation-requests']);

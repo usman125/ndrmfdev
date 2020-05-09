@@ -1,5 +1,5 @@
 export enum Role {
-  Fip = 'fip',
+  Fip = 'signatory',
   Admin = 'admin',
   Sme = 'sme',
 }

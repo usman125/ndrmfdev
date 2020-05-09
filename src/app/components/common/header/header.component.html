@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" class="mat-elevation-z8">
+<mat-toolbar class="mat-elevation-z8">
   <mat-toolbar-row>
     <div class="menu-btn">
       <button (click)="toggleSideNav()" mat-icon-button aria-label="Menu">
@@ -15,10 +15,10 @@
       <button mat-button color="basic" (click)="goToRoute('fip-home')">NDRMF</button>
     </div>
     <span class="example-spacer"></span>
-    <button mat-icon-button [matMenuTriggerFor]="menu2">
+    <!-- <button mat-icon-button [matMenuTriggerFor]="menu2">
       <mat-icon>format_color_fill</mat-icon>
-    </button>
-    <mat-menu #menu2="matMenu" class="menu-items">
+    </button> -->
+    <!-- <mat-menu #menu2="matMenu" class="menu-items">
       <button mat-menu-item *ngFor="let season of seasons;let i = index;">
         <mat-radio-button [checked]="season.key === 'material-base-theme'" (change)="radioChange($event)"
           class="example-radio-button" [value]="season.key">
@@ -33,7 +33,7 @@
           </div>
         </mat-radio-button>
       </button>
-    </mat-menu>
+    </mat-menu> -->
 
     <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>account_box</mat-icon>

@@ -73,11 +73,11 @@
 </mat-sidenav-container> -->
 
 
-<div
+<!-- <div
   [ngClass]="{'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
   class="app_header">
   <app-header class="example-header" *ngIf="loggedUser"></app-header>
-</div>
+</div> -->
 <ng-container>
   <mat-sidenav-container
     [ngClass]="{'app-content': !loggedUser, 'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
@@ -160,8 +160,10 @@
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/user-projects">Add a
                 new project</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/prepare-gia">Prepare Gia</a>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal">Priliminary Appraisals</a>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal-projects">Fill Priliminary Appraisals</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal">Priliminary
+                Appraisals</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal-projects">Fill
+                Priliminary Appraisals</a>
             </mat-nav-list>
           </mat-expansion-panel>
 
@@ -222,6 +224,11 @@
         <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
       </div>
       <div [hidden]="loading" class="router-output">
+        <div
+        [ngClass]="{'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
+        class="app_header">
+        <app-header class="example-header" *ngIf="loggedUser"></app-header>
+      </div>
         <router-outlet></router-outlet>
       </div>
     </mat-sidenav-content>

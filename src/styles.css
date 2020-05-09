@@ -181,3 +181,6 @@ mat-form-field {
     opacity: 0;
     pointer-events: none;
 }
+.example-sidenav{
+  min-width: 35%;
+}
