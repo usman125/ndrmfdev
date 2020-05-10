@@ -26,6 +26,7 @@ button {
   position: fixed;
   z-index: 9999999;
   background-color: #bdd2e7;
+  background-image:linear-gradient(to top right, #a9c4df,#e7ecf0);
 }
 /* .overlay {
   width: 25px;

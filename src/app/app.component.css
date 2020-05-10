@@ -44,8 +44,11 @@ button {
   left: 0;
   right: 0;
   height: 100vh;
+  background-image: linear-gradient(to bottom,#a9c4df,#e7ecf0);
 }
-
+.mat-app-background{
+  background-color: transparent;
+}
 mat-sidenav {
   /* position: fixed;
   top: 9%; */
@@ -67,7 +70,9 @@ mat-sidenav .mat-menu-item {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 220px;
+  width: 45%;
+  background-color: transparent;
+  border: none;
   /* margin-top: 11px; */
   /* background: rgba(255, 0, 0, 0.5); */
 }
@@ -136,4 +141,10 @@ mat-sidenav .mat-menu-item {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+.mat-app-background{
+  background-color: transparent;
+}
+.mat-expansion-panel{
+  margin: 10px 15% !important;
 }
