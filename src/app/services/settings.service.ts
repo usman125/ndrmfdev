@@ -41,23 +41,23 @@ export class SettingsService {
       url,
     );
   }
-  
-  getPendingSignups(){
+
+  getPendingSignups() {
     const url = `${AppConfig.apiUrl}/user/signup/requests/pending`;
     return this._httpClient.get(
       url,
     );
   }
 
-  
-  approveSignup(userId){
+
+  approveSignup(userId) {
     const url = `${AppConfig.apiUrl}/user/signup/requests/${userId}/approve`;
     return this._httpClient.get(
       url,
     );
   }
 
-  addSectionTemplate(sectionId, values){
+  addSectionTemplate(sectionId, values) {
     console.log("VALUES IN SERVICE:--", values);
     var template = {
       components: values.components,
@@ -78,7 +78,7 @@ export class SettingsService {
       }
     );
   }
-  
+
   // getAllSectionTemplates(){
   //   const url = `${AppConfig.apiUrl}/setting/section/${sectionId}/template/add`;
   //   return this._httpClient.post(
@@ -91,8 +91,16 @@ export class SettingsService {
   //       "totalScore": values.totalScore
   //     }
   //   );
-    
+
   // }
+
+  getAccrediattionCommence() {
+
+    const url = `${AppConfig.apiUrl}/accreditation/qualification/commence`;
+    return this._httpClient.get(
+      url
+    );
+  }
 
 
 

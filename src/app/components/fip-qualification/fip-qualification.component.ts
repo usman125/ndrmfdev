@@ -240,21 +240,21 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     // })
 
     this.loadingApi = true;
-    this._settingsService.getProcessTemplate('QUALIFICATION').subscribe(
+    this._settingsService.getAccrediattionCommence().subscribe(
       (result: any) => {
         console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
         // this.allSections = result.sections;
-        this.allSmes = result.sections.map((c) => {
-          return {
-            ...c,
-            template: JSON.parse(c.template)
-          }
-        })
-        this.groupType = this.allSmes[0];
-        this.form = this.allSmes[0].template;
-        this.allSectionsCount = this.allSmes.length;
+        // this.allSmes = result.sections.map((c) => {
+        //   return {
+        //     ...c,
+        //     template: JSON.parse(c.template)
+        //   }
+        // })
+        // this.groupType = this.allSmes[0];
+        // this.form = this.allSmes[0].template;
+        // this.allSectionsCount = this.allSmes.length;
         // this.loadingApi = false;
-        this.getRequestsFromApi();
+        this.getRequestsFromApi(result.id);
       },
       error => {
         this.loadingApi = false;
@@ -273,29 +273,32 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
 
   }
 
-  getRequestsFromApi() {
+  getRequestsFromApi(commenceId) {
     // this.loadingApi = true;
-    this._accreditationRequestService.getQulificationRequests().subscribe(
-      (result: any) => {
-        this.submitSectionsCount = result.length;
-        this.pendingSectionsCount = this.allSectionsCount - this.submitSectionsCount;
-        console.log("RESULT FROM ALL API REQUESTS:--", result, this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);
-        this._accreditationRequestService.getSingleQualificationRequest(result[0].id).subscribe(
-          (result: any) => {
-            this.loadingApi = false;
-            console.log("RESULT FROM ONE REQUEST:---", result);
-          },
-          error => {
-            this.loadingApi = false;
-            console.log("ERROR FROM ONE REQUEST:---", error);
-          }
+    // this._accreditationRequestService.getQulificationRequests().subscribe(
+    //   (result: any) => {
+    //     this.submitSectionsCount = result.length;
+    //     this.pendingSectionsCount = this.allSectionsCount - this.submitSectionsCount;
+    //     console.log("RESULT FROM ALL API REQUESTS:--", result, this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);
+    //     if (result) {
+
+    this._accreditationRequestService.getSingleQualificationRequest(commenceId).subscribe(
+            (result: any) => {
+              this.loadingApi = false;
+              console.log("RESULT FROM ONE REQUEST:---", result);
+            },
+            error => {
+              this.loadingApi = false;
+              console.log("ERROR FROM ONE REQUEST:---", error);
+            }
           );
-        },
-        error => {
-          this.loadingApi = false;
-        console.log("ERROR FROM ALL REQUESTS:--", error);
-      }
-    );
+    //     }
+    //   },
+    //   error => {
+    //     this.loadingApi = false;
+    //     console.log("ERROR FROM ALL REQUESTS:--", error);
+    //   }
+    // );
   }
 
   setDefaults() {
