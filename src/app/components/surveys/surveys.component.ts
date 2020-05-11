@@ -35,6 +35,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
 
   dataSource: any;
   allProcessTypes: any = null;
+  selctedRequest: any = null;
 
   Subscription: Subscription = new Subscription();
 
@@ -137,6 +138,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
 
   toogleForm(form) {
     console.log("FORM TO SHOW:--", form)
+    this.selctedRequest=form;
     this.toggle = !this.toggle;
     this.secondForm = JSON.parse(form.template);
     // this.secondForm.components = JSON.parse(form.components);
@@ -146,6 +148,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   editForm(form) {
+    this.selctedRequest=form;
     this.editFormFlag = !this.editFormFlag;
     this.secondForm = JSON.parse(form.template);
     this.refreshForm.emit({

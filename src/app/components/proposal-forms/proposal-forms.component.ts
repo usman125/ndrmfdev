@@ -5,7 +5,7 @@ import { Subscription } from "rxjs";
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { CreateProposalFormService } from "../../services/create-proposal-form.service";
+import { SettingsService } from "../../services/settings.service";
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,6 +18,7 @@ export class ProposalFormsComponent implements OnInit {
   loggedUser: boolean = false;
   toggle: boolean = false;
   editFormFlag: boolean = false;
+  apiLoading: boolean = false;
 
   refreshForm: EventEmitter<any> = new EventEmitter();
 
@@ -25,7 +26,7 @@ export class ProposalFormsComponent implements OnInit {
   secondForm: any = {};
   formValues: any = null;
 
-  displayedColumns = ['name', 'smeRef', 'actions'];
+  displayedColumns = ['name', 'poRef', 'actions'];
   allForms: any = [];
 
   dataSource: any;
@@ -39,33 +40,39 @@ export class ProposalFormsComponent implements OnInit {
     private _proposalFormsStore: ProposalFormsStore,
     private _authStore: AuthStore,
     private _router: Router,
-    private _createProposalFormService: CreateProposalFormService,
+    private _settingsService: SettingsService,
   ) {
-    this.Subscription.add(
-      this._proposalFormsStore.state$.subscribe(data => {
-        // if (data.forms.length){
-        this.dataSource = new MatTableDataSource(data.forms);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        // }
-        console.log("DATA FROM ALL PROPOSAL FROMS:--", data.forms);
-      })
-    );
   }
 
   ngOnInit() {
     setTimeout(() => {
       this._authStore.setRouteName('Surveys');
     }, 1000);
-    this._createProposalFormService.allForms().subscribe(
-      (result) => {
-        console.log("RESULT FROM ALL FROMS:--", result.response[0].forms);
-        this._proposalFormsStore.setAllForms(result.response[0].forms);
+    this.Subscription.add(
+      this._authStore.state$.subscribe((data) => {
+        this.apiLoading = data.auth.apiCall;
+      })
+    );
+    this._authStore.setLoading();
+    this._settingsService.getAllThematicAreas().subscribe(
+      (result: any) => {
+        this._authStore.removeLoading();
+        console.log("RESULT FROM THEMATIC AREAS:--", result);
+        this._proposalFormsStore.setAllForms(result);
       },
-      (err) => {
-        console.log(err);
+      error => {
+        this._authStore.removeLoading();
+        console.log("ERROR FROM THEMATIC AREAS:--", error);
       }
-    )
+    );
+    this.Subscription.add(
+      this._proposalFormsStore.state$.subscribe(data => {
+        this.dataSource = new MatTableDataSource(data.forms);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        console.log("DATA FROM ALL THEMATIC AREA:--", data.forms);
+      })
+    );
   }
 
   trackTask(index: number, item): string {
@@ -73,35 +80,12 @@ export class ProposalFormsComponent implements OnInit {
     return `${item.formIdentity + index}`;
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-
-  }
-
-  toogleForm(form) {
-    this.toggle = !this.toggle;
-    this.secondForm = form;
-    this.secondForm.components = JSON.parse(this.secondForm.components);
-    this.refreshForm.emit({
-      form: this.secondForm
-    })
-  }
 
   editForm(form) {
-    this.editFormFlag = !this.editFormFlag;
-    this.secondForm = form;
-    // this.secondForm.components = JSON.parse(form.components);
-    this.refreshForm.emit({
-      form: this.secondForm
-    })
+    console.log("FORM TO EDIT:---", form);
   }
 
   onSubmit($event) {
-    this.formValues = $event.data;
-    // console.log("EVENT FROM FORM:---", $event.data);
-    // this.refreshForm.emit({
-    //   form: this.form
-    // })
   }
 
   goBack() {

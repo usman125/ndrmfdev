@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsService } from "../../services/settings.service";
 import { UserService } from "../../services/user.service";
+import { ConfirmModelService } from '../../services/confirm-model.service';
 
 @Component({
   selector: 'app-assign-sections-process',
   templateUrl: './assign-sections-process.component.html',
-  styleUrls: ['./assign-sections-process.component.css']
+  styleUrls: ['./assign-sections-process.component.css'],
+  providers: [ConfirmModelService]
 })
 export class AssignSectionsProcessComponent implements OnInit {
 
@@ -16,6 +18,8 @@ export class AssignSectionsProcessComponent implements OnInit {
   allProcessType: any = [];
   poUsers: any = [];
   smeUsers: any = [];
+  apiLoading: boolean = false;
+
 
   userType = [
     'SME',
@@ -25,6 +29,7 @@ export class AssignSectionsProcessComponent implements OnInit {
   constructor(
     private _settingsService: SettingsService,
     private _userService: UserService,
+    private _confirmModelService: ConfirmModelService,
   ) { }
 
   ngOnInit(): void {
@@ -33,12 +38,15 @@ export class AssignSectionsProcessComponent implements OnInit {
   }
 
   getAllProcess() {
+    this.apiLoading = true;
     this._settingsService.getProcesses().subscribe(
       (result: any) => {
+        this.apiLoading = false;
         console.log("ALL PROCESS RESULT:---", result);
         this.allProcess = result;
       },
       error => {
+        this.apiLoading = false;
         console.log("ERROR PROCESS FETCHING:---", error);
       }
     );
@@ -46,8 +54,10 @@ export class AssignSectionsProcessComponent implements OnInit {
 
   processChanged($event) {
     console.log("PROCESS CHANGED:---", $event);
+    this.apiLoading = true;
     this._settingsService.getProcessMeta($event).subscribe(
       (result: any) => {
+        this.apiLoading = false;
         console.log("RESULT FETCHING TYPE:---", result);
         this.allProcessType = result;
         // var object = {
@@ -73,24 +83,30 @@ export class AssignSectionsProcessComponent implements OnInit {
   }
 
   getProcessOwners() {
+    this.apiLoading = true;
     this._userService.withRoleprocessOwner().subscribe(
       (result: any) => {
+        this.apiLoading = false;
         console.log("RESULT FROM PROCEsS OWNER:---", result);
         this.poUsers = result;
       },
       error => {
+        this.apiLoading = false;
         console.log("ERROR FROM PROCEsS OWNER:---", error);
       }
     );
   }
 
   getSMES() {
+    this.apiLoading = true;
     this._userService.withRoleSME().subscribe(
       (result: any) => {
+        this.apiLoading = false;
         console.log("RESULT FROM SMES:---", result);
         this.smeUsers = result;
       },
       error => {
+        this.apiLoading = false;
         console.log("ERROR FROM SMES:---", error);
       }
     );
@@ -105,6 +121,7 @@ export class AssignSectionsProcessComponent implements OnInit {
   }
 
   updateProcessMeta() {
+    this.apiLoading = true;
     let object = {
       processOwnerId: this.allProcessType.processOwner !== null ? this.allProcessType.processOwner.id : null,
       sections: []
@@ -122,9 +139,27 @@ export class AssignSectionsProcessComponent implements OnInit {
     object.sections = dummySections;
     this._settingsService.updateProcess(this.process, object).subscribe(
       result => {
+        this.apiLoading = false;
         console.log("RESULT FROM UPDATING:---", result);
+        const options = {
+          title: 'Success!',
+          message: 'Succefully Saved.',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+          confirm: false,
+        };
+
+        this._confirmModelService.open(options);
+
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          if (confirmed) {
+            console.log("CONFIRMED FROM MODEL", confirmed);
+          }
+        });
       },
       error => {
+        this.apiLoading = false;
         console.log("ERROR FROM UPDATING:---", error);
       }
     );

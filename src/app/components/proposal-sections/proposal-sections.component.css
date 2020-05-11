@@ -18,3 +18,9 @@ table {
 .example-spacer{
   flex: 1 1 auto;
 }
+
+.row-flex{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}

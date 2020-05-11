@@ -1,11 +1,9 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from "@angular/router";
-import { MatTableDataSource } from "@angular/material/table";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
-import { ProposalSectionsStore } from "../../stores/proposal-sections/proposal-sections-store";
+import { ProposalFormsStore } from "../../stores/proposal-forms/proposal-forms-store";
 import { AuthStore } from "../../stores/auth/auth-store";
 import { Subscription } from "rxjs";
+import { SettingsService } from "../../services/settings.service";
 
 @Component({
   selector: 'app-proposal-sections',
@@ -14,17 +12,15 @@ import { Subscription } from "rxjs";
 })
 export class ProposalSectionsComponent implements OnInit, OnDestroy {
 
-  allSections: any = [];
   Subscription: Subscription = new Subscription();
-  displayedColumns: any = ['name', 'action'];
-  dataSource: any;
+  areaName: any = null;
+  apiLoading: boolean = false;
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    private _proposalSectionsStore: ProposalSectionsStore,
+    private _proposalFormsStore: ProposalFormsStore,
     private _authStore: AuthStore,
+    private _settingsService: SettingsService,
     private _router: Router,
   ) {
 
@@ -35,12 +31,11 @@ export class ProposalSectionsComponent implements OnInit, OnDestroy {
       this._authStore.setRouteName('PROPOSAL-SECTIONS');
     })
     this.Subscription.add(
-      this._proposalSectionsStore.state$.subscribe((data) => {
-        this.dataSource = new MatTableDataSource(data.sections);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+      this._authStore.state$.subscribe((data) => {
+        this.apiLoading = data.auth.apiCall;
       })
     );
+    
   }
 
   editSection(section) {
@@ -48,7 +43,20 @@ export class ProposalSectionsComponent implements OnInit, OnDestroy {
   }
 
   goToAdd() {
-    this._router.navigate(['add-proposal-section']);
+    // this._router.navigate(['add-proposal-section']);
+    this._authStore.setLoading();
+    this._settingsService.addThematicArea({ name: this.areaName, processOwnerId: null}).subscribe(
+      result => {
+        this._authStore.removeLoading();
+        console.log("ADDED SUCCEFULLY:--", result);
+        this._proposalFormsStore.addProposalForm(this.areaName, null, true);
+        this.areaName = null;
+      },
+      error => {
+        this._authStore.removeLoading();
+        console.log("ERROR ADDING:--", error);
+      }
+    );
   }
 
   ngOnDestroy() {

@@ -61,9 +61,9 @@
       </div>
       <form-builder *ngIf="formType === 'form'" [form]="form" (change)="onChange($event)"></form-builder>
       <form-builder *ngIf="formType === 'wizard'" [form]="form" (change)="onChange($event)"></form-builder>
-      <div class="well jsonviewer">
+      <!-- <div class="well jsonviewer">
         <pre id="json"><code class="language-json" #json></code></pre>
-      </div>
+      </div> -->
       <button [disabled]="!createProfileForm.valid" style="margin: 10px 0px;" mat-raised-button color="primary"
         (click)="saveForm(createProfileForm.value)">Save</button>
     </div>

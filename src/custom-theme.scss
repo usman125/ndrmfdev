@@ -550,7 +550,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 }
 
 .hero .mat-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body .mat-list-base .mat-list-item {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .hero .mat-expansion-panel .mat-expansion-panel-content .mat-expansion-panel-body .mat-list-base .mat-list-item,
@@ -573,7 +573,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
   align-items: center;
   padding: 0 15px;
   border-radius: inherit;
-  font-size: 12px;
+  font-size: 14px;
   height: 40px !important;
 }
 

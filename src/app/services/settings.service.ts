@@ -102,6 +102,39 @@ export class SettingsService {
     );
   }
 
+  getAllThematicAreas() {
+    const url = `${AppConfig.apiUrl}/setting/thematic-area`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  addThematicArea(values) {
+    let body = {
+      "enabled": true,
+      "name": values.name,
+      "processOwnerId": null
+    }
+    const url = `${AppConfig.apiUrl}/setting/thematic-area/add`;
+    return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
+  updateThematicArea(values, id) {
+    let body = {
+      "enabled": true,
+      "name": values.name,
+      "processOwnerId": null
+    }
+    const url = `${AppConfig.apiUrl}/setting/thematic-area/${id}/update`;
+    return this._httpClient.put(
+      url,
+      body
+    );
+  }
+
 
 
 }

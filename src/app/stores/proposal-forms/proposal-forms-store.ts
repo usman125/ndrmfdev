@@ -10,25 +10,17 @@ export class ProposalFormsStore extends Store<ProposalFormsState> {
 
   addProposalForm(
     name: string,
-    smeRef: string,
-    components: {}[],
-    type: string,
-    page: number,
-    numPages: number,
-    formIdentity: string,
-    ): void {
-      this.setState({
-        ...this.state,
-        forms: [
-          ...this.state.forms,
-          {
-            name: name,
-            smeRef: smeRef,
-            components: components,
-            type: type,
-            page: page,
-            numPages: numPages,
-            formIdentity: formIdentity,
+    processOwner: any,
+    status: boolean
+  ): void {
+    this.setState({
+      ...this.state,
+      forms: [
+        ...this.state.forms,
+        {
+          name: name,
+          processOwner: processOwner,
+          status: status
         }
       ]
     });

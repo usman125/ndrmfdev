@@ -251,6 +251,7 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
     this._userService.updateEligibleStatus(this.selectedRequest.id).subscribe(
       result => {
         console.log("RESULR FROM MARKING ELIGIBLE:--", result);
+        this.selectedRequest.status = "Approved";
         // this._usersStore.updateUserEligibleFlag('Approved', this.selectedRequestItems.initiatedBy.id);
         // this._authStore.setEligibleFlag('Approved');
         // this.toggleBtn = this._usersStore.findEligibleUser(this.selectedRequest.user);

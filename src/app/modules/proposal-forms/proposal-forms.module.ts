@@ -10,7 +10,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatCardModule } from "@angular/material/card";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { FormioModule } from "angular-formio";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+// import { FormioModule } from "angular-formio";
 
 @NgModule({
   declarations: [
@@ -18,7 +19,7 @@ import { FormioModule } from "angular-formio";
   ],
   imports: [
     CommonModule,
-    FormioModule,
+    // FormioModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
@@ -28,7 +29,9 @@ import { FormioModule } from "angular-formio";
     MatIconModule,
     MatTooltipModule,
     ProposalFormsRoutingModule,
-  ]
+    MatProgressSpinnerModule,
+  ],
+  exports:[ProposalFormsComponent]
 })
 
 export class ProposalFormsModule { }

@@ -321,7 +321,52 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     //     }
     //   })
     // );
+    this.adminDefaults();
+    const id = "842aa74e-b48d-4988-86d5-172a55fa495e";
+    this._accreditationRequestService.getSingleQualificationRequest(id).subscribe(
+        (result: any) => {
+          // this.apiLoading = false;
+          console.log("RESULT QUALIFICATION SME:--", result);
+          // let count = 0;
+          // // let passCount = 0;
+          // this.userReviewRequests = result.sections.map((c) => {
+          //   count = count + parseInt(c.totalScore);
+          //   // passCount = passCount + parseInt(c.passingScore);
+          //   return {
+          //     ...c,
+          //     template: JSON.parse(c.template),
+          //     data: c.data === null ? c.data : JSON.parse(c.data)
+          //   }
+          // })
+          // this.totalFormScore = count;
+          // this.apiLoading = false;
+          // this.totalPassScore = passCount;
+        },
+        error => {
+          // this.apiLoading = false;
+          console.log("ERROR QUALIFICATION SME:---", error);
+        }
+      );
+
+
+
+  }
+
+  // hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+
+  adminDefaults() {
+  //   this.allRequests = _.chain(this.userRequests)
+  //     .filter({ requestKey: 'qualification', status: 'submit' })
+  //     .groupBy('userRef')
+  //     .map((val, user) => {
+  //       return { val, user }
+  //     })
+  //     .value();
+  //   this.dataSource = this.allRequests;
+  //   this.dataSourceTree.data = this.allRequests;
+  //   console.log("ALL REQUESTS:--", this.allRequests);
     this.apiLoading = true;
+
     this._accreditationRequestService.getUnderReviewQulificationRequests().subscribe(
       (result: any) => {
         this.apiLoading = false;
@@ -333,23 +378,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         console.log("ERROR FROM GETTING ALL QUALIFICATIONS:---", error);
       }
     );
-
   }
-
-  // hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
-
-  // adminDefaults() {
-  //   this.allRequests = _.chain(this.userRequests)
-  //     .filter({ requestKey: 'qualification', status: 'submit' })
-  //     .groupBy('userRef')
-  //     .map((val, user) => {
-  //       return { val, user }
-  //     })
-  //     .value();
-  //   this.dataSource = this.allRequests;
-  //   this.dataSourceTree.data = this.allRequests;
-  //   console.log("ALL REQUESTS:--", this.allRequests);
-  // }
 
   // smeDefaults() {
   //   this.allRequests = _.chain(this.userRequests)
@@ -488,29 +517,58 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     // this.checkForAllTasks(this.selectedRequest);
     console.log("REQUEST TO CHECK:--", this.selectedRequest);
     this.apiLoading = true;
-    this._accreditationRequestService.getSingleQualificationRequest(this.selectedRequest.id).subscribe(
-      (result: any) => {
-        console.log("SELECTED REQUEST FORMS:---", result);
-        let count = 0;
-        // let passCount = 0;
-        this.userReviewRequests = result.sections.map((c) => {
-          count = count + parseInt(c.totalScore);
-          // passCount = passCount + parseInt(c.passingScore);
-          return {
-            ...c,
-            template: JSON.parse(c.template),
-            data: c.data === null ? c.data : JSON.parse(c.data)
-          }
-        })
-        this.totalFormScore = count;
-        // this.totalPassScore = passCount;
-        this.apiLoading = false;
-      },
-      error => {
-        this.apiLoading = false;
-        console.log("ERROR REQUEST FORMS:---", error);
-      }
-    );
+    if (this.currentUser.role !== 'sme') {
+
+      this._accreditationRequestService.getSingleQualificationRequest(this.selectedRequest.id).subscribe(
+        (result: any) => {
+          console.log("SELECTED REQUEST FORMS:---", result);
+          let count = 0;
+          // let passCount = 0;
+          this.userReviewRequests = result.sections.map((c) => {
+            count = count + parseInt(c.totalScore);
+            // passCount = passCount + parseInt(c.passingScore);
+            return {
+              ...c,
+              template: JSON.parse(c.template),
+              data: c.data === null ? c.data : JSON.parse(c.data)
+            }
+          })
+          this.totalFormScore = count;
+          this.apiLoading = false;
+          // this.totalPassScore = passCount;
+        },
+        error => {
+          this.apiLoading = false;
+          console.log("ERROR REQUEST FORMS:---", error);
+        }
+      );
+    } else {
+      // const id = "842aa74e-b48d-4988-86d5-172a55fa495e";
+      // this._accreditationRequestService.getSingleQualificationRequest(id).subscribe(
+      //   (result: any) => {
+      //     this.apiLoading = false;
+      //     console.log("RESULT QUALIFICATION SME:--", result);
+      //     let count = 0;
+      //     // let passCount = 0;
+      //     this.userReviewRequests = result.sections.map((c) => {
+      //       count = count + parseInt(c.totalScore);
+      //       // passCount = passCount + parseInt(c.passingScore);
+      //       return {
+      //         ...c,
+      //         template: JSON.parse(c.template),
+      //         data: c.data === null ? c.data : JSON.parse(c.data)
+      //       }
+      //     })
+      //     this.totalFormScore = count;
+      //     this.apiLoading = false;
+      //     // this.totalPassScore = passCount;
+      //   },
+      //   error => {
+      //     this.apiLoading = false;
+      //     console.log("ERROR QUALIFICATION SME:---", error);
+      //   }
+      // );
+    }
     // var count = 0;
     // var passCount = 0;
     // var resultedArray = [];

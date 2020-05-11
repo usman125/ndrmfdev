@@ -174,10 +174,10 @@ export class CreateProposalFormComponent implements OnInit, OnDestroy {
       values.name,
       values.smeRef,
       this.form.components,
-      values.type,
-      this.form.page,
-      this.form.numPages,
-      'proposal-form',
+      // values.type,
+      // this.form.page,
+      // this.form.numPages,
+      // 'proposal-form',
     );
     this._proposalSectionsStore.updateSectionFormgenerated(values.smeRef);
     this.resetForm();

@@ -121,6 +121,8 @@ export class CreateSurveyComponent implements OnInit {
   }
 
   typeChanged($event) {
+    console.log('Type changed:--', $event);
+    this.formType = $event;
     if ($event === 'wizard') {
       this.form.display = 'wizard';
       this.form.page = 0;

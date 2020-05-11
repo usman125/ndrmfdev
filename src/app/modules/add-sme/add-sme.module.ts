@@ -10,6 +10,7 @@ import { MatCardModule } from "@angular/material/card";
 // import { MatListModule } from "@angular/material/list";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatGridListModule } from "@angular/material/grid-list";
+import { MatToolbarModule } from "@angular/material/toolbar";
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { MatGridListModule } from "@angular/material/grid-list";
     MatCardModule,
     MatGridListModule,
     MatProgressSpinnerModule,
+    MatToolbarModule,
   ]
 })
 export class AddSmeModule { }

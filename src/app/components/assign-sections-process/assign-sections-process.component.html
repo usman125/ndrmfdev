@@ -1,11 +1,20 @@
-<mat-card class="m-4">
-  <mat-card-header class="p-2">
+<mat-toolbar style="margin-bottom:20px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>Assign Process & Sections</span>
+    <span class="example-spacer"></span>
+    <!-- <button (click)="goToAdd()" mat-icon-button>
+      <mat-icon>add</mat-icon>
+    </button> -->
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-card class="m-20">
+  <!-- <mat-card-header class="p-2">
     <h4>Assign Process & Sections</h4>
-  </mat-card-header>
+  </mat-card-header> -->
   <mat-card-content>
 
     <mat-form-field class="p-2">
-      <mat-label>Process Type</mat-label>
+      <mat-label>Select Process Type</mat-label>
       <mat-select [(ngModel)]="process" (ngModelChange)="processChanged($event)">
         <mat-option *ngFor="let item of allProcess" [value]="item">
           {{item}}
@@ -13,10 +22,10 @@
       </mat-select>
     </mat-form-field>
 
-    <div class="p-2" *ngIf="process">
+    <div class="p-2" *ngIf="process && !apiLoading">
       <div class="po">
         <!-- {{allProcessType}} -->
-        <div class="po-name">Process Owner</div>
+        <div class="po-name">Select Process Owner</div>
         <mat-form-field>
           <mat-label>Select Process Owner</mat-label>
           <mat-select [compareWith]="comparePoObjects" [(ngModel)]="allProcessType.processOwner" (ngModelChange)="poChanged($event)">
@@ -42,8 +51,9 @@
       </div>
     </div>
     <mat-card-actions class="p-2">
-      <button *ngIf="process" (click)="updateProcessMeta()" mat-button color="primary">SAVE</button>
+      <button *ngIf="process && !apiLoading" (click)="updateProcessMeta()" mat-button color="primary">SAVE</button>
     </mat-card-actions>
+    <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" color="primary" diameter="35"></mat-progress-spinner>
 
   </mat-card-content>
 </mat-card>

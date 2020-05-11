@@ -1,7 +1,16 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title title color="primary">{{'Add Sme'}}</mat-card-title>
-  </mat-card-header>
+<mat-toolbar style="margin-bottom:20px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>Add Section</span>
+    <span class="example-spacer"></span>
+    <button mat-raised-button (click)="goBack()" color="accent" type="submit">Close</button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-card class="m-20">
+  <!-- <mat-card-header>
+    <mat-card-title title color="primary">{{'Add Section'}}</mat-card-title>
+    <div class="example-spacer"></div>
+    <button mat-raised-button (click)="goBack()" color="accent" type="submit">Close</button>
+  </mat-card-header> -->
   <mat-card-content>
     <mat-grid-list cols="1" rowHeight="60px">
       <form [formGroup]="addSmeForm" (ngSubmit)="addSme(addSmeForm.value)">
@@ -32,9 +41,9 @@
           <button *ngIf="!addingFlag" [disabled]="!addSmeForm.valid" mat-raised-button color="primary" type="submit">{{'Add'}}</button>
         </mat-grid-tile>
       </form>
-      <mat-grid-tile>
+      <!-- <mat-grid-tile>
         <button mat-raised-button (click)="goBack()" color="accent" type="submit">Close</button>
-      </mat-grid-tile>
+      </mat-grid-tile> -->
     </mat-grid-list>
   </mat-card-content>
 </mat-card>

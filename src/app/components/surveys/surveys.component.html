@@ -87,9 +87,9 @@
           showFirstLastButtons>
         </mat-paginator>
 
-        <mat-toolbar *ngIf="toggle && !editFormFlag" color="primary">
+        <mat-toolbar class="no-margin" *ngIf="toggle && !editFormFlag" color="primary">
           <mat-toolbar-row>
-            <span>{{secondForm.name}}</span>
+            <span>{{selctedRequest.sectionName}}</span>
             <span class="example-spacer"></span>
             <button mat-icon-button (click)="goBack()">
               <mat-icon color="warn" class="example-icon" aria-hidden="false" aria-label="Close">close</mat-icon>
@@ -103,9 +103,9 @@
 
 
 
-        <mat-toolbar *ngIf="editFormFlag" color="primary">
+        <mat-toolbar class="no-margin" *ngIf="editFormFlag" color="primary">
           <mat-toolbar-row>
-            <span>{{secondForm.name}}</span>
+            <span>{{selctedRequest.sectionName}}</span>
             <span class="example-spacer"></span>
             <button mat-icon-button (click)="hideEditForm()">
               <mat-icon color="warn" class="example-icon" aria-hidden="false" aria-label="Close">close</mat-icon>

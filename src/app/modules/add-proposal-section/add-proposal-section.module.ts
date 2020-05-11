@@ -6,6 +6,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatToolbarModule } from "@angular/material/toolbar";
+import { ProposalFormsModule } from "../proposal-forms/proposal-forms.module";
+import { ProposalSectionsModule } from "../proposal-sections/proposal-sections.module";
 
 @NgModule({
   declarations: [
@@ -13,11 +15,13 @@ import { MatToolbarModule } from "@angular/material/toolbar";
   ],
   imports: [
     CommonModule,
+    AddProposalRoutingModule,
+    ProposalFormsModule,
+    ProposalSectionsModule,
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
     MatToolbarModule,
-    AddProposalRoutingModule
   ]
 })
 export class AddProposalSectionModule { }
