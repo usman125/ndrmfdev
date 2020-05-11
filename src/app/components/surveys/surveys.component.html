@@ -10,7 +10,7 @@
 </mat-toolbar>
 
 
-<div class="row">
+<div class="row mt-3">
   <div class="col-md-3">
     <mat-card class="m-20 mr-0 p-0 mat-elevation-z5">
       <div class="card-header"> Select Process </div>
@@ -28,7 +28,8 @@
 
     <mat-card class="example-container mat-elevation-z8">
       <mat-card-content>
-        <table mat-table [trackBy]="trackTask" [hidden]="toggle || editFormFlag || loadingSection" [dataSource]="dataSource" matSort>
+        <table mat-table [trackBy]="trackTask" [hidden]="toggle || editFormFlag || loadingSection"
+          [dataSource]="dataSource" matSort>
 
           <ng-container matColumnDef="display">
             <th mat-header-cell mat-sort-header *matHeaderCellDef> Type. </th>
@@ -76,8 +77,10 @@
         <div *ngIf="loadingSection" class="m-3" style="display: flex;flex-direction:column;align-items: center;">
           <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
         </div>
-        <div id="answer" class="m-20 mt-3" *ngIf="!dataSource?.length && listItem === null && !loadingSection">{{'No Process Selected'}}</div>
-        <div id="answer" class="m-20 mt-3" *ngIf="!dataSource?.length && listItem && !loadingSection">{{'No Data Found'}}</div>
+        <div id="answer" class="m-20 mt-3" *ngIf="!dataSource?.length && listItem === null && !loadingSection">
+          {{'No Process Selected'}}</div>
+        <div id="answer" class="m-20 mt-3" *ngIf="!dataSource?.length && listItem && !loadingSection">
+          {{'No Data Found'}}</div>
 
 
         <mat-paginator [hidden]="toggle || editFormFlag" #paginator [pageSizeOptions]="[5, 10, 20]"

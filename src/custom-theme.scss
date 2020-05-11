@@ -19,6 +19,13 @@ $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
   color: mat-color($candy-app-primary);
 }
 
+
+.mat-toolbar.mat-primary.no-margin{
+  margin: 0px !important;
+  // margin-top: 10px !important;
+  width: 100%;
+}
+
 .processes .process .mat-list-item-content {
   overflow-wrap: anywhere;
   overflow: hidden;

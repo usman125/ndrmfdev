@@ -1,78 +1,3 @@
-<!-- <mat-sidenav-container class="example-container"
-  [ngClass]="{'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }">
-  <mat-sidenav #sidenav *ngIf="loggedUser" mode="side" [(opened)]="sideNavMode">
-    <div style="display: flex;">
-      <img style="width: 60%;margin: 20px auto;"
-        src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png" alt="Logo">
-    </div>
-    <mat-list *ngIf="loggedUserRole === 'admin'">
-      <mat-divider></mat-divider>
-      <h3 mat-subheader>Profiles</h3>
-      <mat-divider></mat-divider>
-      <mat-list-item class="side-list">
-        <a mat-button routerLinkActive="active-menu-item" routerLink="/create-survey">Create Profile</a>
-      </mat-list-item>
-      <mat-list-item class="side-list">
-        <a mat-button routerLinkActive="active-menu-item" routerLink="/surveys">All Profiles</a>
-      </mat-list-item>
-      <mat-divider></mat-divider>
-      <h3 mat-subheader>Accreditation</h3>
-      <mat-divider></mat-divider>
-      <mat-list-item class="side-list">
-        <a mat-button routerLinkActive="active-menu-item" routerLink="/eligibility-requests">Eligibility Requests</a>
-      </mat-list-item>
-      <mat-list-item class="side-list">
-        <a mat-button routerLinkActive="active-menu-item" routerLink="/accreditation-requests">Qualification
-          Requests</a>
-      </mat-list-item>
-      <mat-divider></mat-divider>
-      <h3 mat-subheader>Settings</h3>
-      <mat-divider></mat-divider>
-      <mat-list-item class="side-list">
-        <a mat-button routerLinkActive="active-menu-item" routerLink="/users">Users</a>
-      </mat-list-item>
-      <mat-list-item class="side-list">
-        <a mat-button routerLinkActive="active-menu-item" routerLink="/smes">Smes</a>
-      </mat-list-item>
-    </mat-list>
-    <mat-list *ngIf="loggedUserRole === 'fip'">
-      <mat-divider></mat-divider>
-      <h3 mat-subheader>Eligibility</h3>
-      <mat-divider></mat-divider>
-      <mat-list-item class="side-list">
-        <a mat-button routerLinkActive="active-menu-item" routerLink="/fip-eligibility">Eligibility Management</a>
-      </mat-list-item>
-      <mat-divider></mat-divider>
-      <h3 mat-subheader>Qualification</h3>
-      <mat-divider></mat-divider>
-      <mat-list-item class="side-list">
-        <a *ngIf="!userEligibleStatus" disabled mat-button href="javascript: void(0);">Qualification
-          Management</a>
-        <a *ngIf="userEligibleStatus" mat-button routerLinkActive="active-menu-item"
-          routerLink="/fip-qualification">Qualification Management</a>
-      </mat-list-item>
-    </mat-list>
-    <mat-list *ngIf="loggedUserRole === 'sme'">
-      <mat-divider></mat-divider>
-      <h3 mat-subheader>Accreditation</h3>
-      <mat-divider></mat-divider>
-      <mat-list-item class="side-list">
-        <a mat-button routerLinkActive="active-menu-item" routerLink="/accreditation-requests">All Requests</a>
-      </mat-list-item>
-
-    </mat-list>
-  </mat-sidenav>
-  <mat-sidenav-content class="mat-app-background">
-    <div [ngClass]="{'app_header_padding': sideNavMode}" class="app_header">
-      <app-header *ngIf="loggedUser"></app-header>
-    </div>
-    <div [ngClass]="{'app-content': loggedUser}">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container> -->
-
-
 <!-- <div
   [ngClass]="{'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
   class="app_header">
@@ -82,43 +7,10 @@
   <mat-sidenav-container
     [ngClass]="{'app-content': !loggedUser, 'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
     class="example-container">
-    <mat-sidenav *ngIf="loggedUser" #sidenav mode="side" [opened]="sideNavMode" class="example-sidenav">
-
-
-      <div style="display: flex;">
-        <img style="width: 85%;padding: 25px;"
-          src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png" alt="Logo">
-      </div>
-
-      <div class="hero" [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'fip' || loggedUserRole === 'process owner'">
+    <mat-sidenav #sidenav mode="side" [opened]="sideNavMode" class="example-sidenav">
+      <div class="hero" *ngIf="loggedUser"
+        [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'fip' || loggedUserRole === 'process owner'">
         <mat-accordion multi="true">
-
-          <!-- <mat-expansion-panel [expanded]="true">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                Templates
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-nav-list>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/create-survey">Create
-                Templates</a>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/surveys">All Templates</a>
-            </mat-nav-list>
-          </mat-expansion-panel> -->
-          <!-- <mat-expansion-panel [expanded]="true">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                Accreditation Requests
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-nav-list>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/eligibility-requests">Eligibility
-                Requests</a>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/accreditation-requests">Qualification
-                Requests</a>
-            </mat-nav-list>
-          </mat-expansion-panel> -->
-
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
@@ -132,7 +24,8 @@
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/create-survey">Create
                 Templates</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/surveys">All Templates</a>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/assign-sections-process">Assign Sections & Process</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/assign-sections-process">Assign Sections
+                & Process</a>
             </mat-nav-list>
           </mat-expansion-panel>
 
@@ -143,15 +36,12 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-nav-list>
-              <!-- <a mat-list-item routerLinkActive="active-menu-item" routerLink="/users">Add Sections</a> -->
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/proposal-sections">All Sections</a>
+              <!-- <a mat-list-item routerLinkActive="active-menu-item" routerLink="/proposal-sections">All Sections</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/add-proposal-section">Add Section</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/proposal-forms">All Section Forms</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/create-proposal-form">Create Section
-                Form</a>
+                Form</a> -->
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/project-plan">Project Plan</a>
-              <!-- <a mat-list-item routerLinkActive="active-menu-item" routerLink="/projects">Add a
-                new project</a> -->
             </mat-nav-list>
           </mat-expansion-panel>
 
@@ -174,8 +64,9 @@
 
         </mat-accordion>
       </div>
-      
-      <div class="hero" [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'admin' || loggedUserRole === 'process owner'">
+
+      <div class="hero"
+        [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'admin' || loggedUserRole === 'process owner'">
         <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
@@ -187,7 +78,8 @@
             <mat-nav-list>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/fip-eligibility">Eligibility
                 Management</a>
-              <a *ngIf="userEligibleStatus === 'Not Initiated' || userEligibleStatus === 'Under Review'" mat-list-item disabled href="javascript: void(0);">Qualification
+              <a *ngIf="userEligibleStatus === 'Not Initiated' || userEligibleStatus === 'Under Review'" mat-list-item
+                disabled href="javascript: void(0);">Qualification
                 Management</a>
               <a *ngIf="userEligibleStatus === 'Approved'" mat-list-item routerLinkActive="active-menu-item"
                 routerLink="/fip-qualification">Qualification Management</a>
@@ -208,7 +100,8 @@
         </mat-accordion>
       </div>
 
-      <div class="hero" [hidden]="loggedUserRole === 'admin' || loggedUserRole === 'fip' || loggedUserRole === 'process owner'">
+      <div class="hero"
+        [hidden]="loggedUserRole === 'admin' || loggedUserRole === 'fip' || loggedUserRole === 'process owner'">
         <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
@@ -252,11 +145,9 @@
         <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
       </div>
       <div [hidden]="loading" class="router-output">
-        <div
-        [ngClass]="{'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
-        class="app_header">
-        <app-header class="example-header" *ngIf="loggedUser"></app-header>
-      </div>
+        <div class="app_header">
+          <app-header class="example-header" *ngIf="loggedUser"></app-header>
+        </div>
         <router-outlet></router-outlet>
       </div>
     </mat-sidenav-content>

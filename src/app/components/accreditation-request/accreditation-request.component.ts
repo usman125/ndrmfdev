@@ -163,193 +163,205 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     });
 
 
-    this._surveysService.getAllSurveys().subscribe(
-      result => {
-        let surveysArray = []
-        console.log("ALL SURVEYS FROM API:--", result['formInfoList']);
-        if (result['formInfoList']) {
-          result['formInfoList'].forEach(element => {
-            var object = {
-              name: element.sectionName,
-              smeRef: element.sectionKey,
-              formIdentity: element.formIdentity,
-              passScore: element.passingScore,
-              totalScore: element.totalScore,
-              display: element.displayType,
-              page: element.page,
-              numPages: element.numOfPages,
-              components: JSON.parse(element.component),
-            }
-            surveysArray.push(object)
-          });
-          this._surveysStore.addAllForms(surveysArray);
-        }
-        this._accreditationRequestService.getAllAccreditationRequests().subscribe(
-          result => {
-            console.log("RESULT FROM ALL API REQUESTS:--", result['accreditationInfos']);
-            let tempRequestsArray = [];
-            if (result['accreditationInfos']) {
-              result['accreditationInfos'].forEach(element => {
-                var object = {
-                  userRef: element.userName,
-                  formSubmitData: JSON.parse(element.formSubmitData),
-                  formData: element.formData,
-                  status: element.status,
-                  formIdentity: element.sectionKey,
-                  startDate: element.startDate,
-                  endDate: element.endDate,
-                  previousReview: element.prevReview,
-                  currentReview: element.currentReview,
-                  requestKey: element.requestKey,
-                  userUpdateFlag: element.userUpdateFlag,
-                  rating: element.ratings,
-                }
-                tempRequestsArray.push(object);
-              })
-            }
-            this._accreditationRequestStore.addAllRequests(tempRequestsArray);
-            this._smeService.getAllSmes().subscribe(
-              result => {
-                console.log("ALL SMES FROM APi:--", result);
-                let smesArray = [];
-                if (result['sectionInfos']) {
-                  result['sectionInfos'].forEach(element => {
-                    var object = {
-                      name: element.sectionName,
-                      userRef: element.username,
-                      formGenerated: element.formGenerated,
-                      key: element.sectionKey,
-                      formIdentity: element.formIdentity,
-                    }
-                    if (element.formIdentity === 'qualification') smesArray.push(object);
-                  });
-                  this._smeStore.addAllSmes(smesArray);
-                }
-                this._accreditationReviewsService.getAllReviews().subscribe(
-                  result => {
-                    console.log("ALL REVIEWS FROM APi:--", result);
-                    let reviewsArray = [];
-                    if (result['sectionReviewInfos']) {
-                      result['sectionReviewInfos'].forEach(element => {
-                        var object = {
-                          data: element.componentReviewInfos,
-                          rating: element.rating,
-                          status: element.status,
-                          userRef: element.username,
-                          formIdentity: element.sectionKey,
-                          generalComments: element.comments,
-                        }
-                        reviewsArray.push(object);
-                      });
-                      this._accreditationReviewStore.addAllReviews(reviewsArray);
-                    }
-                  },
-                  error => {
-                    console.log("ERROR SMES FROM APi:--", result);
-                  }
-                );
-              },
-              error => {
-                console.log("ERROR SMES FROM APi:--", result);
-              }
-            );
-          },
-          error => {
-            console.log("ERROR FROM ALL REQUESTS:--", error);
-          }
-        );
-      },
-      error => {
-        console.log("ERROR SURVEYS API:--", error);
-      }
-    );
+    // this._surveysService.getAllSurveys().subscribe(
+    //   result => {
+    //     let surveysArray = []
+    //     console.log("ALL SURVEYS FROM API:--", result['formInfoList']);
+    //     if (result['formInfoList']) {
+    //       result['formInfoList'].forEach(element => {
+    //         var object = {
+    //           name: element.sectionName,
+    //           smeRef: element.sectionKey,
+    //           formIdentity: element.formIdentity,
+    //           passScore: element.passingScore,
+    //           totalScore: element.totalScore,
+    //           display: element.displayType,
+    //           page: element.page,
+    //           numPages: element.numOfPages,
+    //           components: JSON.parse(element.component),
+    //         }
+    //         surveysArray.push(object)
+    //       });
+    //       this._surveysStore.addAllForms(surveysArray);
+    //     }
+    //     this._accreditationRequestService.getAllAccreditationRequests().subscribe(
+    //       result => {
+    //         console.log("RESULT FROM ALL API REQUESTS:--", result['accreditationInfos']);
+    //         let tempRequestsArray = [];
+    //         if (result['accreditationInfos']) {
+    //           result['accreditationInfos'].forEach(element => {
+    //             var object = {
+    //               userRef: element.userName,
+    //               formSubmitData: JSON.parse(element.formSubmitData),
+    //               formData: element.formData,
+    //               status: element.status,
+    //               formIdentity: element.sectionKey,
+    //               startDate: element.startDate,
+    //               endDate: element.endDate,
+    //               previousReview: element.prevReview,
+    //               currentReview: element.currentReview,
+    //               requestKey: element.requestKey,
+    //               userUpdateFlag: element.userUpdateFlag,
+    //               rating: element.ratings,
+    //             }
+    //             tempRequestsArray.push(object);
+    //           })
+    //         }
+    //         this._accreditationRequestStore.addAllRequests(tempRequestsArray);
+    //         this._smeService.getAllSmes().subscribe(
+    //           result => {
+    //             console.log("ALL SMES FROM APi:--", result);
+    //             let smesArray = [];
+    //             if (result['sectionInfos']) {
+    //               result['sectionInfos'].forEach(element => {
+    //                 var object = {
+    //                   name: element.sectionName,
+    //                   userRef: element.username,
+    //                   formGenerated: element.formGenerated,
+    //                   key: element.sectionKey,
+    //                   formIdentity: element.formIdentity,
+    //                 }
+    //                 if (element.formIdentity === 'qualification') smesArray.push(object);
+    //               });
+    //               this._smeStore.addAllSmes(smesArray);
+    //             }
+    //             this._accreditationReviewsService.getAllReviews().subscribe(
+    //               result => {
+    //                 console.log("ALL REVIEWS FROM APi:--", result);
+    //                 let reviewsArray = [];
+    //                 if (result['sectionReviewInfos']) {
+    //                   result['sectionReviewInfos'].forEach(element => {
+    //                     var object = {
+    //                       data: element.componentReviewInfos,
+    //                       rating: element.rating,
+    //                       status: element.status,
+    //                       userRef: element.username,
+    //                       formIdentity: element.sectionKey,
+    //                       generalComments: element.comments,
+    //                     }
+    //                     reviewsArray.push(object);
+    //                   });
+    //                   this._accreditationReviewStore.addAllReviews(reviewsArray);
+    //                 }
+    //               },
+    //               error => {
+    //                 console.log("ERROR SMES FROM APi:--", result);
+    //               }
+    //             );
+    //           },
+    //           error => {
+    //             console.log("ERROR SMES FROM APi:--", result);
+    //           }
+    //         );
+    //       },
+    //       error => {
+    //         console.log("ERROR FROM ALL REQUESTS:--", error);
+    //       }
+    //     );
+    //   },
+    //   error => {
+    //     console.log("ERROR SURVEYS API:--", error);
+    //   }
+    // );
 
-    this.Subscription.add(
-      this._surveysStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-        this.allSurveys = data.surveys;
-      })
-    );
+    // this.Subscription.add(
+    //   this._surveysStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
+    //     this.allSurveys = data.surveys;
+    //   })
+    // );
     this.Subscription.add(
       this._authStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
         // this.allSmes = data.smes;
         this.addMobileClasses = data.auth.applyMobileClasses;
       })
     );
-    this.Subscription.add(
-      this._smeStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-        this.allSmes = data.smes;
-        // this.allSmes = _.filter(data.smes, { formGenerated: true });
-      })
-    );
-    this.Subscription.add(
-      this._accreditationReviewStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-        this.allRequestReviews = data.reviews;
-        console.log("---:ALL REQEST REVIEWS:---\n", this.allRequestReviews);
-      })
-    );
-    this.Subscription.add(
-      this._singleAccreditationRequestStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-        this.userReviewRequests = data.requests;
-        // console.log("USER REVIEWS:--", this.userReviewRequests);
-        if (this.userReviewRequests)
-          this.checkScores(this.userReviewRequests);
-      })
-    );
-    this.Subscription.add(
-      this._sectionSelectorStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-        this.allSectionSelections = data.selections;
-      })
-    );
-    this.Subscription.add(
-      this._fipIntimationsStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-        // console.log("ALL ADDED INTIMATIONS:--", data.intimations);
-      })
-    );
-    this.Subscription.add(
-      this._accreditationRequestStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-        // console.log(data);
-        // this.generatePipe = generate(data)
-        this.userRequests = [];
-        this.dataSource = [];
-        this.userRequests = data.requests;
-        console.log("ALL ADDED INTIMATIONS:--", data.requests);
-        if (this.currentUser.role !== 'sme') {
-          // this.checkForAllTasks();
-          this.adminDefaults();
-        } else if (this.currentUser.role === 'sme') {
-          this.smeDefaults();
-        }
-      })
+    // this.Subscription.add(
+    //   this._smeStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
+    //     this.allSmes = data.smes;
+    //     // this.allSmes = _.filter(data.smes, { formGenerated: true });
+    //   })
+    // );
+    // this.Subscription.add(
+    //   this._accreditationReviewStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
+    //     this.allRequestReviews = data.reviews;
+    //     console.log("---:ALL REQEST REVIEWS:---\n", this.allRequestReviews);
+    //   })
+    // );
+    // this.Subscription.add(
+    //   this._singleAccreditationRequestStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
+    //     this.userReviewRequests = data.requests;
+    //     // console.log("USER REVIEWS:--", this.userReviewRequests);
+    //     if (this.userReviewRequests)
+    //       this.checkScores(this.userReviewRequests);
+    //   })
+    // );
+    // this.Subscription.add(
+    //   this._sectionSelectorStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
+    //     this.allSectionSelections = data.selections;
+    //   })
+    // );
+    // this.Subscription.add(
+    //   this._fipIntimationsStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
+    //     // console.log("ALL ADDED INTIMATIONS:--", data.intimations);
+    //   })
+    // );
+    // this.Subscription.add(
+    //   this._accreditationRequestStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
+    //     // console.log(data);
+    //     // this.generatePipe = generate(data)
+    //     this.userRequests = [];
+    //     this.dataSource = [];
+    //     this.userRequests = data.requests;
+    //     console.log("ALL ADDED INTIMATIONS:--", data.requests);
+    //     if (this.currentUser.role !== 'sme') {
+    //       // this.checkForAllTasks();
+    //       this.adminDefaults();
+    //     } else if (this.currentUser.role === 'sme') {
+    //       this.smeDefaults();
+    //     }
+    //   })
+    // );
+    this.apiLoading = true;
+    this._accreditationRequestService.getUnderReviewQulificationRequests().subscribe(
+      (result: any) => {
+        this.apiLoading = false;
+        console.log("RESULT AFETR GETTING ALL QUALIFICATION:--", result);
+        this.dataSource = result;
+      },
+      error => {
+        this.apiLoading = false;
+        console.log("ERROR FROM GETTING ALL QUALIFICATIONS:---", error);
+      }
     );
 
   }
 
-  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+  // hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
-  adminDefaults() {
-    this.allRequests = _.chain(this.userRequests)
-      .filter({ requestKey: 'qualification', status: 'submit' })
-      .groupBy('userRef')
-      .map((val, user) => {
-        return { val, user }
-      })
-      .value();
-    this.dataSource = this.allRequests;
-    this.dataSourceTree.data = this.allRequests;
-    console.log("ALL REQUESTS:--", this.allRequests);
-  }
+  // adminDefaults() {
+  //   this.allRequests = _.chain(this.userRequests)
+  //     .filter({ requestKey: 'qualification', status: 'submit' })
+  //     .groupBy('userRef')
+  //     .map((val, user) => {
+  //       return { val, user }
+  //     })
+  //     .value();
+  //   this.dataSource = this.allRequests;
+  //   this.dataSourceTree.data = this.allRequests;
+  //   console.log("ALL REQUESTS:--", this.allRequests);
+  // }
 
-  smeDefaults() {
-    this.allRequests = _.chain(this.userRequests)
-      .filter({ currentReview: "in_review", formIdentity: this.currentUser.smeRef })
-      .groupBy('userRef')
-      .map((val, user) => {
-        return { val, user }
-      })
-      .value();
-    this.dataSource = this.allRequests;
-    console.log("ALL REQUESTS:--", this.allRequests);
-  }
+  // smeDefaults() {
+  //   this.allRequests = _.chain(this.userRequests)
+  //     .filter({ currentReview: "in_review", formIdentity: this.currentUser.smeRef })
+  //     .groupBy('userRef')
+  //     .map((val, user) => {
+  //       return { val, user }
+  //     })
+  //     .value();
+  //   this.dataSource = this.allRequests;
+  //   console.log("ALL REQUESTS:--", this.allRequests);
+  // }
 
   checkForAllTasks(request) {
     for (let i = 0; i < request.val.length; i++) {
@@ -473,155 +485,179 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     // var keys = Object.keys(request.formSubmitData);
     // this.formKeys = keys;
     this.selectedRequest = request;
-    this.checkForAllTasks(this.selectedRequest);
+    // this.checkForAllTasks(this.selectedRequest);
     console.log("REQUEST TO CHECK:--", this.selectedRequest);
-    var count = 0;
-    var passCount = 0;
-    var resultedArray = [];
+    this.apiLoading = true;
+    this._accreditationRequestService.getSingleQualificationRequest(this.selectedRequest.id).subscribe(
+      (result: any) => {
+        console.log("SELECTED REQUEST FORMS:---", result);
+        let count = 0;
+        // let passCount = 0;
+        this.userReviewRequests = result.sections.map((c) => {
+          count = count + parseInt(c.totalScore);
+          // passCount = passCount + parseInt(c.passingScore);
+          return {
+            ...c,
+            template: JSON.parse(c.template),
+            data: c.data === null ? c.data : JSON.parse(c.data)
+          }
+        })
+        this.totalFormScore = count;
+        // this.totalPassScore = passCount;
+        this.apiLoading = false;
+      },
+      error => {
+        this.apiLoading = false;
+        console.log("ERROR REQUEST FORMS:---", error);
+      }
+    );
+    // var count = 0;
+    // var passCount = 0;
+    // var resultedArray = [];
     // this.userReviewRequests = [];
-    for (let i = 0; i < this.allSmes.length; i++) {
-      var object = {
-        name: '',
-        userRef: '',
-        submitData: null,
-        form: null,
-        status: null,
-        formIdentity: null,
-        startDate: null,
-        endDate: null,
-        previousReview: null,
-        currentReview: null,
-        review: null,
-        allReviews: null,
-        userUpdateFlag: null,
-        // rating: 0,
-      }
-      var resultProfile = _.find(this.allSurveys, { 'smeRef': this.allSmes[i].key });
-      var resultRequest = _.find(this.userRequests, { 'formIdentity': this.allSmes[i].key, 'userRef': request.user });
-      object.name = this.allSmes[i].name;
-      object.formIdentity = this.allSmes[i].key;
-      if (resultProfile) {
-        object.form = resultProfile;
-      }
-      if (resultRequest) {
-        object.userRef = resultRequest.userRef;
-        object.submitData = resultRequest.formSubmitData;
-        object.status = resultRequest.status;
-        object.currentReview = resultRequest.currentReview;
-        object.previousReview = resultRequest.previousReview;
-        object.startDate = resultRequest.startDate;
-        object.endDate = resultRequest.endDate;
-        object.userUpdateFlag = resultRequest.userUpdateFlag;
-      }
+    // for (let i = 0; i < this.allSmes.length; i++) {
+    //   var object = {
+    //     name: '',
+    //     userRef: '',
+    //     submitData: null,
+    //     form: null,
+    //     status: null,
+    //     formIdentity: null,
+    //     startDate: null,
+    //     endDate: null,
+    //     previousReview: null,
+    //     currentReview: null,
+    //     review: null,
+    //     allReviews: null,
+    //     userUpdateFlag: null,
+    //     // rating: 0,
+    //   }
+    // var resultProfile = _.find(this.allSurveys, { 'smeRef': this.allSmes[i].key });
+    // var resultRequest = _.find(this.userRequests, { 'formIdentity': this.allSmes[i].key, 'userRef': request.user });
+    // object.name = this.allSmes[i].name;
+    // object.formIdentity = this.allSmes[i].key;
+    // if (resultProfile) {
+    //   object.form = resultProfile;
+    // }
+    // if (resultRequest) {
+    //   object.userRef = resultRequest.userRef;
+    //   object.submitData = resultRequest.formSubmitData;
+    //   object.status = resultRequest.status;
+    //   object.currentReview = resultRequest.currentReview;
+    //   object.previousReview = resultRequest.previousReview;
+    //   object.startDate = resultRequest.startDate;
+    //   object.endDate = resultRequest.endDate;
+    //   object.userUpdateFlag = resultRequest.userUpdateFlag;
+    // }
 
-      count = count + parseInt(object.form.totalScore);
-      passCount = passCount + parseInt(object.form.passScore);
-      this.totalFormScore = count;
-      this.totalPassScore = passCount;
-      // object.totalScore = this.totalFormScore;
-      // object.totalPassScore = this.totalPassScore;
-      // var reviewe = null;
-      var reviewe = _.filter(this.allRequestReviews, { 'userRef': object.userRef, 'formIdentity': this.allSmes[i].key });
-      // var reviewe = null;
-      // this._accreditationReviewsService.getLastestAccreditationReviews(
-      //   object.userRef,
-      //   this.allSmes[i].key
-      // ).subscribe(
-      //   result => {
-      //     console.log("RESULT FROM ACCREDITATION REVIEWS:---", result, object);
-      //     if (result['sectionReviewInfos']) object.review = result['sectionReviewInfos'][0];           
-      //   },
-      //   error => {
-      //     console.log("RESULT FROM ACCREDITATION REVIEWS:---", error);
-      //   }
-      // );
-      // console.log("REVIEW OBJECT:--", reviewe);
-      if (reviewe) {
-        object.review = reviewe[reviewe.length - 1] || null;
-        object.allReviews = reviewe;
-      }
-      // console.log("FINAL OBJECT:--", object, resultRequest, resultProfile, count);
-      console.log("FINAL OBJECT:--", object);
-      resultedArray.push(object);
-      // this.userReviewRequests = resultedArray;
-      this._singleAccreditationRequestStore.addAllRequest(resultedArray);
-
-
-      if (this.currentUser.smeRef === this.allSmes[i].key) {
-        // console.log("USER DEPARTMENT MATCH:--", this.currentUser.smeRef, this.allSmes[i].key);
-        this.form = object.form;
-        this.formSubmission = object.submitData;
-
-        var contentElements = [];
-        var formElements = [];
-        this.formReviewObjects = [];
+    // count = count + parseInt(object.form.totalScore);
+    // passCount = passCount + parseInt(object.form.passScore);
+    // this.totalFormScore = count;
+    // this.totalPassScore = passCount;
+    // object.totalScore = this.totalFormScore;
+    // object.totalPassScore = this.totalPassScore;
+    // var reviewe = null;
+    // var reviewe = _.filter(this.allRequestReviews, { 'userRef': object.userRef, 'formIdentity': this.allSmes[i].key });
+    // var reviewe = null;
+    // this._accreditationReviewsService.getLastestAccreditationReviews(
+    //   object.userRef,
+    //   this.allSmes[i].key
+    // ).subscribe(
+    //   result => {
+    //     console.log("RESULT FROM ACCREDITATION REVIEWS:---", result, object);
+    //     if (result['sectionReviewInfos']) object.review = result['sectionReviewInfos'][0];           
+    //   },
+    //   error => {
+    //     console.log("RESULT FROM ACCREDITATION REVIEWS:---", error);
+    //   }
+    // );
+    // console.log("REVIEW OBJECT:--", reviewe);
+    // if (reviewe) {
+    //   object.review = reviewe[reviewe.length - 1] || null;
+    //   object.allReviews = reviewe;
+    // }
+    // console.log("FINAL OBJECT:--", object, resultRequest, resultProfile, count);
+    // console.log("FINAL OBJECT:--", object);
+    // resultedArray.push(object);
+    // this.userReviewRequests = resultedArray;
+    // this._singleAccreditationRequestStore.addAllRequest(resultedArray);
 
 
-        // if (reviewe) {
-        //   this.formReviewObjects = reviewe.data;
-        // } else {
-        FormioUtils.eachComponent(this.form.components, (component) => {
-          if (component.key != 'submit') {
-            if (component.type != 'content') {
-              formElements.push(component);
-            } else {
-              contentElements.push(component);
-            }
-          }
-        });
+    // if (this.currentUser.smeRef === this.allSmes[i].key) {
+    //   // console.log("USER DEPARTMENT MATCH:--", this.currentUser.smeRef, this.allSmes[i].key);
+    //   this.form = object.form;
+    //   this.formSubmission = object.submitData;
 
-        // console.log(formElements, contentElements);
+    //   var contentElements = [];
+    //   var formElements = [];
+    //   this.formReviewObjects = [];
 
-        for (let i = 0; i < formElements.length; i++) {
-          var jsonObject = {
-            title: '',
-            value: '',
-            submitValue: '',
-            key: '',
-            rating: 0,
-            status: 'un-satisfy',
-            comments: '',
-          }
-          if (formElements[i].label === '&nbsp;') {
-            var titleObject = _.find(contentElements, { 'key': formElements[i].key })
-            if (titleObject) {
-              jsonObject.title = titleObject.html;
-              jsonObject.key = formElements[i].key;
-              jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
-            } else {
-              jsonObject.title = 'Question-' + i;
-              jsonObject.key = formElements[i].key;
-              jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
-            }
-          } else {
-            jsonObject.title = formElements[i].label;
-            jsonObject.key = formElements[i].key;
-            jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
-          }
-          this.formReviewObjects.push(jsonObject);
-        }
-        // var x = $('.formio-component-submit').css({ "display": "none" });
-        // console.log("JAVA SCRIPT OBJECTS:--", x);
-        if (reviewe) {
-          // if (reviewe[reviewe.length - 1]) {
 
-          for (let i = 0; i < reviewe[reviewe.length - 1].data.length; i++) {
-            for (let j = 0; j < this.formReviewObjects.length; j++) {
-              if (this.formReviewObjects[j].key === reviewe[reviewe.length - 1].data[i].key) {
-                this.formReviewObjects[j].rating = reviewe[reviewe.length - 1].data[i].rating;
-                this.formReviewObjects[j].status = reviewe[reviewe.length - 1].data[i].status;
-                this.formReviewObjects[j].comments = reviewe[reviewe.length - 1].data[i].comments;
-              }
-            }
-          }
-          console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects);
-          this.generalComments = reviewe[reviewe.length - 1].generalComments;
-          // }
-        }
-      }
+    //   // if (reviewe) {
+    //   //   this.formReviewObjects = reviewe.data;
+    //   // } else {
+    //   FormioUtils.eachComponent(this.form.components, (component) => {
+    //     if (component.key != 'submit') {
+    //       if (component.type != 'content') {
+    //         formElements.push(component);
+    //       } else {
+    //         contentElements.push(component);
+    //       }
+    //     }
+    //   });
 
-      // }
-    }
+    //   // console.log(formElements, contentElements);
+
+    //   for (let i = 0; i < formElements.length; i++) {
+    //     var jsonObject = {
+    //       title: '',
+    //       value: '',
+    //       submitValue: '',
+    //       key: '',
+    //       rating: 0,
+    //       status: 'un-satisfy',
+    //       comments: '',
+    //     }
+    //     if (formElements[i].label === '&nbsp;') {
+    //       var titleObject = _.find(contentElements, { 'key': formElements[i].key })
+    //       if (titleObject) {
+    //         jsonObject.title = titleObject.html;
+    //         jsonObject.key = formElements[i].key;
+    //         jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
+    //       } else {
+    //         jsonObject.title = 'Question-' + i;
+    //         jsonObject.key = formElements[i].key;
+    //         jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
+    //       }
+    //     } else {
+    //       jsonObject.title = formElements[i].label;
+    //       jsonObject.key = formElements[i].key;
+    //       jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
+    //     }
+    //     this.formReviewObjects.push(jsonObject);
+    //   }
+    //   // var x = $('.formio-component-submit').css({ "display": "none" });
+    //   // console.log("JAVA SCRIPT OBJECTS:--", x);
+    //   if (reviewe) {
+    //     // if (reviewe[reviewe.length - 1]) {
+
+    //     for (let i = 0; i < reviewe[reviewe.length - 1].data.length; i++) {
+    //       for (let j = 0; j < this.formReviewObjects.length; j++) {
+    //         if (this.formReviewObjects[j].key === reviewe[reviewe.length - 1].data[i].key) {
+    //           this.formReviewObjects[j].rating = reviewe[reviewe.length - 1].data[i].rating;
+    //           this.formReviewObjects[j].status = reviewe[reviewe.length - 1].data[i].status;
+    //           this.formReviewObjects[j].comments = reviewe[reviewe.length - 1].data[i].comments;
+    //         }
+    //       }
+    //     }
+    //     console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects);
+    //     this.generalComments = reviewe[reviewe.length - 1].generalComments;
+    //     // }
+    //   }
+    // }
+
+    // }
+    // }
   }
 
   completeTask() {

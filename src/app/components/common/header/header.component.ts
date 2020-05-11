@@ -35,6 +35,7 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   themeName: string = '';
   checked: boolean = false;
   sideNavMode: boolean = false;
+  // loggedIn: boolean = false;
 
   favoriteSeason: { name: string, key: string, active: boolean };
   seasons: { name: string, key: string, active: boolean }[] = [

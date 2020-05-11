@@ -76,12 +76,12 @@ body {
   top: 0%;
 }
 
-/* .app_header_padding {
-  padding-right: 200px;
+.app_header_padding {
+  padding-right: 46% !important;
   transition: none;
   transition: 0.3s ease-in-out all;
   transition-delay: 0.05s;
-} */
+}
 
 mat-card-header .mat-card-header-text {
   margin: 0px !important;
@@ -161,6 +161,15 @@ body::-webkit-scrollbar-thumb {
 
 .m-20 {
   margin: 20px;
+}
+.m-25 {
+  margin: 25px;
+}
+.m-23 {
+  margin: 23px;
+}
+.m-24 {
+  margin: 24px;
 }
 .m-5 {
   margin: 5px !important;

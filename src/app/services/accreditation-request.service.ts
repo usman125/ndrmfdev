@@ -114,8 +114,23 @@ export class AccreditationRequestService {
     );
   }
 
-  addQulificationRequest(values) {
-    const url = `${AppConfig.apiUrl}/accreditation/qualification/add/?action=SAVE`;
+  getUnderReviewQulificationRequests() {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification?status=UNDER_REVIEW`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  addQulificationRequest(values, id) {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}/section/add?action=SAVE`;
+    return this._httpClient.post(
+      url,
+      values
+    );
+  }
+
+  updateQulificationRequest(values, id) {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}/section/add?action=SUBMIT`;
     return this._httpClient.post(
       url,
       values

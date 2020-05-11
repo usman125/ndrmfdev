@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, EventEmitter } from '@angular/core';
 import { Subscription, from } from "rxjs";
-import { filter } from "rxjs/operators";
+import { filter, count } from "rxjs/operators";
 import { SurveysStore } from "../../stores/surveys/surveys-store";
 import { AuthStore } from "../../stores/auth/auth-store";
 import { SmeStore } from "../../stores/sme/sme-store";
@@ -22,6 +22,7 @@ import { Router } from "@angular/router";
 import { SmeService } from "../../services/sme.service";
 import { AccreditationRequestService } from "../../services/accreditation-request.service";
 import { SettingsService } from "../../services/settings.service";
+import { Formio } from "formiojs";
 
 @Component({
   selector: 'app-fip-qualification',
@@ -68,6 +69,12 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   submitSectionsCount: number = 0;
   pendingSectionsCount: number = 0;
   allSectionsCount: number = 0;
+
+  qualificationFlag: any = null;
+  userQualificationRequest: any = null;
+  userQualificationRequestId: any = null;
+  justSubmittedId: any = null;
+  justSubmittedName: any = null;
 
   constructor(
     private _surveysStore: SurveysStore,
@@ -169,12 +176,12 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       this._authStore.setRouteName('FIP-QUALIFICATION');
     });
 
-    // this.Subscription.add(
-    //   this._surveysStore.state$.subscribe(data => {
-    //     this.allProfiles = data.surveys;
-    //     console.log("ALL SURVEYS:--", this.allProfiles);
-    //   })
-    // );
+    this.Subscription.add(
+      this._authStore.state$.subscribe(data => {
+        this.qualificationFlag = data.auth.qualifiationFlag;
+        console.log("QUALIFICATION FLAG:--", data.auth, this.qualificationFlag);
+      })
+    );
 
     // this.Subscription.add(
     //   this._smeStore.state$.subscribe(data => {
@@ -240,27 +247,31 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     // })
 
     this.loadingApi = true;
-    this._settingsService.getAccrediattionCommence().subscribe(
-      (result: any) => {
-        console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
-        // this.allSections = result.sections;
-        // this.allSmes = result.sections.map((c) => {
-        //   return {
-        //     ...c,
-        //     template: JSON.parse(c.template)
-        //   }
-        // })
-        // this.groupType = this.allSmes[0];
-        // this.form = this.allSmes[0].template;
-        // this.allSectionsCount = this.allSmes.length;
-        // this.loadingApi = false;
-        this.getRequestsFromApi(result.id);
-      },
-      error => {
-        this.loadingApi = false;
-        console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
-      }
-    );
+    if (this.qualificationFlag === 'Not Initiated') {
+      this._settingsService.getAccrediattionCommence().subscribe(
+        (result: any) => {
+          console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
+          // this.allSections = result.sections;
+          // this.allSmes = result.sections.map((c) => {
+          //   return {
+          //     ...c,
+          //     template: JSON.parse(c.template)
+          //   }
+          // })
+          // this.groupType = this.allSmes[0];
+          // this.form = this.allSmes[0].template;
+          // this.allSectionsCount = this.allSmes.length;
+          // this.loadingApi = false;
+          this.getCommenceFromApi(result.id);
+        },
+        error => {
+          this.loadingApi = false;
+          console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
+        }
+      );
+    } else {
+      this.getQualificationRequest(null);
+    }
 
 
   }
@@ -273,32 +284,120 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
 
   }
 
-  getRequestsFromApi(commenceId) {
-    // this.loadingApi = true;
-    // this._accreditationRequestService.getQulificationRequests().subscribe(
-    //   (result: any) => {
-    //     this.submitSectionsCount = result.length;
-    //     this.pendingSectionsCount = this.allSectionsCount - this.submitSectionsCount;
-    //     console.log("RESULT FROM ALL API REQUESTS:--", result, this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);
-    //     if (result) {
+  // ngAfterContentInit() {
 
+  //   this.groupType = this.allSmes[0];
+  //   this.form = this.allSmes[0].template;
+  //   if (this.groupType.data !== null) {
+  //     this.form.exists = true;
+  //     this.secondForm = this.allSmes[0].data;
+  //   } else {
+  //     this.form.exists = false;
+  //     this.secondForm = null;
+  //   }
+  //   console.log("RESULT FROM WITHOUT COMMECNCE:---", this.secondForm, this.form, this.groupType);
+  // }
+
+  // ngAfterContentChecked() {
+  //   this.groupType = this.allSmes[0];
+  //   this.form = this.allSmes[0].template;
+  //   if (this.groupType.data !== null) {
+  //     this.form.exists = true;
+  //     this.secondForm = this.allSmes[0].data;
+  //   } else {
+  //     this.form.exists = false;
+  //     this.secondForm = null;
+  //   }
+  //   console.log("RESULT FROM WITHOUT COMMECNCE:---", this.secondForm, this.form, this.groupType);
+
+  // }
+
+  getCommenceFromApi(commenceId) {
+    this.userQualificationRequestId = commenceId;
+    let user = JSON.parse(localStorage.getItem('user'));
+    console.log("USER TO SET QUALIFICATION FLAG:--", user);
+    user.qualificationFlag = 'Draft';
+    localStorage.setItem('user', JSON.stringify(user));
+    this._authStore.setQualificationFlag(user.qualificationFlag);
     this._accreditationRequestService.getSingleQualificationRequest(commenceId).subscribe(
+      (result: any) => {
+        // this.loadingApi = false;
+        this.allSections = result.sections;
+        var count1 = 0;
+        var count2 = 0;
+        this.allSmes = result.sections.map((c) => {
+          if (c.data === null) {
+            count1 = count1 + 1;
+          } else {
+            count2 = count2 + 1;
+          }
+          return {
+            ...c,
+            template: JSON.parse(c.template),
+            data: c.data === null ? c.data : JSON.parse(c.data)
+          }
+        })
+        this.pendingSectionsCount = count1;
+        this.submitSectionsCount = count2;
+        this.allSectionsCount = this.allSmes.length;
+        this.loadingApi = false;
+        console.log("RESULT FROM ALL API REQUESTS:--", result, '\n', this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);
+      },
+      error => {
+        this.loadingApi = false;
+        console.log("ERROR FROM ONE REQUEST:---", error);
+      }
+    );
+  }
+
+  getQualificationRequest(groupType) {
+    // this.groupType = groupType;
+    this.justSubmittedId = this.groupType ? this.groupType.id : null;
+    this.justSubmittedName = this.groupType ? this.groupType.name : null;
+    console.log("SELECTED SECTION TOP BTNSS:---\n", this.groupType,
+      "\nJUST SUMITTED NAME:--\n", this.justSubmittedName,
+      "\nJUST SUMITTED NAME:--\n", this.justSubmittedName
+    );
+    this.loadingApi = true;
+    this._accreditationRequestService.getQulificationRequests().subscribe(
+      (result: any) => {
+        this.userQualificationRequest = result;
+        if (result) {
+          this._accreditationRequestService.getSingleQualificationRequest(result[0].id).subscribe(
             (result: any) => {
+              this.allSections = result;
+              var count1 = 0;
+              var count2 = 0;
+              this.allSmes = result.sections.map((c) => {
+                if (c.data === null) {
+                  count1 = count1 + 1;
+                } else {
+                  count2 = count2 + 1;
+                }
+                return {
+                  ...c,
+                  template: JSON.parse(c.template),
+                  data: c.data === null ? c.data : JSON.parse(c.data)
+                }
+              })
+              this.pendingSectionsCount = count1;
+              this.submitSectionsCount = count2;
+              this.allSectionsCount = this.allSmes.length;
               this.loadingApi = false;
-              console.log("RESULT FROM ONE REQUEST:---", result);
+              console.log("RESULT FROM ALL API REQUESTS:--", result, '\n', this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);
             },
             error => {
               this.loadingApi = false;
-              console.log("ERROR FROM ONE REQUEST:---", error);
+              console.log("ERROR FROM WITHOUT COMMENCE REQUEST:---", error);
             }
           );
-    //     }
-    //   },
-    //   error => {
-    //     this.loadingApi = false;
-    //     console.log("ERROR FROM ALL REQUESTS:--", error);
-    //   }
-    // );
+        }
+      },
+      error => {
+        this.loadingApi = false;
+        console.log("ERROR FROM ALL REQUESTS:--", error);
+      }
+    );
   }
 
   setDefaults() {
@@ -346,12 +445,36 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     //   this.form.exists = false;
     // }
     // }
+    console.log(this.groupType);
+    this.justSubmittedName = null;
+    this.justSubmittedId = null;
     this.form = this.groupType.template;
+    // this.secondForm = this.groupType.data;
+    if (this.groupType.data !== null) {
+      this.form.exists = true;
+      this.secondForm = this.groupType.data;
+    } else {
+      this.form.exists = false;
+      this.secondForm = null;
+    }
+
+    // Formio.createForm(document.getElementById('formio'), 'https://examples.form.io/example', {
+    //   readOnly: true
+    // }).then(function (form) {
+    //   form.submission = {
+    //     data: {
+    //       firstName: 'Joe',
+    //       lastName: 'Smith',
+    //       email: 'joe@example.com'
+    //     }
+    //   };
+    // });
   }
 
   onSubmit($event) {
     // console.log("FORM AFTER SUBMIT:---", $event.data, $event, this.form.formIdentity);
     this.secondForm = $event.data;
+    this.form.exists = true;
     // var flag: any = _.find(this.allRequests, { userRef: this.loggedUser.username, formIdentity: this.groupType })
     // if (!flag) {
     //   var values = {
@@ -410,21 +533,34 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     // }
 
     let object = {
-      sections: [{
-        data: JSON.stringify($event.data),
-        id: this.groupType.id
-      }]
+      data: JSON.stringify($event.data),
+      id: this.groupType.id
     }
 
-    console.log("OBJECT TO STORE:--", object);
-    this._accreditationRequestService.addQulificationRequest(object).subscribe(
-      result => {
-        console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
-      },
-      error => {
-        console.log("ERROR AFTER ADDING QUALIFICATION:--", error);
-      }
-    );
+
+    // console.log("OBJECT TO STORE:--", object, this.userQualificationRequest[0].id);
+    if (this.userQualificationRequestId) {
+      this._accreditationRequestService.addQulificationRequest(object, this.userQualificationRequestId).subscribe(
+        result => {
+          console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
+          this.getQualificationRequest(null);
+        },
+        error => {
+          console.log("ERROR AFTER ADDING QUALIFICATION:--", error);
+        }
+      );
+    } else {
+      this._accreditationRequestService.addQulificationRequest(object, this.userQualificationRequest[0].id).subscribe(
+        result => {
+          console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
+          this.getQualificationRequest(null);
+        },
+        error => {
+          console.log("ERROR AFTER ADDING QUALIFICATION:--", error);
+        }
+      );
+
+    }
 
     // {
     //   "sections": [
@@ -454,32 +590,50 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
 
   submitAllSections() {
 
-    this.allRequests.forEach(element => {
-      var object = {
-        currentReview: element.currentReview,
-        endDate: element.endDate,
-        formData: "string",
-        formSubmitData: JSON.stringify(element.formSubmitData),
-        prevReview: element.previousReview,
-        ratings: element.rating,
-        sectionKey: element.formIdentity,
-        startDate: element.startDate,
-        status: "submit",
-        userName: element.userRef,
-        userUpdateFlag: element.userUpdateFlag,
+    // this.allSmes.forEach(element => {
+      let object = {
+        data: JSON.stringify(this.allSmes[0].data),
+        id: this.allSmes[0].id
       }
-      // console.log(object)
-      this._accreditationRequestService.updateAccreditationRequest(object).subscribe(
-        result => {
-          console.log("RESULT FROM UPDATE ACCREDTITAION:--", result);
-          this._accreditationRequestStore.submitAllRequests(this.loggedUser.username, object.sectionKey);
-        },
-        error => {
-          console.log("ERROR FROM UPDATE ACCREDTITAION:--", error);
-        }
-      );
+      
+      console.log("OBJECT TO STORE:--", object, this.userQualificationRequest[0].id);
+      this._accreditationRequestService.updateQulificationRequest(object, this.userQualificationRequest[0].id).subscribe(
+          result => {
+            console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
+            this.getQualificationRequest(null);
+          },
+          error => {
+            console.log("ERROR AFTER ADDING QUALIFICATION:--", error);
+          }
+        );
       // tempRequestsArray.push(object);
-    });
+    // });
+    // this.allRequests.forEach(element => {
+    //   var object = {
+    //     currentReview: element.currentReview,
+    //     endDate: element.endDate,
+    //     formData: "string",
+    //     formSubmitData: JSON.stringify(element.formSubmitData),
+    //     prevReview: element.previousReview,
+    //     ratings: element.rating,
+    //     sectionKey: element.formIdentity,
+    //     startDate: element.startDate,
+    //     status: "submit",
+    //     userName: element.userRef,
+    //     userUpdateFlag: element.userUpdateFlag,
+    //   }
+    //   // console.log(object)
+    //   this._accreditationRequestService.updateAccreditationRequest(object).subscribe(
+    //     result => {
+    //       console.log("RESULT FROM UPDATE ACCREDTITAION:--", result);
+    //       this._accreditationRequestStore.submitAllRequests(this.loggedUser.username, object.sectionKey);
+    //     },
+    //     error => {
+    //       console.log("ERROR FROM UPDATE ACCREDTITAION:--", error);
+    //     }
+    //   );
+    //   // tempRequestsArray.push(object);
+    // });
 
   }
 

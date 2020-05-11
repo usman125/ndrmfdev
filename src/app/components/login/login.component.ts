@@ -168,8 +168,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         this._authStore.setEligibleFlag(this.user.eligibileFlag);
         this._authStore.setQualificationFlag(this.user.qualificationFlag);
         if (this.user.role !== 'fip') {
-          this._authStore.openSideNav();
           this._authStore.setLoginState(true);
+          this._authStore.openSideNav();
           var newUser = JSON.stringify(this.user);
           console.log(newUser);
           localStorage.setItem('user', newUser);
@@ -208,8 +208,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.user.qualificationFlag = result.qualificationStatus;
         this._authStore.setEligibleFlag(this.user.eligibileFlag);
         this._authStore.setQualificationFlag(this.user.qualificationFlag);
-        this._authStore.openSideNav();
         this._authStore.setLoginState(true);
+        this._authStore.openSideNav();
         var newUser = JSON.stringify(this.user);
         console.log(newUser);
         localStorage.setItem('user', newUser);
@@ -221,6 +221,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         console.log("RESULT FROM ACCREDIATED SATUS:--", error);
       }
     );
+  }
+
+  registerUser(){
+    this._router.navigate(['/register']);
   }
 
 }

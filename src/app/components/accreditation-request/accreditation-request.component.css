@@ -12,10 +12,6 @@ table {
   width: 100%;
 }
 
-mat-form-field {
-  width: 100%;
-}
-
 .example-h2 {
   margin: 0 8px 16px;
 }
@@ -71,9 +67,6 @@ mat-form-field {
   margin-top: 5px;
 }
 
-.example-spacer {
-  flex: 1 1 auto;
-}
 
 .profile-details {
   display: flex;
@@ -232,6 +225,7 @@ button {
     } */
 }
 
+
 .view-block{
   display: flex;
   flex-direction: row;
@@ -248,7 +242,7 @@ button {
 
 .right-layout {
   position: sticky;
-  top: 25px;
+  top: 80px;
 }
 
 

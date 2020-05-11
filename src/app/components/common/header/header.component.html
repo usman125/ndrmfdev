@@ -1,5 +1,5 @@
 <mat-toolbar>
-  <mat-toolbar-row>
+  <mat-toolbar-row [ngClass]="{'app_header_padding': sideNavMode}">
     <div class="menu-btn">
       <button (click)="toggleSideNav()" mat-icon-button aria-label="Menu">
         <mat-icon [hidden]="!sideNavMode">menu_open</mat-icon>

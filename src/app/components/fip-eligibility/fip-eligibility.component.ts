@@ -191,24 +191,29 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
   // }
 
   getEligibilityRequest() {
+    // this.apiLoading = true;
     this._accreditationRequestService.getEligibilityRequest().subscribe(
       (result: any) => {
         console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", result);
-        this._accreditationRequestService.getSingleEligibilityRequest(result[0].id).subscribe(
-          (result: any) => {
-            this.apiLoading = false;
-            console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", result);
-            if (result) {
-              this.form.exists = true;
-              this.secondForm = JSON.parse(result.data);
+        if (result[0]) {
+          this._accreditationRequestService.getSingleEligibilityRequest(result[0].id).subscribe(
+            (result: any) => {
+              console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", result);
+              if (result) {
+                this.form.exists = true;
+                this.secondForm = JSON.parse(result.data);
+              }
+              console.log(this.form, this.secondForm);
+              this.apiLoading = false;
+            },
+            error => {
+              this.apiLoading = false;
+              console.log("ERROR SINGLE ELIGIBILITY REQUEST:---", error);
             }
-            console.log(this.form, this.secondForm);
-          },
-          error => {
-            this.apiLoading = false;
-            console.log("ERROR SINGLE ELIGIBILITY REQUEST:---", error);
-          }
-        );
+          );
+        } else {
+          this.apiLoading = false;
+        }
       },
       error => {
         this.apiLoading = false;
@@ -277,6 +282,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
     ).subscribe(
       result => {
         console.log("RESULT AFTER ADDING ELIGIBLITY:--", result);
+        this.getEligibilityRequest();
       },
       error => {
         console.log("ERROR AFTER ADDING ELIGIBLITY:--", error);

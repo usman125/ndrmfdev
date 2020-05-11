@@ -7,7 +7,7 @@
   justify-content: center;
   align-items: center;
   background-color: #eaedf4;
-  background-image: url(https://103.226.216.10:8600/sap/public/bc/ui2/logon/img/login_background_mobile.jpg);
+  background-image: url(../../../assets/login_background.jpg);
   background-attachment: scroll;
   background-size: 100% auto;
 }

@@ -70,6 +70,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this._authStore.setThemeName('material-base-theme');
     if (this.currentUser) {
       this._authStore.setUserRole(this.currentUser.role);
+      this._authStore.setEligibleFlag(this.currentUser.eligibileFlag);
+      this._authStore.setQualificationFlag(this.currentUser.qualificationFlag);
       this.subscriptions.add(
         this._authStore.state$.subscribe((auth) => {
           this.loggedUser = auth.auth.loggedUser;
