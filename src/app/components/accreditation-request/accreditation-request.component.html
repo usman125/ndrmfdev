@@ -37,7 +37,7 @@
 
 <mat-toolbar *ngIf="toggle && !commentsFlag" style="margin-top:0px;padding: 10px 0px;" color="primary">
   <mat-toolbar-row>
-    <span>{{selectedRequest?.initiatorFullName}}</span>
+    <span>{{selectedRequest?.initiatorFullName ? selectedRequest?.initiatorFullName : selectedRequest?.initiatedBy.name}}</span>
     <span class="example-spacer"></span>
     <span>{{selectedRequest?.submittedAt | date:'fullDate'}}</span>
     <span class="example-spacer"></span>
@@ -109,14 +109,14 @@
           </span>
 
 
-          <formio [form]="item.template" readOnly="true" [submission]="{data: item.data}"></formio>
-          <!-- <formio *ngIf="(currentUser?.smeRef !== item?.form.smeRef) && currentUser?.role === 'sme'" [form]="item.form"
-            readOnly="true" [submission]="{data: item.submitData}"></formio>
-          <formio *ngIf="currentUser?.role !== 'sme' && !item.review" [form]="item.form" readOnly="true"
+          <formio *ngIf="currentUser?.role !== 'sme'" [form]="item.template" readOnly="true" [submission]="{data: item.data}"></formio>
+          <formio *ngIf="!item.assigned && currentUser?.role === 'sme'" [form]="item.template"
+            readOnly="true" [submission]="{data: item.data}"></formio>
+          <!-- <formio *ngIf="currentUser?.role !== 'sme' && !item.review" [form]="item.form" readOnly="true"
             [submission]="{data: item.submitData}"></formio> -->
 
           <!-- <button *ngIf="item.allReviews.length" mat-raised-button>View Previous</button> -->
-          <!-- <div *ngIf="currentUser?.smeRef === item.form.smeRef && currentUser?.role === 'sme'">
+          <div *ngIf="currentUser?.role === 'sme' && item.assigned === true">
             <div class="form-comments" *ngFor="let item of formReviewObjects">
               <div class="details">
                 <span>{{item.title}}</span>
@@ -147,16 +147,17 @@
             <div class="comment-box">
               <mat-form-field appearance="outline">
                 <mat-label>Comments</mat-label>
-                <textarea [(ngModel)]="generalComments" value="generalComments" matInput></textarea>
+                <textarea [(ngModel)]="generalComments" matInput></textarea>
               </mat-form-field>
               <div style="padding: 15px;">
                 <mat-spinner *ngIf="apiLoading" diameter="40"></mat-spinner>
                 <button *ngIf="!apiLoading" [disabled]="reviewAdded" (click)="addRequestReview(item)" mat-mini-fab color="accent">
+                <!-- <button *ngIf="!apiLoading" [disabled]="reviewAdded" mat-mini-fab color="primary"> -->
                   <mat-icon>send</mat-icon>
                 </button>
               </div>
             </div>
-          </div> -->
+          </div>
 
           <div *ngIf="currentUser?.role !== 'sme' && item.review">
             <div *ngFor="let review of item.allReviews; let i=index;">
@@ -191,7 +192,7 @@
               <div class="comment-box">
                 <mat-form-field appearance="outline">
                   <mat-label>Comments</mat-label>
-                  <textarea disabled [(ngModel)]="generalComments" value="generalComments" matInput></textarea>
+                  <textarea disabled [(ngModel)]="generalComments" matInput></textarea>
                 </mat-form-field>
               </div>
               <div *ngIf="i !== item.allReviews.length-1" style="padding: 15px;">

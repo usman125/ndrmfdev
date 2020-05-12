@@ -321,32 +321,13 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     //     }
     //   })
     // );
-    this.adminDefaults();
-    const id = "842aa74e-b48d-4988-86d5-172a55fa495e";
-    this._accreditationRequestService.getSingleQualificationRequest(id).subscribe(
-        (result: any) => {
-          // this.apiLoading = false;
-          console.log("RESULT QUALIFICATION SME:--", result);
-          // let count = 0;
-          // // let passCount = 0;
-          // this.userReviewRequests = result.sections.map((c) => {
-          //   count = count + parseInt(c.totalScore);
-          //   // passCount = passCount + parseInt(c.passingScore);
-          //   return {
-          //     ...c,
-          //     template: JSON.parse(c.template),
-          //     data: c.data === null ? c.data : JSON.parse(c.data)
-          //   }
-          // })
-          // this.totalFormScore = count;
-          // this.apiLoading = false;
-          // this.totalPassScore = passCount;
-        },
-        error => {
-          // this.apiLoading = false;
-          console.log("ERROR QUALIFICATION SME:---", error);
-        }
-      );
+    // this.adminDefaults();
+    if (this.currentUser.role !== 'sme') {
+      this.adminDefaults();
+    } else if (this.currentUser.role === 'sme') {
+      this.smeDefaults();
+    }
+
 
 
 
@@ -355,16 +336,16 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   // hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   adminDefaults() {
-  //   this.allRequests = _.chain(this.userRequests)
-  //     .filter({ requestKey: 'qualification', status: 'submit' })
-  //     .groupBy('userRef')
-  //     .map((val, user) => {
-  //       return { val, user }
-  //     })
-  //     .value();
-  //   this.dataSource = this.allRequests;
-  //   this.dataSourceTree.data = this.allRequests;
-  //   console.log("ALL REQUESTS:--", this.allRequests);
+    //   this.allRequests = _.chain(this.userRequests)
+    //     .filter({ requestKey: 'qualification', status: 'submit' })
+    //     .groupBy('userRef')
+    //     .map((val, user) => {
+    //       return { val, user }
+    //     })
+    //     .value();
+    //   this.dataSource = this.allRequests;
+    //   this.dataSourceTree.data = this.allRequests;
+    //   console.log("ALL REQUESTS:--", this.allRequests);
     this.apiLoading = true;
 
     this._accreditationRequestService.getUnderReviewQulificationRequests().subscribe(
@@ -380,17 +361,94 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     );
   }
 
-  // smeDefaults() {
-  //   this.allRequests = _.chain(this.userRequests)
-  //     .filter({ currentReview: "in_review", formIdentity: this.currentUser.smeRef })
-  //     .groupBy('userRef')
-  //     .map((val, user) => {
-  //       return { val, user }
-  //     })
-  //     .value();
-  //   this.dataSource = this.allRequests;
-  //   console.log("ALL REQUESTS:--", this.allRequests);
-  // }
+  smeDefaults() {
+    //   this.allRequests = _.chain(this.userRequests)
+    //     .filter({ currentReview: "in_review", formIdentity: this.currentUser.smeRef })
+    //     .groupBy('userRef')
+    //     .map((val, user) => {
+    //       return { val, user }
+    //     })
+    //     .value();
+    //   this.dataSource = this.allRequests;
+    //   console.log("ALL REQUESTS:--", this.allRequests);
+    this.apiLoading = true;
+    const id = "842aa74e-b48d-4988-86d5-172a55fa495e";
+    this._accreditationRequestService.getSingleQualificationRequest(id).subscribe(
+      (result: any) => {
+        // this.apiLoading = false;
+        this.toggle = !this.toggle;
+        this.selectedRequest = result;
+        let count = 0;
+        let smeComponent: any = null;
+        // console.log("RESULT QUALIFICATION SME:--", result);
+        this.userReviewRequests = result.sections.map((c) => {
+          if (c.assigned === true) {
+            var contentElements = [];
+            var formElements = [];
+            this.formReviewObjects = [];
+            var form = JSON.parse(c.template);
+            this.formSubmission = JSON.parse(c.data);
+            FormioUtils.eachComponent(form.components, (component) => {
+              if (component.key != 'submit') {
+                if (component.type != 'content') {
+                  formElements.push(component);
+                } else {
+                  contentElements.push(component);
+                }
+              }
+            });
+
+            // console.log(formElements, contentElements);
+
+            for (let i = 0; i < formElements.length; i++) {
+              var jsonObject = {
+                title: '',
+                value: '',
+                submitValue: '',
+                key: '',
+                rating: 0,
+                status: 'un-satisfy',
+                comments: '',
+              }
+              if (formElements[i].label === '&nbsp;') {
+                var titleObject = _.find(contentElements, { 'key': formElements[i].key })
+                if (titleObject) {
+                  jsonObject.title = titleObject.html;
+                  jsonObject.key = formElements[i].key;
+                  jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
+                } else {
+                  jsonObject.title = 'Question-' + i;
+                  jsonObject.key = formElements[i].key;
+                  jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
+                }
+              } else {
+                jsonObject.title = formElements[i].label;
+                jsonObject.key = formElements[i].key;
+                jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
+              }
+              this.formReviewObjects.push(jsonObject);
+            }
+            console.log("FORM REVIEW OBJECT:---", form, this.formSubmission, this.formReviewObjects, contentElements, formElements);
+          }
+          count = count + parseInt(c.totalScore);
+          // passCount = passCount + parseInt(c.passingScore);
+          return {
+            ...c,
+            template: JSON.parse(c.template),
+            data: c.data === null ? c.data : JSON.parse(c.data)
+          }
+        })
+        this.totalFormScore = count;
+        console.log("RESULT QUALIFICATION SME:--", this.userReviewRequests);
+        this.apiLoading = false;
+        this._singleAccreditationRequestStore.addAllRequest(this.userReviewRequests);
+      },
+      error => {
+        this.apiLoading = false;
+        console.log("ERROR QUALIFICATION SME:---", error);
+      }
+    );
+  }
 
   checkForAllTasks(request) {
     for (let i = 0; i < request.val.length; i++) {
@@ -448,19 +506,19 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     this._accreditationRequestService.updateAccreditationRequest(values).subscribe(
       result => {
         console.log("RESULT AFTER UPDATING REQUEST:--", result);
-        this._singleAccreditationRequestStore.setTaskReview(
-          this.selectedTask.formIdentity,
-          this.selectedTask.startDate,
-          this.selectedTask.endDate
-        );
-        this._accreditationRequestStore.updateRequestReview(
-          this.selectedTask.formIdentity,
-          this.selectedRequest.user,
-          this.selectedTask.startDate,
-          this.selectedTask.endDate,
-          null,
-          'in_review'
-        );
+        // this._singleAccreditationRequestStore.setTaskReview(
+        //   this.selectedTask.formIdentity,
+        //   this.selectedTask.startDate,
+        //   this.selectedTask.endDate
+        // );
+        // this._accreditationRequestStore.updateRequestReview(
+        //   this.selectedTask.formIdentity,
+        //   this.selectedRequest.user,
+        //   this.selectedTask.startDate,
+        //   this.selectedTask.endDate,
+        //   null,
+        //   'in_review'
+        // );
       },
       error => {
         console.log("ERROR AFTER UPDATING REQUEST:--", error);
@@ -502,10 +560,10 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         );
       }
     });
-    this._singleAccreditationRequestStore.setAllTaskReview(
-      startDate,
-      endDate
-    );
+    // this._singleAccreditationRequestStore.setAllTaskReview(
+    //   startDate,
+    //   endDate
+    // );
   }
 
   getRequest(request) {
@@ -534,6 +592,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
             }
           })
           this.totalFormScore = count;
+          this._singleAccreditationRequestStore.addAllRequest(this.userReviewRequests);
           this.apiLoading = false;
           // this.totalPassScore = passCount;
         },
@@ -726,7 +785,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   }
 
   addRequestReview(item) {
-    this.apiLoading = true;
+    // this.apiLoading = true;
     // this.currentReviewItem = item;
     // console.log("REVIEW ITWM:--", item);
     var rating = {
@@ -761,89 +820,104 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     } else {
       requestStatus = "Accredited";
     }
+    var apiValues = {
+      "comments": this.generalComments,
+      "controlWiseComments": JSON.stringify(this.formReviewObjects),
+      "rating": Math.ceil(count1 / count2),
+      "status": requestStatus
+    }
     console.log(
       "REVIEW TO ADD FOR ITEM:--\n", item,
-      "\nACTUAL REVIEW:--", this.formReviewObjects,
-      "\nTOAL RATING :--", rating,
-      "\nCOUNT 1 :--", count1,
-      "\nCOUNT 2 :--", count2,
-      "\nRATING RAW:--", count1 / count2,
-      "\nRATING :--", Math.ceil(count1 / count2),
-      "\nGENERAL COMMENTS :--", this.generalComments,
-      "\REQUEST STATUS :--", requestStatus,
+      "\nACTUAL REVIEW:--\n", this.formReviewObjects,
+      "\nTOAL RATING :--\n", rating,
+      "\nCOUNT 1 :--\n", count1,
+      "\nCOUNT 2 :--\n", count2,
+      "\nRATING RAW:--\n", count1 / count2,
+      "\nRATING :--\n", Math.ceil(count1 / count2),
+      "\nGENERAL COMMENTS :--\n", this.generalComments,
+      "\nEQUEST STATUS :--\n", requestStatus,
+      "\nAPI VALUES :--\n", apiValues,
     );
-    var flag = _.find(this.allRequestReviews, { userRef: item.userRef, formIdentity: item.formIdentity });
-    // if (!flag) {
-    console.log("FLAG FROM ANOTHER FIND:-", flag);
-    this._accreditationReviewsService.addReview(
-      this.formReviewObjects,
-      Math.ceil(count1 / count2),
-      item.userRef,
-      item.formIdentity,
-      this.generalComments,
-      requestStatus,
-      this.currentUser.username
-    ).subscribe(
+    this._accreditationReviewsService.addReview(item.id, apiValues).subscribe(
       result => {
-        console.log("RESULT AFTER ADDING REVIEW:--", result);
-        this.apiLoading = false;
-        this.reviewAdded = true;
-        var object = {
-          currentReview: 'reviewed',
-          endDate: item.endDate,
-          formData: "string",
-          formSubmitData: JSON.stringify(item.submitData),
-          prevReview: "done",
-          ratings: Math.ceil(count1 / count2),
-          sectionKey: item.formIdentity,
-          startDate: item.startDate,
-          status: item.status,
-          userName: item.userRef,
-          userUpdateFlag: item.userUpdateFlag,
-        }
-        this._accreditationReviewStore.addReview(
-          this.formReviewObjects,
-          Math.ceil(count1 / count2),
-          requestStatus,
-          item.userRef,
-          item.formIdentity,
-          this.generalComments,
-        );
-        this._accreditationRequestService.updateAccreditationRequest(object).subscribe(
-          result => {
-            console.log("RESULT AFTER UPDATING REQUEST:---", result);
-            this._accreditationRequestStore.markRequestReview(
-              item.userRef,
-              item.formIdentity,
-              "reviewed",
-              "done",
-              requestStatus,
-              Math.ceil(count1 / count2),
-            );
-            this._singleAccreditationRequestStore.updateSingleReviewStatus(
-              item.userRef,
-              item.formIdentity,
-              {
-                data: this.formReviewObjects,
-                rating: Math.ceil(count1 / count2),
-                status: requestStatus,
-                userRef: item.userRef,
-                formIdentity: item.formIdentity
-              }
-            );
-          },
-          error => {
-            console.log("RESULT AFTER UPDATING REQUEST:---", error);
-          }
-        );
+        console.log("RESULT FROM ADDING REVIEW:--", result);
       },
       error => {
-        this.apiLoading = false;
-        console.log("RESULT AFTER ADDING REVIEW:--", error);
+        console.log("ERROR ADDING REVIEW:--", error);
       }
-    )
+    );
+    // var flag = _.find(this.allRequestReviews, { userRef: item.userRef, formIdentity: item.formIdentity });
+    // if (!flag) {
+    // console.log("FLAG FROM ANOTHER FIND:-", flag);
+    // this._accreditationReviewsService.addReview(
+    //   this.formReviewObjects,
+    //   Math.ceil(count1 / count2),
+    //   item.userRef,
+    //   item.formIdentity,
+    //   this.generalComments,
+    //   requestStatus,
+    //   this.currentUser.username
+    // ).subscribe(
+    //   result => {
+    //     console.log("RESULT AFTER ADDING REVIEW:--", result);
+    //     this.apiLoading = false;
+    //     this.reviewAdded = true;
+    //     var object = {
+    //       currentReview: 'reviewed',
+    //       endDate: item.endDate,
+    //       formData: "string",
+    //       formSubmitData: JSON.stringify(item.submitData),
+    //       prevReview: "done",
+    //       ratings: Math.ceil(count1 / count2),
+    //       sectionKey: item.formIdentity,
+    //       startDate: item.startDate,
+    //       status: item.status,
+    //       userName: item.userRef,
+    //       userUpdateFlag: item.userUpdateFlag,
+    //     }
+    //     this._accreditationReviewStore.addReview(
+    //       this.formReviewObjects,
+    //       Math.ceil(count1 / count2),
+    //       requestStatus,
+    //       item.userRef,
+    //       item.formIdentity,
+    //       this.generalComments,
+    //     );
+    //     this._accreditationRequestService.updateAccreditationRequest(object).subscribe(
+    //       result => {
+    //         console.log("RESULT AFTER UPDATING REQUEST:---", result);
+    //         this._accreditationRequestStore.markRequestReview(
+    //           item.userRef,
+    //           item.formIdentity,
+    //           "reviewed",
+    //           "done",
+    //           requestStatus,
+    //           Math.ceil(count1 / count2),
+    //         );
+    //         this._singleAccreditationRequestStore.updateSingleReviewStatus(
+    //           item.userRef,
+    //           item.formIdentity,
+    //           {
+    //             data: this.formReviewObjects,
+    //             rating: Math.ceil(count1 / count2),
+    //             status: requestStatus,
+    //             userRef: item.userRef,
+    //             formIdentity: item.formIdentity
+    //           }
+    //         );
+    //       },
+    //       error => {
+    //         console.log("RESULT AFTER UPDATING REQUEST:---", error);
+    //       }
+    //     );
+    //   },
+    //   error => {
+    //     this.apiLoading = false;
+    //     console.log("RESULT AFTER ADDING REVIEW:--", error);
+    //   }
+    // )
     // } else {
-    console.log("VALUE EXISTS:--");
+    // console.log("VALUE EXISTS:--");
     // this._accreditationReviewStore.udpateReview(
     //   this.formReviewObjects,
     //   Math.ceil(count1 / count2),

@@ -9,34 +9,30 @@ export class SingleAccreditationRequestStore extends Store<SingleAccreditationRe
   }
 
   addRequest(
+    id: string,
     name: string,
-    userRef: string,
-    submitData: any,
-    form: any,
-    status: string,
-    formIdentity: string,
-    startDate: string,
-    endDate: string,
-    previousReview: string,
-    currentReview: string,
-    review: any,
+    totalScore: number,
+    passingScore: number,
+    templateType: string,
+    template: any,
+    data: any,
+    sme: any,
+    assigned: boolean,
   ): void {
     this.setState({
       ...this.state,
       requests: [
         ...this.state.requests,
         {
+          id: id,
           name: name,
-          userRef: userRef,
-          submitData: submitData,
-          form: form,
-          status: status,
-          formIdentity: formIdentity,
-          startDate: startDate,
-          endDate: endDate,
-          previousReview: previousReview,
-          currentReview: currentReview,
-          review: review,
+          totalScore: totalScore,
+          passingScore: passingScore,
+          templateType: templateType,
+          template: template,
+          data: data,
+          sme: sme,
+          assigned: assigned,
         }
       ]
     });
@@ -44,17 +40,15 @@ export class SingleAccreditationRequestStore extends Store<SingleAccreditationRe
 
   addAllRequest(
     requests: {
+      id: string,
       name: string,
-      userRef: string,
-      submitData: any,
-      form: any,
-      status: string,
-      formIdentity: string,
-      startDate: string,
-      endDate: string,
-      previousReview: string,
-      currentReview: string,
-      review: any,
+      totalScore: number,
+      passingScore: number,
+      templateType: string,
+      template: any,
+      data: any,
+      sme: any,
+      assigned: boolean,
     }[]
   ): void {
     this.setState({
@@ -63,69 +57,69 @@ export class SingleAccreditationRequestStore extends Store<SingleAccreditationRe
     });
   }
 
-  setTaskReview(
-    formIdentity: string,
-    startDate: string,
-    endDate: string
-  ): void {
-    console.log("SINGLE TASK UPDATE CALLED:--");
-    this.setState({
-      ...this.state,
-      requests: this.state.requests.map((c) => {
-        if (c.formIdentity === formIdentity) {
-          return {
-            ...c,
-            startDate: startDate,
-            endDate: endDate,
-            currentReview: 'in_review',
-          }
-        }
-        return c;
-      })
-    });
-  }
+  // setTaskReview(
+  //   formIdentity: string,
+  //   startDate: string,
+  //   endDate: string
+  // ): void {
+  //   console.log("SINGLE TASK UPDATE CALLED:--");
+  //   this.setState({
+  //     ...this.state,
+  //     requests: this.state.requests.map((c) => {
+  //       if (c.formIdentity === formIdentity) {
+  //         return {
+  //           ...c,
+  //           startDate: startDate,
+  //           endDate: endDate,
+  //           currentReview: 'in_review',
+  //         }
+  //       }
+  //       return c;
+  //     })
+  //   });
+  // }
 
-  setAllTaskReview(
-    startDate: string,
-    endDate: string
-  ): void {
-    console.log("ALL TASK UPDATE CALLED:--");
-    this.setState({
-      ...this.state,
-      requests: this.state.requests.map((c) => {
-        if (c.currentReview !== 'in_review') {
-          return {
-            ...c,
-            startDate: startDate,
-            endDate: endDate,
-            currentReview: 'in_review',
-          }
-        }
-        return c;
-      })
-    });
-  }
+  // setAllTaskReview(
+  //   startDate: string,
+  //   endDate: string
+  // ): void {
+  //   console.log("ALL TASK UPDATE CALLED:--");
+  //   this.setState({
+  //     ...this.state,
+  //     requests: this.state.requests.map((c) => {
+  //       if (c.currentReview !== 'in_review') {
+  //         return {
+  //           ...c,
+  //           startDate: startDate,
+  //           endDate: endDate,
+  //           currentReview: 'in_review',
+  //         }
+  //       }
+  //       return c;
+  //     })
+  //   });
+  // }
 
-  updateSingleReviewStatus(
-    userRef: string,
-    formIdentity: string,
-    data: any,
-  ): void {
-    this.setState({
-      ...this.state,
-      requests: this.state.requests.map((c) => {
-        if (c.userRef === userRef && c.formIdentity === formIdentity) {
-          return {
-            ...c,
-            currentReview: "reviewed",
-            review: data,
-            // review: {...this.state.requests['review'], data},
-          };
-        }
-        return c;
-      })
-    })
-  }
+  // updateSingleReviewStatus(
+  //   userRef: string,
+  //   formIdentity: string,
+  //   data: any,
+  // ): void {
+  //   this.setState({
+  //     ...this.state,
+  //     requests: this.state.requests.map((c) => {
+  //       if (c.userRef === userRef && c.formIdentity === formIdentity) {
+  //         return {
+  //           ...c,
+  //           currentReview: "reviewed",
+  //           review: data,
+  //           // review: {...this.state.requests['review'], data},
+  //         };
+  //       }
+  //       return c;
+  //     })
+  //   })
+  // }
 
   resetData(): void {
     this.setState({

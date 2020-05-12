@@ -40,28 +40,12 @@ export class AccreditationReviewsService {
     );
   }
 
-  addReview(formList, ratings, username, sectionKey, generalComments, status, reviewer) {
-    const url = `${AppConfig.apiUrl}/accreditation/addReview`;
-    console.log("ADD REVIEW IN SERVICE:--", {
-      "comments": generalComments,
-      "compReviewCreateRequestList": formList,
-      "rating": ratings,
-      "sectionKey": sectionKey,
-      "sectionReviewer": reviewer,
-      "status": status,
-      "username": username,
-    })
+  addReview(sectionId, values) {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification/section/${sectionId}/review/add`;
+    // console.log("ADD REVIEW IN SERVICE:--", )
     return this._httpClient.post(
       url,
-      {
-        "comments": generalComments,
-        "compReviewCreateRequestList": formList,
-        "rating": ratings,
-        "sectionKey": sectionKey,
-        "sectionReviewer": reviewer,
-        "status": status,
-        "username": username,
-      }
+      values
     );
   }
 }
