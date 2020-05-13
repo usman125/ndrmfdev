@@ -11,7 +11,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatChipsModule } from '@angular/material/chips';
-// import { MatInputModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 
@@ -32,7 +32,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     MatChipsModule,
     MatToolbarModule,
     MatProgressSpinnerModule,
-    // MatInputModule,
+    MatInputModule,
   ]
 })
 

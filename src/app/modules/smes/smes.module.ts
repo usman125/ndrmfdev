@@ -11,6 +11,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatSortModule } from "@angular/material/sort";
+import { MatInputModule } from "@angular/material/input";
 import {
   MatListModule,
 } from "@angular/material/list";
@@ -32,6 +33,7 @@ import {
     MatProgressSpinnerModule,
     MatPaginatorModule,
     MatSortModule,
+    MatInputModule,
   ]
 
 })

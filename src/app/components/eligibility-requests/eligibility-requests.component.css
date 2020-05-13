@@ -1,11 +1,12 @@
 .example-container {
-  height: 400px;
+  /* height: 400px; */
   overflow: auto;
   /* margin: 4px; */
 }
 
 .margin-5 {
   margin: 5px !important;
+  margin-bottom: 0px !important;
   padding: 15px;
 }
 

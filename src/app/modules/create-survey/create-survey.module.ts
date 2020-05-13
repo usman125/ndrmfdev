@@ -12,6 +12,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { FormioModule } from "angular-formio";
+// import { FormioModule } from "angular-formio/components";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({

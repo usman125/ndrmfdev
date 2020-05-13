@@ -1,4 +1,16 @@
-<mat-card class="m-20">
+<mat-toolbar style="margin-bottom:20px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>Pending Signups</span>
+    <span class="example-spacer"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="mr-4 ml-4">
+  <mat-form-field>
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
+  </mat-form-field>
+</div>
+<mat-card class="m-20 p-0">
   <mat-card-content>
 
     <table [trackBy]="trackTask" mat-table [dataSource]="dataSource">

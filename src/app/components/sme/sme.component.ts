@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { SmeStore } from "../../stores/sme/sme-store";
 import { AuthStore } from "../../stores/auth/auth-store";
 import { Subscription } from "rxjs";
@@ -8,6 +8,9 @@ import {
 } from "../../stores/sme/sme-replay";
 import { SmeService } from "../../services/sme.service";
 import { SettingsService } from "../../services/settings.service";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
 
 @Component({
   selector: 'app-sme',
@@ -28,6 +31,9 @@ export class SmeComponent implements OnInit, OnDestroy {
   public warnMsg: string = "No Process Selected";
   public listItem: any = null;
 
+
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     private _smesStore: SmeStore,
@@ -101,7 +107,10 @@ export class SmeComponent implements OnInit, OnDestroy {
         this.loadingSection = false;
         console.log("ALL PROCESSES:---", result);
         if (result.sections){
-          this.dataSource = result.sections;
+          this.dataSource = new MatTableDataSource(result.sections);
+          // this.dataSource = result.sections;
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
         }else{
           this.warnMsg = "No Data Found."
         }
@@ -124,6 +133,16 @@ export class SmeComponent implements OnInit, OnDestroy {
     );
     this._router.navigate(['/add-sme']);
 
+  }
+
+  applyFilter(event: Event) {
+    console.log("APPLY FIKTER:--", event);
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   goToAdd() {

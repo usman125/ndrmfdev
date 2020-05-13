@@ -7,6 +7,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatInputModule } from "@angular/material/input";
+import { MatPaginatorModule } from "@angular/material/paginator";
 import { EligibilityRequestsComponent } from "../../components/component-index";
 import { EligibilityRequestsRoutingModule } from "./eligibility-requests-routing.module";
 import { FormioModule } from "angular-formio";
@@ -25,6 +26,7 @@ import { FormioModule } from "angular-formio";
     MatToolbarModule,
     FormioModule,
     MatInputModule,
+    MatPaginatorModule,
     EligibilityRequestsRoutingModule,
   ]
 })

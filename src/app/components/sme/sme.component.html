@@ -23,9 +23,15 @@
     </mat-card>
   </div>
   <div class="col-md-8">
+    <div class="mr-4 ml-1">
+      <mat-form-field>
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
+      </mat-form-field>
+    </div>
     <mat-card class="m-20 ml-0 example-container mat-elevation-z5" style="padding: 0px;">
       <mat-card-content>
-        <table *ngIf="!loadingSection && dataSource?.length" mat-table [dataSource]="dataSource">
+        <table [hidden]="loadingSection === false && dataSource?.length" mat-table [dataSource]="dataSource">
           <ng-container matColumnDef="email">
             <th mat-header-cell *matHeaderCellDef> Email </th>
             <td mat-cell *matCellDef="let element"> {{element.email}} </td>
@@ -54,10 +60,11 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <div *ngIf="loadingSection" class="m-3" style="display: flex;flex-direction:column;align-items: center;">
+        <div [hidden]="!loadingSection" class="m-3" style="display: flex;flex-direction:column;align-items: center;">
           <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
         </div>
-        <div id="answer" class="m-20 mt-3" *ngIf="!loadingSection && !dataSource?.length">{{warnMsg}}</div>
+        <div id="answer" class="m-20 mt-3" [hidden]="loadingSection === true || dataSource?.length !== 0">{{warnMsg}}
+        </div>
         <mat-paginator #paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons>
         </mat-paginator>
       </mat-card-content>

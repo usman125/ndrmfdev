@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SettingsService } from "../../services/settings.service";
 import { PendingSignupsStore } from "../../stores/pending-signups/pending-signups-store";
 import { Subscription } from "rxjs";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
   selector: 'app-pending-signups',
@@ -25,7 +26,7 @@ export class PendingSignupsComponent implements OnInit {
     this.getAllRequests();
     this.Subscription.add(
       this._pendingSignupsStore.state$.subscribe(data => {
-        this.dataSource = data.requests;
+        this.dataSource = new MatTableDataSource(data.requests);
       })
     )
   }
@@ -62,6 +63,16 @@ export class PendingSignupsComponent implements OnInit {
         console.log("ERROR AFTER APPROVING USER:--", error);
       }
     );
+  }
+
+  applyFilter(event: Event) {
+    console.log("APPLY FIKTER:--", event);
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   trackTask(index: number, item): string {

@@ -136,6 +136,15 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
       this._router.navigate(['/edit-user', user.username]);
   }
 
+  applyFilter(event: Event) {
+    console.log("APPLY FIKTER:--", event);
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 
   goToAdd() {
     this._router.navigate(['/add-user']);

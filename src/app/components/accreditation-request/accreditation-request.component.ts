@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AccreditationRequestStore } from "../../stores/accreditation-requests/accreditation-requests-store";
 import { Subscription, from } from "rxjs";
@@ -16,6 +16,9 @@ import { setValue } from "../../stores/fip-intimations/intimate-fip";
 import { SurveysService } from "../../services/surveys.service";
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { AccreditationRequestService } from "../../services/accreditation-request.service";
 import { SmeService } from "../../services/sme.service";
 import { AccreditationReviewsService } from "../../services/accreditation-reviews.service";
@@ -52,7 +55,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   public Subscription: Subscription = new Subscription();
 
   public displayedColumns = ['user', 'actions'];
-  public dataSource = [];
+  public dataSource: any = [];
 
   public toggle: boolean = false;
   public form: any = null;
@@ -135,6 +138,9 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
 
   dataSourceTree = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   // dataSourceTree;
+
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
 
   constructor(
@@ -352,7 +358,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       (result: any) => {
         this.apiLoading = false;
         console.log("RESULT AFETR GETTING ALL QUALIFICATION:--", result);
-        this.dataSource = result;
+        this.dataSource = new MatTableDataSource(result);
       },
       error => {
         this.apiLoading = false;
@@ -1136,6 +1142,16 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   hideComments() {
     this.commentsFlag = false;
     // this.generalComments = null;
+  }
+
+  applyFilter(event: Event) {
+    console.log("APPLY FIKTER:--", event);
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   convertNumber(number) {

@@ -3,7 +3,7 @@ import { AuthStore } from "../../stores/auth/auth-store";
 import { SurveysStore } from "../../stores/surveys/surveys-store";
 import { Subscription } from "rxjs";
 import { MatPaginator } from '@angular/material/paginator';
-// import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { Router } from "@angular/router";
 import { SurveysService } from "../../services/surveys.service";
@@ -113,10 +113,10 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
       (result: any) => {
         this.loadingSection = false;
         console.log("RESULT FROM ALL TEMPLATES:--", result);
-        this.dataSource = result.sections;
+        this.dataSource = new MatTableDataSource(result.sections);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
         if (this.dataSource) {
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
         }
       },
       error => {
@@ -154,6 +154,16 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     this.refreshForm.emit({
       form: this.secondForm
     })
+  }
+
+  applyFilter(event: Event) {
+    console.log("APPLY FIKTER:--", event);
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   onSubmit($event) {

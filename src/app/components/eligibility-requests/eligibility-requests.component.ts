@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { AuthStore } from "../../stores/auth/auth-store";
 import { SurveysStore } from "../../stores/surveys/surveys-store";
 import { AccreditationRequestStore } from "../../stores/accreditation-requests/accreditation-requests-store";
@@ -8,6 +8,9 @@ import { UsersStore } from 'src/app/stores/users/users-store';
 import { AccreditationRequestService } from "../../services/accreditation-request.service";
 import { SurveysService } from "../../services/surveys.service";
 import { UserService } from "../../services/user.service";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatPaginator } from "@angular/material/paginator";
+// import {  } from "@angular/material/sort";
 
 @Component({
   selector: 'app-eligibility-requests',
@@ -21,7 +24,9 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
   public allSurveys: any = [];
   public Subscription: Subscription = new Subscription();
   public displayedColumns = ['user', 'status', 'actions'];
-  public dataSource = [];
+  public dataSource: any = [];
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  // @ViewChild(MatSort, { static: true }) sort: MatSort;
   public toggle: boolean = false;
   public selectedRequest: any = null;
 
@@ -191,7 +196,8 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
         this.loadingApi = false;
         console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", result);
         this.allRequests = result;
-        this.dataSource = this.allRequests;
+        this.dataSource = new MatTableDataSource(this.allRequests);
+        this.dataSource.paginator = this.paginator;
       },
       error => {
         this.loadingApi = false;
@@ -244,6 +250,16 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
 
   hideRequest() {
     this.toggle = !this.toggle;
+  }
+
+  applyFilter(event: Event) {
+    console.log("APPLY FIKTER:--", event);
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   markEligibleFlag() {
