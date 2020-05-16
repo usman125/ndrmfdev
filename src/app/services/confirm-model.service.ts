@@ -20,6 +20,7 @@ export class ConfirmModelService {
         confirm: options.confirm,
         startDate: options.startDate,
         endDate: options.endDate,
+        setStatus: options.setStatus,
       }
     });
   }

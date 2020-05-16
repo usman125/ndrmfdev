@@ -7,6 +7,7 @@ export interface ConfirmData {
   message: string;
   title: string;
   add: boolean;
+  setStatus: boolean;
   confirm: boolean;
   startDate: string;
   endDate: string;

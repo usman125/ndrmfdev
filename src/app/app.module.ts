@@ -36,7 +36,7 @@ import {
   IntimateFip,
   CoffeeElectionComponent,
   AddProjectComponent,
-  ProjectPlanComponent,
+  // ProjectPlanComponent,
 } from './components/component-index';
 
 import { AccreditationRequestStore } from './stores/accreditation-requests/accreditation-requests-store';
@@ -79,7 +79,7 @@ import { MatTreeModule } from "@angular/material/tree";
 // import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 // import { EditUserComponent } from './components/edit-user/edit-user.component';
-import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
+// import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
 // import { ViewPrimaryAppraisalComponent } from './components/view-primary-appraisal/view-primary-appraisal.component';
 // import { PrimaryAppraisalProjectsComponent } from './components/primary-appraisal-projects/primary-appraisal-projects.component';
 // import { CreatePrimaryAppraisalComponent } from './components/create-primary-appraisal/create-primary-appraisal.component';
@@ -99,6 +99,9 @@ import { EditSmeComponent } from './components/edit-sme/edit-sme.component';
 // import { MatGridListModule } from "@angular/material/grid-list";
 // import { GiaProjectsModule } from "./modules/gia-projects/gia-projects.module";
 import { JwtModule } from "@auth0/angular-jwt";
+// import { AdminHomeComponent } from './components/admin-home/admin-home.component';
+// import { SmeHomeComponent } from './components/sme-home/sme-home.component';
+// import { PoHomeComponent } from './components/po-home/po-home.component';
 // import { AssignSectionsProcessComponent } from './components/assign-sections-process/assign-sections-process.component';
 // import { PendingSignupsComponent } from './components/pending-signups/pending-signups.component';
 
@@ -117,8 +120,11 @@ export function tokenGetter() {
     LoginComponent,
     NoHeaderLayoutComponent,
     AddProjectComponent,
+    // AdminHomeComponent,
     // EditUserComponent,
-    EditSmeComponent,
+    // EditSmeComponent,
+    // SmeHomeComponent,
+    // PoHomeComponent,
     // AssignSectionsProcessComponent,
     // PendingSignupsComponent,
     // ViewPrimaryAppraisalComponent,
@@ -240,7 +246,7 @@ export function tokenGetter() {
   entryComponents: [
     IntimateFip,
     AssignTask,
-    ProjectPlanComponent,
+    // ProjectPlanComponent,
   ]
 })
 export class AppModule { }

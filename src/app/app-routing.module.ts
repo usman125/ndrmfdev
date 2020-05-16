@@ -393,6 +393,24 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin, Role.Fip] }
   },
+  {
+    path: 'pohome',
+    loadChildren: () => import('./modules/po-home/po-home.module').then(m => m.PoHomeModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po] }
+  },
+  {
+    path: 'smehome',
+    loadChildren: () => import('./modules/sme-home/sme-home.module').then(m => m.SmeHomeModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Sme] }
+  },
+  {
+    path: 'adminhome',
+    loadChildren: () => import('./modules/admin-home/admin-home.module').then(m => m.AdminHomeModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
 ];
 
 @NgModule({

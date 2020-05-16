@@ -176,11 +176,11 @@ export class LoginComponent implements OnInit, OnDestroy {
           this._authStore.removeLoading();
           if (this.user.role === 'admin') {
             // console.log("Login CAlled:--", this.user);
-            this._router.navigate(['users']);
+            this._router.navigate(['adminhome']);
           } else if (this.user.role === 'process owner') {
-            this._router.navigate(['eligibility-requests']);
+            this._router.navigate(['pohome']);
           } else if (this.user.role === 'sme') {
-            this._router.navigate(['accreditation-requests']);
+            this._router.navigate(['smehome']);
           }
         } else {
           var newUser = JSON.stringify(this.user);

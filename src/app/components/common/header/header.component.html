@@ -8,11 +8,12 @@
       <!-- <span class="company-name" id="comment">NDRMF</span> -->
     </div>
     <div *ngIf="loggedUser?.role == 'admin'">
-      <button mat-button color="basic" (click)="goToRoute('smes')">Smes</button>
-      <button mat-button color="basic" (click)="goToRoute('users')">Users</button>
+      <button mat-button color="basic" (click)="goToRoute('adminhome')">HOME</button>
+      <button mat-button color="basic" (click)="goToRoute('smes')">SMES</button>
+      <button mat-button color="basic" (click)="goToRoute('users')">USERS</button>
     </div>
     <div *ngIf="loggedUser?.role == 'fip'">
-      <button mat-button color="basic" (click)="goToRoute('fip-home')">NDRMF</button>
+      <button mat-button color="basic" (click)="goToRoute('fip-home')">HOME</button>
     </div>
     <span class="example-spacer"></span>
     <!-- <button mat-icon-button [matMenuTriggerFor]="menu2">

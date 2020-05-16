@@ -1,0 +1,295 @@
+<ng-container>
+  <mat-toolbar class="toolbar-sticky" style="margin-bottom:25px;padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>My Trackpad</span>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <!-- PENDING SIGNUPS -->
+  <div class="box-heading">
+    <span>Pending Signups</span>
+  </div>
+  <div class="row m-20">
+    <div class="col-md-3" (click)="goToRoute('pending-signups')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Total</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{pendingSignUpsCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <!-- USERS -->
+  <div class="box-heading">
+    <span>Users</span>
+  </div>
+  <div class="row m-20">
+    <div class="col-md-3" (click)="goToRoute('users')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>FIPs</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{fipCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-3" (click)="goToRoute('users')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Process Owners</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{poCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-3" (click)="goToRoute('users')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>SMEs</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{smeCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-3" (click)="goToRoute('users')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Total</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{allUsers}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <!-- PROCESSES -->
+  <div class="box-heading">
+    <span>Processes</span>
+  </div>
+  <div class="row m-20">
+    <div class="col-md-3" (click)="goToRoute('assign-sections-process')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>With Owners</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{withOwner}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-3" (click)="goToRoute('assign-sections-process')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Without Owners</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{withoutOwner}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-3" (click)="goToRoute('assign-sections-process')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Total</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{allProcess}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <!-- TEMPLATES -->
+  <div class="box-heading">
+    <span>Templates</span>
+  </div>
+  <div class="row m-20" *ngIf="apiLoading">
+    <div class="col-md-3">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Loading</h6>
+            </div>
+            <div class="value">
+              <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row m-20" *ngIf="!apiLoading">
+    <div class="col-md-3" *ngFor="let count of templatesCount;" (click)="goToRoute('surveys')">
+      <mat-card class="mb-4">
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>{{count.name}}</h6>
+            </div>
+            <div class="value">
+              <span>{{count.sectionsCount}}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <!-- <div class="col-md-3">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Eligibility</h6>
+            </div>
+            <div class="value">
+              <span>0</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-3">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Extended Appraisal</h6>
+            </div>
+            <div class="value">
+              <span>0</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div> -->
+  </div>
+  <!-- SECTIONS -->
+  <div class="box-heading">
+    <span>Sections</span>
+  </div>
+  <div class="row m-20" *ngIf="apiLoading">
+    <div class="col-md-3">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Loading</h6>
+            </div>
+            <div class="value">
+              <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row m-20" *ngIf="!apiLoading">
+    <div class="col-md-3" *ngFor="let section of sectionsCount;" (click)="goToRoute('smes')">
+      <mat-card class="mb-4">
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>{{section.name}}</h6>
+            </div>
+            <div class="value">
+              <span>{{section.sectionsCount}}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <!-- <div class="col-md-3">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Eligibility</h6>
+            </div>
+            <div class="value">
+              <span>0</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-3">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Extended Appraisal</h6>
+            </div>
+            <div class="value">
+              <span>0</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div> -->
+  </div>
+  <!-- THEMATIC AREAS -->
+  <div class="box-heading">
+    <span>Thematic Areas</span>
+  </div>
+  <div class="row m-20">
+    <div class="col-md-3" (click)="goToRoute('add-proposal-section')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Total</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{thematicCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</ng-container>

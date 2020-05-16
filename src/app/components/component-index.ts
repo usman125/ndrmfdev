@@ -47,3 +47,6 @@ export { ViewPrimaryAppraisalComponent } from './view-primary-appraisal/view-pri
 export { EditUserComponent } from './edit-user/edit-user.component';
 export { PendingSignupsComponent } from './pending-signups/pending-signups.component';
 export { AssignSectionsProcessComponent } from './assign-sections-process/assign-sections-process.component';
+export { PoHomeComponent } from './po-home/po-home.component';
+export { SmeHomeComponent } from './sme-home/sme-home.component';
+export { AdminHomeComponent } from './admin-home/admin-home.component';

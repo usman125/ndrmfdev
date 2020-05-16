@@ -100,6 +100,20 @@ export class AccreditationRequestService {
     );
   }
 
+  getUnderReviewEligibilityRequest() {
+    const url = `${AppConfig.apiUrl}/accreditation/eligibility?status=UNDER_REVIEW`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  getApprovedEligibilityRequest() {
+    const url = `${AppConfig.apiUrl}/accreditation/eligibility?status=APPROVED`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
   getSingleEligibilityRequest(id) {
     const url = `${AppConfig.apiUrl}/accreditation/eligibility/${id}`;
     return this._httpClient.get(
@@ -121,6 +135,13 @@ export class AccreditationRequestService {
     );
   }
 
+  getApprovedQulificationRequests() {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification?status=APPROVED`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
   addQulificationRequest(values, id) {
     const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}/section/add?action=SAVE`;
     return this._httpClient.post(
@@ -136,9 +157,24 @@ export class AccreditationRequestService {
       values
     );
   }
+  
+  assignTaskToSme(values, sectionId) {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification/section/${sectionId}/task/add`;
+    return this._httpClient.post(
+      url,
+      values
+    );
+  }
 
   getSingleQualificationRequest(id) {
     const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  getSmeTasks() {
+    const url = `${AppConfig.apiUrl}/task/`;
     return this._httpClient.get(
       url
     );

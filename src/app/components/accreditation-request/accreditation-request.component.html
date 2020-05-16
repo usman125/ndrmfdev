@@ -1,16 +1,16 @@
 <mat-toolbar *ngIf="!toggle && !commentsFlag" style="margin-bottom:15px;padding: 10px 0px;" color="primary">
   <mat-toolbar-row>
-    <small>Qualificatin Requests</small>
+    <span>Qualificatin Requests</span>
     <span class="example-spacer"></span>
   </mat-toolbar-row>
 </mat-toolbar>
-<div class="mr-4 ml-4">
+<div class="mr-4 ml-4" *ngIf="!toggle && !commentsFlag">
   <mat-form-field>
     <mat-label>Filter</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
   </mat-form-field>
 </div>
-<div *ngIf="!toggle && !commentsFlag && !apiLoading" class="margin-5 example-container mat-elevation-z4">
+<div *ngIf="!toggle && !commentsFlag && !apiLoading && currentUser?.role === 'process owner'" class="margin-5 example-container mat-elevation-z4">
   <table mat-table [dataSource]="dataSource">
 
     <ng-container matColumnDef="user">
@@ -29,7 +29,6 @@
       <th mat-header-cell *matHeaderCellDef> Actions </th>
       <td mat-cell *matCellDef="let element">
         <button (click)="getRequest(element)" mat-icon-button aria-label="Example icon-button with a heart icon">
-          <!-- <button mat-icon-button aria-label="Example icon-button with a heart icon"> -->
           <mat-icon>play_arrow</mat-icon>
         </button>
       </td>
@@ -39,13 +38,50 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
+<div *ngIf="!toggle && !commentsFlag && !apiLoading && currentUser?.role === 'sme'" class="margin-5 example-container mat-elevation-z4">
+  <table mat-table [dataSource]="dataSource">
+
+    <ng-container matColumnDef="startDate">
+      <th mat-header-cell *matHeaderCellDef> Start Date </th>
+      <td mat-cell *matCellDef="let element">
+        {{element.startDate | date:'shortDate'}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="endDate">
+      <th mat-header-cell *matHeaderCellDef> End Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.endDate | date:'shortDate'}} </td>
+    </ng-container>
+    <ng-container matColumnDef="expiry">
+      <th mat-header-cell *matHeaderCellDef> Expiry </th>
+      <td mat-cell *matCellDef="let element"> {{element.expiry}} Days </td>
+    </ng-container>
+    <ng-container matColumnDef="comments">
+      <th mat-header-cell *matHeaderCellDef> Comments </th>
+      <td mat-cell *matCellDef="let element"> {{element.comments}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let element">
+        <button (click)="getSmeRequest(element.requestId)" mat-icon-button aria-label="Example icon-button with a heart icon">
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns2; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+  </table>
+</div>
 
 
 <mat-toolbar *ngIf="toggle && !commentsFlag" style="margin-top:0px;padding: 10px 0px;" color="primary">
   <mat-toolbar-row>
-    <span>{{selectedRequest?.initiatorFullName ? selectedRequest?.initiatorFullName : selectedRequest?.initiatedBy.name}}</span>
+    <span *ngIf="currentUser?.role === 'process owner'">{{selectedRequest?.initiatorFullName ? selectedRequest?.initiatorFullName : selectedRequest?.initiatedBy.name}}</span>
+    <span *ngIf="currentUser?.role === 'sme'">{{selectedRequest?.initiatedBy.name}}</span>
     <span class="example-spacer"></span>
-    <span>{{selectedRequest?.submittedAt | date:'fullDate'}}</span>
+    <span *ngIf="currentUser?.role === 'process owner'">{{selectedRequest?.submittedAt | date:'fullDate'}}</span>
     <span class="example-spacer"></span>
     <button (click)="goBack()" mat-icon-button>
       <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
@@ -57,7 +93,6 @@
 <div class="m-20" *ngIf="apiLoading">
   <mat-card>
     <mat-card-content>
-
       <mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
     </mat-card-content>
   </mat-card>
@@ -73,11 +108,11 @@
           <div class="title-details">
             <span id="title">{{item.name}}</span>
             <div class="review-info">
-              <span id="date" class="request-status" *ngIf="item.currentReview === 'reviewed'">Reviewed:
+              <span id="date" class="request-status" *ngIf="item.review.rating !== null">Reviewed:
                 {{item.endDate | date:'shortDate'}}</span>
-              <span id="date" class="request-status" *ngIf="item.currentReview === 'in_review'">Pending:
+              <span id="date" class="request-status" *ngIf="item.review.rating === null">Pending:
                 {{item.endDate | date:'shortDate'}}</span>
-              <span id="stars" *ngIf="item.currentReview === 'reviewed' && item?.review">
+              <span id="stars" *ngIf="item.review.rating !== null">
                 <bar-rating [(rate)]="item?.review.rating" [max]="max"></bar-rating>
               </span>
             </div>
@@ -85,12 +120,15 @@
           <span class="example-spacer"></span>
           <div *ngIf="currentUser?.role !== 'sme'">
             <button matTooltip="Assign Task" (click)="openDialog(item)"
-              *ngIf="item.previousReview === null && item.submitData" [disabled]="item.currentReview" mat-button
-              color="basic">
+              *ngIf="item.review.rating === null && (item.reviewStatus === null || item.reviewStatus === 'Pending')"
+              [disabled]="item.review.rating === null && item.reviewStatus === 'Pending'" mat-button color="basic">
               <mat-icon>assignment</mat-icon>Assign-Task
             </button>
-            <button matTooltip="Re-evaluate Task" [disabled]="item.currentReview === 'in_review'"
-              (click)="openDialog(item)" *ngIf="item.previousReview && item.submitData" mat-button color="basic">
+            <!-- <button matTooltip="Re-evaluate Task" [disabled]="item.review.rating !== null" -->
+            <button matTooltip="Re-evaluate Task"
+              [disabled]="item.review.rating !== null && item.reviewStatus === 'Pending'" (click)="openDialog(item)"
+              *ngIf="item.review.rating !== null && (item.reviewStatus === null || item.reviewStatus === 'Pending'|| item.reviewStatus === 'Completed')"
+              mat-button color="basic">
               <mat-icon>redo</mat-icon> Re-Evaluate
             </button>
           </div>
@@ -99,8 +137,8 @@
             <div *ngIf="currentUser?.role !== 'sme'">
               <small id="request-status" *ngIf="item.previousReview === null && item.currentReview === null">Not
                 Reviewed</small>
-              <small id="request-status" *ngIf="item.assigned">REVIEWED</small>
-              <small id="request-status" *ngIf="!item.assigned">PENDING</small>
+              <small id="request-status" *ngIf="item.review.rating !== null">REVIEWED</small>
+              <small id="request-status" *ngIf="item.review.rating === null">PENDING</small>
             </div>
           </div>
         </mat-toolbar-row>
@@ -108,16 +146,23 @@
 
       <mat-card class="example-result-card mb-3">
         <mat-card-content>
+          <div class="section-info">
+            <span class="mb-3" style="display: block;">
+              <span id="comment" style="font-weight: bold;">SME: </span>
+              {{item.sme.name}}
+            </span>
+            <!-- <span><mat-icon>assignment_returned</mat-icon></span> -->
+            <!-- <span *ngIf="item.review.rating !== null && item.reviewStatus === 'Completed'"><mat-icon>assignment_returned</mat-icon></span>
+            <span *ngIf="item.review.rating !== null && item.reviewStatus === 'Pending'"><mat-icon>assignment_turned_in</mat-icon></span>
+            <span *ngIf="item.review.rating === null && item.reviewStatus === null"><mat-icon>assignment_late</mat-icon></span>
+            <span *ngIf="item.review.rating === null && item.reviewStatus === 'Pending'"><mat-icon>assignment_late</mat-icon></span> -->
+          </div>
 
-          <span class="mb-3" style="display: block;">
-            <span id="comment" style="font-weight: bold;">SME: </span>
-            {{item.sme.name}}
-          </span>
 
-
-          <formio *ngIf="currentUser?.role !== 'sme'" [form]="item.template" readOnly="true" [submission]="{data: item.data}"></formio>
-          <formio *ngIf="!item.assigned && currentUser?.role === 'sme'" [form]="item.template"
+          <formio *ngIf="currentUser?.role !== 'sme' && item.review.rating === null" [form]="item.template"
             readOnly="true" [submission]="{data: item.data}"></formio>
+          <formio *ngIf="!item.assigned && currentUser?.role === 'sme'" [form]="item.template" readOnly="true"
+            [submission]="{data: item.data}"></formio>
           <!-- <formio *ngIf="currentUser?.role !== 'sme' && !item.review" [form]="item.form" readOnly="true"
             [submission]="{data: item.submitData}"></formio> -->
 
@@ -152,60 +197,61 @@
             </div>
             <div class="comment-box">
               <mat-form-field appearance="outline">
-                <mat-label>Comments</mat-label>
+                <mat-label>Mitigation Factors</mat-label>
                 <textarea [(ngModel)]="generalComments" matInput></textarea>
               </mat-form-field>
               <div style="padding: 15px;">
-                <mat-spinner *ngIf="apiLoading" diameter="40"></mat-spinner>
-                <button *ngIf="!apiLoading" [disabled]="reviewAdded" (click)="addRequestReview(item)" mat-mini-fab color="accent">
-                <!-- <button *ngIf="!apiLoading" [disabled]="reviewAdded" mat-mini-fab color="primary"> -->
+                <mat-spinner *ngIf="submitLoading" diameter="40"></mat-spinner>
+                <button *ngIf="!submitLoading" [disabled]="reviewAdded" (click)="addRequestReview(item)" mat-mini-fab
+                  color="accent">
+                  <!-- <button *ngIf="!submitLoading" [disabled]="reviewAdded" mat-mini-fab color="primary"> -->
                   <mat-icon>send</mat-icon>
                 </button>
               </div>
             </div>
           </div>
 
-          <div *ngIf="currentUser?.role !== 'sme' && item.review">
-            <div *ngFor="let review of item.allReviews; let i=index;">
+          <div *ngIf="currentUser?.role !== 'sme' && item.review.rating !== null">
+            <!-- <div *ngFor="let review of item.allReviews; let i=index;"> -->
 
-              <div class="form-comments" *ngFor="let obj of review?.data">
-                <div class="details">
-                  <span>{{obj.title}}</span>
-                  <span *ngIf="obj.value === true">{{"true"}}</span>
-                  <span id="answer">{{obj.value}}</span>
-                  <span>
-                    <mat-form-field>
-                      <mat-label>Comments</mat-label>
-                      <input disabled matInput placeholder="Write any comments" [(ngModel)]="obj.comments"
-                        value="obj.comments" />
-                    </mat-form-field>
-                  </span>
-                </div>
-                <div class="controls admin-controls">
-                  <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
-                  <mat-button-toggle-group disabled [(ngModel)]="obj.status" #group="matButtonToggleGroup">
-                    <mat-button-toggle *ngIf="obj.status === 'satisfy'" color="primary" (change)="onValChange($event)"
-                      value="satisfy" aria-label="Text align left">
-                      <mat-icon style="color:green;">thumb_up</mat-icon>
-                    </mat-button-toggle>
-                    <mat-button-toggle *ngIf="obj.status === 'un-satisfy'" (change)="onValChange($event)"
-                      value="un-satisfy" aria-label="Text align center">
-                      <mat-icon color="warn">thumb_down</mat-icon>
-                    </mat-button-toggle>
-                  </mat-button-toggle-group>
-                </div>
+            <div class="form-comments" *ngFor="let obj of item.review?.controlWiseComments">
+              <div class="details">
+                <span>{{obj.title}}</span>
+                <span *ngIf="obj.value === true">{{"true"}}</span>
+                <span id="answer">{{obj.value}}</span>
+                <span>
+                  <mat-form-field>
+                    <mat-label>Comments</mat-label>
+                    <input disabled matInput placeholder="Write any comments" [(ngModel)]="obj.comments"
+                      value="obj.comments" />
+                  </mat-form-field>
+                </span>
               </div>
-              <div class="comment-box">
-                <mat-form-field appearance="outline">
-                  <mat-label>Comments</mat-label>
-                  <textarea disabled [(ngModel)]="generalComments" matInput></textarea>
-                </mat-form-field>
-              </div>
-              <div *ngIf="i !== item.allReviews.length-1" style="padding: 15px;">
-
-                <mat-divider></mat-divider>
+              <div class="controls admin-controls">
+                <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
+                <mat-button-toggle-group disabled [(ngModel)]="obj.status" #group="matButtonToggleGroup">
+                  <mat-button-toggle *ngIf="obj.status === 'satisfy'" color="primary" (change)="onValChange($event)"
+                    value="satisfy" aria-label="Text align left">
+                    <mat-icon style="color:green;">thumb_up</mat-icon>
+                  </mat-button-toggle>
+                  <mat-button-toggle *ngIf="obj.status === 'un-satisfy'" (change)="onValChange($event)"
+                    value="un-satisfy" aria-label="Text align center">
+                    <mat-icon color="warn">thumb_down</mat-icon>
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
               </div>
             </div>
+            <div class="comment-box">
+              <mat-form-field appearance="outline">
+                <mat-label>Comments</mat-label>
+                <textarea disabled [(ngModel)]="item.review.comments" matInput></textarea>
+              </mat-form-field>
+            </div>
+            <!-- <div *ngIf="i !== item.allReviews.length-1" style="padding: 15px;">
+
+                <mat-divider></mat-divider>
+              </div> -->
+            <!-- </div> -->
           </div>
 
         </mat-card-content>
@@ -215,6 +261,32 @@
   </div>
   <div class="margin-5 activity-items control-box">
     <div class="right-layout">
+      <mat-card *ngIf="currentUser?.role !== 'sme'">
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
+              <div mat-line>{{'Assigned Tasks'}}</div>
+              <div mat-line>{{sectionStats.pendingCount}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>assignment_late</mat-icon>
+              <div mat-line>{{'Unassigned Tasks'}}</div>
+              <div mat-line>{{sectionStats.unassignCount}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>assignment_returned</mat-icon>
+              <div mat-line>{{'Reviews Submitted'}}</div>
+              <div mat-line>{{sectionStats.reviewsCount}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>folder</mat-icon>
+              <div mat-line>{{'Total Sections'}}</div>
+              <div mat-line>{{userReviewRequests.length}}</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
       <mat-card>
         <mat-card-content>
 
@@ -222,12 +294,16 @@
             <div class="top-controls">
               <div class="fullbtn">
                 <button [disabled]="allTasksAssingedFlag" color="accent" (click)="openDialog('all-tasks')"
-                  class="control-btn" mat-flat-button>Assign all
-                  tasks</button>
+                  class="control-btn" mat-flat-button>ASSIGN ALL
+                  TASKS</button>
               </div>
               <div class="fullbtn">
                 <button color="primary" (click)="viewCommentsMatrix(userReviewRequests)" class="control-btn"
-                  mat-flat-button>View comments</button>
+                  mat-flat-button>COMMENTS MATRIX</button>
+              </div>
+              <div class="fullbtn">
+                <button (click)="setRequestStatus()" *ngIf="allReviewsFlag && currentUser?.role !== 'sme'" color="warn" mat-button>SET
+                  STATUS</button>
               </div>
               <div class="comments-box">
                 <mat-form-field appearance="outline">
@@ -235,7 +311,7 @@
                   <textarea matInput [(ngModel)]="commentsForFip" placeholder="write your comments..."></textarea>
                 </mat-form-field>
                 <button (click)="intimateFip()" [disabled]="allTasksAssingedFlag || !commentsForFip" color="accent"
-                  mat-raised-button>Intimate Fip</button>
+                  mat-raised-button>INTIMATE FIP</button>
               </div>
             </div>
           </div>
@@ -252,9 +328,9 @@
                   <textarea matInput placeholder="write your comments..."></textarea>
                 </mat-form-field>
                 <mat-spinner *ngIf="apiLoading" diameter="40"></mat-spinner>
-                <button *ngIf="!apiLoading" [disabled]="reviewAdded" color="accent" (click)="completeTask()"
+                <!-- <button *ngIf="!submitLoading" [disabled]="reviewAdded" color="accent" (click)="completeTask()"
                   mat-raised-button>Complete
-                  Task</button>
+                  Task</button> -->
               </div>
             </div>
           </div>
@@ -265,30 +341,31 @@
           <div class="bottom-controls">
             <div class="left-block">
               <span class="head">Accredit Status:</span>
-              <!-- <span *ngIf="userSystemStatus === null" id="comment" class="answer">{{'N/A'}}</span>
-              <span *ngIf="userSystemStatus === 'Failed'" id="comment" class="answer">{{'Failed'}}</span>
-              <span *ngIf="userSystemStatus === 'Deffered'" id="comment" class="answer">{{'Deffered'}}</span>
-              <span *ngIf="userSystemStatus === 'Accredited'" id="comment" class="answer">{{'Accredited'}}</span> -->
-              <span id="comment" class="answer">{{selectedRequest?.status}}</span>
+              <span id="comment" class="answer mb-3">{{selectedRequest?.status | uppercase}}</span>
+              <span class="head" *ngIf="allReviewsFlag && currentUser?.role !== 'sme'">System Status:</span>
+              <span id="warn" class="answer"
+                *ngIf="allReviewsFlag && currentUser?.role !== 'sme'">{{userSystemStatus | uppercase}}</span>
             </div>
             <div class="right-block">
-              <span class="head">Overall Score</span>
+              <span class="head">Current Score</span>
               <span class="comments">{{userAllScore || 0}} / {{'5'}}</span>
               <span *ngIf="userAllScore" id="answer" class="comments">{{(userAllScore/5 * 100)}}%</span>
             </div>
           </div>
-          <button color="primary" mat-button>SET STATUS</button>
+
         </mat-card-actions>
 
       </mat-card>
+
+
     </div>
   </div>
 </div>
 
 <div *ngIf="commentsFlag && !apiLoading">
-  <mat-toolbar style="margin-bottom: 5px;" color="primary">
+  <mat-toolbar style="margin-bottom: 25px;" color="primary">
     <mat-toolbar-row>
-      <small>{{"All Comments"}}</small>
+      <span>{{"Comments Matrix"}}</span>
       <span class="example-spacer"></span>
       <button (click)="hideComments()" mat-icon-button>
         <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
@@ -296,22 +373,31 @@
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <small>{{"Sections"}}</small>
+      <span class="example-spacer"></span>
+      <small> Comments</small>
+      <span class="example-spacer"></span>
+      <small>Mitigations</small>
+    </mat-toolbar-row>
+  </mat-toolbar>
   <mat-card style="padding: 0px;margin: 20px;">
     <div class="comments-matrix" *ngFor="let item of commentsData">
       <div class="title-details">
         <span id="title">{{item.name}}</span>
         <div class="review-info">
-          <span id="date" *ngIf="item.currentReview === 'reviewed'">Reviewed:
+          <!-- <span id="date" *ngIf="item.review.rating !== null">Reviewed:
             {{item.endDate | date:'shortDate'}}</span>
-          <span id="date" *ngIf="item.currentReview === 'in_review'">Pending:
-            {{item.endDate | date:'shortDate'}}</span>
-          <span id="stars" *ngIf="item.currentReview === 'reviewed'">
+          <span id="date" *ngIf="item.review.rating === null">Pending:
+            {{item.endDate | date:'shortDate'}}</span> -->
+          <span id="stars" *ngIf="item.review.rating !== null">
             <bar-rating [(rate)]="item.review.rating" [max]="max"></bar-rating>
           </span>
         </div>
       </div>
       <div class="form-comments">
-        <div class="form-item mat-elevation-z2" *ngFor="let obj of item.review?.data">
+        <div class="form-item mat-elevation-z2" *ngFor="let obj of item.review?.controlWiseComments">
           <div class="form-item-boxes">
             <div class="details">
               <span>{{obj.title}}</span>
@@ -332,7 +418,7 @@
         </div>
       </div>
       <div class="review-comments">
-        <span>{{item.review?.generalComments}}</span>
+        <span>{{item.review?.comments}}</span>
       </div>
       <mat-divider></mat-divider>
     </div>

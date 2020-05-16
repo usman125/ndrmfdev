@@ -7,9 +7,23 @@
   <mat-sidenav-container
     [ngClass]="{'app-content': !loggedUser, 'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
     class="example-container">
-    <mat-sidenav #sidenav mode="side" [opened]="sideNavMode" class="example-sidenav">
-      <div class="hero" *ngIf="loggedUser"
+    <mat-sidenav #sidenav *ngIf="loggedUser" mode="side" [opened]="sideNavMode" class="example-sidenav">
+      <div class="hero"
         [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'fip' || loggedUserRole === 'process owner'">
+        <mat-accordion multi="true">
+        
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                My Launchpad
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/adminhome">Home</a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        
+        </mat-accordion>
         <mat-accordion multi="true">
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
@@ -103,6 +117,20 @@
       <div class="hero"
         [hidden]="loggedUserRole === 'admin' || loggedUserRole === 'fip' || loggedUserRole === 'process owner'">
         <mat-accordion multi="true">
+        
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                My Launchpad
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/smehome">Home</a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        
+        </mat-accordion>
+        <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
@@ -120,6 +148,20 @@
       </div>
 
       <div class="hero" [hidden]="loggedUserRole === 'admin' || loggedUserRole === 'fip' || loggedUserRole === 'sme'">
+        <mat-accordion multi="true">
+
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                My Launchpad
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/pohome">Home</a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+
+        </mat-accordion>
         <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">

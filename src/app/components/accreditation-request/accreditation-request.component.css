@@ -67,7 +67,6 @@ table {
   margin-top: 5px;
 }
 
-
 .profile-details {
   display: flex;
   flex-direction: column;
@@ -225,8 +224,7 @@ button {
     } */
 }
 
-
-.view-block{
+.view-block {
   display: flex;
   flex-direction: row;
 }
@@ -245,11 +243,10 @@ button {
   top: 80px;
 }
 
-
-.mobile-class.view-block{
+.mobile-class.view-block {
   flex-direction: column-reverse;
 }
-.mobile-class.view-block{
+.mobile-class.view-block {
   flex-direction: column-reverse;
 }
 
@@ -264,8 +261,20 @@ button {
 }
 
 .title-details {
-    text-overflow: clip;
-    white-space: nowrap;
-    overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+  overflow: hidden;
 }
-  
+
+/* .answer{
+  mar
+} */
+
+.mat-list-item {
+  background: rgba(235, 235, 235, 0.5);
+  margin-bottom: 5px;
+}
+
+#warn {
+  color: #f44336;
+}

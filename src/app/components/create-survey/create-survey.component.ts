@@ -161,6 +161,7 @@ export class CreateSurveyComponent implements OnInit {
       result => {
         console.log("RESULT FROM ADD SURVEY:--", result);
         this.createProfileForm.reset();
+        this.createProfileForm.patchValue({type: 'form'}, {onlySelf: true});
         this.form = {
           components: [],
           display: "form",

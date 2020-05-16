@@ -1,0 +1,93 @@
+<ng-container>
+    <mat-toolbar class="toolbar-sticky" style="margin-bottom:25px;padding: 15px 0px;" color="primary">
+      <mat-toolbar-row>
+        <span>My Trackpad</span>
+        <span class="example-spacer"></span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  <div class="box-heading">
+    <span>Eligibility Requests</span>
+  </div>
+  <div class="row m-20">
+    <div class="col-md-3" (click)="goToRoute('eligibility-requests')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Requests</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{eligiUnderReviewCount+eligiApprovedCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-3" (click)="goToRoute('eligibility-requests')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Under Review</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{eligiUnderReviewCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-3" (click)="goToRoute('eligibility-requests')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Approved</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{eligiApprovedCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="box-heading">
+    <span>Qualifciation Requests</span>
+  </div>
+  <div class="row m-20">
+    <div class="col-md-3" (click)="goToRoute('accreditation-requests')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Under Review</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{qualiUnderReviewCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-3" (click)="goToRoute('accreditation-requests')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Approved</h6>
+            </div>
+            <div class="value">
+              <span *ngIf="!apiLoading">{{qualiApprovedCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</ng-container>

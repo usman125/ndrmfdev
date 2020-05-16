@@ -1,9 +1,9 @@
 .example-container {
-  /* height: 400px; */
+  /* height: 200px; */
   /* overflow: auto; */
   margin: 20px;
-  padding: 0px;
-  position: relative;
+  /* padding: 0px; */
+  /* position: relative; */
 }
 
 table {

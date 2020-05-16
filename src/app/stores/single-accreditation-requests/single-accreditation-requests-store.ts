@@ -18,6 +18,8 @@ export class SingleAccreditationRequestStore extends Store<SingleAccreditationRe
     data: any,
     sme: any,
     assigned: boolean,
+    review: any,
+    reviewStatus: any,
   ): void {
     this.setState({
       ...this.state,
@@ -33,6 +35,8 @@ export class SingleAccreditationRequestStore extends Store<SingleAccreditationRe
           data: data,
           sme: sme,
           assigned: assigned,
+          review: review,
+          reviewStatus: reviewStatus,
         }
       ]
     });
@@ -49,6 +53,8 @@ export class SingleAccreditationRequestStore extends Store<SingleAccreditationRe
       data: any,
       sme: any,
       assigned: boolean,
+      review: any,
+      reviewStatus: any,
     }[]
   ): void {
     this.setState({
@@ -57,27 +63,24 @@ export class SingleAccreditationRequestStore extends Store<SingleAccreditationRe
     });
   }
 
-  // setTaskReview(
-  //   formIdentity: string,
-  //   startDate: string,
-  //   endDate: string
-  // ): void {
-  //   console.log("SINGLE TASK UPDATE CALLED:--");
-  //   this.setState({
-  //     ...this.state,
-  //     requests: this.state.requests.map((c) => {
-  //       if (c.formIdentity === formIdentity) {
-  //         return {
-  //           ...c,
-  //           startDate: startDate,
-  //           endDate: endDate,
-  //           currentReview: 'in_review',
-  //         }
-  //       }
-  //       return c;
-  //     })
-  //   });
-  // }
+  setTaskReview(
+    reviewStatus: string,
+    sectionId: string,
+  ): void {
+    console.log("SINGLE TASK UPDATE CALLED:--");
+    this.setState({
+      ...this.state,
+      requests: this.state.requests.map((c) => {
+        if (c.id === sectionId) {
+          return {
+            ...c,
+            reviewStatus: reviewStatus,
+          }
+        }
+        return c;
+      })
+    });
+  }
 
   // setAllTaskReview(
   //   startDate: string,
@@ -128,4 +131,18 @@ export class SingleAccreditationRequestStore extends Store<SingleAccreditationRe
     })
   }
 
+  addSectionReview(sectionId, review) {
+    this.setState({
+      ...this.state,
+      requests: this.state.requests.map(c => {
+        if (c.id === sectionId) {
+          return {
+            ...c,
+            review: review
+          }
+        }
+        return c;
+      })
+    });
+  }
 }
