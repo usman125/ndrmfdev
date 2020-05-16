@@ -31,7 +31,7 @@
     "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "http-server": "^0.12.1",
-    "jquery": "^3.4.1",
+    "jquery": "3.4.1",
     "lodash": "^4.17.15",
     "ngx-bar-rating": "^1.1.0",
     "path": "^0.12.7",
