@@ -119,13 +119,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     if (this.loggedUser) {
       if (this.loggedUser.role === 'admin') {
-        this._router.navigate(['surveys']);
+        this._router.navigate(['adminhome']);
       }
-      if (this.loggedUser.role === 'signatory') {
-        this._router.navigate(['fip-home']);
+      if (this.loggedUser.role === 'process owner') {
+        this._router.navigate(['pohome']);
       }
       if (this.loggedUser.role === 'sme') {
-        this._router.navigate(['accreditation-requests']);
+        this._router.navigate(['smehome']);
       }
     }
   }

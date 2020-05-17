@@ -121,6 +121,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   apiLoading: boolean = false;
   submitLoading: boolean = false;
   allReviewsFlag: boolean = false;
+  hideForms: boolean = false;
 
   sectionStats: any = null;
 
@@ -398,9 +399,10 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     // const id = "842aa74e-b48d-4988-86d5-172a55fa495e";
     // const id = "eecf9f85-5dab-4580-8e48-0b2b346b0b14";
     // const id = "91a7a3d7-0bb0-4608-98f7-6a5b96db5d12";
+    this.apiLoading = true;
     const id = "88ff4768-2a23-44d0-9af3-4d398e78d5a4";
     this._accreditationRequestService.getSmeTasks().subscribe(
-      (result: any) => { 
+      (result: any) => {
         console.log("RESULT SME TASKS:--", result);
         // result.
         const array: any = result.qualification.map(c => {
@@ -416,12 +418,14 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
           }
         });
         this.dataSource = new MatTableDataSource(array);
+        this.apiLoading = false;
       },
       error => {
+        this.apiLoading = false;
         console.log("ERROR SME TASKS:--", error);
       }
     );
-    
+
   }
 
   checkForAllTasks() {
@@ -509,6 +513,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   }
 
   addAllTaskReview(comments, startDate, endDate) {
+    console.log("ADD ALL TASK REVIEW CALLED:--", this.userReviewRequests)
     this.userReviewRequests.forEach(element => {
       // if (element.currentReview !== 'in_review') {
       //   var values = {
@@ -541,7 +546,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       //     }
       //   );
       // }
-      if (element.reviewStatus === null) {
+      if (element.reviewStatus === null || element.reviewStatus === 'Completed') {
         var object = {
           "comments": comments || null,
           "endDate": endDate,
@@ -788,7 +793,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     // }
   }
 
-  getSmeRequest(id){
+  getSmeRequest(id) {
     this.toggle = !this.toggle;
     this.apiLoading = true;
     this._accreditationRequestService.getSingleQualificationRequest(id).subscribe(
@@ -848,16 +853,18 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
             if (c.review.rating) {
 
               for (let i = 0; i < JSON.parse(c.review.controlWiseComments).length; i++) {
-                for (let j = 0; j < this.formReviewObjects.length; j++) {
-                  if (this.formReviewObjects[j].key === JSON.parse(c.review.controlWiseComments)[i].key) {
-                    this.formReviewObjects[j].rating = JSON.parse(c.review.controlWiseComments)[i].rating;
-                    this.formReviewObjects[j].status = JSON.parse(c.review.controlWiseComments)[i].status;
-                    this.formReviewObjects[j].comments = JSON.parse(c.review.controlWiseComments)[i].comments;
+                // if (c.formReviewObjects) {
+                  for (let j = 0; j < this.formReviewObjects.length; j++) {
+                    if (this.formReviewObjects[j].key === JSON.parse(c.review.controlWiseComments)[i].key) {
+                      this.formReviewObjects[j].rating = JSON.parse(c.review.controlWiseComments)[i].rating;
+                      this.formReviewObjects[j].status = JSON.parse(c.review.controlWiseComments)[i].status;
+                      this.formReviewObjects[j].comments = JSON.parse(c.review.controlWiseComments)[i].comments;
+                    }
                   }
-                }
+                // }
               }
               console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects);
-              this.generalComments = c.review.comments;
+              // this.generalComments = c.review.comments;
             }
           }
           count = count + parseInt(c.totalScore);
@@ -871,7 +878,9 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
               status: c.review.status,
               rating: c.review.rating,
               controlWiseComments: c.review.controlWiseComments !== null ? JSON.parse(c.review.controlWiseComments) : c.review.controlWiseComments,
-            }
+            },
+            formReviewObjects: this.formReviewObjects,
+            comments: c.review.comments
           }
         })
         this.totalFormScore = count;
@@ -910,8 +919,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     };
     for (let j = 0; j <= 5; j++) {
       var count = 0;
-      for (let i = 0; i < this.formReviewObjects.length; i++) {
-        if (this.formReviewObjects[i].rating === j) {
+      for (let i = 0; i < item.formReviewObjects.length; i++) {
+        if (item.formReviewObjects[i].rating === j) {
           count = count + 1;
         }
       }
@@ -933,20 +942,20 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       requestStatus = "Accredited";
     }
     var apiValues = {
-      "comments": this.generalComments,
-      "controlWiseComments": JSON.stringify(this.formReviewObjects),
+      "comments": item.review.comments,
+      "controlWiseComments": JSON.stringify(item.formReviewObjects),
       "rating": Math.ceil(count1 / count2),
       "status": requestStatus
     }
     console.log(
       "REVIEW TO ADD FOR ITEM:--\n", item,
-      "\nACTUAL REVIEW:--\n", this.formReviewObjects,
+      "\nACTUAL REVIEW:--\n", item.formReviewObjects,
       "\nTOAL RATING :--\n", rating,
       "\nCOUNT 1 :--\n", count1,
       "\nCOUNT 2 :--\n", count2,
       "\nRATING RAW:--\n", count1 / count2,
       "\nRATING :--\n", Math.ceil(count1 / count2),
-      "\nGENERAL COMMENTS :--\n", this.generalComments,
+      "\nGENERAL COMMENTS :--\n", item.review.comments,
       "\nEQUEST STATUS :--\n", requestStatus,
       "\nAPI VALUES :--\n", apiValues,
     );
@@ -956,12 +965,13 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         this._singleAccreditationRequestStore.addSectionReview(
           item.id,
           {
-            "comments": this.generalComments,
-            "controlWiseComments": this.formReviewObjects,
+            "comments": item.review.comments,
+            "controlWiseComments": item.formReviewObjects,
             "rating": Math.ceil(count1 / count2),
             "status": requestStatus
           }
         );
+        this.reviewAdded = true;
         this._authStore.removeLoading();
       },
       error => {

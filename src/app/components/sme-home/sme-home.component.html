@@ -9,7 +9,7 @@
     <span>Qualifciations</span>
   </div>
   <div class="row m-20">
-    <div class="col-md-3">
+    <div class="col-md-3" (click)="goToRoute('accreditation-requests')">
       <mat-card>
         <mat-card-content>
           <div class="box">
@@ -17,35 +17,8 @@
               <h6>Pending Tasks</h6>
             </div>
             <div class="value">
-              <span>40</span>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-md-3">
-      <mat-card>
-        <mat-card-content>
-          <div class="box">
-            <div class="heading">
-              <h6>Under Review</h6>
-            </div>
-            <div class="value">
-              <span>40</span>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-md-3">
-      <mat-card>
-        <mat-card-content>
-          <div class="box">
-            <div class="heading">
-              <h6>Approved</h6>
-            </div>
-            <div class="value">
-              <span>40</span>
+              <span *ngIf="!apiLoading">{{qualiTaskCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
             </div>
           </div>
         </mat-card-content>
@@ -64,7 +37,8 @@
               <h6>Pending Tasks</h6>
             </div>
             <div class="value">
-              <span>40</span>
+              <span *ngIf="!apiLoading">0</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
             </div>
           </div>
         </mat-card-content>
@@ -112,7 +86,8 @@
               <h6>Pending Tasks</h6>
             </div>
             <div class="value">
-              <span>40</span>
+              <span *ngIf="!apiLoading">0</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
             </div>
           </div>
         </mat-card-content>

@@ -103,7 +103,7 @@
 
     <div *ngFor="let item of userReviewRequests">
 
-      <mat-toolbar class="no-margin" color="primary">
+      <mat-toolbar class="no-margin" color="primary" [hidden]="hideForms && item.assigned === false">
         <mat-toolbar-row>
           <div class="title-details">
             <span id="title">{{item.name}}</span>
@@ -144,7 +144,7 @@
         </mat-toolbar-row>
       </mat-toolbar>
 
-      <mat-card class="example-result-card mb-3">
+      <mat-card class="example-result-card mb-3" [hidden]="hideForms && item.assigned === false">
         <mat-card-content>
           <div class="section-info">
             <span class="mb-3" style="display: block;">
@@ -168,7 +168,7 @@
 
           <!-- <button *ngIf="item.allReviews.length" mat-raised-button>View Previous</button> -->
           <div *ngIf="currentUser?.role === 'sme' && item.assigned === true">
-            <div class="form-comments" *ngFor="let item of formReviewObjects">
+            <div class="form-comments" *ngFor="let obj of item.formReviewObjects">
               <div class="details">
                 <span>{{item.title}}</span>
                 <span *ngIf="item.value === true">{{"true"}}</span>
@@ -177,12 +177,12 @@
                   <mat-form-field>
                     <mat-label>Comments</mat-label>
                     <input [disabled]="reviewAdded" matInput placeholder="Write any comments"
-                      [(ngModel)]="item.comments" value="item.comments" />
+                      [(ngModel)]="obj.comments" value="obj.comments" />
                   </mat-form-field>
                 </span>
               </div>
               <div class="controls">
-                <bar-rating [(rate)]="item.rating" [max]="max"></bar-rating>
+                <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
                 <mat-button-toggle-group [disabled]="reviewAdded" [(ngModel)]="item.status"
                   #group="matButtonToggleGroup">
                   <mat-button-toggle color="primary" (change)="onValChange($event)" value="satisfy"
@@ -198,11 +198,11 @@
             <div class="comment-box">
               <mat-form-field appearance="outline">
                 <mat-label>Mitigation Factors</mat-label>
-                <textarea [(ngModel)]="generalComments" matInput></textarea>
+                <textarea [(ngModel)]="item.review.comments" matInput></textarea>
               </mat-form-field>
               <div style="padding: 15px;">
                 <mat-spinner *ngIf="submitLoading" diameter="40"></mat-spinner>
-                <button *ngIf="!submitLoading" [disabled]="reviewAdded" (click)="addRequestReview(item)" mat-mini-fab
+                <button *ngIf="!submitLoading" [disabled]="reviewAdded || (item.review.rating !== null && item.reviewStatus === 'Completed')" (click)="addRequestReview(item)" mat-mini-fab
                   color="accent">
                   <!-- <button *ngIf="!submitLoading" [disabled]="reviewAdded" mat-mini-fab color="primary"> -->
                   <mat-icon>send</mat-icon>
@@ -317,6 +317,11 @@
           </div>
           <div *ngIf="currentUser?.role === 'sme'">
             <div class="top-controls">
+              <div class="fullbtn">
+                <button (click)="hideForms = !hideForms" color="warn" class="control-btn" mat-flat-button>
+                  {{!hideForms ? 'FILTER REVIEW SECTION' : 'SHOW ALL SECTION'}}
+                </button>
+              </div>
               <div class="fullbtn">
                 <button [disabled]="reviewAdded" color="primary" class="control-btn" mat-flat-button>
                   Assign to member

@@ -19,6 +19,7 @@ export class AssignSectionsProcessComponent implements OnInit {
   poUsers: any = [];
   smeUsers: any = [];
   apiLoading: boolean = false;
+  apiProcessLoading: boolean = false;
 
 
   userType = [
@@ -38,15 +39,15 @@ export class AssignSectionsProcessComponent implements OnInit {
   }
 
   getAllProcess() {
-    this.apiLoading = true;
+    this.apiProcessLoading = true;
     this._settingsService.getProcesses().subscribe(
       (result: any) => {
-        this.apiLoading = false;
+        this.apiProcessLoading = false;
         console.log("ALL PROCESS RESULT:---", result);
         this.allProcess = result;
       },
       error => {
-        this.apiLoading = false;
+        this.apiProcessLoading = false;
         console.log("ERROR PROCESS FETCHING:---", error);
       }
     );
@@ -54,10 +55,10 @@ export class AssignSectionsProcessComponent implements OnInit {
 
   processChanged($event) {
     console.log("PROCESS CHANGED:---", $event);
-    this.apiLoading = true;
+    // this.apiLoading = true;
     this._settingsService.getProcessMeta($event).subscribe(
       (result: any) => {
-        this.apiLoading = false;
+        // this.apiLoading = false;
         console.log("RESULT FETCHING TYPE:---", result);
         this.allProcessType = result;
         // var object = {
@@ -73,6 +74,7 @@ export class AssignSectionsProcessComponent implements OnInit {
         // });
         // object.sections = dummyTypes;
         // this.allProcessType = object;
+        this.apiLoading = true;
         this.getProcessOwners();
         this.getSMES();
       },
@@ -83,10 +85,9 @@ export class AssignSectionsProcessComponent implements OnInit {
   }
 
   getProcessOwners() {
-    this.apiLoading = true;
     this._userService.withRoleprocessOwner().subscribe(
       (result: any) => {
-        this.apiLoading = false;
+        // this.apiLoading = false;
         console.log("RESULT FROM PROCEsS OWNER:---", result);
         this.poUsers = result;
       },
@@ -98,12 +99,12 @@ export class AssignSectionsProcessComponent implements OnInit {
   }
 
   getSMES() {
-    this.apiLoading = true;
+    // this.apiLoading = true;
     this._userService.withRoleSME().subscribe(
       (result: any) => {
-        this.apiLoading = false;
         console.log("RESULT FROM SMES:---", result);
         this.smeUsers = result;
+        this.apiLoading = false;
       },
       error => {
         this.apiLoading = false;
@@ -166,16 +167,53 @@ export class AssignSectionsProcessComponent implements OnInit {
   }
 
   comparePoObjects(o1: any, o2: any): boolean {
-    return o1.name === o2.name && o1.id === o2.id;
+    if (o2 !== null) {
+      return o1.name === o2.name && o1.id === o2.id;
+    }
+    return false;
   }
 
   compareSmeObjects(o1: any, o2: any): boolean {
-    console.log(o1, o2)
+    // console.log(o1, o2)
     // return o1.name === o2.name && o1.id === o2.id;
     if (o2 !== null) {
       return o1.name === o2.name && o1.id === o2.id;
     }
     return false;
+  }
+
+  // ACCORDION STYLES
+  step = 0;
+  stepArray: any = 0;
+
+  setStep(index: number) {
+    this.step = index;
+  }
+
+  nextStep() {
+    this.step++;
+  }
+
+  prevStep() {
+    this.step--;
+  }
+
+  setArrayStep(i, item) {
+    console.log("ITEM TO FETCH USERS:--", i, item);
+    setTimeout(() => {
+      this.allProcessType = [];
+      this.process = item;
+      this.processChanged(item);
+    })
+    this.stepArray = i;
+  }
+  prevArrayStep() {
+    // console.log("ITEM TO FETCH USERS:--", item);
+    this.stepArray--;
+  }
+  nextArrayStep() {
+    // console.log("ITEM TO FETCH USERS:--", item);
+    this.stepArray++;
   }
 
 }

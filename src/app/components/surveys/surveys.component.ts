@@ -8,6 +8,7 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from "@angular/router";
 import { SurveysService } from "../../services/surveys.service";
 import { SettingsService } from "../../services/settings.service";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-surveys',
@@ -18,14 +19,30 @@ import { SettingsService } from "../../services/settings.service";
 
 export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  createProfileForm: FormGroup;
+
   loggedUser: boolean = false;
   toggle: boolean = false;
+
+  formName: any = '';
+  formType: any = '';
+  passScore: any = null;
+  totalScore: any = null;
+  smeRef: any = '';
+  refreshForm: any = new EventEmitter();
+
+  public form: any = {
+    components: [],
+    display: "form",
+    page: 0,
+    numPages: 2
+  };
+
+
   editFormFlag: boolean = false;
   loadingSection: boolean = false;
 
-  refreshForm: EventEmitter<any> = new EventEmitter();
 
-  form: any = {};
   secondForm: any = {};
   formValues: any = null;
   listItem: any = null;
@@ -36,6 +53,10 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   dataSource: any;
   allProcessTypes: any = null;
   selctedRequest: any = null;
+  fetchedSection: any = null;
+
+  allSmes: any = null;
+  selectedSme: any = null;
 
   Subscription: Subscription = new Subscription();
 
@@ -48,7 +69,22 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     private _router: Router,
     private _surveysService: SurveysService,
     private _settingsService: SettingsService,
-  ) { }
+    private _formBuilder: FormBuilder,
+  ) {
+
+    this._buildCreateProfileForm();
+  }
+
+  private _buildCreateProfileForm() {
+    this.createProfileForm = this._formBuilder.group({
+      name: ['', Validators.required],
+      passingScore: ['', Validators.required],
+      totalScore: ['', Validators.required],
+      smeRef: ['', Validators.required],
+      type: ['', Validators.required],
+      formIdentity: ['', Validators.required],
+    })
+  }
 
   ngOnInit() {
     setTimeout(() => {
@@ -113,6 +149,8 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
       (result: any) => {
         this.loadingSection = false;
         console.log("RESULT FROM ALL TEMPLATES:--", result);
+        // this.allSmes = result.sections;
+        this.fetchSectons(item);
         this.dataSource = new MatTableDataSource(result.sections);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -138,7 +176,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
 
   toogleForm(form) {
     console.log("FORM TO SHOW:--", form)
-    this.selctedRequest=form;
+    this.selctedRequest = form;
     this.toggle = !this.toggle;
     this.secondForm = JSON.parse(form.template);
     // this.secondForm.components = JSON.parse(form.components);
@@ -148,12 +186,59 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   editForm(form) {
-    this.selctedRequest=form;
+    this.selctedRequest = form;
     this.editFormFlag = !this.editFormFlag;
     this.secondForm = JSON.parse(form.template);
+    console.log("FORM TO EDIT:--", this.secondForm, this.selctedRequest);
+    let macthedEntry = null;
+    // this.fetchSectons(this.selctedRequest.processType);
+    for (let i=0; i<this.allSmes.length; i++){
+      if (this.allSmes[i].id === this.selctedRequest.id){
+        console.log("THIS ENTRY MATCHED:--", this.allSmes[i]);
+        macthedEntry = this.allSmes[i];
+        break;
+      }
+    }
+    this.patchForm(macthedEntry);
     this.refreshForm.emit({
       form: this.secondForm
     })
+  }
+  
+  patchForm(sme){
+    this.createProfileForm.patchValue({
+      name: this.secondForm.name,
+      passingScore: this.secondForm.passingScore || 0,
+      totalScore: this.secondForm.totalScore || 0,
+      smeRef: sme,
+      type: this.secondForm.display,
+      formIdentity: this.listItem,
+    }, { onlySelf: true });
+
+  }
+
+  fetchSectons(item) {
+    if (item) {
+      this.createProfileForm.patchValue({'smeRef': null}, {onlySelf: true});
+      if (item !== 'QUALIFICATION') {
+        this.createProfileForm.patchValue({
+          'passingScore': 0,
+          'totalScore': 0,
+        }, { onlySelf: true })
+      }
+      this.allSmes = [];
+      this._settingsService.getProcessMeta(item).subscribe(
+        (result: any) => {
+          console.log("ALL PROCESSES:---", result);
+          if (result.sections) {
+            this.allSmes = result.sections;
+          }
+        },
+        error => {
+          console.log("ALL PROCESSES ERROR:---", error);
+        }
+      );
+    }
   }
 
   applyFilter(event: Event) {
@@ -186,8 +271,60 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     this._router.navigate(['/create-survey']);
   }
 
-  hideEditForm(){
+  hideEditForm() {
     this.editFormFlag = false;
+  }
+
+
+  // FORM BUILDER
+  smeChanged($event) {
+    this.selectedSme = $event;
+    console.log("SME CHANGED:--", this.selectedSme);
+  }
+
+  typeChanged($event) {
+    console.log('Type changed:--', $event);
+    this.formType = $event;
+    if ($event === 'wizard') {
+      this.form.display = 'wizard';
+      this.form.page = 0;
+      this.form.numPages = 1;
+    } else {
+      this.form.display = 'form';
+      this.form.page = 0;
+      this.form.numPages = 0;
+    }
+    this.refreshForm.emit({
+      form: this.form
+    })
+  }
+
+  saveForm(values) {
+    values.components = this.form.components
+    values.page = this.form.page;
+    values.numOfPages = this.form.numPages;
+    this._settingsService.addSectionTemplate(this.selectedSme.id, values).subscribe(
+      result => {
+        console.log("RESULT FROM ADD SURVEY:--", result);
+        this.createProfileForm.reset();
+        this.createProfileForm.patchValue({ type: 'form' }, { onlySelf: true });
+        this.form = {
+          components: [],
+          display: "form",
+          page: 0,
+          refreshOn: "submit",
+          numPages: 2
+        };
+        this.refreshForm.emit({
+          form: this.form
+        });
+      },
+      error => {
+        console.log("ERROR FROM ADD SURVEY:--", error);
+      }
+    );
+
+
   }
 
 }

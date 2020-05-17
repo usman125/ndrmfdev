@@ -2,18 +2,13 @@
   <mat-toolbar-row>
     <span>Assign Process & Sections</span>
     <span class="example-spacer"></span>
-    <!-- <button (click)="goToAdd()" mat-icon-button>
-      <mat-icon>add</mat-icon>
-    </button> -->
   </mat-toolbar-row>
 </mat-toolbar>
-<mat-card class="m-20">
-  <!-- <mat-card-header class="p-2">
-    <h4>Assign Process & Sections</h4>
-  </mat-card-header> -->
-  <mat-card-content>
+<!-- <mat-card class="m-20">
 
-    <mat-form-field class="p-2">
+  <mat-card-content> -->
+
+<!-- <mat-form-field class="p-2">
       <mat-label>Select Process Type</mat-label>
       <mat-select [(ngModel)]="process" (ngModelChange)="processChanged($event)">
         <mat-option *ngFor="let item of allProcess" [value]="item">
@@ -24,11 +19,11 @@
 
     <div class="p-2" *ngIf="process && !apiLoading">
       <div class="po">
-        <!-- {{allProcessType}} -->
         <div class="po-name">Select Process Owner</div>
         <mat-form-field>
           <mat-label>Select Process Owner</mat-label>
-          <mat-select [compareWith]="comparePoObjects" [(ngModel)]="allProcessType.processOwner" (ngModelChange)="poChanged($event)">
+          <mat-select [compareWith]="comparePoObjects" [(ngModel)]="allProcessType.processOwner"
+            (ngModelChange)="poChanged($event)">
             <mat-option *ngFor="let po of poUsers;" [value]="po">
               {{po.name}}
             </mat-option>
@@ -52,8 +47,76 @@
     </div>
     <mat-card-actions class="p-2">
       <button *ngIf="process && !apiLoading" (click)="updateProcessMeta()" mat-button color="primary">SAVE</button>
-    </mat-card-actions>
-    <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" color="primary" diameter="35"></mat-progress-spinner>
+    </mat-card-actions> -->
+<div class="m-20">
+  <div class="mb-3 ml-2">
+    <a mat-icon-button disabled color="warn" href="#">CLICK TABS TO ASSIGN USERS</a>
+  </div>
+  <mat-progress-spinner *ngIf="apiProcessLoading" mode="indeterminate" color="primary" diameter="35">
+  </mat-progress-spinner>
 
-  </mat-card-content>
-</mat-card>
+  <mat-accordion class="example-headers-align">
+    <mat-expansion-panel *ngFor="let item of allProcess; let i = index;" [expanded]="stepArray === i"
+      (opened)="setArrayStep(i, item)" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{item}}
+        </mat-panel-title>
+        <mat-panel-description>
+          &nbsp;
+          <mat-icon>supervised_user_circle</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div
+        *ngIf="allProcessType.length !== 0 && (allProcessType.processOwner !== null || allProcessType.sections !== null) && !apiLoading">
+        <div class="po">
+          <div class="po-name">Select Process Owner</div>
+          <mat-form-field>
+            <mat-label>Select Process Owner</mat-label>
+            <mat-select [compareWith]="comparePoObjects" [(ngModel)]="allProcessType.processOwner"
+              (ngModelChange)="poChanged($event)">
+              <mat-option *ngFor="let po of poUsers;" [value]="po">
+                {{po.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div *ngFor="let obj of allProcessType.sections;">
+          <div class="smes">
+
+            <div class="sme-name">{{obj.name}}</div>
+            <mat-form-field>
+              <mat-label>Select SME</mat-label>
+              <mat-select [compareWith]="compareSmeObjects" [(ngModel)]="obj.sme" (ngModelChange)="smeChanged($event)">
+                <mat-option *ngFor="let sme of smeUsers;" [value]="sme">
+                  {{sme.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" color="primary" diameter="35">
+      </mat-progress-spinner>
+
+      <mat-action-row>
+        <div class="save-btn">
+          <button
+            *ngIf="allProcessType.length !== 0 && (allProcessType.processOwner !== null || allProcessType.sections !== null) && !apiLoading"
+            (click)="updateProcessMeta()" mat-button color="primary">SAVE</button>
+        </div>
+        <div class="actio-btns">
+          <button mat-button color="warn" (click)="prevArrayStep()">{{'Previous' | uppercase}}</button>
+          <button mat-button color="primary"
+            (click)="nextArrayStep()">{{i !== allProcess.length-1 ? 'NEXT' : 'END'}}</button>
+        </div>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+<!-- </mat-card-content>
+  <mat-card-actions>
+
+  </mat-card-actions>
+</mat-card> -->
