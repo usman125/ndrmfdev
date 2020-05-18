@@ -10,7 +10,8 @@
     <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
   </mat-form-field>
 </div>
-<div *ngIf="!toggle && !commentsFlag && !apiLoading && currentUser?.role === 'process owner'" class="margin-5 example-container mat-elevation-z4">
+<div *ngIf="!toggle && !commentsFlag && !apiLoading && currentUser?.role === 'process owner'"
+  class="margin-5 example-container mat-elevation-z4">
   <table mat-table [dataSource]="dataSource">
 
     <ng-container matColumnDef="user">
@@ -38,9 +39,16 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
-<div *ngIf="!toggle && !commentsFlag && !apiLoading && currentUser?.role === 'sme'" class="margin-5 example-container mat-elevation-z4">
+<div *ngIf="!toggle && !commentsFlag && !apiLoading && currentUser?.role === 'sme'"
+  class="margin-5 example-container mat-elevation-z4">
   <table mat-table [dataSource]="dataSource">
 
+    <ng-container matColumnDef="section">
+      <th mat-header-cell *matHeaderCellDef> Section </th>
+      <td mat-cell *matCellDef="let element">
+        {{element.sectionName}}
+      </td>
+    </ng-container>
     <ng-container matColumnDef="startDate">
       <th mat-header-cell *matHeaderCellDef> Start Date </th>
       <td mat-cell *matCellDef="let element">
@@ -51,6 +59,10 @@
     <ng-container matColumnDef="endDate">
       <th mat-header-cell *matHeaderCellDef> End Date </th>
       <td mat-cell *matCellDef="let element"> {{element.endDate | date:'shortDate'}} </td>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let element"> {{element.status}} </td>
     </ng-container>
     <ng-container matColumnDef="expiry">
       <th mat-header-cell *matHeaderCellDef> Expiry </th>
@@ -64,7 +76,8 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions </th>
       <td mat-cell *matCellDef="let element">
-        <button (click)="getSmeRequest(element.requestId)" mat-icon-button aria-label="Example icon-button with a heart icon">
+        <button (click)="getSmeRequest(element)" mat-icon-button
+          aria-label="Example icon-button with a heart icon">
           <mat-icon>play_arrow</mat-icon>
         </button>
       </td>
@@ -78,7 +91,8 @@
 
 <mat-toolbar *ngIf="toggle && !commentsFlag" style="margin-top:0px;padding: 10px 0px;" color="primary">
   <mat-toolbar-row>
-    <span *ngIf="currentUser?.role === 'process owner'">{{selectedRequest?.initiatorFullName ? selectedRequest?.initiatorFullName : selectedRequest?.initiatedBy.name}}</span>
+    <span
+      *ngIf="currentUser?.role === 'process owner'">{{selectedRequest?.initiatorFullName ? selectedRequest?.initiatorFullName : selectedRequest?.initiatedBy.name}}</span>
     <span *ngIf="currentUser?.role === 'sme'">{{selectedRequest?.initiatedBy.name}}</span>
     <span class="example-spacer"></span>
     <span *ngIf="currentUser?.role === 'process owner'">{{selectedRequest?.submittedAt | date:'fullDate'}}</span>
@@ -163,27 +177,29 @@
             readOnly="true" [submission]="{data: item.data}"></formio>
           <formio *ngIf="!item.assigned && currentUser?.role === 'sme'" [form]="item.template" readOnly="true"
             [submission]="{data: item.data}"></formio>
+          <formio *ngIf="item.assigned && currentUser?.role === 'sme' && selectedSection !== item.id" [form]="item.template" readOnly="true"
+            [submission]="{data: item.data}"></formio>
           <!-- <formio *ngIf="currentUser?.role !== 'sme' && !item.review" [form]="item.form" readOnly="true"
             [submission]="{data: item.submitData}"></formio> -->
 
           <!-- <button *ngIf="item.allReviews.length" mat-raised-button>View Previous</button> -->
-          <div *ngIf="currentUser?.role === 'sme' && item.assigned === true">
+          <div *ngIf="currentUser?.role === 'sme' && item.assigned === true" [hidden]="item.assigned && selectedSection !== item.id">
             <div class="form-comments" *ngFor="let obj of item.formReviewObjects">
               <div class="details">
-                <span>{{item.title}}</span>
+                <span>{{obj.title}}</span>
                 <span *ngIf="item.value === true">{{"true"}}</span>
-                <span id="answer">{{item.value}}</span>
+                <span id="answer">{{obj.value}}</span>
                 <span>
                   <mat-form-field>
                     <mat-label>Comments</mat-label>
-                    <input [disabled]="reviewAdded" matInput placeholder="Write any comments"
-                      [(ngModel)]="obj.comments" value="obj.comments" />
+                    <input [disabled]="reviewAdded" matInput placeholder="Write any comments" [(ngModel)]="obj.comments"
+                      value="obj.comments" />
                   </mat-form-field>
                 </span>
               </div>
               <div class="controls">
                 <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
-                <mat-button-toggle-group [disabled]="reviewAdded" [(ngModel)]="item.status"
+                <mat-button-toggle-group [disabled]="reviewAdded" [(ngModel)]="obj.status"
                   #group="matButtonToggleGroup">
                   <mat-button-toggle color="primary" (change)="onValChange($event)" value="satisfy"
                     aria-label="Text align left">
@@ -202,8 +218,9 @@
               </mat-form-field>
               <div style="padding: 15px;">
                 <mat-spinner *ngIf="submitLoading" diameter="40"></mat-spinner>
-                <button *ngIf="!submitLoading" [disabled]="reviewAdded || (item.review.rating !== null && item.reviewStatus === 'Completed')" (click)="addRequestReview(item)" mat-mini-fab
-                  color="accent">
+                <button *ngIf="!submitLoading"
+                  [disabled]="reviewAdded || (item.review.rating !== null && item.reviewStatus === 'Completed')"
+                  (click)="addRequestReview(item)" mat-mini-fab color="accent">
                   <!-- <button *ngIf="!submitLoading" [disabled]="reviewAdded" mat-mini-fab color="primary"> -->
                   <mat-icon>send</mat-icon>
                 </button>
@@ -214,7 +231,7 @@
           <div *ngIf="currentUser?.role !== 'sme' && item.review.rating !== null">
             <!-- <div *ngFor="let review of item.allReviews; let i=index;"> -->
 
-            <div class="form-comments" *ngFor="let obj of item.review?.controlWiseComments">
+            <div class="form-comments" *ngFor="let obj of item.review.controlWiseComments">
               <div class="details">
                 <span>{{obj.title}}</span>
                 <span *ngIf="obj.value === true">{{"true"}}</span>
@@ -267,17 +284,17 @@
             <mat-list-item>
               <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
               <div mat-line>{{'Assigned Tasks'}}</div>
-              <div mat-line>{{sectionStats.pendingCount}}</div>
+              <div mat-line>{{sectionStats?.pendingCount}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>assignment_late</mat-icon>
               <div mat-line>{{'Unassigned Tasks'}}</div>
-              <div mat-line>{{sectionStats.unassignCount}}</div>
+              <div mat-line>{{sectionStats?.unassignCount}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>assignment_returned</mat-icon>
               <div mat-line>{{'Reviews Submitted'}}</div>
-              <div mat-line>{{sectionStats.reviewsCount}}</div>
+              <div mat-line>{{sectionStats?.reviewsCount}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>folder</mat-icon>
@@ -302,7 +319,8 @@
                   mat-flat-button>COMMENTS MATRIX</button>
               </div>
               <div class="fullbtn">
-                <button (click)="setRequestStatus()" *ngIf="allReviewsFlag && currentUser?.role !== 'sme'" color="warn" mat-button>SET
+                <button (click)="setRequestStatus()" *ngIf="allReviewsFlag && currentUser?.role !== 'sme'" color="warn"
+                  mat-button>SET
                   STATUS</button>
               </div>
               <div class="comments-box">
@@ -319,12 +337,12 @@
             <div class="top-controls">
               <div class="fullbtn">
                 <button (click)="hideForms = !hideForms" color="warn" class="control-btn" mat-flat-button>
-                  {{!hideForms ? 'FILTER REVIEW SECTION' : 'SHOW ALL SECTION'}}
+                  {{!hideForms ? 'FILTER MY SECTIONS' : 'SHOW ALL SECTIONS'}}
                 </button>
               </div>
               <div class="fullbtn">
                 <button [disabled]="reviewAdded" color="primary" class="control-btn" mat-flat-button>
-                  Assign to member
+                  {{'ASSIGN TO MEMBERS'}}
                 </button>
               </div>
               <div class="comments-box">

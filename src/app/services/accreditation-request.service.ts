@@ -59,26 +59,12 @@ export class AccreditationRequestService {
     );
   }
 
-  updateAccreditationRequest(values) {
-    const url = `${AppConfig.apiUrl}/accreditation/updateAccreditation`;
-    console.log("VALUES FOR SME IN SERVICE:---", values);
+  updateAccreditationRequest(id, status) {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}?status=${status}`;
+    console.log("VALUES FOR SME IN SERVICE:---", status);
     return this._httpClient.put(
       url,
-      {
-        "currentReview": values.currentReview,
-        "endDate": values.endDate,
-        "formData": 'values',
-        "formIdentity": values.formIdentity,
-        "formSubmitData": values.formSubmitData,
-        "prevReview": values.prevReview,
-        "ratings": values.ratings,
-        "sectionKey": values.sectionKey,
-        "startDate": values.startDate,
-        "status": values.status,
-        "userName": values.userName,
-        "userUpdateFlag": values.userUpdateFlag
-      },
-      this.httpOptions
+      null
     );
   }
 
@@ -178,5 +164,14 @@ export class AccreditationRequestService {
     return this._httpClient.get(
       url
     );
+  }
+  
+  reassignFipSection(id, values){
+    const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}/reassign`;
+    return this._httpClient.post(
+      url, 
+      values
+    );
+
   }
 }

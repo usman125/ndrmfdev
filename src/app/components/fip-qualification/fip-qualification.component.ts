@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, EventEmitter, Output } from '@angular/core';
 import { Subscription, from } from "rxjs";
 import { filter, count } from "rxjs/operators";
 import { SurveysStore } from "../../stores/surveys/surveys-store";
@@ -28,7 +28,7 @@ import { Formio } from "formiojs";
   selector: 'app-fip-qualification',
   templateUrl: './fip-qualification.component.html',
   styleUrls: ['./fip-qualification.component.css'],
-  providers: [SurveysService, AccreditationRequestService],
+  providers: [],
   animations: [
     trigger('pageAnimations', [
       transition(':enter', [
@@ -75,6 +75,9 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   userQualificationRequestId: any = null;
   justSubmittedId: any = null;
   justSubmittedName: any = null;
+
+      
+  @Output() fipComments: any = [];
 
   constructor(
     private _surveysStore: SurveysStore,
@@ -233,14 +236,14 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     // );
 
 
-    // this.Subscription.add(
-    //   this._fipIntimationsStore.state$.subscribe(data => {
-    //     // this.allInitimations['intimations'] = data.intimations;
-    //     const result = _.filter(data.intimations, { intimation_status: 'pending', userRef: this.loggedUser.email });
-    //     this.allInitimations['intimations'] = result;
-    //     // console.log("ALL INTIMATIONS FROM USER:--", this.allInitimations.intimations);
-    //   })
-    // );
+    this.Subscription.add(
+      this._fipIntimationsStore.state$.subscribe(data => {
+        // this.allInitimations['intimations'] = data.intimations;
+        // const result = _.filter(data.intimations, { intimation_status: 'pending', userRef: this.loggedUser.email });
+        this.allInitimations['intimations'] = data.intimations;
+        console.log("ALL INTIMATIONS FROM USER:--", this.allInitimations);
+      })
+    );
 
     // shareStoreReplay.subscribe((c) => {
     //   this.currentIntimation = c;
@@ -323,6 +326,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       (result: any) => {
         // this.loadingApi = false;
         this.allSections = result.sections;
+        let allInitimations = [];
         var count1 = 0;
         var count2 = 0;
         this.allSmes = result.sections.map((c) => {
@@ -330,6 +334,9 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
             count1 = count1 + 1;
           } else {
             count2 = count2 + 1;
+          }
+          if (c.reassignmentStatus === 'Pending' && c.data !== null) {
+            allInitimations.push(c);
           }
           return {
             ...c,
@@ -340,6 +347,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
         this.pendingSectionsCount = count1;
         this.submitSectionsCount = count2;
         this.allSectionsCount = this.allSmes.length;
+        this._fipIntimationsStore.addIntimations(allInitimations);
         this.loadingApi = false;
         console.log("RESULT FROM ALL API REQUESTS:--", result, '\n', this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);
       },
@@ -366,6 +374,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
           this._accreditationRequestService.getSingleQualificationRequest(result[0].id).subscribe(
             (result: any) => {
               this.allSections = result;
+              let allInitimations = [];
               var count1 = 0;
               var count2 = 0;
               this.allSmes = result.sections.map((c) => {
@@ -373,6 +382,9 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
                   count1 = count1 + 1;
                 } else {
                   count2 = count2 + 1;
+                }
+                if (c.reassignmentStatus === 'Pending' && c.data !== null) {
+                  allInitimations.push(c);
                 }
                 return {
                   ...c,
@@ -383,6 +395,8 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
               this.pendingSectionsCount = count1;
               this.submitSectionsCount = count2;
               this.allSectionsCount = this.allSmes.length;
+              this.fipComments = this.allSections.reassignmentComments;
+              this._fipIntimationsStore.addIntimations(allInitimations);
               this.loadingApi = false;
               console.log("RESULT FROM ALL API REQUESTS:--", result, '\n', this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);
             },
@@ -446,8 +460,10 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     // }
     // }
     console.log(this.groupType);
-    this.justSubmittedName = null;
-    this.justSubmittedId = null;
+    // this.justSubmittedName = null;
+    // this.justSubmittedId = null;
+    this.justSubmittedId = this.groupType ? this.groupType.id : null;
+    this.justSubmittedName = this.groupType ? this.groupType.name : null;
     this.form = this.groupType.template;
     // this.secondForm = this.groupType.data;
     if (this.groupType.data !== null) {
@@ -537,12 +553,13 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       id: this.groupType.id
     }
 
-
+    this.groupType.reassignmentStatus === 'Pending' ? this.groupType.reassignmentStatus = 'Completed' : this.groupType.reassignmentStatus = null
     // console.log("OBJECT TO STORE:--", object, this.userQualificationRequest[0].id);
     if (this.userQualificationRequestId) {
       this._accreditationRequestService.addQulificationRequest(object, this.userQualificationRequestId).subscribe(
         result => {
           console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
+          // this._fipIntimationsStore.filterIntimations(object.id);
           this.getQualificationRequest(null);
         },
         error => {
@@ -553,6 +570,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       this._accreditationRequestService.addQulificationRequest(object, this.userQualificationRequest[0].id).subscribe(
         result => {
           console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
+          // this._fipIntimationsStore.filterIntimations(object.id);
           this.getQualificationRequest(null);
         },
         error => {
@@ -574,10 +592,14 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   }
 
   setInitmationSection(item) {
-    console.log(item);
-    this.groupType = item.formIdentity;
+    this.groupType = item;
+    if (typeof (this.groupType.template) !== 'object')
+      this.groupType.template = JSON.parse(this.groupType.template)
+    if (typeof (this.groupType.data) !== 'object')
+      this.groupType.data = JSON.parse(this.groupType.data);
+    console.log("INITMATION BUTTON CLICK:---", this.groupType);
     this.setDefaults();
-    setCommentValue(item.endDate, item.formIdentity, item.comments);
+    // setCommentValue(item.endDate, item.formIdentity, item.comments);
   }
 
   ngOnDestroy() {
@@ -585,28 +607,29 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   }
 
   goBack() {
+    this._fipIntimationsStore.addIntimations([]);
     this._router.navigate(['fip-home']);
   }
 
   submitAllSections() {
 
     // this.allSmes.forEach(element => {
-      let object = {
-        data: JSON.stringify(this.allSmes[0].data),
-        id: this.allSmes[0].id
+    let object = {
+      data: JSON.stringify(this.allSmes[0].data),
+      id: this.allSmes[0].id
+    }
+
+    console.log("OBJECT TO STORE:--", object, this.userQualificationRequest[0].id);
+    this._accreditationRequestService.updateQulificationRequest(object, this.userQualificationRequest[0].id).subscribe(
+      result => {
+        console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
+        this.getQualificationRequest(null);
+      },
+      error => {
+        console.log("ERROR AFTER ADDING QUALIFICATION:--", error);
       }
-      
-      console.log("OBJECT TO STORE:--", object, this.userQualificationRequest[0].id);
-      this._accreditationRequestService.updateQulificationRequest(object, this.userQualificationRequest[0].id).subscribe(
-          result => {
-            console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
-            this.getQualificationRequest(null);
-          },
-          error => {
-            console.log("ERROR AFTER ADDING QUALIFICATION:--", error);
-          }
-        );
-      // tempRequestsArray.push(object);
+    );
+    // tempRequestsArray.push(object);
     // });
     // this.allRequests.forEach(element => {
     //   var object = {

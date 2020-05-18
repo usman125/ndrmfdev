@@ -56,7 +56,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   public Subscription: Subscription = new Subscription();
 
   public displayedColumns = ['user', 'status', 'actions'];
-  public displayedColumns2 = ['startDate', 'endDate', 'expiry', 'comments', 'actions'];
+  public displayedColumns2 = ['section', 'startDate', 'endDate', 'expiry', 'status', 'comments', 'actions'];
   public dataSource: any = [];
 
   public toggle: boolean = false;
@@ -124,7 +124,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   hideForms: boolean = false;
 
   sectionStats: any = null;
-
+  selectedSection: any = null;
 
 
   private _transformer = (node: FoodNode, level: number) => {
@@ -312,18 +312,17 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         this.userReviewRequests = data.requests;
         console.log("OVER ALL REQUEST IN SUBSCRIPTION:--", this.userReviewRequests);
         if (this.userReviewRequests) {
-
           this.checkScores(this.userReviewRequests);
           this.checkAllReviews(this.userReviewRequests);
           this.checkForAllTasks();
         }
       })
     );
-    // this.Subscription.add(
-    //   this._sectionSelectorStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-    //     this.allSectionSelections = data.selections;
-    //   })
-    // );
+    this.Subscription.add(
+      this._sectionSelectorStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
+        this.allSectionSelections = data.selections;
+      })
+    );
     // this.Subscription.add(
     //   this._fipIntimationsStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
     //     // console.log("ALL ADDED INTIMATIONS:--", data.intimations);
@@ -597,12 +596,17 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
               ...c,
               template: JSON.parse(c.template),
               data: c.data === null ? c.data : JSON.parse(c.data),
-              review: {
+              review: c.review ? {
                 comments: c.review.comments,
                 status: c.review.status,
                 rating: c.review.rating,
                 controlWiseComments: JSON.parse(c.review.controlWiseComments),
-              }
+              } : {
+                  comments: null,
+                  status: null,
+                  rating: null,
+                  controlWiseComments: null,
+                }
             }
           });
           console.log("SELECTED REQUEST FORMS:---", result, this.userReviewRequests, tasksFlag);
@@ -794,9 +798,11 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   }
 
   getSmeRequest(id) {
+    this.selectedSection = id.sectionId;
     this.toggle = !this.toggle;
     this.apiLoading = true;
-    this._accreditationRequestService.getSingleQualificationRequest(id).subscribe(
+
+    this._accreditationRequestService.getSingleQualificationRequest(id.requestId).subscribe(
       (result: any) => {
         this.selectedRequest = result;
         let count = 0;
@@ -850,17 +856,17 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
               this.formReviewObjects.push(jsonObject);
             }
             console.log("FORM REVIEW OBJECT:---", form, this.formSubmission, this.formReviewObjects, contentElements, formElements);
-            if (c.review.rating) {
+            if (c.review) {
 
               for (let i = 0; i < JSON.parse(c.review.controlWiseComments).length; i++) {
                 // if (c.formReviewObjects) {
-                  for (let j = 0; j < this.formReviewObjects.length; j++) {
-                    if (this.formReviewObjects[j].key === JSON.parse(c.review.controlWiseComments)[i].key) {
-                      this.formReviewObjects[j].rating = JSON.parse(c.review.controlWiseComments)[i].rating;
-                      this.formReviewObjects[j].status = JSON.parse(c.review.controlWiseComments)[i].status;
-                      this.formReviewObjects[j].comments = JSON.parse(c.review.controlWiseComments)[i].comments;
-                    }
+                for (let j = 0; j < this.formReviewObjects.length; j++) {
+                  if (this.formReviewObjects[j].key === JSON.parse(c.review.controlWiseComments)[i].key) {
+                    this.formReviewObjects[j].rating = JSON.parse(c.review.controlWiseComments)[i].rating;
+                    this.formReviewObjects[j].status = JSON.parse(c.review.controlWiseComments)[i].status;
+                    this.formReviewObjects[j].comments = JSON.parse(c.review.controlWiseComments)[i].comments;
                   }
+                }
                 // }
               }
               console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects);
@@ -873,14 +879,19 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
             ...c,
             template: JSON.parse(c.template),
             data: c.data === null ? c.data : JSON.parse(c.data),
-            review: {
+            review: c.review !== null ? {
               comments: c.review.comments,
               status: c.review.status,
               rating: c.review.rating,
               controlWiseComments: c.review.controlWiseComments !== null ? JSON.parse(c.review.controlWiseComments) : c.review.controlWiseComments,
-            },
+            } : {
+                comments: null,
+                status: null,
+                rating: null,
+                controlWiseComments: null
+              },
             formReviewObjects: this.formReviewObjects,
-            comments: c.review.comments
+            comments: c.review ? c.review.comments : null
           }
         })
         this.totalFormScore = count;
@@ -1249,7 +1260,18 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
 
     this._confirmModelService.confirmed().subscribe(confirmed => {
       if (confirmed) {
-        console.log("CONFIRMED FROM MODEL", confirmed);
+        console.log("CONFIRMED FROM MODEL", confirmed, this.selectedRequest);
+        this.apiLoading = true;
+        this._accreditationRequestService.updateAccreditationRequest(this.selectedRequest.id, confirmed.status).subscribe(
+          result => {
+            this.apiLoading = false;
+            console.log("RESULT AFTER UPDATING STATUS:---", result);
+          },
+          error => {
+            this.apiLoading = false;
+            console.log("ERROR AFTER UPDATING STATUS:---", error);
+          }
+        );
       }
     });
   }
@@ -1266,83 +1288,103 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       data: { comments: this.commentsForFip }
     });
     dialogRef.afterClosed().subscribe(result => {
-      var currentIntimation: any = this._fipIntimationsStore.filterIntimations(this.selectedRequest.user);
-      if (result) {
-        // console.log("RESULT:--", result, this.allSectionSelections, this.selectedRequest);
-        if (currentIntimation.intimations.length) {
-          // console.log("CURRENT INTIMATION:--", currentIntimation);
-          var newEntry = [];
-          var previousEntries = [];
-          var allEntries = [];
-          for (let i = 0; i < this.allSectionSelections.length; i++) {
-            var bool = false;
-            for (let j = 0; j < currentIntimation.intimations.length; j++) {
-              if (this.allSectionSelections[i].key === currentIntimation.intimations[j].formIdentity) {
-                currentIntimation.intimations[j].comments.push({ data: this.commentsForFip, date: result.startDate });
-                previousEntries.push(currentIntimation.intimations[j]);
-                bool = true;
-                this._accreditationRequestStore.setUserUpdateFlag(this.selectedRequest.user, this.allSectionSelections[i].key);
-                break;
-              }
-            }
-            if (!bool) {
-              var object = {
-                userRef: '',
-                formIdentity: '',
-                endDate: '',
-                comments: [],
-                intimation_status: ''
-              }
-              this.selectedRequest.val.forEach((d) => {
-                if (d.formIdentity === this.allSectionSelections[i].key) {
-                  object.userRef = d.userRef;
-                  object.formIdentity = d.formIdentity;
-                  object.endDate = result.endDate;
-                  object.intimation_status = 'pending';
-                  object.comments.push({ data: this.commentsForFip, date: result.startDate });
-                }
-              })
-              newEntry.push(object);
-              this._accreditationRequestStore.setUserUpdateFlag(this.selectedRequest.user, this.allSectionSelections[i].key);
-            }
-          }
-          newEntry.concat(previousEntries);
-          console.log("ENTRIES ARRAYS:--", newEntry, previousEntries, allEntries);
-          this._fipIntimationsStore.newIntimations(newEntry);
-          this.commentsForFip = null;
-        } else {
-          var initimations = [];
-          for (let i = 0; i < this.allSectionSelections.length; i++) {
-            // console.log("ENTRY TO CHECK:--", this.allSectionSelections[i])
-            var object = {
-              userRef: '',
-              formIdentity: '',
-              endDate: '',
-              comments: [],
-              intimation_status: ''
-            }
-            for (let j = 0; j < this.selectedRequest.val.length; j++) {
-              if (this.allSectionSelections[i].key === this.selectedRequest.val[j].formIdentity) {
-                // console.log("ENTRY MATCHED:--", this.selectedRequest.val[j].formIdentity);
-                object.userRef = this.selectedRequest.val[j].userRef;
-                object.formIdentity = this.selectedRequest.val[j].formIdentity;
-                object.endDate = result.endDate;
-                object.intimation_status = 'pending';
-                object.comments.push({ data: this.commentsForFip, date: result.startDate });
-                break;
-              }
-            }
-            initimations.push(object);
-            this._accreditationRequestStore.setUserUpdateFlag(this.selectedRequest.user, this.allSectionSelections[i].key);
-          }
-          // console.log("OBJECT TO SHOW:--", initimations);
-          this._fipIntimationsStore.addIntimations(initimations);
-          this._sectionSelectorStore.removeAllSelections();
-          this.commentsForFip = null;
+      //   var currentIntimation: any = this._fipIntimationsStore.filterIntimations(this.selectedRequest.user);
+      //   if (result) {
+      let sectionIds = this.allSectionSelections.map(element => {
+        if (element.reassignmentStatus === null || element.reassignmentStatus === 'Completed') {
+          return element.id;
         }
-      } else {
-        setValue(null, null, []);
+      });
+      let values = {
+        sectionIds,
+        comments: this.commentsForFip,
+        startDate: result.startDate,
+        endDate: result.endDate,
       }
+      console.log("RESULT:--", result, this.allSectionSelections, this.selectedRequest, values);
+      this._accreditationRequestService.reassignFipSection(this.selectedRequest.id, values).subscribe(
+        result => {
+          console.log("RESULT FROM REASSIGN:--", result);
+          this._singleAccreditationRequestStore.updateReassignFipSection(sectionIds);
+        },
+        error => {
+          console.log("RESULT FROM REASSIGN:--", error);
+        }
+      );
+      //     if (currentIntimation.intimations.length) {
+      //       // console.log("CURRENT INTIMATION:--", currentIntimation);
+      //       var newEntry = [];
+      //       var previousEntries = [];
+      //       var allEntries = [];
+      //       for (let i = 0; i < this.allSectionSelections.length; i++) {
+      //         var bool = false;
+      //         for (let j = 0; j < currentIntimation.intimations.length; j++) {
+      //           if (this.allSectionSelections[i].key === currentIntimation.intimations[j].formIdentity) {
+      //             currentIntimation.intimations[j].comments.push({ data: this.commentsForFip, date: result.startDate });
+      //             previousEntries.push(currentIntimation.intimations[j]);
+      //             bool = true;
+      //             this._accreditationRequestStore.setUserUpdateFlag(this.selectedRequest.user, this.allSectionSelections[i].key);
+      //             break;
+      //           }
+      //         }
+      //         if (!bool) {
+      //           var object = {
+      //             userRef: '',
+      //             formIdentity: '',
+      //             endDate: '',
+      //             comments: [],
+      //             intimation_status: ''
+      //           }
+      //           this.selectedRequest.val.forEach((d) => {
+      //             if (d.formIdentity === this.allSectionSelections[i].key) {
+      //               object.userRef = d.userRef;
+      //               object.formIdentity = d.formIdentity;
+      //               object.endDate = result.endDate;
+      //               object.intimation_status = 'pending';
+      //               object.comments.push({ data: this.commentsForFip, date: result.startDate });
+      //             }
+      //           })
+      //           newEntry.push(object);
+      //           this._accreditationRequestStore.setUserUpdateFlag(this.selectedRequest.user, this.allSectionSelections[i].key);
+      //         }
+      //       }
+      //       newEntry.concat(previousEntries);
+      //       console.log("ENTRIES ARRAYS:--", newEntry, previousEntries, allEntries);
+      //       this._fipIntimationsStore.newIntimations(newEntry);
+      //       this.commentsForFip = null;
+      //     } else {
+      //       var initimations = [];
+      //       for (let i = 0; i < this.allSectionSelections.length; i++) {
+      //         // console.log("ENTRY TO CHECK:--", this.allSectionSelections[i])
+      //         var object = {
+      //           userRef: '',
+      //           formIdentity: '',
+      //           endDate: '',
+      //           comments: [],
+      //           intimation_status: ''
+      //         }
+      //         for (let j = 0; j < this.selectedRequest.val.length; j++) {
+      //           if (this.allSectionSelections[i].key === this.selectedRequest.val[j].formIdentity) {
+      //             // console.log("ENTRY MATCHED:--", this.selectedRequest.val[j].formIdentity);
+      //             object.userRef = this.selectedRequest.val[j].userRef;
+      //             object.formIdentity = this.selectedRequest.val[j].formIdentity;
+      //             object.endDate = result.endDate;
+      //             object.intimation_status = 'pending';
+      //             object.comments.push({ data: this.commentsForFip, date: result.startDate });
+      //             break;
+      //           }
+      //         }
+      //         initimations.push(object);
+      //         this._accreditationRequestStore.setUserUpdateFlag(this.selectedRequest.user, this.allSectionSelections[i].key);
+      //       }
+      //       // console.log("OBJECT TO SHOW:--", initimations);
+      //       this._fipIntimationsStore.addIntimations(initimations);
+      //       this._sectionSelectorStore.removeAllSelections();
+      //       this.commentsForFip = null;
+      //     }
+      //   } else {
+      //     setValue(null, null, []);
+      //   }
     });
   }
 
@@ -1379,7 +1421,15 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     this.toggle = !this.toggle;
     this.generalComments = null;
     this.selectedRequest = null;
+    this.reviewAdded = false;
+    this.hideForms = false;
     this._singleAccreditationRequestStore.resetData();
+    if (this.currentUser.role === 'sme'){
+      this.smeDefaults();
+    }
+    if (this.currentUser.role === 'process owner'){
+      this.adminDefaults();
+    }
     // this.cameFromComments = !this.cameFromComments;
   }
 

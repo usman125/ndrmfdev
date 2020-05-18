@@ -127,6 +127,9 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (this.loggedUser.role === 'sme') {
         this._router.navigate(['smehome']);
       }
+      if (this.loggedUser.role === 'fip') {
+        this._router.navigate(['fip-home']);
+      }
     }
   }
 

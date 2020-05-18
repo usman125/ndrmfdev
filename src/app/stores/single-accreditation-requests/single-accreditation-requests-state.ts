@@ -280,5 +280,7 @@ export class SingleAccreditationRequestState {
     assigned: boolean,
     review: any,
     reviewStatus: any,
+    reviewHistory: any,
+    reassignmentStatus: any,
   }[] = [];
 }

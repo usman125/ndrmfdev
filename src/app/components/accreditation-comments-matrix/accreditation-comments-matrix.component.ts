@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostBinding, Input } from '@angular/core';
 import { Router } from "@angular/router";
 import { AccreditationCommentsMatrixStore } from "../../stores/accreditation-comments-matrix/accreditation-comments-matrix-store";
 import { Subscription } from "rxjs";
@@ -71,6 +71,8 @@ export class AccreditationCommentsMatrixComponent implements OnInit, OnDestroy {
   _heroes = [];
   heroTotal = -1;
 
+  @Input() fipComments: any = [];
+
   constructor(
     private _router: Router,
     private _authStore: AuthStore,
@@ -86,22 +88,25 @@ export class AccreditationCommentsMatrixComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this._authStore.setRouteName("COMMENTS-MATRIX");
     });
-    this.Subscription.add(
-      this._accreditationCommentsMatrixStore.state$.subscribe((data) => {
-        this.selectedRequest = data.request;
-        console.log('REQUEST TO VIEW:--', this.selectedRequest);
-      })
-    )
-    shareStoreReplay.subscribe((c) => {
-      this.currentComment = c;
-      if (this.currentComment.endDate){
-        this._heroes = this.currentComment.comments;
-        // console.log("CURRENT COMMENT:--", this.currentComment);
-        this.heroTotal = this.currentComment.comments;
-      }else{
-        this.heroTotal = -1;
-      }
-    })
+    this._heroes = this.fipComments.comments;
+    this.heroTotal = this.fipComments;
+        console.log("CURRENT COMMENT:--", this.fipComments);
+    // this.Subscription.add(
+    //   this._accreditationCommentsMatrixStore.state$.subscribe((data) => {
+    //     this.selectedRequest = data.request;
+    //     console.log('REQUEST TO VIEW:--', this.selectedRequest);
+    //   })
+    // )
+    // shareStoreReplay.subscribe((c) => {
+    //   this.currentComment = c;
+    //   if (this.currentComment.endDate){
+    //     this._heroes = this.currentComment.comments;
+    //     this.heroTotal = this.currentComment.comments;
+    //     // console.log("CURRENT COMMENT:--", this.currentComment);
+    //   }else{
+    //     this.heroTotal = -1;
+    //   }
+    // })
   }
 
   ngOnDestroy() {

@@ -50,6 +50,11 @@ export class ConfirmDialogComponent implements OnInit {
     this.close(false);
   }
 
+  setStatus(status) {
+    this.close({ status });
+
+  }
+
   @HostListener("keydown.esc")
   onEsc() {
     this.close(false);

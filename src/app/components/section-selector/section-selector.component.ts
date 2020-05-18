@@ -3,8 +3,10 @@ import { Subscription } from "rxjs";
 import { SmeStore } from '../../stores/sme/sme-store'
 import { SectionSelectorStore } from "../../stores/section-selector/section-selector-store";
 import { FormControl } from "@angular/forms";
-import { shareWithReplay, setValue } from "../../stores/fip-intimations/intimate-fip";
+// import { shareWithReplay, setValue } from "../../stores/fip-intimations/intimate-fip";
+import { SingleAccreditationRequestStore } from "../../stores/single-accreditation-requests/single-accreditation-requests-store";
 import { SectionSelector } from "../../models/section-selector";
+
 
 @Component({
   selector: 'section-selector',
@@ -25,27 +27,29 @@ export class SectionSelectorComponent implements OnInit, OnDestroy {
 
   constructor(
     private _smeStore: SmeStore,
+    private _singleAccreditationRequestStore: SingleAccreditationRequestStore,
     private _sectionSelectorStore: SectionSelectorStore,
   ) {
-    shareWithReplay.subscribe((c: SectionSelector) => {
-      this.sectionsData = c;
-      if (this.sectionsData) {
-        this.startDate = this.sectionsData.startDate;
-        this.endDate = this.sectionsData.endDate;
-      }
-      // console.log("START VALUES FROM MULTI SELCT:--", this.startDate, this.endDate, this.sectionsData);
-    });
-    this.Subscription.add(
-      this._sectionSelectorStore.state$.subscribe((c) => {
-        console.log("ALL SELCTIONS:--", c);
-      })
-    )
+    // shareWithReplay.subscribe((c: SectionSelector) => {
+    //   this.sectionsData = c;
+    //   if (this.sectionsData) {
+    //     this.startDate = this.sectionsData.startDate;
+    //     this.endDate = this.sectionsData.endDate;
+    //   }
+    //   // console.log("START VALUES FROM MULTI SELCT:--", this.startDate, this.endDate, this.sectionsData);
+    // });
+    // this.Subscription.add(
+    //   this._sectionSelectorStore.state$.subscribe((c) => {
+    //     console.log("ALL SELCTIONS:--", c);
+    //   })
+    // )
   }
 
   ngOnInit() {
     this.Subscription.add(
-      this._smeStore.state$.subscribe((data) => {
-        this.allSmes = data.smes;
+      this._singleAccreditationRequestStore.state$.subscribe((data) => {
+        this.allSmes = data.requests;
+        console.log("_-----------ALL SMES IN SELECTION STORE:-------------", this.allSmes);
       })
     )
   }

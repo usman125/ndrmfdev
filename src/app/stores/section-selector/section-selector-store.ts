@@ -8,13 +8,13 @@ export class SectionSelectorStore extends Store<SectionSelectorState> {
     super(new SectionSelectorState());
   }
 
-  addSelections(selections: { name: string, key: string }[]): void {
+  addSelections(selections: any[]): void {
     this.setState({
       selections: selections
     });
   }
 
-  removeSelection(selection: { name: string, key: string }): void {
+  removeSelection(selection: any): void {
     this.setState({
       selections: this.state.selections.map((c) => {
         if (selection.key !== c.key){

@@ -20,6 +20,8 @@ export class SingleAccreditationRequestStore extends Store<SingleAccreditationRe
     assigned: boolean,
     review: any,
     reviewStatus: any,
+    reviewHistory: any,
+    reassignmentStatus: any,
   ): void {
     this.setState({
       ...this.state,
@@ -37,6 +39,8 @@ export class SingleAccreditationRequestStore extends Store<SingleAccreditationRe
           assigned: assigned,
           review: review,
           reviewStatus: reviewStatus,
+          reviewHistory: reviewHistory,
+          reassignmentStatus: reassignmentStatus,
         }
       ]
     });
@@ -55,6 +59,8 @@ export class SingleAccreditationRequestStore extends Store<SingleAccreditationRe
       assigned: boolean,
       review: any,
       reviewStatus: any,
+      reviewHistory: any,
+      reassignmentStatus: any,
     }[]
   ): void {
     this.setState({
@@ -80,6 +86,26 @@ export class SingleAccreditationRequestStore extends Store<SingleAccreditationRe
         return c;
       })
     });
+  }
+
+  updateReassignFipSection(sectionIds) {
+    this.setState({
+      ...this.state,
+      requests: this.state.requests.map(c => {
+        // sectionIds.forEach(d => {
+        //   if (d === c.id) {
+        //     console.log("***STIRE ENTRY MATCHED:---", c);
+        //   }
+        // });
+        for (let i=0; i< sectionIds.length; i++){
+          if (sectionIds[i] === c.id){
+            c.reassignmentStatus = 'Pending';
+            break;
+          }
+        }
+        return c;
+      })
+    })
   }
 
   // setAllTaskReview(

@@ -75,9 +75,9 @@
             </mat-button-toggle-group>
           </div>
           <div style="margin: 20px 10px;" *ngIf="groupType" [ngClass]="{'update-btn': secondForm}">
-            <formio disableAlerts="true" readOnly="true" [hidden]="!form?.exists" [form]="form"
+            <formio disableAlerts="true" readOnly="true" *ngIf="form?.exists && (groupType?.reassignmentStatus === 'Completed' || groupType?.reassignmentStatus === null)" [form]="form"
               [submission]="{data:secondForm}"></formio>
-            <formio [hidden]="form?.exists" [form]="form" (submit)="onSubmit($event)"></formio>
+            <formio *ngIf="!form?.exists || groupType?.reassignmentStatus == 'Pending'" [submission]="{data:secondForm}" [form]="form" (submit)="onSubmit($event)"></formio>
             <!-- <div *ngIf="secondForm">{{secondForm | json}}</div> -->
             <!-- <div *ngIf="!form?.exists" id="formio"></div> -->
           </div>
@@ -104,20 +104,22 @@
 
     <mat-card>
       <mat-card-content>
-        <div mat-card-title style="margin-bottom: 15px;">Intimations</div>
+        <div mat-card-title style="margin-bottom: 15px;">Section Updates</div>
         <div @pageAnimations class="badge-btns" mat-menu>
-          <div (click)="setInitmationSection(item)" [ngClass]="{'active': groupType === item.formIdentity}"
+          <div (click)="setInitmationSection(item)" [ngClass]="{'active': groupType?.id === item?.id}"
             mat-menu-item class="btn-row" *ngFor="let item of allInitimations.intimations">
             <div class="title_info">
-              <span class="title">{{item.formIdentity}}</span>
-              <small *ngIf="item.intimation_status === 'pending'" class="date"><span id="answer">Pending:</span>
-                {{item.endDate | date:'shortDate'}}</small>
-              <small *ngIf="item.intimation_status === 'updated'" class="date"><span id="answer">Updated:</span>
-                {{item.endDate | date:'shortDate'}}</small>
+              <span class="title">{{item.name | uppercase}}</span>
+              <!-- <small *ngIf="item.intimation_status === 'pending'" class="date"><span id="answer">Pending:</span>
+                {{item.endDate | date:'shortDate'}}</small> -->
+              <!-- <small class="date"><span id="answer">Updated:</span>
+                {{item.submittedAt | date:'shortDate'}}</small> -->
             </div>
             <div class="badge">
-              <mat-icon matTooltip="Commnets!" [matBadge]="item.comments.length" matBadgeColor="accent">comment
+              <mat-icon>edit
               </mat-icon>
+              <!-- <mat-icon matTooltip="Commnets!" [matBadge]="2" matBadgeColor="accent">comment
+              </mat-icon> -->
             </div>
           </div>
           <div @pageAnimations style="background-color: rgba(102, 103, 103, 0.1);">
@@ -130,6 +132,6 @@
         </div>
       </mat-card-content>
     </mat-card>
-    <accreditation-comments-matrix></accreditation-comments-matrix>
+    <accreditation-comments-matrix [fipComments]="fipComments"></accreditation-comments-matrix>
   </div>
 </div>
