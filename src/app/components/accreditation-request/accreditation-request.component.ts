@@ -122,6 +122,9 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   submitLoading: boolean = false;
   allReviewsFlag: boolean = false;
   hideForms: boolean = false;
+  commentsHistoryFlag: boolean = false;
+  commentsHistory: any = [];
+  selectedHistoryItem: any = null;
 
   sectionStats: any = null;
   selectedSection: any = null;
@@ -1276,6 +1279,18 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     });
   }
 
+  showCommentsHistoty(item) {
+    console.log('ALL SECTIONS IN HISTORY:--', this.userReviewRequests, item);
+    this.selectedHistoryItem = item;
+    this.commentsHistory = item.reviewHistory.map(c => {
+      return {
+        ...c,
+        controlWiseComments: JSON.parse(c.controlWiseComments)
+      }
+    });
+    this.commentsHistoryFlag = true;
+  }
+
   viewCommentsMatrix(userReviewRequests) {
     // console.log("REQUEST TO VIEW COMMENTS:--", userReviewRequests);
     this.commentsData = userReviewRequests;
@@ -1424,10 +1439,10 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     this.reviewAdded = false;
     this.hideForms = false;
     this._singleAccreditationRequestStore.resetData();
-    if (this.currentUser.role === 'sme'){
+    if (this.currentUser.role === 'sme') {
       this.smeDefaults();
     }
-    if (this.currentUser.role === 'process owner'){
+    if (this.currentUser.role === 'process owner') {
       this.adminDefaults();
     }
     // this.cameFromComments = !this.cameFromComments;

@@ -76,8 +76,7 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions </th>
       <td mat-cell *matCellDef="let element">
-        <button (click)="getSmeRequest(element)" mat-icon-button
-          aria-label="Example icon-button with a heart icon">
+        <button (click)="getSmeRequest(element)" mat-icon-button aria-label="Example icon-button with a heart icon">
           <mat-icon>play_arrow</mat-icon>
         </button>
       </td>
@@ -177,13 +176,14 @@
             readOnly="true" [submission]="{data: item.data}"></formio>
           <formio *ngIf="!item.assigned && currentUser?.role === 'sme'" [form]="item.template" readOnly="true"
             [submission]="{data: item.data}"></formio>
-          <formio *ngIf="item.assigned && currentUser?.role === 'sme' && selectedSection !== item.id" [form]="item.template" readOnly="true"
-            [submission]="{data: item.data}"></formio>
+          <formio *ngIf="item.assigned && currentUser?.role === 'sme' && selectedSection !== item.id"
+            [form]="item.template" readOnly="true" [submission]="{data: item.data}"></formio>
           <!-- <formio *ngIf="currentUser?.role !== 'sme' && !item.review" [form]="item.form" readOnly="true"
             [submission]="{data: item.submitData}"></formio> -->
 
           <!-- <button *ngIf="item.allReviews.length" mat-raised-button>View Previous</button> -->
-          <div *ngIf="currentUser?.role === 'sme' && item.assigned === true" [hidden]="item.assigned && selectedSection !== item.id">
+          <div *ngIf="currentUser?.role === 'sme' && item.assigned === true"
+            [hidden]="item.assigned && selectedSection !== item.id">
             <div class="form-comments" *ngFor="let obj of item.formReviewObjects">
               <div class="details">
                 <span>{{obj.title}}</span>
@@ -406,44 +406,91 @@
     </mat-toolbar-row>
   </mat-toolbar>
   <mat-card style="padding: 0px;margin: 20px;">
-    <div class="comments-matrix" *ngFor="let item of commentsData">
-      <div class="title-details">
-        <span id="title">{{item.name}}</span>
-        <div class="review-info">
-          <!-- <span id="date" *ngIf="item.review.rating !== null">Reviewed:
+    <div *ngIf="!commentsHistoryFlag">
+      <div class="comments-matrix" *ngFor="let item of commentsData">
+        <div class="title-details">
+          <span id="title">{{item.name}}</span>
+          <div class="review-info">
+            <!-- <span id="date" *ngIf="item.review.rating !== null">Reviewed:
             {{item.endDate | date:'shortDate'}}</span>
           <span id="date" *ngIf="item.review.rating === null">Pending:
             {{item.endDate | date:'shortDate'}}</span> -->
-          <span id="stars" *ngIf="item.review.rating !== null">
-            <bar-rating [(rate)]="item.review.rating" [max]="max"></bar-rating>
-          </span>
-        </div>
-      </div>
-      <div class="form-comments">
-        <div class="form-item mat-elevation-z2" *ngFor="let obj of item.review?.controlWiseComments">
-          <div class="form-item-boxes">
-            <div class="details">
-              <span>{{obj.title}}</span>
-              <span *ngIf="obj.value === true">{{"true"}}</span>
-              <span id="answer">{{obj.value}}</span>
-              <div class="field-comments">
-                <span id="comment">{{obj.comments}}</span>
-              </div>
-            </div>
-            <div class="controls admin-controls">
-              <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
-              <mat-icon style="font-size: 20px;color: green;margin-top: 8px;" *ngIf="obj.status === 'satisfy'">thumb_up
-              </mat-icon>
-              <mat-icon style="font-size: 20px;color: red;margin-top: 8px;" *ngIf="obj.status === 'un-satisfy'">
-                thumb_down</mat-icon>
+            <span id="stars" *ngIf="item.review.rating !== null">
+              <bar-rating [(rate)]="item.review.rating" [max]="max"></bar-rating>
+            </span>
+            <div class="m-2" *ngIf="item.reviewHistory !== null">
+              <button color="accent" mat-button (click)="showCommentsHistoty(item)">View History</button>
             </div>
           </div>
         </div>
+        <div class="form-comments">
+          <div class="form-item mat-elevation-z2" *ngFor="let obj of item.review?.controlWiseComments">
+            <div class="form-item-boxes">
+              <div class="details">
+                <span>{{obj.title}}</span>
+                <span *ngIf="obj.value === true">{{"true"}}</span>
+                <span id="answer">{{obj.value}}</span>
+                <div class="field-comments">
+                  <span id="comment">{{obj.comments}}</span>
+                </div>
+              </div>
+              <div class="controls admin-controls">
+                <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
+                <mat-icon style="font-size: 20px;color: green;margin-top: 8px;" *ngIf="obj.status === 'satisfy'">
+                  thumb_up
+                </mat-icon>
+                <mat-icon style="font-size: 20px;color: red;margin-top: 8px;" *ngIf="obj.status === 'un-satisfy'">
+                  thumb_down</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="review-comments">
+          <span>{{item.review?.comments}}</span>
+        </div>
+        <mat-divider></mat-divider>
       </div>
-      <div class="review-comments">
-        <span>{{item.review?.comments}}</span>
+    </div>
+    <div *ngIf="commentsHistoryFlag">
+      <div class="m-2">
+        <button mat-button color="warn" (click)="commentsHistoryFlag = !commentsHistoryFlag">Close History</button>
       </div>
-      <mat-divider></mat-divider>
+      <div class="comments-matrix" *ngFor="let item of commentsHistory">
+        <div class="title-details">
+          <span id="title">{{selectedHistoryItem.name}}</span>
+          <div class="review-info">
+            <span id="stars" *ngIf="item.rating !== null">
+              <bar-rating [(rate)]="item.rating" [max]="max"></bar-rating>
+            </span>
+          </div>
+        </div>
+        <div class="form-comments">
+          <div class="form-item mat-elevation-z2" *ngFor="let obj of item.controlWiseComments">
+            <div class="form-item-boxes">
+              <div class="details">
+                <span>{{obj.title}}</span>
+                <span *ngIf="obj.value === true">{{"true"}}</span>
+                <span id="answer">{{obj.value}}</span>
+                <div class="field-comments">
+                  <span id="comment">{{obj.comments}}</span>
+                </div>
+              </div>
+              <div class="controls admin-controls">
+                <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
+                <mat-icon style="font-size: 20px;color: green;margin-top: 8px;" *ngIf="obj.status === 'satisfy'">
+                  thumb_up
+                </mat-icon>
+                <mat-icon style="font-size: 20px;color: red;margin-top: 8px;" *ngIf="obj.status === 'un-satisfy'">
+                  thumb_down</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="review-comments">
+          <span>{{item.comments}}</span>
+        </div>
+        <mat-divider></mat-divider>
+      </div>
     </div>
   </mat-card>
 </div>
