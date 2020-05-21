@@ -278,3 +278,8 @@ button {
 #warn {
   color: #f44336;
 }
+
+.section-info{
+  display: flex;
+  justify-content: space-between;
+}

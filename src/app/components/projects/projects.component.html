@@ -1,46 +1,32 @@
 <ng-container>
-
   <mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
     <mat-toolbar-row>
-      <span>All Projects</span>
+      <span>Projects</span>
       <span class="example-spacer"></span>
-      <!-- <button matTooltip="Add User!" (click)="goToAdd()" mat-icon-button>
-        <mat-icon class="example-icon" aria-hidden="false" aria-label="Add User">add
-        </mat-icon>
-      </button> -->
+      <button color="primary" mat-raised-button (click)="addNewProject();">
+        <mat-icon>add</mat-icon> PROJECT
+      </button>
     </mat-toolbar-row>
   </mat-toolbar>
-  <mat-grid-list cols="4" rowHeight="130px">
-    <mat-grid-tile colspan="4" rowspan="1" *ngIf="showAddBtn">
-      <mat-card style="margin: 20px;">
-        <mat-card-content>
-          <button color="primary" mat-raised-button (click)="addNewProject();">Add new Project</button>
-        </mat-card-content>
-      </mat-card>
+  <mat-grid-list cols="6" rowHeight="130px">
+    <mat-grid-tile colspan="6" rowspan="1" *ngIf="showAddBtn">
+      <div class="searchField">
+        <mat-form-field>
+          <mat-label>Filter Project</mat-label>
+          <input [(ngModel)]="filterQuery" matInput type="text" />
+        </mat-form-field>
+      </div>
     </mat-grid-tile>
-    <mat-grid-tile (click)="goToDetails(item);" *ngFor="let item of allProjects">
-      <mat-card style="width: 90%;margin: 20px;">
-        <mat-card-content>
-          <div class="inner-content">
-            <div class="content">
-              <div class="icon">
-                <mat-icon color="primary">sync</mat-icon>
-              </div>
-              <div class="info">
-                <h6>{{item.name}}</h6>
-                <span>{{item.status}}</span>
-                <div *ngIf="item.primaryAppraisalStatus === 'pending'">
-                  Pending: <span id="comment">Pre-Appraisal</span>
-                </div>
-                <div *ngIf="item.primaryAppraisalStatus === 'submitted'">
-                  Submitted: <span id="comment">Pre-Appraisal</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+    <mat-grid-tile class="own-tiles" rowspan="2" colspan="2" *ngFor="let item of allProjects | dataFilter:filterQuery">
+      <div class="inner-content mat-elevation-z8" (click)="goToDetails(item)">
+        <div class="content">
+          <h6>{{item?.name}}</h6>
+          <span>{{item?.thematicAreaName}}</span>
+        </div>
+        <div class="bottom-content">
+          <span>{{item.status}}</span>
+        </div>
+      </div>
     </mat-grid-tile>
   </mat-grid-list>
-
 </ng-container>

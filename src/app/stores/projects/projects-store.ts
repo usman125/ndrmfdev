@@ -9,34 +9,24 @@ export class ProjectsStore extends Store<ProjectsState> {
   }
 
   addProject(
+    id: string,
+    initiatorFullName: string,
     name: string,
-    type: string,
     status: string,
-    userRef: string,
-    key: string,
-    primaryAppraisalStatus: string,
-    primaryAppraisalStartDate: string,
-    primaryAppraisalEndDate: string,
-    extendedAppraisalStatus: string,
-    extendedAppraisalExpiry: string,
-    smeReview: string,
+    submittedAt: string,
+    thematicAreaName: string
   ): void {
     this.setState({
       ...this.state,
       projects: [
         ...this.state.projects,
         {
-          name: name,
-          type: type,
-          status: status,
-          userRef: userRef,
-          key: key,
-          primaryAppraisalStatus: primaryAppraisalStatus,
-          primaryAppraisalStartDate: primaryAppraisalStartDate,
-          primaryAppraisalEndDate: primaryAppraisalEndDate,
-          extendedAppraisalStatus: extendedAppraisalStatus,
-          extendedAppraisalExpiry: extendedAppraisalExpiry,
-          smeReview: smeReview,
+          "id": id,
+          "initiatorFullName": initiatorFullName,
+          "name": name,
+          "status": status,
+          "submittedAt": submittedAt,
+          "thematicAreaName": thematicAreaName
         }
       ]
     });
@@ -49,48 +39,48 @@ export class ProjectsStore extends Store<ProjectsState> {
     })
   }
 
-  markPrimaryAppraisal(
-    startDate,
-    endDate,
-    projectId,
-  ) {
-    this.setState({
-      ...this.state,
-      projects: this.state.projects.map((c) => {
-        if (c.key === projectId) {
-          return {
-            ...c,
-            primaryAppraisalStatus: 'pending',
-            primaryAppraisalStartDate: startDate,
-            primaryAppraisalEndDate: endDate,
-          }
-        }
-        return c;
-      })
-    })
-  }
+  // markPrimaryAppraisal(
+  //   startDate,
+  //   endDate,
+  //   projectId,
+  // ) {
+  //   this.setState({
+  //     ...this.state,
+  //     projects: this.state.projects.map((c) => {
+  //       if (c.key === projectId) {
+  //         return {
+  //           ...c,
+  //           primaryAppraisalStatus: 'pending',
+  //           primaryAppraisalStartDate: startDate,
+  //           primaryAppraisalEndDate: endDate,
+  //         }
+  //       }
+  //       return c;
+  //     })
+  //   })
+  // }
 
-  completeAppraisalTask(projectId) {
-    this.setState({
-      ...this.state,
-      projects: this.state.projects.map((c) => {
-        if (c.key === projectId) {
-          return {
-            ...c,
-            primaryAppraisalStatus: 'submitted',
-            primaryAppraisalEndDate: new Date().toISOString(),
-          }
-        }
-        return c;
-      })
-    });
-  }
+  // completeAppraisalTask(projectId) {
+  //   this.setState({
+  //     ...this.state,
+  //     projects: this.state.projects.map((c) => {
+  //       if (c.key === projectId) {
+  //         return {
+  //           ...c,
+  //           primaryAppraisalStatus: 'submitted',
+  //           primaryAppraisalEndDate: new Date().toISOString(),
+  //         }
+  //       }
+  //       return c;
+  //     })
+  //   });
+  // }
 
 
   getProject(projectId) {
     let project = null;
     this.state.projects.forEach(c => {
-      if (c.key === projectId) {
+      if (c.id === projectId) {
         project = c;
       }
     });

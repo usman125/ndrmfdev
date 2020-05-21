@@ -49,13 +49,13 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
         })
       })
     );
-    this._activatedRoute.paramMap.subscribe(params => {
-      this.selectedProjectId = params.get("projectId");
-      // for (let i=0; i< this.allPro)
-      console.log(this._projectsStore.getProject(this.selectedProjectId));
-      this.selectedProject = this._projectsStore.getProject(this.selectedProjectId);
-    });
-    console.log("SELCTED PROJECT ID IS:--", this.selectedProjectId);
+    // this._activatedRoute.paramMap.subscribe(params => {
+    //   this.selectedProjectId = params.get("projectId");
+    //   // for (let i=0; i< this.allPro)
+    //   console.log(this._projectsStore.getProject(this.selectedProjectId));
+    //   this.selectedProject = this._projectsStore.getProject(this.selectedProjectId);
+    // });
+    // console.log("SELCTED PROJECT ID IS:--", this.selectedProjectId);
 
   }
 

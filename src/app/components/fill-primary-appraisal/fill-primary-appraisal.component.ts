@@ -39,22 +39,22 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
 
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
 
-    this._activatedRoute.paramMap.subscribe(params => {
-      this.selectedProjectId = params.get("projectId");
-      const project = this._projectsStore.getProject(this.selectedProjectId);
-      setCurrentProject(
-        project.name,
-        project.type,
-        project.status,
-        project.userRef,
-        project.key,
-        project.primaryAppraisalStatus,
-        project.primaryAppraisalStartDate,
-        project.primaryAppraisalEndDate,
-        project.extendedAppraisalStatus,
-        project.extendedAppraisalExpiry,
-      );
-    });
+    // this._activatedRoute.paramMap.subscribe(params => {
+    //   this.selectedProjectId = params.get("projectId");
+    //   const project = this._projectsStore.getProject(this.selectedProjectId);
+    //   setCurrentProject(
+    //     project.name,
+    //     project.type,
+    //     project.status,
+    //     project.userRef,
+    //     project.key,
+    //     project.primaryAppraisalStatus,
+    //     project.primaryAppraisalStartDate,
+    //     project.primaryAppraisalEndDate,
+    //     project.extendedAppraisalStatus,
+    //     project.extendedAppraisalExpiry,
+    //   );
+    // });
     currentProjectReplay.subscribe((data) => {
       this.selectedProject = data;
       console.log("SELCTED PROJECT ID IS:--", this.selectedProjectId, this.selectedProject);
@@ -116,7 +116,7 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
       this.selectedProject.extendedAppraisalStatus,
       this.selectedProject.extendedAppraisalExpiry,
     );
-    this._projectsStore.completeAppraisalTask(this.selectedProjectId);
+    // this._projectsStore.completeAppraisalTask(this.selectedProjectId);
     this._primaryAppraisalRequestsStore.submitAppraisalRequest(this.selectedProjectId);
   }
 

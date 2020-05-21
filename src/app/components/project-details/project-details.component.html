@@ -1,4 +1,4 @@
-<ng-container>
+<ng-container *ngIf="!apiLoading">
   <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
     <mat-toolbar-row>
       <span>Project Information</span>
@@ -57,7 +57,7 @@
         <div class="top-tabs">
           <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
             <mat-button-toggle (change)="tabChanged(item)" *ngFor="let item of proposalSections; let i = index;"
-              [value]="item.key">
+              [value]="item">
               <span>{{item.name}}</span>
             </mat-button-toggle>
           </mat-button-toggle-group>
@@ -96,4 +96,11 @@
 
   <!-- <app-fill-primary-appraisal [viewType]="viewType2"></app-fill-primary-appraisal> -->
 
+</ng-container>
+<ng-container *ngIf="apiLoading">
+  <mat-card>
+    <mat-card-content>
+      <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+    </mat-card-content>
+  </mat-card>
 </ng-container>

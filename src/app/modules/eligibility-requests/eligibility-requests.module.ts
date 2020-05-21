@@ -8,6 +8,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatInputModule } from "@angular/material/input";
 import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { EligibilityRequestsComponent } from "../../components/component-index";
 import { EligibilityRequestsRoutingModule } from "./eligibility-requests-routing.module";
 import { FormioModule } from "angular-formio";
@@ -27,6 +28,7 @@ import { FormioModule } from "angular-formio";
     FormioModule,
     MatInputModule,
     MatPaginatorModule,
+    MatProgressSpinnerModule,
     EligibilityRequestsRoutingModule,
   ]
 })

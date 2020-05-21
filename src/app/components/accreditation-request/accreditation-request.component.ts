@@ -29,6 +29,7 @@ export interface DialogData {
   comments: string;
   startDate: string;
   endDate: string;
+  minDate: string;
 }
 
 interface ExampleFlatNode {
@@ -451,7 +452,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     }
     const dialogRef = this.dialog.open(AssignTask, {
       width: '320px',
-      data: { startDate: this.startDate, endDate: this.endDate, comments: this.comments }
+      data: { startDate: this.startDate, endDate: this.endDate, comments: this.comments, minDate: new Date() }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -801,7 +802,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   }
 
   getSmeRequest(id) {
-    this.selectedSection = id.sectionId;
+    this.selectedSection = id;
     this.toggle = !this.toggle;
     this.apiLoading = true;
 
@@ -1200,6 +1201,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     var pendingCount = 0;
     var reviewsCount = 0;
     var unassignCount = 0;
+    var mySectionsCount = 0;
     for (let i = 0; i < item.length; i++) {
       if (item[i].reviewStatus === 'Pending') {
         pendingCount = pendingCount + 1;
@@ -1208,12 +1210,19 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         reviewsCount = reviewsCount + 1;
       }
       if ((item[i].review.rating === null && item[i].reviewStatus === null) ||
-        (item[i].review.rating !== null && item[i].reviewStatus === null)
+        (item[i].review.rating !== null && item[i].reviewStatus === null) ||
+        (item[i].review.rating !== null && item[i].reviewStatus === 'Completed')
       ) {
         unassignCount = unassignCount + 1;
       }
+      if (this.currentUser.role === 'sme') {
+        if (item[i].assigned) {
+          mySectionsCount = mySectionsCount + 1;
+        }
+
+      }
     }
-    this.sectionStats = { pendingCount, reviewsCount, unassignCount };
+    this.sectionStats = { pendingCount, reviewsCount, unassignCount, mySectionsCount };
   }
 
   rateApplication(rating) {
@@ -1300,7 +1309,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   intimateFip(): void {
     const dialogRef = this.dialog.open(IntimateFip, {
       width: '320px',
-      data: { comments: this.commentsForFip }
+      data: { comments: this.commentsForFip, minDate: new Date() }
     });
     dialogRef.afterClosed().subscribe(result => {
       //   var currentIntimation: any = this._fipIntimationsStore.filterIntimations(this.selectedRequest.user);
@@ -1471,6 +1480,7 @@ export class AssignTask implements OnDestroy {
 
   Subscription: Subscription = new Subscription();
   checked: boolean = false;
+  // minDate = new Date(2020, 5, 17);
 
   constructor(
     public dialogRef: MatDialogRef<AssignTask>,

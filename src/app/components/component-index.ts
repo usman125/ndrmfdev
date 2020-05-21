@@ -50,3 +50,5 @@ export { AssignSectionsProcessComponent } from './assign-sections-process/assign
 export { PoHomeComponent } from './po-home/po-home.component';
 export { SmeHomeComponent } from './sme-home/sme-home.component';
 export { AdminHomeComponent } from './admin-home/admin-home.component';
+export { AssignThematicAreaComponent } from './assign-thematic-area/assign-thematic-area.component';
+export { DataFilterPipe } from '../pipes/data-filter.pipe'

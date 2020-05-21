@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from "@angular/material/input";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatRadioModule } from "@angular/material/radio";
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {
   FormsModule,
   ReactiveFormsModule
@@ -28,6 +30,8 @@ import {
     ReactiveFormsModule,
     MatCheckboxModule,
     MatRadioModule,
+    MatSelectModule,
+    MatProgressSpinnerModule,
     AddProjectDialogRoutingModule,
   ]
 })

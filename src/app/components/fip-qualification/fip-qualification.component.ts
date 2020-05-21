@@ -395,7 +395,8 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
               this.pendingSectionsCount = count1;
               this.submitSectionsCount = count2;
               this.allSectionsCount = this.allSmes.length;
-              this.fipComments = this.allSections.reassignmentComments;
+              this.fipComments = this.allSections.reassignmentTask;
+              setCommentValue(null, null, [this.allSections.reassignmentTask.comments]);
               this._fipIntimationsStore.addIntimations(allInitimations);
               this.loadingApi = false;
               console.log("RESULT FROM ALL API REQUESTS:--", result, '\n', this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);

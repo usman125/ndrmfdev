@@ -99,6 +99,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 // import { MatGridListModule } from "@angular/material/grid-list";
 // import { GiaProjectsModule } from "./modules/gia-projects/gia-projects.module";
 import { JwtModule } from "@auth0/angular-jwt";
+// import { AssignThematicAreaComponent } from './components/assign-thematic-area/assign-thematic-area.component';
 // import { AdminHomeComponent } from './components/admin-home/admin-home.component';
 // import { SmeHomeComponent } from './components/sme-home/sme-home.component';
 // import { PoHomeComponent } from './components/po-home/po-home.component';
@@ -120,6 +121,7 @@ export function tokenGetter() {
     LoginComponent,
     NoHeaderLayoutComponent,
     AddProjectComponent,
+    // AssignThematicAreaComponent,
     // AdminHomeComponent,
     // EditUserComponent,
     // EditSmeComponent,

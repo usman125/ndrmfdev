@@ -10,6 +10,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { FormioModule } from "angular-formio";
 // import { ViewPrimaryAppraisalModule } from "../view-primary-appraisal/view-primary-appraisal.module";
 import { ProjectPlanModule } from "../project-plan/project-plan.module";
@@ -22,7 +23,7 @@ import { ProjectPlanModule } from "../project-plan/project-plan.module";
     CommonModule,
     ProjectDetailsRoutingModule,
     ProjectPlanModule,
-    // ViewPrimaryAppraisalModule,
+    MatProgressSpinnerModule,
     FormioModule,
     MatButtonModule,
     MatTabsModule,

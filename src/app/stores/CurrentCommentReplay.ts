@@ -3,9 +3,7 @@ import { Subject, ReplaySubject } from "rxjs";
 interface CurrentIntimationState {
   endDate: string,
   formIdentity: string,
-  comments: {
-    data: string, date: string
-  }[]
+  comments: string[]
 }
 
 const routeEnd = new Subject<CurrentIntimationState>();
@@ -15,7 +13,7 @@ routeEnd.pipe().subscribe(val => shareStoreReplay.next(val));
 export const setCommentValue = (
   endDate: string,
   formIdentity: string,
-  comments: { data: string, date: string }[],
+  comments: string[],
 ) => {
   routeEnd.next({ endDate, formIdentity, comments: comments });
 }

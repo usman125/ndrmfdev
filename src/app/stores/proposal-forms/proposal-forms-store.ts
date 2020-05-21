@@ -9,18 +9,20 @@ export class ProposalFormsStore extends Store<ProposalFormsState> {
   }
 
   addProposalForm(
+    id: string,
     name: string,
     processOwner: any,
-    status: boolean
+    enabled: boolean
   ): void {
     this.setState({
       ...this.state,
       forms: [
         ...this.state.forms,
         {
+          id: id,
           name: name,
           processOwner: processOwner,
-          status: status
+          enabled: enabled
         }
       ]
     });
@@ -33,6 +35,21 @@ export class ProposalFormsStore extends Store<ProposalFormsState> {
       ...this.state,
       forms: forms
     })
+  }
+
+  updateProcessOwner(id, processOwner) {
+    this.setState({
+      ...this.state,
+      forms: this.state.forms.map(c => {
+        if (c.id === id) {
+          return {
+            ...c,
+            processOwner: processOwner
+          }
+        }
+        return c;
+      })
+    });
   }
 
   // updateSme(

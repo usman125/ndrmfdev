@@ -33,6 +33,7 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
   public selectedRequestItems: any = [];
 
   toggleBtn: boolean = false;
+  secondForm: any = null;
   addMobileClasses: boolean = false;
   loadingApi: boolean = false;
 
@@ -215,6 +216,7 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
     this._accreditationRequestService.getSingleEligibilityRequest(element.id).subscribe(
       (result: any) => {
         // this.selectedRequestItems = result;
+        this.secondForm = JSON.parse(result.data);
         var object = {
           data: JSON.parse(result.data),
           initiatedBy: result.initiatedBy,

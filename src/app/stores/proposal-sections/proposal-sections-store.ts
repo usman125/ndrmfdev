@@ -9,59 +9,84 @@ export class ProposalSectionsStore extends Store<ProposalSectionsState> {
   }
 
   addSection(
+    id: string,
     name: string,
-    key: string,
-    userRef: string,
-    formGenerated: boolean,
+    totalScore: number,
+    passingScore: number,
+    templateType: string,
+    template: any,
+    data: any,
+    sme: any,
+    assigned: boolean,
+    reviewHistory: any,
+    review: any,
+    reviewStatus: string,
+    reassignmentStatus: string
   ): void {
     this.setState({
       ...this.state,
       sections: [
         ...this.state.sections,
         {
+          id: id,
           name: name,
-          key: key,
-          userRef: userRef,
-          formGenerated: formGenerated,
+          totalScore: totalScore,
+          passingScore: passingScore,
+          templateType: templateType,
+          template: template,
+          data: data,
+          sme: sme,
+          assigned: assigned,
+          reviewHistory: reviewHistory,
+          review: review,
+          reviewStatus: reviewStatus,
+          reassignmentStatus: reassignmentStatus
         }
       ]
     });
   }
 
-  updateSectionFormgenerated(
-    key: string,
-  ): void {
+  addAllSections(sections){
     this.setState({
       ...this.state,
-      sections: this.state.sections.map((c) => {
-        if (c.key === key) {
-          return {
-            ...c,
-            formGenerated: true
-          }
-        }
-        return c;
-      })
-    });
+      sections: sections
+    })
   }
 
-  updateSectionUserRef(
-    key: string,
-    userRef: string,
-  ): void {
-    this.setState({
-      ...this.state,
-      sections: this.state.sections.map((c) => {
-        if (c.key === key) {
-          return {
-            ...c,
-            userRef: userRef
-          }
-        }
-        return c;
-      })
-    });
-  }
+  // updateSectionFormgenerated(
+  //   key: string,
+  // ): void {
+  //   this.setState({
+  //     ...this.state,
+  //     sections: this.state.sections.map((c) => {
+  //       if (c.key === key) {
+  //         return {
+  //           ...c,
+  //           formGenerated: true
+  //         }
+  //       }
+  //       return c;
+  //     })
+  //   });
+  // }
+
+  // updateSectionUserRef(
+  //   key: string,
+  //   userRef: string,
+  // ): void {
+  //   this.setState({
+  //     ...this.state,
+  //     sections: this.state.sections.map((c) => {
+  //       if (c.key === key) {
+  //         return {
+  //           ...c,
+  //           userRef: userRef
+  //         }
+  //       }
+  //       return c;
+  //     })
+  //   });
+  // }
 
 
 

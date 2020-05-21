@@ -1,4 +1,10 @@
-<mat-card class="p-2 m-4">
+<mat-toolbar class="mat-elevation-z8" color="primary" style="margin-bottom: 20px;">
+  <mat-toolbar-row>
+    <span>Fill Eligibility Section</span>
+    <span class="example-spacer"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-card class="m-20">
   <div class="toggle-btns" *ngIf="!apiLoading">
     <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
       <mat-button-toggle *ngFor="let item of allSections" MatButtonToggleAppearance="standard" color="primary"

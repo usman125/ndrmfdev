@@ -52,6 +52,9 @@ $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
 #answer {
   color: mat-color($candy-app-primary);
 }
+#notify {
+  color: #f44336;
+}
 .mat-form-field-wrapper {
   padding-bottom: 2px;
 }

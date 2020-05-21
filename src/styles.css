@@ -113,8 +113,8 @@ mat-card-header .mat-card-header-text {
 }
 
 mat-sidenav-container ::-webkit-scrollbar {
-  width: 0.3em;
-  height: 0.3em;
+  width: 0.6em;
+  height: 0.6em;
 }
 
 mat-sidenav-container ::-webkit-scrollbar-track {
@@ -271,4 +271,10 @@ table {
   position: sticky;
   top: 64px;
   z-index: 1111;
+}
+
+
+.own-tiles .mat-figure {
+    margin: 20px !important;
+    justify-content: flex-start;
 }

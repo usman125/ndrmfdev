@@ -23,23 +23,23 @@ export class CreatePrimaryAppraisalComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this._activatedRoute.paramMap.subscribe(params => {
-      this.selectedProjectId = params.get("projectId");
-      const project = this._projectsStore.getProject(this.selectedProjectId);
-      // this.selectedProject = this._projectsStore.getProject(this.selectedProjectId);
-      setCurrentProject(
-        project.name,
-        project.type,
-        project.status,
-        project.userRef,
-        project.key,
-        project.primaryAppraisalStatus,
-        project.primaryAppraisalStartDate,
-        project.primaryAppraisalEndDate,
-        project.extendedAppraisalStatus,
-        project.extendedAppraisalExpiry,
-      );
-    });
+    // this._activatedRoute.paramMap.subscribe(params => {
+    //   this.selectedProjectId = params.get("projectId");
+    //   const project = this._projectsStore.getProject(this.selectedProjectId);
+    //   // this.selectedProject = this._projectsStore.getProject(this.selectedProjectId);
+    //   setCurrentProject(
+    //     project.name,
+    //     project.type,
+    //     project.status,
+    //     project.userRef,
+    //     project.key,
+    //     project.primaryAppraisalStatus,
+    //     project.primaryAppraisalStartDate,
+    //     project.primaryAppraisalEndDate,
+    //     project.extendedAppraisalStatus,
+    //     project.extendedAppraisalExpiry,
+    //   );
+    // });
     currentProjectReplay.subscribe((data) => {
       this.selectedProject = data;
     })

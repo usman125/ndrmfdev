@@ -71,18 +71,18 @@ export class CreateProposalFormComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this._authStore.setRouteName('Create-Proposal-Form');
     });
-    this.Subscription.add(
-      this._proposalSectionsStore.state$.subscribe((data) => {
-        var sections = [];
-        from(data.sections).pipe(
-          filter(value => !value.formGenerated)
-        ).subscribe(result => {
-          sections.push(result);
-        }).unsubscribe();
-        this.allProposalSections = sections;
-        console.log("ALL PROPOSAL SECTIONS:--", this.allProposalSections);
-      })
-    )
+    // this.Subscription.add(
+    //   this._proposalSectionsStore.state$.subscribe((data) => {
+    //     var sections = [];
+    //     from(data.sections).pipe(
+    //       filter(value => !value.formGenerated)
+    //     ).subscribe(result => {
+    //       sections.push(result);
+    //     }).unsubscribe();
+    //     this.allProposalSections = sections;
+    //     console.log("ALL PROPOSAL SECTIONS:--", this.allProposalSections);
+    //   })
+    // )
     // this.Subscription.add(
     //   this._proposalSectionsStore.state$.subscribe((data) => {
     //     console.log("ALL PROPOSAL FORMS:--", data.sections)
@@ -174,12 +174,13 @@ export class CreateProposalFormComponent implements OnInit, OnDestroy {
       values.name,
       values.smeRef,
       this.form.components,
+      null
       // values.type,
       // this.form.page,
       // this.form.numPages,
       // 'proposal-form',
     );
-    this._proposalSectionsStore.updateSectionFormgenerated(values.smeRef);
+    // this._proposalSectionsStore.updateSectionFormgenerated(values.smeRef);
     this.resetForm();
     // this._createProposalFormService.addForm(
     //   values.name,

@@ -3,13 +3,13 @@
   <p>Select Start & End Date!</p>
   <mat-form-field>
     <mat-label>Start Date</mat-label>
-    <input matInput [matDatepicker]="picker" (ngModelChange)="dateChange1($event)" [(ngModel)]="data.startDate">
+    <input matInput [matDatepicker]="picker" [min]="data.minDate" (ngModelChange)="dateChange1($event)" [(ngModel)]="data.startDate">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
   <mat-form-field>
     <mat-label>End Date</mat-label>
-    <input matInput [matDatepicker]="picker2" (ngModelChange)="dateChange2($event)" [(ngModel)]="data.endDate">
+    <input matInput [matDatepicker]="picker2" [min]="data.minDate" (ngModelChange)="dateChange2($event)" [(ngModel)]="data.endDate">
     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
     <mat-datepicker #picker2></mat-datepicker>
   </mat-form-field>

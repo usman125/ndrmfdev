@@ -14,7 +14,7 @@
 
       <ng-container matColumnDef="poRef">
         <th mat-header-cell mat-sort-header *matHeaderCellDef> Process Owner </th>
-        <td mat-cell *matCellDef="let element"> {{element.poRef}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.processOwner?.name}} </td>
       </ng-container>
 
       <ng-container matColumnDef="name">

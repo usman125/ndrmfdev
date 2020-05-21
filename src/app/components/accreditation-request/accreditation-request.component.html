@@ -131,7 +131,9 @@
             </div>
           </div>
           <span class="example-spacer"></span>
-          <div *ngIf="currentUser?.role !== 'sme'">
+          <mat-icon *ngIf="item.reviewStatus === 'Expired'" color="warn" matTooltip="Task Expired!">
+            notification_important</mat-icon>
+          <div *ngIf="currentUser?.role !== 'sme'" class="m-2">
             <button matTooltip="Assign Task" (click)="openDialog(item)"
               *ngIf="item.review.rating === null && (item.reviewStatus === null || item.reviewStatus === 'Pending')"
               [disabled]="item.review.rating === null && item.reviewStatus === 'Pending'" mat-button color="basic">
@@ -160,9 +162,13 @@
       <mat-card class="example-result-card mb-3" [hidden]="hideForms && item.assigned === false">
         <mat-card-content>
           <div class="section-info">
-            <span class="mb-3" style="display: block;">
-              <span id="comment" style="font-weight: bold;">SME: </span>
-              {{item.sme.name}}
+            <span class="mb-3" style="display: block;font-weight: bold;">
+              SME:
+              <span id="comment">{{item.sme.name}}</span>
+            </span>
+            <span class="mb-3" style="display: block;font-weight: bold;" *ngIf="item.review.rating !== null">
+              SCORED WEITAGE:
+              <span id="comment">{{(item.review.rating/5) * 100}}%</span>
             </span>
             <!-- <span><mat-icon>assignment_returned</mat-icon></span> -->
             <!-- <span *ngIf="item.review.rating !== null && item.reviewStatus === 'Completed'"><mat-icon>assignment_returned</mat-icon></span>
@@ -176,14 +182,14 @@
             readOnly="true" [submission]="{data: item.data}"></formio>
           <formio *ngIf="!item.assigned && currentUser?.role === 'sme'" [form]="item.template" readOnly="true"
             [submission]="{data: item.data}"></formio>
-          <formio *ngIf="item.assigned && currentUser?.role === 'sme' && selectedSection !== item.id"
+          <formio *ngIf="item.assigned && currentUser?.role === 'sme' && selectedSection.sectionId !== item.id"
             [form]="item.template" readOnly="true" [submission]="{data: item.data}"></formio>
           <!-- <formio *ngIf="currentUser?.role !== 'sme' && !item.review" [form]="item.form" readOnly="true"
             [submission]="{data: item.submitData}"></formio> -->
 
           <!-- <button *ngIf="item.allReviews.length" mat-raised-button>View Previous</button> -->
           <div *ngIf="currentUser?.role === 'sme' && item.assigned === true"
-            [hidden]="item.assigned && selectedSection !== item.id">
+            [hidden]="item.assigned && selectedSection.sectionId !== item.id">
             <div class="form-comments" *ngFor="let obj of item.formReviewObjects">
               <div class="details">
                 <span>{{obj.title}}</span>
@@ -219,7 +225,7 @@
               <div style="padding: 15px;">
                 <mat-spinner *ngIf="submitLoading" diameter="40"></mat-spinner>
                 <button *ngIf="!submitLoading"
-                  [disabled]="reviewAdded || (item.review.rating !== null && item.reviewStatus === 'Completed')"
+                  [disabled]="reviewAdded || (item.review.rating !== null && (item.reviewStatus === 'Completed' || item.reviewStatus === 'Expired'))"
                   (click)="addRequestReview(item)" mat-mini-fab color="accent">
                   <!-- <button *ngIf="!submitLoading" [disabled]="reviewAdded" mat-mini-fab color="primary"> -->
                   <mat-icon>send</mat-icon>
@@ -304,6 +310,22 @@
           </mat-list>
         </mat-card-content>
       </mat-card>
+      <mat-card *ngIf="currentUser?.role === 'sme'">
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
+              <div mat-line>{{'My Sections'}}</div>
+              <div mat-line>{{sectionStats?.mySectionsCount}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>assignment_returned</mat-icon>
+              <div mat-line>{{'Selected Task'}}</div>
+              <div mat-line>{{selectedSection?.sectionName}}</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
       <mat-card>
         <mat-card-content>
 
@@ -328,8 +350,9 @@
                   <mat-label>Comments for fip</mat-label>
                   <textarea matInput [(ngModel)]="commentsForFip" placeholder="write your comments..."></textarea>
                 </mat-form-field>
-                <button (click)="intimateFip()" [disabled]="allTasksAssingedFlag || !commentsForFip" color="accent"
-                  mat-raised-button>INTIMATE FIP</button>
+                <button (click)="intimateFip()"
+                  [disabled]="(sectionStats?.unassignCount !== sectionStats?.reviewsCount !== userReviewRequests.length) || !commentsForFip"
+                  color="accent" mat-raised-button>INTIMATE FIP</button>
               </div>
             </div>
           </div>
@@ -345,23 +368,23 @@
                   {{'ASSIGN TO MEMBERS'}}
                 </button>
               </div>
-              <div class="comments-box">
+              <!-- <div class="comments-box">
                 <mat-form-field appearance="outline">
                   <mat-label>Comments for others</mat-label>
                   <textarea matInput placeholder="write your comments..."></textarea>
                 </mat-form-field>
-                <mat-spinner *ngIf="apiLoading" diameter="40"></mat-spinner>
-                <!-- <button *ngIf="!submitLoading" [disabled]="reviewAdded" color="accent" (click)="completeTask()"
+                <mat-spinner *ngIf="apiLoading" diameter="40"></mat-spinner> -->
+              <!-- <button *ngIf="!submitLoading" [disabled]="reviewAdded" color="accent" (click)="completeTask()"
                   mat-raised-button>Complete
                   Task</button> -->
-              </div>
+              <!-- </div> -->
             </div>
           </div>
 
         </mat-card-content>
 
         <mat-card-actions>
-          <div class="bottom-controls">
+          <div class="bottom-controls" *ngIf="currentUser?.role !== 'sme'">
             <div class="left-block">
               <span class="head">Accredit Status:</span>
               <span id="comment" class="answer mb-3">{{selectedRequest?.status | uppercase}}</span>

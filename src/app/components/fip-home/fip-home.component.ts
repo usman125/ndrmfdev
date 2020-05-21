@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from "rxjs";
 import { AuthStore } from "../../stores/auth/auth-store";
 
@@ -15,6 +16,7 @@ export class FipHomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private _authStore: AuthStore,
+    private _router: Router,
   ) { }
 
   ngOnInit() {
@@ -28,6 +30,10 @@ export class FipHomeComponent implements OnInit, OnDestroy {
         // console.log("FLAGS FROM FIP HOME:--", data.auth.eligibaleFlag)
       })
     )
+  }
+
+  goToRoute(route){
+    this._router.navigate([route]);
   }
 
   ngOnDestroy(){

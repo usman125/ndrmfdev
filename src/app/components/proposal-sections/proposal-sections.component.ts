@@ -4,6 +4,7 @@ import { ProposalFormsStore } from "../../stores/proposal-forms/proposal-forms-s
 import { AuthStore } from "../../stores/auth/auth-store";
 import { Subscription } from "rxjs";
 import { SettingsService } from "../../services/settings.service";
+import { setThematicAreaValue } from "../../stores/proposal-forms/proposal-forms-replay";
 
 @Component({
   selector: 'app-proposal-sections',
@@ -47,9 +48,10 @@ export class ProposalSectionsComponent implements OnInit, OnDestroy {
     this._authStore.setLoading();
     this._settingsService.addThematicArea({ name: this.areaName, processOwnerId: null}).subscribe(
       result => {
-        this._authStore.removeLoading();
         console.log("ADDED SUCCEFULLY:--", result);
-        this._proposalFormsStore.addProposalForm(this.areaName, null, true);
+        this._authStore.removeLoading();
+        // setThematicAreaValue(null, null, false, null);
+        // this._proposalFormsStore.addProposalForm(this.areaName, this.areaName, true, null);
         this.areaName = null;
       },
       error => {

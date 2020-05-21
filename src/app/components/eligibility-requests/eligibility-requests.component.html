@@ -4,7 +4,7 @@
     <span class="example-spacer"></span>
   </mat-toolbar-row>
 </mat-toolbar>
-<div class="mr-4 ml-4">
+<div class="mr-4 ml-4" *ngIf="!toggle">
   <mat-form-field>
     <mat-label>Filter</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
@@ -37,8 +37,8 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
-          <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-          </mat-paginator>
+      <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+      </mat-paginator>
     </mat-card-content>
   </mat-card>
 </div>
@@ -48,9 +48,9 @@
   </mat-card-content>
 </mat-card> -->
 
-<mat-toolbar [hidden]="!toggle" style="margin-bottom:5px;padding: 10px 0px;" class="mat-elevation-z8" color="primary">
+<mat-toolbar *ngIf="toggle" style="margin-bottom:5px;padding: 10px 0px;" class="mat-elevation-z8" color="primary">
   <mat-toolbar-row>
-    <small>{{selectedRequestItems?.initiatedBy?.name}}</small>
+    <span>{{selectedRequestItems?.initiatedBy?.name}}</span>
     <span class="example-spacer"></span>
     <button (click)="hideRequest()" mat-icon-button>
       <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
@@ -58,7 +58,7 @@
     </button>
   </mat-toolbar-row>
 </mat-toolbar>
-<div [hidden]="!toggle" [ngClass]="{'mobile-class': addMobileClasses}" class="margin-5 view-block">
+<div *ngIf="toggle" [ngClass]="{'mobile-class': addMobileClasses}" class="margin-5 view-block">
   <div class="view-block-item form-items">
     <mat-card style="padding: 0px;">
       <mat-card-content>
@@ -73,19 +73,21 @@
             <formio [form]="item.formData" [options]="options" readOnly="true" [submission]="{data: item.formSubmitData}"></formio>
           </div>
         </div> -->
-        <mat-toolbar class="mat-elevation-z8" color="primary">
+        <mat-toolbar class="mat-elevation-z8 no-margin" color="primary">
           <mat-toolbar-row>
-            <small>{{selectedRequestItems?.template?.name}}</small>
+            <span>{{selectedRequestItems?.template?.name}}</span>
             <span class="example-spacer"></span>
             <div style="display: flex;justify-content: center;flex-direction: column;align-items: center;">
-              <small>{{selectedRequestItems?.status}}</small>
+              <small id="comment" style="font-weight: bold;">{{selectedRequestItems?.status}}</small>
               <small>{{selectedRequestItems?.submittedAt | date:'shortDate'}}</small>
             </div>
           </mat-toolbar-row>
         </mat-toolbar>
         <div style="padding: 15px;">
-          <formio [form]="selectedRequestItems.template" readOnly="true" [submission]="{data: selectedRequestItems.data}"></formio>
+          <formio *ngIf="!loadingApi" [form]="selectedRequestItems.template" readOnly="true"
+            [submission]="{data: secondForm}"></formio>
           <!-- {{selectedRequestItems.data | json}} -->
+          <mat-progress-spinner *ngIf="loadingApi" mode="indeterminate" diameter="30"></mat-progress-spinner>
         </div>
       </mat-card-content>
     </mat-card>
@@ -95,17 +97,19 @@
       <mat-card-content>
         <div class="top-controls">
           <div class="fullbtn">
-            <button [disabled]="toggleBtn" (click)="markEligibleFlag()" [color]="!toggleBtn ? 'primary' : 'warn'" class="control-btn" mat-flat-button>
+            <button *ngIf="!loadingApi" [disabled]="toggleBtn" (click)="markEligibleFlag()"
+              [color]="!toggleBtn ? 'primary' : 'warn'" class="control-btn" mat-flat-button>
               {{!toggleBtn ? "Mark Eligible" : "Mark Un-eligible"}}
             </button>
+            <mat-progress-spinner *ngIf="loadingApi" mode="indeterminate" diameter="30"></mat-progress-spinner>
           </div>
-          <div class="comments-box">
+          <!-- <div class="comments-box">
             <mat-form-field appearance="outline">
               <mat-label>Comments for fip</mat-label>
               <textarea matInput placeholder="write your comments..."></textarea>
             </mat-form-field>
             <button color="accent" (click)="intimateFip()" mat-raised-button>Intimate Fip</button>
-          </div>
+          </div> -->
         </div>
       </mat-card-content>
     </mat-card>

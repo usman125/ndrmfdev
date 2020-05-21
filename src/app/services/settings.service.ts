@@ -123,15 +123,10 @@ export class SettingsService {
   }
 
   updateThematicArea(values, id) {
-    let body = {
-      "enabled": true,
-      "name": values.name,
-      "processOwnerId": null
-    }
     const url = `${AppConfig.apiUrl}/setting/thematic-area/${id}/update`;
     return this._httpClient.put(
       url,
-      body
+      values
     );
   }
 

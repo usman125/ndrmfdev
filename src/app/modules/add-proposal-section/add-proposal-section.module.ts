@@ -8,6 +8,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { ProposalFormsModule } from "../proposal-forms/proposal-forms.module";
 import { ProposalSectionsModule } from "../proposal-sections/proposal-sections.module";
+import { AssignThematicAreaModule } from "../assign-thematic-area/assign-thematic-area.module";
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { ProposalSectionsModule } from "../proposal-sections/proposal-sections.m
     AddProposalRoutingModule,
     ProposalFormsModule,
     ProposalSectionsModule,
+    AssignThematicAreaModule,
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,

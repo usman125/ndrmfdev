@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { SettingsService } from "../../services/settings.service";
 import { Router } from '@angular/router';
+import { setThematicAreaValue } from "../../stores/proposal-forms/proposal-forms-replay";
 
 @Component({
   selector: 'app-proposal-forms',
@@ -30,6 +31,8 @@ export class ProposalFormsComponent implements OnInit {
   allForms: any = [];
 
   dataSource: any;
+
+  selectedArea: any = null;
 
   Subscription: Subscription = new Subscription();
 
@@ -73,6 +76,7 @@ export class ProposalFormsComponent implements OnInit {
         console.log("DATA FROM ALL THEMATIC AREA:--", data.forms);
       })
     );
+
   }
 
   trackTask(index: number, item): string {
@@ -82,7 +86,8 @@ export class ProposalFormsComponent implements OnInit {
 
 
   editForm(form) {
-    console.log("FORM TO EDIT:---", form);
+    // console.log("FORM TO EDIT:---", form);
+    setThematicAreaValue(form.id, form.name, form.processOwner, form.enabled);
   }
 
   onSubmit($event) {
