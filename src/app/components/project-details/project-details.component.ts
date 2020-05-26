@@ -28,6 +28,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   form: any = null;
   formSubmitData: any = null;
   selectedProject: any = null;
+  selectedProjectInfo: any = null;
   selectedProjectId: any = null;
   sub: any = null;
   costSections = [
@@ -48,6 +49,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   // @Output() preAppViewType: string = 'view';
 
   apiLoading: boolean = false;
+  submitSections: any = 0;
+  pendingSections: any = 0;
 
 
 
@@ -82,24 +85,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       //   project.extendedAppraisalStatus,
       //   project.extendedAppraisalExpiry,
       // );
-      this._projectService.getSingleProject(this.selectedProjectId).subscribe(
-        (result: any) => {
-          this.selectedProject = result;
-          console.log("PROJECT DETAILS FROM DATABASE:--", this.selectedProject);
-          let proposalSections = result.sections.map(c => {
-            return {
-              ...c,
-              template: c.template ? JSON.parse(c.template) : null,
-            }
-          })
-          this._proposalSectionsStore.addAllSections(proposalSections);
-          this.apiLoading = false;
-        },
-        error => {
-          this.apiLoading = false;
-          console.log("ERROR DETAILS FROM DATABASE:--", error);
-        },
-      );
+      this.getProjectDetails();
     });
     // currentProjectReplay.subscribe((data) => {
     //   this.selectedProject = data;
@@ -107,11 +93,34 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
     this.Subscription.add(
       this._proposalSectionsStore.state$.subscribe(data => {
+        this.apiLoading = true;
         this.proposalSections = data.sections;
         console.log("PROPOSAL SECTION FROM STORE:---", this.proposalSections);
-        if (this.proposalSections.length){
+        let pendingCount = 0;
+        let submitCount = 0;
+        if (this.proposalSections.length) {
+          this.proposalSections.forEach(c => {
+            if (c.data === null && c.reassignmentStatus === null ||
+              c.data !== null && c.reassignmentStatus === 'Pending'
+            ) {
+              pendingCount = pendingCount + 1;
+            }
+            if (c.data !== null && c.reassignmentStatus === null ||
+              c.data !== null && c.reassignmentStatus === 'Complete'
+            ) {
+              submitCount = submitCount + 1;
+            }
+            let result = c.name.match(/glance/g);
+            if (result !== null) {
+              this.selectedProjectInfo = c.data;
+            }
+          });
+          this.submitSections = submitCount;
+          this.pendingSections = pendingCount;
+          console.log("PENDING?SUBMITTED:--", pendingCount, submitCount, this.selectedProjectInfo);
           this.groupType = this.proposalSections[0];
           this.tabChanged(this.groupType);
+          this.apiLoading = false;
         }
         // this.groupType = this.proposalSections[0].name;
       })
@@ -184,6 +193,34 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     //   this.selectedProject = data;
     //   console.log("SELECTED PROJECT:---", this.selectedProject)
     // });
+  }
+
+  getProjectDetails() {
+    this.apiLoading = true;
+    this._projectService.getSingleProject(this.selectedProjectId).subscribe(
+      (result: any) => {
+        this.selectedProject = result;
+        console.log("PROJECT DETAILS FROM DATABASE:--", this.selectedProject);
+        let pendingCount = 0;
+        let submitCount = 0;
+        let proposalSections = result.sections.map(c => {
+          return {
+            ...c,
+            data: c.data ? JSON.parse(c.data) : null,
+            template: c.template ? JSON.parse(c.template) : null,
+            projectStatus: this.selectedProject.status,
+          }
+        })
+        if (this.selectedProject !== null) {
+          this._proposalSectionsStore.addAllSections(proposalSections);
+        } else {
+          this.apiLoading = false;
+        }
+      },
+      error => {
+        console.log("ERROR DETAILS FROM DATABASE:--", error);
+      },
+    );
   }
 
   getSelectedValues(item) {
@@ -269,13 +306,27 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this._router.navigate(['/fill-primary-appraisal', this.selectedProjectId]);
   }
 
-  ngOnDestroy(): void {
-    this.Subscription.unsubscribe();
-  }
-
   onSubmit($event) {
+    this.apiLoading = true;
     this.formSubmitData = $event.data;
-    console.log("FORM SUBMIT:---", this.formSubmitData);
+    console.log("FORM SUBMIT:---", this.formSubmitData, this.selectedProject);
+    this._projectService.addProjectRequest(
+      {
+        data: JSON.stringify(this.formSubmitData),
+        id: this.groupType.id
+      },
+      this.selectedProjectId
+      ).subscribe(
+        result => {
+          console.log("RESULT ADDING REQUEST:--", result);
+          this._proposalSectionsStore.updateSectionReview(this.formSubmitData, this.groupType.id);
+          this.apiLoading = false;
+        },
+        error => {
+          this.apiLoading = false;
+        console.log("ERROR ADDING REQUEST:--", error);
+      }
+    );
     // this._proposalRequestsStore.addProposalRequest(
     //   this.loggedUser.username,
     //   $event.data,
@@ -312,8 +363,36 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     // );
   }
 
+  submitRequest() {
+    this.apiLoading = true;
+    this._projectService.updateProjectRequest(
+      {
+        data: JSON.stringify(this.proposalSections[0].data),
+        id: this.proposalSections[0].id
+      },
+      this.selectedProjectId
+      ).subscribe(
+        result => {
+          console.log("RESULT AFTER UPDATING THE REQUEST:---", result);
+          this.selectedProject.status = 'Under Review';
+          this.apiLoading = false;
+        },
+        error => {
+          this.apiLoading = false;
+        console.log("ERROR AFTER UPDATING THE REQUEST:---", error);
+      }
+    )
+  }
+
   viewPreApprasial() {
     this._router.navigate(['/view-primary-appraisal', this.selectedProjectId]);
   }
+
+
+  ngOnDestroy(): void {
+    this._proposalSectionsStore.addAllSections([]);
+    this.Subscription.unsubscribe();
+  }
+
 
 }

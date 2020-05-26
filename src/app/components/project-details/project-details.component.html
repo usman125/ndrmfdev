@@ -1,7 +1,12 @@
 <ng-container *ngIf="!apiLoading">
   <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
     <mat-toolbar-row>
-      <span>Project Information</span>
+      <span>Project Summary</span>
+      <div class="example-spacer"></div>
+      <button *ngIf="!apiLoading && viewType === 'user'" [disabled]="submitSections === proposalSections.length && 
+        selectedProject?.status === 'Under Review' || proposalSections.length !== submitSections && selectedProject?.status === 'Draft'" mat-raised-button (click)="submitRequest()">
+        <mat-icon>publish</mat-icon> SUBMIT
+      </button>
     </mat-toolbar-row>
   </mat-toolbar>
   <!-- <app-view-primary-appraisal></app-view-primary-appraisal> -->
@@ -10,47 +15,61 @@
       <div class="project-details">
         <div class="field">
           <div class="title">Name</div>
-          <div class="value">Azat Foundation</div>
+          <div class="value">{{selectedProjectInfo?.projectName}}</div>
         </div>
         <div class="field">
           <div class="title">Company</div>
-          <div class="value">Azat Foundation</div>
+          <div class="value">{{selectedProjectInfo?.nameOfAgency}}</div>
         </div>
         <div class="field">
-          <div class="title">Amount</div>
-          <div class="value">100M</div>
+          <div class="title">Time of submission</div>
+          <div class="value">{{selectedProjectInfo?.timeOfSubmission | date:'fullDate'}}</div>
         </div>
         <div class="field">
-          <div class="title">Address</div>
-          <div class="value">Samndabad, Lahore</div>
+          <div class="title">Duration</div>
+          <div class="value">{{selectedProjectInfo?.duration}} Months</div>
         </div>
-      </div>
-      <div class="gia-link" *ngIf="viewType === 'po'">
-        <div class="appraisal-block"
-          *ngIf="selectedProject.primaryAppraisalStatus === null || selectedProject.primaryAppraisalStatus === 'pending'">
-          <button [disabled]="selectedProject.primaryAppraisalStatus === 'pending'" mat-button color="primary"
-            (click)="confirmApprasial()">
-            Prepare Preliminary appraisal <mat-icon style="margin-left: 5px;">description</mat-icon>
-          </button>
-          <small *ngIf="selectedProject.primaryAppraisalStatus === 'pending'">
-            Pending Date: {{selectedProject.primaryAppraisalEndDate | date:'fullDate'}}
-          </small>
+        <div class="field">
+          <div class="title">Start Date</div>
+          <div class="value">{{selectedProjectInfo?.startDate | date:'fullDate'}}</div>
         </div>
-        <div class="appraisal-block" *ngIf="selectedProject.primaryAppraisalStatus === 'submitted'">
-          <button mat-button color="primary" (click)="viewPreApprasial()">
-            View Preliminary appraisal <mat-icon style="margin-left: 5px;">description</mat-icon>
-          </button>
-          <small>
-            Submitted: {{selectedProject.primaryAppraisalEndDate | date:'fullDate'}}
-          </small>
+        <div class="field">
+          <div class="title">End Date</div>
+          <div class="value">{{selectedProjectInfo?.endDate | date:'fullDate'}}</div>
         </div>
       </div>
     </mat-card-content>
     <mat-card-actions *ngIf="viewType === 'po'">
-      <button class="m-1" mat-button color="primary">MARK TO GM</button>
+      <!-- <div class="appraisal-block">
+        <small>
+        </small>
+      </div>
+      <div class="appraisal-block">
+        <small>
+        </small>
+      </div> -->
+      <!-- Pending Date: {{selectedProject.primaryAppraisalEndDate | date:'fullDate'}} -->
+      <!-- Submitted: {{selectedProject.primaryAppraisalEndDate | date:'fullDate'}} -->
+      <button mat-raised-button color="primary" (click)="confirmApprasial()">
+        {{'Prepare Pre appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+      </button>
+      <button mat-raised-button color="primary" (click)="viewPreApprasial()">
+        {{'View pre appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+      </button>
+      <button mat-raised-button color="primary">
+        {{'Prepare extended appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+      </button>
     </mat-card-actions>
   </mat-card>
 
+
+
+  <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary" *ngIf="viewType === 'po'">
+    <mat-toolbar-row>
+      <span>Details</span>
+      <div class="example-spacer"></div>
+    </mat-toolbar-row>
+  </mat-toolbar>
   <mat-card class="m-20">
     <mat-card-content>
       <div class="tabs-top-container">
@@ -58,11 +77,13 @@
           <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
             <mat-button-toggle (change)="tabChanged(item)" *ngFor="let item of proposalSections; let i = index;"
               [value]="item">
+              <mat-icon class="mr-2" *ngIf="item.data !== null">check</mat-icon>
+              <mat-icon class="mr-2" *ngIf="item.data === null">feedback</mat-icon>
               <span>{{item.name}}</span>
             </mat-button-toggle>
           </mat-button-toggle-group>
         </div>
-        <div class="top-form">
+        <div class="top-form pb-0">
           <formio *ngIf="form && !formSubmitData && loggedUser.role !== 'admin'" [form]="form"
             (submit)="onSubmit($event)"></formio>
           <formio *ngIf="form && formSubmitData && loggedUser.role !== 'admin'" readOnly="true"
@@ -74,6 +95,18 @@
         </div>
       </div>
     </mat-card-content>
+    <mat-card-actions>
+      <div class="info" class="m-20" style="display: flex;flex-direction: column;">
+        <div class="block">
+          <mat-icon style="font-size: 14px;color:#4caf50">done_outline</mat-icon>
+          <span style="font-size: 10px;"> Submitted Sections</span>
+        </div>
+        <div class="block">
+          <mat-icon style="font-size: 14px;color:#4caf50">feedback</mat-icon>
+          <span style="font-size: 10px;"> Pending Sections</span>
+        </div>
+      </div>
+    </mat-card-actions>
   </mat-card>
 
   <mat-card class="m-20">

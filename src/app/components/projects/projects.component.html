@@ -3,7 +3,7 @@
     <mat-toolbar-row>
       <span>Projects</span>
       <span class="example-spacer"></span>
-      <button color="primary" mat-raised-button (click)="addNewProject();">
+      <button color="primary" mat-raised-button (click)="addNewProject();" *ngIf="showAddBtn">
         <mat-icon>add</mat-icon> PROJECT
       </button>
     </mat-toolbar-row>

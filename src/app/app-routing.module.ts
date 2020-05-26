@@ -319,7 +319,7 @@ const routes: Routes = [
     path: 'primary-appraisal',
     loadChildren: () => import('./modules/primary-appraisal/primary-appraisal.module').then(m => m.PrimaryAppraisalModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Po] }
   },
   {
     path: 'primary-appraisal-projects',
@@ -331,7 +331,7 @@ const routes: Routes = [
     path: 'create-primary-appraisal/:projectId',
     loadChildren: () => import('./modules/create-primary-appraisal/create-primary-appraisal.module').then(m => m.CreatePrimaryAppraisalModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Po] }
   },
   {
     path: 'fill-primary-appraisal/:projectId',
@@ -391,7 +391,7 @@ const routes: Routes = [
     path: 'project-details/:projectId',
     loadChildren: () => import('./modules/project-details/project-details.module').then(m => m.ProjectDetailsModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin, Role.Fip] }
+    data: { roles: [Role.Fip] }
   },
   {
     path: 'pohome',

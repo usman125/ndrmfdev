@@ -21,7 +21,8 @@ export class ProposalSectionsStore extends Store<ProposalSectionsState> {
     reviewHistory: any,
     review: any,
     reviewStatus: string,
-    reassignmentStatus: string
+    reassignmentStatus: string,
+    projectStatus: string,
   ): void {
     this.setState({
       ...this.state,
@@ -40,17 +41,32 @@ export class ProposalSectionsStore extends Store<ProposalSectionsState> {
           reviewHistory: reviewHistory,
           review: review,
           reviewStatus: reviewStatus,
-          reassignmentStatus: reassignmentStatus
+          reassignmentStatus: reassignmentStatus,
+          projectStatus: projectStatus
         }
       ]
     });
   }
 
-  addAllSections(sections){
+  addAllSections(sections) {
     this.setState({
       ...this.state,
       sections: sections
     })
+  }
+
+  updateSectionReview(data, id) {
+    this.setState({
+      ...this.state,
+      sections: this.state.sections.map(c => {
+        if (c.id === id) {
+          return {
+            ...c, data: data
+          }
+        }
+        return c;
+      })
+    });
   }
 
   // updateSectionFormgenerated(

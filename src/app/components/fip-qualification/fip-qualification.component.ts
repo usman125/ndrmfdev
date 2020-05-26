@@ -76,7 +76,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   justSubmittedId: any = null;
   justSubmittedName: any = null;
 
-      
+
   @Output() fipComments: any = [];
 
   constructor(
@@ -396,7 +396,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
               this.submitSectionsCount = count2;
               this.allSectionsCount = this.allSmes.length;
               this.fipComments = this.allSections.reassignmentTask;
-              setCommentValue(null, null, [this.allSections.reassignmentTask.comments]);
+              if (this.allSections.reassignmentTask) setCommentValue(null, null, [this.allSections.reassignmentTask.comments]);
               this._fipIntimationsStore.addIntimations(allInitimations);
               this.loadingApi = false;
               console.log("RESULT FROM ALL API REQUESTS:--", result, '\n', this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);

@@ -5,6 +5,8 @@ import { Subscription } from "rxjs";
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { SelectionModel } from '@angular/cdk/collections';
+import { SettingsService } from '../../services/settings.service';
+
 
 export class FoodNode {
   title: string;
@@ -15,6 +17,8 @@ export class FoodNode {
   procurement: boolean;
   procurementCost: number;
   mainCostId: string;
+  rfEntry: boolean;
+  rfEntryData: any;
 }
 
 /** Flat node with expandable and level information */
@@ -28,6 +32,8 @@ export class ExampleFlatNode {
   level: number;
   _id: string;
   mainCostId: string;
+  rfEntry: boolean;
+  rfEntryData: any;
 }
 
 
@@ -80,8 +86,17 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() show: any = null;
 
+  rfForm: any = null;
+
+  options: Object = {
+    submitMessage: "",
+    disableAlerts: true,
+    noAlerts: true
+  }
+
   constructor(
     public _CostSummaryStore: CostSummaryStore,
+    public _settingsService: SettingsService,
     // public _checklistDatabase: ChecklistDatabase,
   ) {
 
@@ -122,6 +137,23 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       this.financersMonthsArray.push(object);
     }
+
+  }
+
+  getRfMeta() {
+    this._settingsService.getProcessTemplate('PROJECT_PROPOSAL').subscribe(
+      (result: any) => {
+        result.sections.forEach(element => {
+          if (element.sectionName === "Results Framework"){
+            this.rfForm = JSON.parse(element.template);
+            console.log("RESULT FROM TEMPLATES:--", this.rfForm);
+          }
+        });
+      },
+      error => {
+        console.log("ERROR FROM TEMPLATES:--", error);
+      }
+    );
   }
 
   private _transformer = (node: FoodNode, level: number) => {
@@ -151,11 +183,14 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       procurementCost: node.procurementCost || 0,
       name: node.title,
       level: level,
+      rfEntry: node.rfEntry,
+      rfEntryData: node.rfEntryData,
       expandable: !!node.children && true,
     };
   }
 
   ngOnInit(): void {
+    this.getRfMeta();
     // this.Subscription.add(
     // this._CostSummaryStore.state$.subscribe((data) => {
     // console.log("DATA FROM STORE:--", data.costs);
@@ -232,6 +267,8 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       showChildren: true,
       mainCostId: null,
       showInput: true,
+      rfEntry: false,
+      rfEntryData: null,
     }
     var allArray = [];
     for (let i = 0; i < this.financersMonthsArray.length; i++) {
@@ -258,6 +295,14 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       allArray.push(test2);
     }
     cost.financers = allArray;
+    // this.allCosts.forEach(c => {
+    //   // return {
+    //   //   ...c,
+    //   //   rfEntry: c.rfEntry,
+    //   //   rfEntryData: c.rfEntryData,
+    //   // }
+    //   cost.
+    // })
     this.allCosts.push(cost);
     this.cost = null;
     this.prepareForm(cost);
@@ -274,6 +319,8 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       _id: 'subcost' + new Date().toISOString(),
       mainCostId: this.mainCostId,
       showInput: true,
+      rfEntry: false,
+      rfEntryData: null,
     }
 
     for (let i = 0; i < this.allCosts.length; i++) {
@@ -283,6 +330,11 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.allCosts[i].procurement) {
           this.allCosts[i].procurement = false;
           this.allCosts[i].procurementCost = 0;
+          this.totalProcurementCost();
+        }
+        if (this.allCosts[i].rfEntry) {
+          this.allCosts[i].rfEntry = this.allCosts[i].rfEntry;
+          this.allCosts[i].rfEntryData = this.allCosts[i].rfEntryData;
           this.totalProcurementCost();
         }
         if (this.allCosts[i].mainCostId) {
@@ -358,8 +410,8 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     }
-    // console.log("ALL COSTS FROM PREPARE FORM:--\n:--", this.allCosts);
     var test2 = _.filter(this.allCosts, { mainCostId: null })
+    console.log("ALL COSTS FROM PREPARE FORM:--\n:--", test2, this.allCosts);
     this.dataSource.data = test2;
     this.treeControl.expandAll();
     this.dummyCosts = test2;
@@ -573,6 +625,28 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     // this.checklistSelection.toggle(node);
     // this.checkAllParentsSelection(node);
   }
+  
+  rfEntryToggle(node: ExampleFlatNode): void {
+    node.rfEntry = !node.rfEntry;
+    // var result = this.getParentCost(node);
+    // result.rfEntry = node.rfEntry;
+    // result.rfEntryData = node.rfEntryData;
+    for (let i=0; i<this.allCosts.length; i++){
+      if (this.allCosts[i]._id === node._id){
+        this.allCosts[i].rfEntry = node.rfEntry;
+        this.allCosts[i].rfEntryData = node.rfEntryData;
+         console.log("NODE TO ADD IN LINK RF:---", node, this.allCosts[i]);
+      }
+    }
+    // if (node.rfEntry === true){
+    //   node.rfEntry = false;
+    // }else{
+    //   node.rfEntry = true;
+    // }
+    // this.findProcuremntCost(node);
+    // this.checklistSelection.toggle(node);
+    // this.checkAllParentsSelection(node);
+  }
 
 
   findProcuremntCost = (node) => {
@@ -601,7 +675,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
         this.allCosts[i].procurementCost = this.allCosts[i].totalCost;
       }
     }
-    
+
     if (parent) {
       parent.procurementCost = this.getChildProcurementCosts(parent);
     }
@@ -674,6 +748,18 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     // console.log("ALL PARENTS COUNT:--", count);
     this.totalCostSummary = count;
     return stack.pop() || null;
+  }
+
+  onSubmit($event, node){
+    console.log("RF SUBMITTED:---", $event);
+    for (let i = 0; i < this.allCosts.length; i++) {
+      if (this.allCosts[i]._id === node._id) {
+        // this.allCosts[i].rfEntry = node.rfEntry;
+        this.allCosts[i].rfEntryData = $event.data;
+        node.rfEntryData = $event.data;
+        console.log("NODE TO ADD IN LINK RF:---", node, this.allCosts[i]);
+      }
+    }
   }
 }
 

@@ -56,7 +56,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         this.allProjects = data.projects;
       })
     );
-    this.getAllProjects();
+    // this.getAllProjects();
+    if (this.loggedUser.role === 'fip') this.getAllProjects();
+    if (this.loggedUser.role === 'process owner') this.getPoProjects();
   }
 
   getAllProjects() {
@@ -68,7 +70,19 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       error => {
         console.log("ERROR ALL PROJECT:---", error);
       }
-    )
+    );
+  }
+
+  getPoProjects() {
+    this._projectService.getPoProjects().subscribe(
+      (result: any) => {
+        console.log("RESULT ALL PO PROJECT:---", result);
+        this._projectsStore.addAllProjects(result);
+      },
+      error => {
+        console.log("ERROR ALL PO PROJECT:---", error);
+      }
+    );
   }
 
   goToDetails(item) {
@@ -144,6 +158,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this._projectsStore.addAllProjects([]);
     this.Subscriptions.unsubscribe();
   }
 

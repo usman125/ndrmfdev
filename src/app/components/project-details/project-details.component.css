@@ -38,9 +38,12 @@
   background: #f8f8f8;
   margin: 5px 0px;
 }
+.field .value {
+  text-transform: capitalize;
+}
 
 .title {
-  font-weight: normal;
+  font-weight: bold;
   text-transform: uppercase;
 }
 

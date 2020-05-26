@@ -19,6 +19,13 @@ export class ProjectService {
     );
   }
   
+  getPoProjects(){
+    const url = `${AppConfig.apiUrl}/project-proposal/?status=UNDER_REVIEW`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+  
   commenceNewProjects(values){
     console.log("----FINAL API OBJECT:----", {
       name: values.name,
@@ -40,6 +47,22 @@ export class ProjectService {
     const url = `${AppConfig.apiUrl}/project-proposal/${id}`;
     return this._httpClient.get(
       url,
+    );
+  }
+
+  addProjectRequest(data, id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}/section/add?action=SAVE`;
+    return this._httpClient.post(
+      url,
+      data
+    );
+  }
+
+  updateProjectRequest(data, id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}/section/add?action=SUBMIT`;
+    return this._httpClient.post(
+      url,
+      data
     );
   }
 }

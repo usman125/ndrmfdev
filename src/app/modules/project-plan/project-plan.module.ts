@@ -13,6 +13,7 @@ import { MatTreeModule } from "@angular/material/tree";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatGridListModule } from "@angular/material/grid-list";
+import { FormioModule } from "angular-formio";
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { MatGridListModule } from "@angular/material/grid-list";
     MatTreeModule,
     MatCheckboxModule,
     MatToolbarModule,
-    ProjectPlanRoutingModule
+    ProjectPlanRoutingModule,
+    FormioModule,
   ],
   entryComponents: [],
   exports: [ProjectPlanComponent]
