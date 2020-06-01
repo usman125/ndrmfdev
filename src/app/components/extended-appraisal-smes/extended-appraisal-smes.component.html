@@ -1,1 +1,25 @@
-<p>extended-appraisal-smes works!</p>
+<mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>Comments Matrix Form</span>
+    <div class="example-spacer"></div>
+    <button (click)="goBack()" color="accent" mat-raised-button>
+      <mat-icon>undo</mat-icon> Go to proposal
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="matrix">
+  <div class="row header-row">
+    <div class="col-md-4 item"><h6> Name</h6></div>
+    <div class="col-md-4 item"><h6> Proposal Sections</h6></div>
+    <div class="col-md-4 item"><h6> Comments</h6></div>
+  </div>
+  <div class="row data-row" *ngFor="let item of allComments;">
+    <div class="col-md-4 item">{{item.addedBy || 'N/A'}}</div>
+    <div class="col-md-4 item">
+      <mat-chip-list>
+        <mat-chip *ngFor="let section of item.sections" color="warn" selected>{{section}}</mat-chip>
+      </mat-chip-list>
+    </div>
+    <div class="col-md-4 item">{{item.comment || 'N/A'}}</div>
+  </div>
+</div>

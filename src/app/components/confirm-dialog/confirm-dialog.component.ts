@@ -11,6 +11,7 @@ export interface ConfirmData {
   confirm: boolean;
   startDate: string;
   endDate: string;
+  comments: string;
 }
 
 @Component({
@@ -25,6 +26,7 @@ export class ConfirmDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmData) {
+      this.data.startDate = new Date().toISOString();
   }
 
   ngOnInit() { }
@@ -43,6 +45,7 @@ export class ConfirmDialogComponent implements OnInit {
       this.close({
         startDate: this.data.startDate,
         endDate: this.data.endDate,
+        comments: this.data.comments,
       });
     }
   }

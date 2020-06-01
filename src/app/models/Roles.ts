@@ -3,4 +3,5 @@ export enum Role {
   Admin = 'admin',
   Sme = 'sme',
   Po = 'process owner',
+  Dm = 'dm pam',
 }

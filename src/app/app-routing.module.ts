@@ -325,7 +325,7 @@ const routes: Routes = [
     path: 'primary-appraisal-projects',
     loadChildren: () => import('./modules/primary-appraisal-projects/primary-appraisal-projects.module').then(m => m.PrimaryAppraisalProjectsModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Admin, Role.Dm] }
   },
   {
     path: 'create-primary-appraisal/:projectId',
@@ -337,31 +337,31 @@ const routes: Routes = [
     path: 'fill-primary-appraisal/:projectId',
     loadChildren: () => import('./modules/fill-primary-appraisal/fill-primary-appraisal.module').then(m => m.FillPrimaryAppraisalModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Po, Role.Dm] }
   },
   {
     path: 'view-primary-appraisal/:projectId',
     loadChildren: () => import('./modules/view-primary-appraisal/view-primary-appraisal.module').then(m => m.ViewPrimaryAppraisalModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Po, Role.Dm] }
   },
   {
     path: 'primary-appraisal-forms',
     loadChildren: () => import('./modules/primary-appraisal-forms/primary-appraisal-forms.module').then(m => m.PrimaryAppraisalFormsModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Admin, Role.Dm, Role.Sme] }
   },
   {
-    path: 'add-primary-appraisal-form',
+    path: 'add-primary-appraisal-form/:projectId',
     loadChildren: () => import('./modules/add-primary-appraisal-form/add-primary-appraisal-form.module').then(m => m.AddPrimaryAppraisalFormModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Admin, Role.Dm, Role.Sme] }
   },
   {
     path: 'extended-appraisals',
     loadChildren: () => import('./modules/extended-appraisal/extended-appraisal.module').then(m => m.ExtendedAppraisalModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Dm, Role.Sme] }
   },
   {
     path: 'extended-appraisal-forms',
@@ -370,16 +370,16 @@ const routes: Routes = [
     data: { roles: [Role.Admin] }
   },
   {
-    path: 'add-extended-appraisal-form',
+    path: 'add-extended-appraisal-form/:projectId',
     loadChildren: () => import('./modules/add-extended-appraisal-form/add-extended-appraisal-form.module').then(m => m.AddExtendedAppraisalFormModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Dm, Role.Sme, Role.Po] }
   },
   {
-    path: 'extended-appraisal-smes',
+    path: 'extended-appraisal-smes/:projectId',
     loadChildren: () => import('./modules/extended-appraisal-smes/extended-appraisal-smes.module').then(m => m.ExtendedAppraisalSmesModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Admin, Role.Dm, Role.Po] }
   },
   {
     path: 'add-extended-appraisal-sme',

@@ -123,6 +123,13 @@ export class UserService {
     );
   }
 
+  getDmPams() {
+    const url = `${AppConfig.apiUrl}/user/withRoleDMPAM`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
 
 
 }

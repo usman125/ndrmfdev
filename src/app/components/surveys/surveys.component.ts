@@ -151,10 +151,11 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log("RESULT FROM ALL TEMPLATES:--", result);
         // this.allSmes = result.sections;
         this.fetchSectons(item);
-        this.dataSource = new MatTableDataSource(result.sections);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-        if (this.dataSource) {
+        if (result.sectons !== null) {
+          this.dataSource = new MatTableDataSource(result.sections);
+          // this.dataSource = result.sections;
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
         }
       },
       error => {
@@ -166,7 +167,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
 
   trackTask(index: number, item): string {
     // console.log("TRACK BY CALLED:---", index, item)
-    return `${item.formIdentity + index}`;
+    return `${item.id + index}`;
   }
 
   ngAfterViewInit() {
@@ -192,8 +193,8 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log("FORM TO EDIT:--", this.secondForm, this.selctedRequest);
     let macthedEntry = null;
     // this.fetchSectons(this.selctedRequest.processType);
-    for (let i=0; i<this.allSmes.length; i++){
-      if (this.allSmes[i].id === this.selctedRequest.id){
+    for (let i = 0; i < this.allSmes.length; i++) {
+      if (this.allSmes[i].id === this.selctedRequest.id) {
         console.log("THIS ENTRY MATCHED:--", this.allSmes[i]);
         macthedEntry = this.allSmes[i];
         break;
@@ -204,8 +205,8 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
       form: this.secondForm
     })
   }
-  
-  patchForm(sme){
+
+  patchForm(sme) {
     this.createProfileForm.patchValue({
       name: this.secondForm.name,
       passingScore: this.secondForm.passingScore || 0,
@@ -219,7 +220,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
 
   fetchSectons(item) {
     if (item) {
-      this.createProfileForm.patchValue({'smeRef': null}, {onlySelf: true});
+      this.createProfileForm.patchValue({ 'smeRef': null }, { onlySelf: true });
       if (item !== 'QUALIFICATION') {
         this.createProfileForm.patchValue({
           'passingScore': 0,
@@ -244,6 +245,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   applyFilter(event: Event) {
     console.log("APPLY FIKTER:--", event);
     const filterValue = (event.target as HTMLInputElement).value;
+
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {

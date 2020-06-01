@@ -21,6 +21,8 @@
 
 .bottom-content {
     height: 50px;
+    font-size: 13px;
+    font-weight: 600;
 }
 .bottom-content .icon{
     font-size: 40px;

@@ -9,6 +9,9 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatGridListModule } from "@angular/material/grid-list";
+import { MatListModule } from "@angular/material/list";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { FormioModule } from "angular-formio";
@@ -34,6 +37,9 @@ import { ProjectPlanModule } from "../project-plan/project-plan.module";
     MatGridListModule,
     MatIconModule,
     MatToolbarModule,
+    MatListModule,
+    MatInputModule,
+    MatSelectModule,
   ],
   exports: [ProjectDetailsComponent]
 })

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ExtendedAppraisalFormsComponent } from '../../components/component-index';
 import { ExtendedAppraisalFormsRoutingModule } from "./extended-appraisal-forms-routing.module";
 
+
 @NgModule({
   declarations: [
     ExtendedAppraisalFormsComponent,

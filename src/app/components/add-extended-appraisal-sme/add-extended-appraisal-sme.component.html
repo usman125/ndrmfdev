@@ -1,1 +1,57 @@
-<p>add-extended-appraisal-sme works!</p>
+<ng-container>
+  <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>{{'Extended Appresial'}}</span>
+      <div class="example-spacer"></div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-card class="m-20 p-4">
+    <mat-card-title>
+    </mat-card-title>
+    <mat-card-content>
+      <mat-list>
+        <mat-list-item>
+          <mat-icon mat-list-icon>folder</mat-icon>
+          <div mat-line>{{'Total Sections'}}</div>
+          <div mat-line>{{totalSections}}</div>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon mat-list-icon>assignment_late</mat-icon>
+          <div mat-line>{{'Pending'}}</div>
+          <div mat-line>{{sectionStats?.pendingCount}}</div>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
+          <div mat-line>{{'Submitted'}}</div>
+          <div mat-line>{{sectionStats?.submitCount}}</div>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+    <mat-card-actions>
+      <!-- <button class="m-1" mat-raised-button color="primary">ASSIGN PROPOSAL SECTIONS TO DESK</button> -->
+      <!-- <button class="m-1" *ngIf="selectedProject && selectedProject?.status === 'Extended Appraisal'" mat-raised-button
+        color="primary">ASSIGN
+        EXTENDED APPRAISAL TO DESK</button> -->
+    </mat-card-actions>
+  </mat-card>
+</ng-container>
+<ng-container>
+  <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>{{'Pending Task'}}</span>
+      <div class="example-spacer"></div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-card class="m-20 p-4">
+    <div class="mb-4" *ngFor="let item of appraisalSections">
+      <formio *ngIf="(item.data === null || item.data !== null) && item.status === 'Pending'" [form]="item.template"
+        [submission]="{data:item.data}" (submit)="onSubmit($event, item.id)"></formio>
+      <formio *ngIf="item.data !== null && item.status === 'Completed'" readOnly="true" [form]="item.template"
+        [submission]="{data:item.data}" (submit)="onSubmit($event, item.id)"></formio>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="mt-5 mb-4 no-submit margin-5" *ngFor="let item of unassignedSections">
+      <formio *ngIf="!item.assigned" readOnly="true" [form]="item.template" [submission]="{data:item.data}"></formio>
+    </div>
+  </mat-card>
+</ng-container>

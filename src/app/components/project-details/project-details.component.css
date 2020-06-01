@@ -67,3 +67,14 @@ mat-button-toggle-group {
   flex-wrap: nowrap;
   overflow-x: auto;
 }
+
+
+.review-box .info .box-title {
+    display: flex;
+    align-items: center;
+}
+.review-box .info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

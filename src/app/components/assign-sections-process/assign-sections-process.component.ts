@@ -35,7 +35,7 @@ export class AssignSectionsProcessComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllProcess();
-
+    this.getDmPams();
   }
 
   getAllProcess() {
@@ -77,6 +77,9 @@ export class AssignSectionsProcessComponent implements OnInit {
         this.apiLoading = true;
         this.getProcessOwners();
         this.getSMES();
+        if ($event === 'EXTENDED_APPRAISAL'){
+          this.getDmPams();
+        }
       },
       error => {
         console.log("ERROR FETCHING TYPE:---", error);
@@ -94,6 +97,24 @@ export class AssignSectionsProcessComponent implements OnInit {
       error => {
         this.apiLoading = false;
         console.log("ERROR FROM PROCEsS OWNER:---", error);
+      }
+    );
+  }
+
+  getDmPams() {
+    this._userService.getDmPams().subscribe(
+      (result: any) => {
+        // this.apiLoading = false;
+        // this.poUsers = result;
+        result.forEach(element => {
+          this.poUsers.push(element);
+          this.smeUsers.push(element);
+        });
+        // console.log("RESULT FROM DM PAMS:---", result);
+      },
+      error => {
+        this.apiLoading = false;
+        console.log("ERROR FROM DM PAMS:---", error);
       }
     );
   }

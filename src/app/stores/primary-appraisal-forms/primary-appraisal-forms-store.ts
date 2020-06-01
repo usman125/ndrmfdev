@@ -9,33 +9,21 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
   }
 
   addPrimaryAppraisal(
-    name: string,
-    display: string,
-    formIdentity: string,
-    page: number,
-    numPages: number,
-    components: any
+    preAppraisal: any,
   ): void {
     this.setState({
       ...this.state,
-      primaryAppraisals: [
-        ...this.state.primaryAppraisals,
-        {
-          name: name,
-          display: display,
-          formIdentity: formIdentity,
-          page: page,
-          numPages: numPages,
-          components: components
-        }
-      ]
+      selectedProject: {
+        ...this.state.selectedProject,
+        preAppraisal: preAppraisal,
+      }
     });
   }
 
-  addAllPrimaryAppraisals(primaryAppraisals) {
+  addSelectedProject(selectedProject) {
     this.setState({
       ...this.state,
-      primaryAppraisals: primaryAppraisals
+      selectedProject: selectedProject
     })
   }
 }

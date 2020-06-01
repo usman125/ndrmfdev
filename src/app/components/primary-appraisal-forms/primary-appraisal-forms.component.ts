@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-primary-appraisal-forms',
@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./primary-appraisal-forms.component.css']
 })
 export class PrimaryAppraisalFormsComponent implements OnInit {
+
+  @Output() showAddBtn: any = false;
+  @Output() viewType: string = 'propapp';
 
   constructor() { }
 

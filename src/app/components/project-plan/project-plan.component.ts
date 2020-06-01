@@ -6,6 +6,7 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SettingsService } from '../../services/settings.service';
+import { AuthStore } from "../../stores/auth/auth-store";
 
 
 export class FoodNode {
@@ -85,6 +86,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   @Input() show: any = null;
+  @Input() proMonths: any = null;
 
   rfForm: any = null;
 
@@ -97,13 +99,16 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     public _CostSummaryStore: CostSummaryStore,
     public _settingsService: SettingsService,
+    public _authStore: AuthStore,
     // public _checklistDatabase: ChecklistDatabase,
   ) {
 
     // this.testingCosts = NODES;
 
+
     var years = 3;
-    var months = 12 * years;
+    // var months = 12 * years;
+    var months = null;
     var quarters = months / 3;
     var quartersObject = {
       title: '',
@@ -113,6 +118,14 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.quarters = quarters;
     this.financersMonthsArray = [];
+
+    this.Subscription.add(
+      this._authStore.state$.subscribe(data => {
+        months = data.auth.proMonths;
+        console.log("months in Plan:---", months);
+      })
+    );
+
     for (let i = 0; i < months; i++) {
       var monthsData = [];
       var object = {
@@ -144,7 +157,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     this._settingsService.getProcessTemplate('PROJECT_PROPOSAL').subscribe(
       (result: any) => {
         result.sections.forEach(element => {
-          if (element.sectionName === "Results Framework"){
+          if (element.sectionName === "Results Framework") {
             this.rfForm = JSON.parse(element.template);
             console.log("RESULT FROM TEMPLATES:--", this.rfForm);
           }
@@ -625,17 +638,17 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     // this.checklistSelection.toggle(node);
     // this.checkAllParentsSelection(node);
   }
-  
+
   rfEntryToggle(node: ExampleFlatNode): void {
     node.rfEntry = !node.rfEntry;
     // var result = this.getParentCost(node);
     // result.rfEntry = node.rfEntry;
     // result.rfEntryData = node.rfEntryData;
-    for (let i=0; i<this.allCosts.length; i++){
-      if (this.allCosts[i]._id === node._id){
+    for (let i = 0; i < this.allCosts.length; i++) {
+      if (this.allCosts[i]._id === node._id) {
         this.allCosts[i].rfEntry = node.rfEntry;
         this.allCosts[i].rfEntryData = node.rfEntryData;
-         console.log("NODE TO ADD IN LINK RF:---", node, this.allCosts[i]);
+        console.log("NODE TO ADD IN LINK RF:---", node, this.allCosts[i]);
       }
     }
     // if (node.rfEntry === true){
@@ -750,7 +763,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     return stack.pop() || null;
   }
 
-  onSubmit($event, node){
+  onSubmit($event, node) {
     console.log("RF SUBMITTED:---", $event);
     for (let i = 0; i < this.allCosts.length; i++) {
       if (this.allCosts[i]._id === node._id) {

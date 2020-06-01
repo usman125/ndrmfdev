@@ -8,8 +8,7 @@
     [ngClass]="{'app-content': !loggedUser, 'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
     class="example-container">
     <mat-sidenav #sidenav *ngIf="loggedUser" mode="side" [opened]="sideNavMode" class="example-sidenav">
-      <div class="hero"
-        [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'fip' || loggedUserRole === 'process owner'">
+      <div class="hero" *ngIf="loggedUserRole === 'admin'">
         <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
@@ -71,16 +70,15 @@
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/prepare-gia">Prepare Gia</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal">Priliminary
                 Appraisals</a>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal-projects">Fill
-                Priliminary Appraisals</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal-projects">
+                Priliminary Appraisal Requests</a>
             </mat-nav-list>
           </mat-expansion-panel>
 
         </mat-accordion>
       </div>
 
-      <div class="hero"
-        [hidden]="loggedUserRole === 'sme' || loggedUserRole === 'admin' || loggedUserRole === 'process owner'">
+      <div class="hero" *ngIf="loggedUserRole === 'fip'">
         <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
@@ -128,8 +126,7 @@
         </mat-accordion>
       </div>
 
-      <div class="hero"
-        [hidden]="loggedUserRole === 'admin' || loggedUserRole === 'fip' || loggedUserRole === 'process owner'">
+      <div class="hero" *ngIf="loggedUserRole === 'sme'">
         <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
@@ -153,15 +150,50 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-nav-list>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/accreditation-requests">Assigned
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/accreditation-requests">Qualification
                 Requests</a>
             </mat-nav-list>
           </mat-expansion-panel>
 
         </mat-accordion>
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Projects
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal-forms">
+                Project Proposal Requests</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/extended-appraisals">Extended
+                Appraisal Requests</a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
       </div>
 
-      <div class="hero" [hidden]="loggedUserRole === 'admin' || loggedUserRole === 'fip' || loggedUserRole === 'sme'">
+      <div class="hero" *ngIf="loggedUserRole === 'dm pam'">
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Projects
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal-forms">
+                Project Proposal Requests</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal-projects">
+                Priliminary Appraisal Requests</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/extended-appraisals">Extended
+                Appraisal Requests</a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+
+      <div class="hero" *ngIf="loggedUserRole === 'process owner'">
         <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
@@ -201,7 +233,8 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-nav-list>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal">Pre Appraisal Requests</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal">Proposal
+                Requests</a>
             </mat-nav-list>
           </mat-expansion-panel>
         </mat-accordion>

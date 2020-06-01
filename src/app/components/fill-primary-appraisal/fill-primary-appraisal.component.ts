@@ -5,6 +5,7 @@ import { PrimaryAppraisalFormsStore } from "../../stores/primary-appraisal-forms
 import { PrimaryAppraisalRequestsStore } from "../../stores/primary-appraisal-requests/primary-appraisal-requests-store";
 import { Subscription } from "rxjs";
 import { setCurrentProject, currentProjectReplay } from "../../stores/projects/project-replay";
+import { ProjectService } from "../../services/project.service";
 
 @Component({
   selector: 'app-fill-primary-appraisal',
@@ -26,16 +27,21 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
 
   @Output() showFillApprasialBtn: boolean = false;
   @Input() preAppViewType: string = 'fill';
+  @Input() viewType: string = 'dm';
+
+  pendingAppraisalDays: any = null;
 
   constructor(
     private _projectsStore: ProjectsStore,
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
+    private _projectService: ProjectService,
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
     private _primaryAppraisalRequestsStore: PrimaryAppraisalRequestsStore,
   ) { }
 
   ngOnInit(): void {
+
 
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
 
@@ -55,55 +61,94 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
     //     project.extendedAppraisalExpiry,
     //   );
     // });
-    currentProjectReplay.subscribe((data) => {
-      this.selectedProject = data;
-      console.log("SELCTED PROJECT ID IS:--", this.selectedProjectId, this.selectedProject);
-    })
-    this._primaryAppraisalFormsStore.state$.subscribe(data => {
-      this.form = data.primaryAppraisals[0];
-      console.log("APPRASIAL FORM:----", this.form);
-    })
+    // currentProjectReplay.subscribe((data) => {
+    //   this.selectedProject = data;
+    //   console.log("SELCTED PROJECT ID IS:--", this.selectedProjectId, this.selectedProject);
+    // })
+    // this.getPreAppraisalRequests();
+    this.Subscription.add(
+      this._primaryAppraisalFormsStore.state$.subscribe(data => {
+        // this.form = data.primaryAppraisals[0];
+        this.selectedProject = data.selectedProject;
+        if (this.selectedProject && this.selectedProject.preAppraisal) {
+          if (typeof (this.selectedProject.preAppraisal.template) === 'string') {
+            this.selectedProject.preAppraisal.template = JSON.parse(this.selectedProject.preAppraisal.template);
+          }
+          if (typeof (this.selectedProject.preAppraisal.data) === 'string') {
+            this.selectedProject.preAppraisal.data = JSON.parse(this.selectedProject.preAppraisal.data);
+          }
+        }
+        // if (this.selectedProject && this.selectedProject.preAppraisal.data) {
+        // }
+        console.log("APPRASIAL FORM:----", this.selectedProject);
+        if (this.selectedProject && this.selectedProject.preAppraisal) {
+
+          var date1 = new Date();
+          var date2 = new Date(this.selectedProject.preAppraisal.endDate);
+
+          // To calculate the time difference of two dates 
+          var Difference_In_Time = date2.getTime() - date1.getTime();
+
+          // To calculate the no. of days between two dates 
+          var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
+          this.pendingAppraisalDays = Math.trunc(Difference_In_Days);
+
+          console.log("TIME DIFFERENCE:", Difference_In_Days, Math.trunc(Difference_In_Days));
+        }
+      })
+    );
     this.Subscription.add(
       this._primaryAppraisalRequestsStore.state$.subscribe(data => {
         this.apprasialRequests = data.requests;
-        for (let i = 0; i < this.apprasialRequests.length; i++) {
-          if (this.apprasialRequests[i].projectRef === this.selectedProjectId) {
-            this.apprasialRequest = this.apprasialRequests[i];
-            this.submitData = this.apprasialRequests[i].submitData;
-            break;
-          }
-        }
-        if (this.apprasialRequest) {
-          this.form.exists = true
-        }else {
-          this.form.exists = false
-        }
         console.log("APPRASIAL REQUESTS:----\n", this.apprasialRequests,
           "\nSINGLE REQUEST:---\n", this.apprasialRequest,
           "\nSUBMIT DATA:---\n", this.submitData,
         );
       })
     );
-    // this.Subscription.add(
-    // );
 
   }
+
+  getPreAppraisalRequests() {
+    this._projectService.getPreAppraisalRequests().subscribe(
+      result => {
+        console.log("RESULT FROM PRE APPRAISAL:--", result);
+      },
+      error => {
+        console.log("ERROR FROM PRE APPRAISAL:--", error);
+      }
+    );
+  }
+
 
   onSubmit($event) {
     console.log("FORM SUBMIT DATA:---", $event.data);
     this.submitData = $event.data;
-    this._primaryAppraisalRequestsStore.addRequest(
-      this.selectedProjectId,
-      this.loggedUser.username,
-      $event.data,
-      'appresial-form',
-      null,
-      'pending',
+    this._projectService.submitPreAppraisal(this.selectedProject.id, { data: JSON.stringify($event.data) }).subscribe(
+      result => {
+        console.log("RESULT FROM ADDING PRE APPRAISAL:--", result);
+        this._primaryAppraisalFormsStore.addPrimaryAppraisal(
+          {
+            data: $event.data,
+            startDate: this.selectedProject.preAppraisal.startDate,
+            endDate: this.selectedProject.preAppraisal.endDate,
+            id: this.selectedProject.preAppraisal.id,
+            status: 'Completed',
+            proposalName: this.selectedProject.preAppraisal.proposalName,
+            template: this.selectedProject.preAppraisal.template,
+            assigned: this.selectedProject.preAppraisal.assigned,
+          }
+        );
+      },
+      error => {
+        console.log("ERROR FROM ADDING PRE APPRAISAL:--", error);
+      }
     )
-    this.form.exists = true;
+    // this.form.exists = true;
   }
 
-  completeTask(){
+  completeTask() {
     setCurrentProject(
       this.selectedProject.name,
       this.selectedProject.type,

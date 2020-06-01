@@ -49,7 +49,14 @@ export class SmeHomeComponent implements OnInit {
         //   }
         // });
         console.log("RESULT SME HOME TASKS:--", result);
-        this.qualiTaskCount = result.qualification.length;
+        let count = 0;
+        for (let i = 0; i < result.qualification.length; i++){
+          let key = result.qualification[i];
+          if (key.status === "Pending"){
+            count = count + 1;
+          }
+        }
+        this.qualiTaskCount = count;
         this._authStore.removeLoading();
       },
       error => {

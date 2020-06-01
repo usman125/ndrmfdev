@@ -8,15 +8,19 @@
     <div class="controls" *ngIf="data?.confirm">
       <mat-form-field>
         <mat-label>Start Date</mat-label>
-        <input matInput [matDatepicker]="picker" [(ngModel)]="data.startDate">
+        <input matInput [matDatepicker]="picker" [min]="data.startDate" [(ngModel)]="data.startDate">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
       <mat-form-field>
         <mat-label>End Date</mat-label>
-        <input matInput [matDatepicker]="picker2" [(ngModel)]="data.endDate">
+        <input matInput [matDatepicker]="picker2" [min]="data.startDate" [(ngModel)]="data.endDate">
         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
         <mat-datepicker #picker2></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Comments for others</mat-label>
+        <textarea matInput placeholder="Enter your comments..." [(ngModel)]="data.comments"></textarea>
       </mat-form-field>
     </div>
     <div class="controls" *ngIf="data?.setStatus">

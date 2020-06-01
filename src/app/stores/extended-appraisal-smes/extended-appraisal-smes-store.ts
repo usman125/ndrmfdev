@@ -8,60 +8,86 @@ export class ExtendedAppraisalSmesStore extends Store<ExtendedAppraisalSmesState
     super(new ExtendedAppraisalSmesState());
   }
 
-  addSection(
-    name: string,
-    key: string,
-    userRef: string,
-    formGenerated: boolean,
-  ): void {
+  addAppraisal(appraisal) {
     this.setState({
       ...this.state,
-      sections: [
-        ...this.state.sections,
-        {
-          name: name,
-          key: key,
-          userRef: userRef,
-          formGenerated: formGenerated,
-        }
-      ]
-    });
+      extendedAppraisal: appraisal
+    })
   }
 
-  updateSectionFormgenerated(
-    key: string,
-  ): void {
+  updateSectionData(id, data) {
     this.setState({
       ...this.state,
-      sections: this.state.sections.map((c) => {
-        if (c.key === key) {
-          return {
-            ...c,
-            formGenerated: true
+      extendedAppraisal: {
+        ...this.state.extendedAppraisal,
+        sections: this.state.extendedAppraisal.sections.map(c => {
+          if (c.id === id) {
+            return {
+              ...c,
+              data: data,
+              status: 'Completed',
+            }
           }
-        }
-        return c;
-      })
-    });
+          return c;
+        })
+      }
+    })
   }
 
-  updateSectionUserRef(
-    key: string,
-    userRef: string,
-  ): void {
-    this.setState({
-      ...this.state,
-      sections: this.state.sections.map((c) => {
-        if (c.key === key) {
-          return {
-            ...c,
-            userRef: userRef
-          }
-        }
-        return c;
-      })
-    });
-  }
+  // addSection(
+  //   name: string,
+  //   key: string,
+  //   userRef: string,
+  //   formGenerated: boolean,
+  // ): void {
+  //   this.setState({
+  //     ...this.state,
+  //     sections: [
+  //       ...this.state.sections,
+  //       {
+  //         name: name,
+  //         key: key,
+  //         userRef: userRef,
+  //         formGenerated: formGenerated,
+  //       }
+  //     ]
+  //   });
+  // }
+
+  // updateSectionFormgenerated(
+  //   key: string,
+  // ): void {
+  //   this.setState({
+  //     ...this.state,
+  //     sections: this.state.sections.map((c) => {
+  //       if (c.key === key) {
+  //         return {
+  //           ...c,
+  //           formGenerated: true
+  //         }
+  //       }
+  //       return c;
+  //     })
+  //   });
+  // }
+
+  // updateSectionUserRef(
+  //   key: string,
+  //   userRef: string,
+  // ): void {
+  //   this.setState({
+  //     ...this.state,
+  //     sections: this.state.sections.map((c) => {
+  //       if (c.key === key) {
+  //         return {
+  //           ...c,
+  //           userRef: userRef
+  //         }
+  //       }
+  //       return c;
+  //     })
+  //   });
+  // }
 
 
 

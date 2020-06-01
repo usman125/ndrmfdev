@@ -11,6 +11,7 @@ const AUTH = {
   checkedThemeName: 'unicorn-light-theme',
   apiCall: false,
   authToken: null,
+  proMonths: null,
 }
 
 export class AuthState {
@@ -27,5 +28,6 @@ export class AuthState {
     checkedThemeName: string,
     apiCall: boolean,
     authToken: string,
+    proMonths: any,
   } = AUTH;
 }

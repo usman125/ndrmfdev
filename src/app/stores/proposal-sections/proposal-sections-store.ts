@@ -69,6 +69,39 @@ export class ProposalSectionsStore extends Store<ProposalSectionsState> {
     });
   }
 
+  assignTasksToSmes(sectionId) {
+    this.setState({
+      ...this.state,
+      sections: this.state.sections.map(c => {
+        if (c.id === sectionId) {
+          return {
+            ...c,
+            reviewStatus: 'Pending',
+            reviewDeadline: new Date(),
+          }
+        }
+        return c;
+      })
+    })
+  }
+
+  submitProposalReview(sectionId, review) {
+    this.setState({
+      ...this.state,
+      sections: this.state.sections.map(c => {
+        if (c.id === sectionId) {
+          return {
+            ...c,
+            review: review,
+            reviewStatus: 'Completed',
+            reviewCompletedDate: new Date().toISOString()
+          }
+        }
+        return c;
+      })
+    })
+  }
+
   // updateSectionFormgenerated(
   //   key: string,
   // ): void {

@@ -58,7 +58,8 @@ import { ProposalRequestsStore } from './stores/proposal-requests/proposal-reque
 import { PrimaryAppraisalFormsStore } from './stores/primary-appraisal-forms/primary-appraisal-forms-store';
 import { PrimaryAppraisalRequestsStore } from './stores/primary-appraisal-requests/primary-appraisal-requests-store';
 import { PendingSignupsStore } from './stores/pending-signups/pending-signups-store';
-
+import { ExtendedAppraisalSmesStore } from "./stores/extended-appraisal-smes/extended-appraisal-smes-store";
+import { ExtendedAppraisalFormsStore } from "./stores/extended-appraisal-forms/extended-appraisal-forms-store";
 
 
 import { IntimateFipModule } from './modules/fip-intimations/fip-intimations.module';
@@ -238,6 +239,8 @@ export function tokenGetter() {
     PrimaryAppraisalFormsStore,
     PrimaryAppraisalRequestsStore,
     PendingSignupsStore,
+    ExtendedAppraisalSmesStore,
+    ExtendedAppraisalFormsStore,
   ],
   bootstrap: [AppComponent],
   exports: [

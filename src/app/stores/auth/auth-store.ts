@@ -179,4 +179,14 @@ export class AuthStore extends Store<AuthState> {
     });
   }
 
+  setProjectMonths(months){
+    this.setState({
+      ...this.state,
+      auth: {
+        ...this.state.auth,
+        proMonths: months
+      }
+    })
+  }
+
 }

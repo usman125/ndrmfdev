@@ -24,7 +24,9 @@
           <span>{{item?.thematicAreaName}}</span>
         </div>
         <div class="bottom-content">
-          <span>{{item.status}}</span>
+          <span id="answer">{{item.status}}</span>
+          <!-- <span *ngIf="item?.preAppraisal !== null" id="comment">{{item?.preAppraisal.status}}</span> -->
+          <!-- <span *ngIf="item.preAppraisal === null" id="comment">{{item.preAppraisal.status}}</span> -->
         </div>
       </div>
     </mat-grid-tile>

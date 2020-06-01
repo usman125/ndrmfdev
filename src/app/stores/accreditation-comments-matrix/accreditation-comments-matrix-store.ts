@@ -20,10 +20,10 @@ export class AccreditationCommentsMatrixStore extends Store<AccreditationComment
   //   });
   // }
 
-  addRequest (request: any): void {
+  addCommentsArray (comments: any): void {
     this.setState({
       ...this.state,
-      request: request
+      comments: comments
     });
   }
 }

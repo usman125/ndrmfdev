@@ -38,10 +38,14 @@ const SECTIONS = [
 ]
 
 export class ExtendedAppraisalSmesState {
-  sections: {
-    name: string,
-    key: string,
-    userRef: string,
-    formGenerated: boolean
-  }[] = SECTIONS;
+  extendedAppraisal: {
+    assigned: any;
+    assignee: any;
+    comments: any;
+    endDate: any;
+    id: any;
+    sections: any;
+    startDate: any;
+    status: any;
+  } = null;
 }

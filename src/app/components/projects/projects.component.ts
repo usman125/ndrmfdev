@@ -49,6 +49,12 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
+    // this.getAllProjects();
+    if (this.loggedUser.role === 'fip') this.getAllProjects();
+    if (this.loggedUser.role === 'process owner') this.getPoProjects();
+    if (this.loggedUser.role === 'dm pam' && this.viewType === 'dm') this.getDmPamProjects();
+    if (this.loggedUser.role === 'dm pam' && (this.viewType === 'extapp' || this.viewType === 'propapp')) this.getExtAppraisalProjects();
+    if (this.loggedUser.role === 'sme') this.getExtAppraisalProjects();
     console.log("SHOW BUTTON VALUE:--", this.showAddBtn, this.viewType, this.loggedUser);
     this.Subscriptions.add(
       this._projectsStore.state$.subscribe(data => {
@@ -56,9 +62,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         this.allProjects = data.projects;
       })
     );
-    // this.getAllProjects();
-    if (this.loggedUser.role === 'fip') this.getAllProjects();
-    if (this.loggedUser.role === 'process owner') this.getPoProjects();
   }
 
   getAllProjects() {
@@ -73,14 +76,39 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     );
   }
 
+  getExtAppraisalProjects() {
+    this._projectService.getExtAppraisalProjects().subscribe(
+      (result: any) => {
+        console.log("RESULT EXTENDED APPRAISAL PROJECT:---", result);
+        this._projectsStore.addAllProjects(result);
+      },
+      error => {
+        console.log("ERROR EXTENDED APPRAISAL PROJECT:---", error);
+      }
+    );
+  }
+
   getPoProjects() {
     this._projectService.getPoProjects().subscribe(
       (result: any) => {
         console.log("RESULT ALL PO PROJECT:---", result);
         this._projectsStore.addAllProjects(result);
+        // this.getExtAppraisalProjects();
       },
       error => {
         console.log("ERROR ALL PO PROJECT:---", error);
+      }
+    );
+  }
+
+  getDmPamProjects() {
+    this._projectService.getDmPamProjects().subscribe(
+      (result: any) => {
+        console.log("RESULT ALL DM PAM PROJECT:---", result);
+        this._projectsStore.addAllProjects(result);
+      },
+      error => {
+        console.log("ERROR ALL DM PAM PROJECT:---", error);
       }
     );
   }
@@ -103,8 +131,16 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       this._router.navigate(['/gia-appraisal', item.id]);
     } else if (this.viewType == 'po') {
       this._router.navigate(['/create-primary-appraisal', item.id]);
-    } else if (this.viewType == 'dm') {
+    } else if (this.loggedUser.role === 'dm pam' && this.viewType === 'dm') {
       this._router.navigate(['/fill-primary-appraisal', item.id]);
+    } else if (this.loggedUser.role === 'dm pam' && this.viewType === 'extapp') {
+      this._router.navigate(['/add-extended-appraisal-form', item.id]);
+    } else if (this.loggedUser.role === 'dm pam' && this.viewType === 'propapp') {
+      this._router.navigate(['/add-primary-appraisal-form', item.id]);
+    } else if (this.loggedUser.role === 'sme' && this.viewType === 'extapp') {
+      this._router.navigate(['/add-extended-appraisal-form', item.id]);
+    } else if (this.loggedUser.role === 'sme' && this.viewType === 'propapp') {
+      this._router.navigate(['/add-primary-appraisal-form', item.id]);
     } else {
       this._router.navigate(['/project-details', item.id]);
     }

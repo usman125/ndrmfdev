@@ -1219,7 +1219,6 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         if (item[i].assigned) {
           mySectionsCount = mySectionsCount + 1;
         }
-
       }
     }
     this.sectionStats = { pendingCount, reviewsCount, unassignCount, mySectionsCount };
