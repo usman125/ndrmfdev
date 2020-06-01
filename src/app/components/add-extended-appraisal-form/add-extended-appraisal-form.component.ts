@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PrimaryAppraisalFormsStore } from "../../stores/primary-appraisal-forms/primary-appraisal-forms-store";
 import { Subscription } from "rxjs";
@@ -15,6 +15,7 @@ export class AddExtendedAppraisalFormComponent implements OnInit {
   Subscription: Subscription = new Subscription();
 
   @Input() totalSections: any = 0;
+  @Output() viewType: string = 'extapp';
 
   constructor(
     private _activatedRoute: ActivatedRoute,

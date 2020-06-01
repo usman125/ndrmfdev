@@ -52,6 +52,8 @@ export class ProposalSectionsState {
     review: any,
     reviewStatus: string,
     projectStatus: string,
-    reassignmentStatus: string
+    reassignmentStatus: string,
+    reviewDeadline: any,
+    reviewCompletedDate: any,
   }[] = SECTIONS;
 }

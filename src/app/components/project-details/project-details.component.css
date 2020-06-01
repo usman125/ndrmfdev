@@ -68,7 +68,9 @@ mat-button-toggle-group {
   overflow-x: auto;
 }
 
-
+.review-box{
+  padding: 10px;
+}
 .review-box .info .box-title {
     display: flex;
     align-items: center;
@@ -77,4 +79,9 @@ mat-button-toggle-group {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.mat-list-item {
+  background: rgba(235, 235, 235, 0.5);
+  margin-bottom: 5px;
 }

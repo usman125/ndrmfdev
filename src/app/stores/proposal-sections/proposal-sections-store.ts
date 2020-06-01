@@ -23,6 +23,8 @@ export class ProposalSectionsStore extends Store<ProposalSectionsState> {
     reviewStatus: string,
     reassignmentStatus: string,
     projectStatus: string,
+    reviewDeadline: any,
+    reviewCompletedDate: any,
   ): void {
     this.setState({
       ...this.state,
@@ -42,7 +44,9 @@ export class ProposalSectionsStore extends Store<ProposalSectionsState> {
           review: review,
           reviewStatus: reviewStatus,
           reassignmentStatus: reassignmentStatus,
-          projectStatus: projectStatus
+          projectStatus: projectStatus,
+          reviewDeadline: reviewDeadline,
+          reviewCompletedDate: reviewCompletedDate,
         }
       ]
     });

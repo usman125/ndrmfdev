@@ -294,6 +294,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   tabChanged($event) {
     this.form = this.groupType.template;
+    this.form.sme = this.groupType.sme.name;
     this.formSubmitData = this.groupType.data;
     // for (let i = 0; i < this.proposalForms.length; i++) {
     //   if (this.proposalForms[i].smeRef === $event.key) {

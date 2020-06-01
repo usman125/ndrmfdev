@@ -598,6 +598,11 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
   box-shadow: none;
 }
 
+.warn-comment {
+  color: #f54336;
+  // color: map_get($mat-red, 800);
+}
+
 // .mat-button-toggle-checked {
 //   color: #fff !important;
 //   background: mat-color($candy-app-accent) !important;

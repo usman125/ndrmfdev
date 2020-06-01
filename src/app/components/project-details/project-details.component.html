@@ -1,7 +1,7 @@
 <ng-container *ngIf="!apiLoading">
   <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
     <mat-toolbar-row>
-      <span>Project Summary</span>
+      <span>Proposal Summary</span>
       <div class="example-spacer"></div>
       <button *ngIf="!apiLoading && viewType === 'user' && loggedUser.role === 'fip'"
         [disabled]="submitSections === proposalSections.length && 
@@ -59,7 +59,8 @@
         color="primary" (click)="viewExtAppraisal()">
         {{'View extended appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
       </button>
-      <button (click)="viewCommentsMatrix()" class="m-1" *ngIf="selectedProject && selectedProject?.status === 'Extended Appraisal'" mat-button
+      <button (click)="viewCommentsMatrix()" class="m-1"
+        *ngIf="selectedProject && selectedProject?.status === 'Extended Appraisal'" mat-button
         color="warn">{{'View Comments Matrix' | uppercase}} <mat-icon style="margin-left: 5px;">view_module</mat-icon>
       </button>
     </mat-card-actions>
@@ -80,7 +81,8 @@
         *ngIf="selectedProject && selectedProject?.status === 'Extended Appraisal'" mat-button color="accent">ASSIGN
         PROPOSAL SECTIONS TO DESK <mat-icon style="margin-left: 5px;">description</mat-icon>
       </button>
-      <button (click)="viewCommentsMatrix()" class="m-1" *ngIf="selectedProject && selectedProject?.status === 'Extended Appraisal'" mat-button
+      <button (click)="viewCommentsMatrix()" class="m-1"
+        *ngIf="selectedProject && selectedProject?.status === 'Extended Appraisal'" mat-button
         color="warn">{{'View Comments Matrix' | uppercase}} <mat-icon style="margin-left: 5px;">view_module</mat-icon>
       </button>
     </mat-card-actions>
@@ -89,7 +91,15 @@
   </mat-card>
 
   <!-- PROJECT PROPOSAL SECTION STATS -->
-  <mat-card class="m-20 p-4" [hidden]="loggedUser.role === 'sme' || loggedUser.role === 'fip' || preAppViewType === 'view'">
+  <mat-toolbar class="mat-elevation-z8" *ngIf="viewType === 'propapp' || viewType === 'po'" style="padding: 15px 0px;"
+    color="primary">
+    <mat-toolbar-row>
+      <span>Proposal Sections</span>
+      <div class="example-spacer"></div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-card class="m-20 mb-0 p-4"
+    *ngIf="(loggedUser.role === 'dm pam' || loggedUser.role === 'process owner') && (viewType === 'propapp' || viewType === 'po')">
     <mat-card-title>
     </mat-card-title>
     <mat-card-content>
@@ -127,21 +137,21 @@
     </mat-card-title>
     <mat-card-content>
       <div class="review-box" *ngIf="assignedProposalSections.length">
-        <h6 id="answer" class="mb-2">Proposal Sections</h6>
-        <div class="info mt-4" *ngFor="let item of assignedProposalSections">
+        <h6 id="answer" class="mb-4">Proposal Sections</h6>
+        <div class="info mt-2" *ngFor="let item of assignedProposalSections">
           <span class="box-title">
             <mat-icon class="mr-2" color="warn" *ngIf="item.reviewStatus === 'Pending' || item.reviewStatus === null">
               info</mat-icon>
             <mat-icon class="mr-2" color="accent" *ngIf="item.reviewStatus === 'Completed'">check</mat-icon>
             {{item.name}}
           </span>
-          <small id="answer" *ngIf="item.reviewStatus === 'Completed'" class="task">
+          <small id="comment" *ngIf="item.reviewStatus === 'Completed'" class="task">
             <span style="font-weight: 600;">{{'Submitted' | uppercase}}:</span>
             {{item.reviewCompletedDate | date:'fullDate' | uppercase}}
           </small>
-          <small id="comment" *ngIf="item.reviewStatus === 'Pending'" class="task">
+          <small *ngIf="item.reviewStatus === 'Pending'" class="task warn-comment">
             <span style="font-weight: 600;">{{'Pending' | uppercase}}:</span>
-            {{item.reviewCompletedDate | date:'fullDate' | uppercase}}
+            {{item.reviewDeadline | date:'fullDate' | uppercase}}
           </small>
           <!-- <span *ngIf="item.reviewStatus === 'Pending'" class="task">
             {{item.review.createdAt | date:'fullDate'}}
@@ -179,17 +189,19 @@
     <mat-card-actions>
     </mat-card-actions>
   </mat-card>
-  <mat-card class="m-20 p-4" *ngIf="loggedUser.role === 'sme'">
+  <mat-card class="m-20 p-4"
+    *ngIf="(loggedUser.role === 'sme' || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner') && (viewType === 'propapp' || viewType === 'po' || viewType === 'extapp')">
     <mat-card-title>
-      <h5>Add General Review</h5>
+      <h5 class="review-box pb-0">Add General Remarks</h5>
     </mat-card-title>
     <mat-card-content>
       <div class="review-box" *ngIf="unassignedProposalSections.length">
-        <h6 id="answer" class="mb-2">Proposal Sections</h6>
+        <h6 id="answer" class="mb-4">Proposal Sections</h6>
         <div class="info" *ngFor="let item of unassignedProposalSections">
           <span>{{item.name}}</span>
         </div>
-        <div class="input-box mt-3" *ngIf="assignedProposalSections.length">
+        <div class="input-box mt-3"
+          *ngIf="assignedProposalSections.length || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner'">
           <mat-form-field appearance="outline">
             <mat-select (selectionChange)="unassignSectionsSelectStore($event)" placeholder="Select Sections"
               [formControl]="unAssignSections" multiple>
@@ -206,7 +218,8 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div class="input-box mt-3" *ngIf="assignedProposalSections.length">
+        <div class="input-box mt-3"
+          *ngIf="assignedProposalSections.length || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner'">
           <mat-form-field appearance="outline">
             <mat-label>General remarks</mat-label>
             <textarea (input)="sectionUnassignComments = $event.target.value" [value]="sectionUnassignComments" matInput
@@ -224,9 +237,9 @@
 
 
   <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary"
-    *ngIf="viewType === 'po' || viewType === 'dm'">
+    *ngIf="viewType === 'po' || viewType === 'dm' || viewType === 'propapp' || viewType === 'extapp'">
     <mat-toolbar-row>
-      <span>Project Details</span>
+      <span>Proposal Section Details</span>
       <div class="example-spacer"></div>
     </mat-toolbar-row>
   </mat-toolbar>
@@ -244,6 +257,12 @@
           </mat-button-toggle-group>
         </div>
         <div class="top-form pb-0">
+
+          <span class="mb-3 mt-3" style="display: block;font-weight: bold;">
+            SME:
+            <span id="comment">{{form.sme}}</span>
+          </span>
+
           <formio *ngIf="form && !formSubmitData && loggedUser.role !== 'admin'" [form]="form"
             (submit)="onSubmit($event)"></formio>
           <formio *ngIf="form && formSubmitData && loggedUser.role !== 'admin'" readOnly="true"
