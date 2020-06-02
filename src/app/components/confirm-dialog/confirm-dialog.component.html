@@ -25,9 +25,12 @@
     </div>
     <div class="controls" *ngIf="data?.setStatus">
       <div class="status-btns">
-        <button mat-raised-button (click)="setStatus('DEFERRED')" color="accent" class="m-2">{{'Deferred' | uppercase}}</button>
-        <button mat-raised-button (click)="setStatus('APPROVED')" color="primary" class="m-2">{{'Approved' | uppercase}}</button>
-        <button mat-raised-button (click)="setStatus('REJECTED')" color="warn" class="m-2">{{'Rejected' | uppercase}}</button>
+        <button mat-raised-button (click)="setStatus('DEFERRED')" color="accent"
+          class="m-2">{{'Deferred' | uppercase}}</button>
+        <button mat-raised-button (click)="setStatus('APPROVED')" color="primary"
+          class="m-2">{{'Approved' | uppercase}}</button>
+        <button mat-raised-button (click)="setStatus('REJECTED')" color="warn"
+          class="m-2">{{'Rejected' | uppercase}}</button>
       </div>
     </div>
   </div>
@@ -38,7 +41,10 @@
       (click)="cancel()">{{ data.cancelText }}</button>
     <button [disabled]="!data.startDate || !data.endDate" *ngIf="data?.confirm" color="primary" mat-raised-button
       (click)="confirm()">{{ data.confirmText }}</button>
-    <!-- <button *ngIf="data?.setStatus" mat-button style="margin-right:10px;"
-      (click)="cancel()">{{ data.cancelText }}</button> -->
+    <!-- GM CONTROLS -->
+    <button *ngIf="data?.assignToGm" mat-raised-button (click)="cancel()" color="warn"
+      class="m-2">{{'no' | uppercase}}</button>
+    <button *ngIf="data?.assignToGm" mat-raised-button (click)="assignToGm('ASSIGN')" color="primary"
+      class="m-2">{{'yes' | uppercase}}</button>
   </div>
 </div>

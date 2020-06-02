@@ -1,4 +1,5 @@
 import { Component, OnInit, Output } from '@angular/core';
+import { Location } from '@angular/common';
 import { ExtendedAppraisalSmesStore } from "../../stores/extended-appraisal-smes/extended-appraisal-smes-store";
 import { Subscription } from 'rxjs';
 import { ProjectService } from "../../services/project.service";
@@ -23,6 +24,7 @@ export class AddExtendedAppraisalSmeComponent implements OnInit {
   constructor(
     private _extendedAppraisalSmesStore: ExtendedAppraisalSmesStore,
     private _projectService: ProjectService,
+    private _location: Location,
   ) { }
 
   ngOnInit(): void {
@@ -82,5 +84,9 @@ export class AddExtendedAppraisalSmeComponent implements OnInit {
         console.log("ERROR FROM adding EP:--", error);
       },
     );
+  }
+
+  goBack(){
+    this._location.back();
   }
 }

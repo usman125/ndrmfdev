@@ -4,4 +4,6 @@ export enum Role {
   Sme = 'sme',
   Po = 'process owner',
   Dm = 'dm pam',
+  Gm = 'gm',
+  Ceo = 'ceo',
 }

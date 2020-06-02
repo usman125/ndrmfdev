@@ -33,6 +33,20 @@ export class ProjectService {
     );
   }
 
+  getGmProjects() {
+    const url = `${AppConfig.apiUrl}/project-proposal/?status=MARKED_TO_GM`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
+  getCeoProjects() {
+    const url = `${AppConfig.apiUrl}/project-proposal/?status=MARKED_TO_CEO`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
   getExtAppraisalProjects() {
     const url = `${AppConfig.apiUrl}/project-proposal/?status=EXTENDED_APPRAISAL`;
     return this._httpClient.get(
@@ -119,8 +133,8 @@ export class ProjectService {
       data
     );
   }
-  
-  assignProposalSectionTasks(sectionId, data){
+
+  assignProposalSectionTasks(sectionId, data) {
     const url = `${AppConfig.apiUrl}/project-proposal/section/${sectionId}/task/add`;
     return this._httpClient.post(
       url,
@@ -128,7 +142,7 @@ export class ProjectService {
     );
   }
 
-  submitProposalSectionReview(sectionId, data){
+  submitProposalSectionReview(sectionId, data) {
     const url = `${AppConfig.apiUrl}/project-proposal/section/${sectionId}/review/add`;
     return this._httpClient.post(
       url,
@@ -136,12 +150,22 @@ export class ProjectService {
     );
   }
 
-  submitProposalGeneralReview(id, data){
+  submitProposalGeneralReview(id, data) {
     const url = `${AppConfig.apiUrl}/project-proposal/${id}/comment/add`;
     return this._httpClient.post(
       url,
       data
     );
+  }
+
+  markToGm(id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=MARKED_TO_GM`;
+    const status = 'MARKED_TO_GM';
+    return this._httpClient.put(
+      url,
+      null
+    );
+
   }
 
 

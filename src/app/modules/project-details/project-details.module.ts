@@ -17,6 +17,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { FormioModule } from "angular-formio";
 // import { ViewPrimaryAppraisalModule } from "../view-primary-appraisal/view-primary-appraisal.module";
 import { ProjectPlanModule } from "../project-plan/project-plan.module";
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ProjectPlanModule } from "../project-plan/project-plan.module";
     MatToolbarModule,
     MatListModule,
     MatInputModule,
+    MatChipsModule,
     MatSelectModule,
   ],
   exports: [ProjectDetailsComponent]

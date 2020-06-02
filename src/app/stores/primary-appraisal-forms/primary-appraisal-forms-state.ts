@@ -331,10 +331,13 @@ export class PrimaryAppraisalFormsState {
     initiatedBy: any,
     owner: any,
     preAppraisal: any,
+    extendedAppraisal: any,
+    commentsMatrix: any,
     processOwner: any,
     reassignmentTask: any,
     sections: any,
     status: any,
+    subStatus: any,
     submittedAt: any,
     id: any,
   } = null;

@@ -52,3 +52,8 @@ export { SmeHomeComponent } from './sme-home/sme-home.component';
 export { AdminHomeComponent } from './admin-home/admin-home.component';
 export { AssignThematicAreaComponent } from './assign-thematic-area/assign-thematic-area.component';
 export { DataFilterPipe } from '../pipes/data-filter.pipe'
+
+export { CeoHomeComponent } from './ceo-home/ceo-home.component';
+export { CeoProposalComponent } from './ceo-proposal/ceo-proposal.component';
+export { GmProposalComponent } from './gm-proposal/gm-proposal.component';
+export { GmHomeComponent } from './gm-home/gm-home.component';

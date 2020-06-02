@@ -18,7 +18,7 @@
     <div class="col-md-4 item">{{item.addedBy || 'N/A'}}</div>
     <div class="col-md-4 item">
       <mat-chip-list>
-        <mat-chip *ngFor="let section of item.sections" color="warn" selected>{{section}}</mat-chip>
+        <mat-chip *ngFor="let section of item.sections;">{{section}}</mat-chip>
       </mat-chip-list>
     </div>
     <div class="col-md-4 item">{{item.comment || 'N/A'}}</div>

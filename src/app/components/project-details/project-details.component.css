@@ -68,20 +68,40 @@ mat-button-toggle-group {
   overflow-x: auto;
 }
 
-.review-box{
+.review-box {
   padding: 10px;
 }
 .review-box .info .box-title {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 .review-box .info {
-    display: flex;
+  display: flex;
     align-items: center;
     justify-content: space-between;
+    background: rgba(235, 235, 235, 0.5);
+    padding: 10px;
+    cursor: pointer;
 }
 
 .mat-list-item {
   background: rgba(235, 235, 235, 0.5);
   margin-bottom: 5px;
+}
+
+.top-info-bar {
+  display: flex;
+  justify-content: space-between;
+  background: rgba(235, 235, 235, 0.5);
+  padding: 25px;
+  align-items: center;
+  align-content: center;
+  margin: 25px auto;
+}
+.block{
+  display: flex;
+  align-items: center;
+  align-content: center;
+  margin: 3px 0px;
+  /* justify-content: space-between; */
 }

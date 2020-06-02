@@ -6,8 +6,6 @@
     height: 150px;
 }
 
-
-
 .info {
     display: flex;
     flex-direction: column;
@@ -20,15 +18,17 @@
 }
 
 .bottom-content {
-    height: 50px;
+    height: 90px;
     font-size: 13px;
     font-weight: 600;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
 }
-.bottom-content .icon{
+.bottom-content .icon {
     font-size: 40px;
 }
-
-
 
 .inner-content {
     padding: 15px;

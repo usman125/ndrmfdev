@@ -133,6 +133,12 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (this.loggedUser.role === 'dm pam') {
         this._router.navigate(['primary-appraisal-projects']);
       }
+      if (this.loggedUser.role === 'gm') {
+        this._router.navigate(['gmhome']);
+      }
+      if (this.loggedUser.role === 'ceo') {
+        this._router.navigate(['ceohome']);
+      }
     }
   }
 
@@ -189,6 +195,10 @@ export class LoginComponent implements OnInit, OnDestroy {
             this._router.navigate(['smehome']);
           } else if (this.user.role === 'dm pam') {
             this._router.navigate(['primary-appraisal-projects']);
+          } else if (this.user.role === 'gm') {
+            this._router.navigate(['gmhome']);
+          } else if (this.user.role === 'ceo') {
+            this._router.navigate(['ceohome']);
           }
         } else {
           var newUser = JSON.stringify(this.user);
@@ -231,7 +241,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     );
   }
 
-  registerUser(){
+  registerUser() {
     this._router.navigate(['/register']);
   }
 

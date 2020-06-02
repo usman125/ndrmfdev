@@ -65,7 +65,8 @@ export class ProposalSectionsStore extends Store<ProposalSectionsState> {
       sections: this.state.sections.map(c => {
         if (c.id === id) {
           return {
-            ...c, data: data
+            ...c, 
+            data: data,
           }
         }
         return c;

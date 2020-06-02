@@ -12,6 +12,7 @@ export interface ConfirmData {
   startDate: string;
   endDate: string;
   comments: string;
+  assignToGm: boolean;
 }
 
 @Component({
@@ -26,7 +27,7 @@ export class ConfirmDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmData) {
-      this.data.startDate = new Date().toISOString();
+    this.data.startDate = new Date().toISOString();
   }
 
   ngOnInit() { }
@@ -56,6 +57,10 @@ export class ConfirmDialogComponent implements OnInit {
   setStatus(status) {
     this.close({ status });
 
+  }
+
+  assignToGm(status) {
+    this.close({ status });
   }
 
   @HostListener("keydown.esc")

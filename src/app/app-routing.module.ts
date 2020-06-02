@@ -411,6 +411,30 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin] }
   },
+  {
+    path: 'gmhome',
+    loadChildren: () => import('./modules/gm-home/gm-home.module').then(m => m.GmHomeModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Gm] }
+  },
+  {
+    path: 'gmproposals',
+    loadChildren: () => import('./modules/gm-proposals/gm-proposals.module').then(m => m.GmProposalsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Gm] }
+  },
+  {
+    path: 'ceohome',
+    loadChildren: () => import('./modules/ceo-home/ceo-home.module').then(m => m.CeoHomeModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Ceo] }
+  },
+  {
+    path: 'ceoproposals',
+    loadChildren: () => import('./modules/ceo-proposals/ceo-proposals.module').then(m => m.CeoProposalsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Ceo] }
+  },
 ];
 
 @NgModule({

@@ -51,6 +51,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
     // this.getAllProjects();
     if (this.loggedUser.role === 'fip') this.getAllProjects();
+    if (this.loggedUser.role === 'gm') this.getGmProjects();
     if (this.loggedUser.role === 'process owner') this.getPoProjects();
     if (this.loggedUser.role === 'dm pam' && this.viewType === 'dm') this.getDmPamProjects();
     if (this.loggedUser.role === 'dm pam' && (this.viewType === 'extapp' || this.viewType === 'propapp')) this.getExtAppraisalProjects();
@@ -101,6 +102,19 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     );
   }
 
+  getGmProjects() {
+    this._projectService.getGmProjects().subscribe(
+      (result: any) => {
+        console.log("RESULT ALL GM PROJECT:---", result);
+        this._projectsStore.addAllProjects(result);
+        // this.getExtAppraisalProjects();
+      },
+      error => {
+        console.log("ERROR ALL GM PROJECT:---", error);
+      }
+    );
+  }
+
   getDmPamProjects() {
     this._projectService.getDmPamProjects().subscribe(
       (result: any) => {
@@ -129,19 +143,26 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     // );
     if (this.viewType == 'gia') {
       this._router.navigate(['/gia-appraisal', item.id]);
-    } else if (this.viewType == 'po') {
+    }
+    else if (this.viewType == 'po') {
       this._router.navigate(['/create-primary-appraisal', item.id]);
-    } else if (this.loggedUser.role === 'dm pam' && this.viewType === 'dm') {
+    }
+    else if (this.loggedUser.role === 'dm pam' && this.viewType === 'dm') {
       this._router.navigate(['/fill-primary-appraisal', item.id]);
-    } else if (this.loggedUser.role === 'dm pam' && this.viewType === 'extapp') {
+    }
+    else if (this.loggedUser.role === 'dm pam' && this.viewType === 'extapp') {
       this._router.navigate(['/add-extended-appraisal-form', item.id]);
-    } else if (this.loggedUser.role === 'dm pam' && this.viewType === 'propapp') {
+    }
+    else if (this.loggedUser.role === 'dm pam' && this.viewType === 'propapp') {
       this._router.navigate(['/add-primary-appraisal-form', item.id]);
-    } else if (this.loggedUser.role === 'sme' && this.viewType === 'extapp') {
+    }
+    else if (this.loggedUser.role === 'sme' && this.viewType === 'extapp') {
       this._router.navigate(['/add-extended-appraisal-form', item.id]);
-    } else if (this.loggedUser.role === 'sme' && this.viewType === 'propapp') {
+    }
+    else if (this.loggedUser.role === 'sme' && this.viewType === 'propapp') {
       this._router.navigate(['/add-primary-appraisal-form', item.id]);
-    } else {
+    }
+    else {
       this._router.navigate(['/project-details', item.id]);
     }
   }

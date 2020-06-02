@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, Output, Input } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from "@angular/router";
 import { ProjectsStore } from "../../stores/projects/projects-store";
 import { PrimaryAppraisalFormsStore } from "../../stores/primary-appraisal-forms/primary-appraisal-forms-store";
@@ -34,6 +35,8 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
   constructor(
     private _projectsStore: ProjectsStore,
     private _router: Router,
+    private _Location: Location,
+
     private _activatedRoute: ActivatedRoute,
     private _projectService: ProjectService,
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
@@ -135,6 +138,7 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
             endDate: this.selectedProject.preAppraisal.endDate,
             id: this.selectedProject.preAppraisal.id,
             status: 'Completed',
+            completedDate: new Date(),
             proposalName: this.selectedProject.preAppraisal.proposalName,
             template: this.selectedProject.preAppraisal.template,
             assigned: this.selectedProject.preAppraisal.assigned,
@@ -167,6 +171,10 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     // currentProjectReplay.unsubscribe();
+  }
+
+  goBack(){
+    this._Location.back();
   }
 
 }

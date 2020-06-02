@@ -124,7 +124,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             }
             if (c.assigned === false) {
               this.unassignedProposalSections.push(c);
-            } else if (c.assigned === true) {
+            } else if (c.assigned === true && c.reviewStatus !== null) {
               this.assignedProposalSections.push(c);
             }
             if (c.reviewStatus === 'Pending') {
@@ -153,96 +153,17 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           console.log("PENDING?SUBMITTED:--", pendingCount, submitCount, this.selectedProjectInfo, this.proMonths);
           this.groupType = this.proposalSections[0];
           this.tabChanged(this.groupType);
-          // this.assignSections = this.proposalSections[0];
           this.assignSections.patchValue([this.assignedProposalSections[0]], { onlySelf: true });
           this.apiLoading = false;
         }
-        // this.groupType = this.proposalSections[0].name;
       })
     );
-    // this.Subscription.add(
-    //   this._proposalFormsStore.state$.subscribe(data => {
-    //     this.proposalForms = data.forms;
-    //     console.log("PROPOSAL FORMS:---", this.proposalForms);
-    //     // this.groupType = this.proposalSections[0].name;
-    //   })
-    // );
-    // this.Subscription.add(
-    //   this._proposalRequestsStore.state$.subscribe(data => {
-    //     this.proposalRequests = data.proposals;
-    //     console.log("PROPOSAL Requests:---", this.proposalRequests);
-    //   })
-    // );
-    // this.Subscription.add(
-    //   this._proposalSectionsStore.state$.subscribe(data => {
-    //     // this.proposalSections = data.sections;
-    //     var dummySections = [];
-    //     if (data.sections) {
-    //       for (let i = 0; i < data.sections.length; i++) {
-    //         var object = {
-    //           formGenerated: data.sections[i].formGenerated,
-    //           key: data.sections[i].key,
-    //           name: data.sections[i].name,
-    //           userRef: data.sections[i].userRef,
-    //           form: null,
-    //         }
-    //         dummySections.push(object);
-    //       }
-    //     }
-    //     this.proposalSections = dummySections;
-    //     if (this.proposalSections.length) {
-    //       this.groupType = this.proposalSections[0].key;
-    //       for (let i = 0; i < this.proposalForms.length; i++) {
-    //         if (this.proposalForms[i].smeRef === this.proposalSections[0].key) {
-    //           this.proposalSections[0].form = this.proposalForms[i];
-    //           this.form = this.proposalForms[i];
-    //         }
-    //       }
-    //       if (this.loggedUser.role === 'fip') {
-
-    //         for (let i = 0; i < this.proposalRequests.length; i++) {
-    //           if (this.proposalRequests[i].formIdentity === this.proposalSections[0].key &&
-    //             this.loggedUser.username === this.proposalRequests[i].userRef &&
-    //             this.proposalRequests[i].projectRef === this.selectedProjectId
-    //           ) {
-    //             this.formSubmitData = this.proposalRequests[i].formSubmitData;
-    //           }
-    //         }
-    //       } else {
-
-    //         for (let i = 0; i < this.proposalRequests.length; i++) {
-    //           if (this.proposalRequests[i].formIdentity === this.proposalSections[0].key &&
-    //             this.selectedProject.userRef === this.proposalRequests[i].userRef &&
-    //             this.proposalRequests[i].projectRef === this.selectedProjectId
-    //           ) {
-    //             this.formSubmitData = this.proposalRequests[i].formSubmitData;
-    //           }
-    //         }
-
-    //       }
-    //     }
-    //     console.log("PROPOSALS:---", this.proposalSections);
-    //   })
-    // );
-    // currentProjectReplay.subscribe(data => {
-    //   this.selectedProject = data;
-    //   console.log("SELECTED PROJECT:---", this.selectedProject)
-    // });
     this.Subscription.add(
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
         this.selectedProject = data.selectedProject;
+        console.log("SELECTED PROJECT IN STORE:--", this.selectedProject);
         if (this.selectedProject && this.selectedProject.commentsMatrix) {
           this._accreditationCommentsMatrixStore.addCommentsArray(this.selectedProject.commentsMatrix);
-        }
-        if (this.selectedProject && this.selectedProject.preAppraisal) {
-          var date1 = new Date();
-          var date2 = new Date(this.selectedProject.preAppraisal.endDate);
-          // To calculate the time difference of two dates 
-          var Difference_In_Time = date2.getTime() - date1.getTime();
-          // To calculate the no. of days between two dates 
-          var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-          this.pendingAppraisalDays = Math.trunc(Difference_In_Days);
-          console.log("TIME DIFFERENCE:", Difference_In_Days, Math.trunc(Difference_In_Days));
         }
         if (this.selectedProject &&
           this.selectedProject.extendedAppraisal &&
@@ -257,11 +178,33 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this.apiLoading = true;
     this._projectService.getSingleProject(this.selectedProjectId).subscribe(
       (result: any) => {
-        // this.selectedProject = result;
-        // this.selectedProject.id = this.selectedProjectId;
+        this.pendingAppraisalDays = 0;
         result.id = this.selectedProjectId;
         this._primaryAppraisalFormsStore.addSelectedProject(result);
-        console.log("PROJECT DETAILS FROM DATABASE:--", this.selectedProject);
+        if (result && result.preAppraisal) {
+          if (result.preAppraisal.status === 'Pending') {
+            this.pendingAppraisalDays = this.calculateDaysDifference(result.preAppraisal.endDate);
+            this._primaryAppraisalFormsStore.setPreAppraisalExpiryDays(this.pendingAppraisalDays);
+            if (this.pendingAppraisalDays < parseInt('0')) {
+              console.log("TIME DIFFERENCE:", this.pendingAppraisalDays, this.pendingAppraisalDays < parseInt('0'));
+              this._primaryAppraisalFormsStore.setPreAppraisalExpiry();
+            }
+          }
+        }
+        if (result &&
+          result.extendedAppraisal &&
+          result.extendedAppraisal !== null) {
+          if (result.extendedAppraisal.status === 'Pending') {
+            this.pendingAppraisalDays = this.calculateDaysDifference(result.extendedAppraisal.endDate);
+            this._primaryAppraisalFormsStore.setExtAppraisalExpiryDays(this.pendingAppraisalDays);
+            if (this.pendingAppraisalDays < parseInt('0')) {
+              console.log("TIME DIFFERENCE:", this.pendingAppraisalDays, this.pendingAppraisalDays < parseInt('0'));
+              this._primaryAppraisalFormsStore.setExtAppraisalExpiry();
+            }
+          }
+          // this._extendedAppraisalSmesStore.addAppraisal(this.selectedProject.extendedAppraisal);
+        }
+        // console.log("PROJECT DETAILS FROM DATABASE:--", this.selectedProject);
         let proposalSections = result.sections.map(c => {
           return {
             ...c,
@@ -282,6 +225,25 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
+  calculateDaysDifference(date) {
+    var date1 = new Date();
+    var date2 = new Date(date);
+
+    // To calculate the time difference of two dates 
+    var Difference_In_Time = date2.getTime() - date1.getTime();
+
+    // To calculate the no. of days between two dates 
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
+    console.log("TIME DIFFERENCE:", Difference_In_Time, Math.trunc(Difference_In_Days), Math.floor(Difference_In_Days));
+    if (Math.trunc(Difference_In_Days) < 0) {
+      return -1 * Math.trunc(Difference_In_Days);
+    } else {
+      return Math.trunc(Difference_In_Days);
+
+    }
+  }
+
   getSelectedValues(item) {
     return item;
   }
@@ -295,6 +257,10 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   tabChanged($event) {
     this.form = this.groupType.template;
     this.form.sme = this.groupType.sme.name;
+    // this.form.status = this.groupType.status;
+    // this.form.endDate = this.groupType.endDate;
+    // this.form.completeDate = this.groupType.completeDate;
+    // this.form.sme = this.groupType.sme.name;s
     this.formSubmitData = this.groupType.data;
     // for (let i = 0; i < this.proposalForms.length; i++) {
     //   if (this.proposalForms[i].smeRef === $event.key) {
@@ -326,6 +292,13 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     console.log(this.groupType);
   }
 
+  elementClicked(item){
+    console.log("ELEMENT CLICKED:--", item);
+    this.groupType = item;
+    this.tabChanged(item);
+    document.querySelector('#myTopElement').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
   confirmApprasial() {
     const options = {
       title: 'Are you sure?',
@@ -344,12 +317,16 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         this._projectService.createPreAppraisalRequest(this.selectedProjectId, confirmed).subscribe(
           result => {
             console.log("ADDED APPRAISAL:---", result);
+            let days = this.calculateDaysDifference(confirmed.endDate);
+            this._primaryAppraisalFormsStore.updatePreAppraisalStatus(confirmed);
+            this._primaryAppraisalFormsStore.setPreAppraisalExpiryDays(days);
             // if (this.selectedProject)
-            if (this.selectedProject.preAppraisal === null) {
-              this.selectedProject.status = "Preliminary Appraisal";
-            } else {
-              this.selectedProject.preAppraisal.status = 'Pending';
-            }
+            // if (this.selectedProject.preAppraisal === null) {
+            //   this.selectedProject.status = "Preliminary Appraisal";
+            // } else {
+            //   this.selectedProject.preAppraisal.status = 'Pending';
+            // }
+
           },
           error => {
             console.log("ERROR APPRAISAL:---", error);
@@ -392,9 +369,19 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       if (confirmed) {
         console.log("CONFIRMED FROM EXT-APPRAISAL MODEL", confirmed);
         this._projectService.createExtAppraisalRequest(this.selectedProjectId, confirmed).subscribe(
-          result => {
-            this.selectedProject.status = "Extended Appraisal";
-            if (this.selectedProject.extendedAppraisal) this.selectedProject.extendedAppraisal.status = "Pending";
+          (result: any) => {
+            // this.selectedProject.status = "Extended Appraisal";
+            // if (this.selectedProject.extendedAppraisal) this.selectedProject.extendedAppraisal.status = "Pending";
+            let days = this.calculateDaysDifference(confirmed.endDate);
+            confirmed.sections = result.sections;
+            confirmed.assigned = result.assigned;
+            confirmed.assignee = result.assignee;
+            confirmed.comments = result.comments;
+            confirmed.endDate = result.endDate;
+            confirmed.id = result.id;
+            confirmed.startDate = result.startDate;
+            this._primaryAppraisalFormsStore.updateExtAppraisalStatus(confirmed);
+            this._primaryAppraisalFormsStore.setExtAppraisalExpiryDays(days);
             console.log("ADDED APPRAISAL:---", result, this.selectedProject);
             // if (this.selectedProject.preAppraisal.data === null) {
             // } else {
@@ -603,12 +590,15 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   addUnAssignedSectionReview() {
     console.log("ADDING REVIEW:--", this.unAssignSections.value, this.sectionUnassignComments);
     var sectionIds: any = [];
-    for (let i = 0; i < this.unAssignSections.value.length; i++) {
-      let key = this.unAssignSections.value[i];
-      sectionIds.push(key.id)
+    if (this.unAssignSections.value) {
+
+      for (let i = 0; i < this.unAssignSections.value.length; i++) {
+        let key = this.unAssignSections.value[i];
+        sectionIds.push(key.id)
+      }
     }
     var object = {
-      comments: this.sectionUnassignComments,
+      comment: this.sectionUnassignComments,
       sectionIds: sectionIds.length ? sectionIds : null
     }
     this._projectService.submitProposalGeneralReview(
@@ -617,6 +607,21 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     ).subscribe(
       result => {
         console.log("RESULT AFTER PROPOSAL GENERAL REVIEW:--", result);
+        const options = {
+          title: 'Successfully Added!',
+          message: 'Click OK to exit',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+          confirm: false,
+          setStatus: false,
+        };
+
+        this._confirmModelService.open(options);
+
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          console.log("CONFIRMED FROM MODEL", confirmed);
+        });
       },
       error => {
         console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
@@ -624,6 +629,36 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
+
+  markToGm() {
+    const options = {
+      title: 'Mark To GM!',
+      message: 'By Clicking "Yes" project status will be changed',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: true,
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("MARK TO GM STATUS", confirmed);
+      if (confirmed) {
+        this._projectService.markToGm(this.selectedProjectId).subscribe(
+          result => {
+            console.log("RESULT FROM MARK TO GM:--", result);
+          },
+          error => {
+            console.log("ERROR FROM MARK TO GM:--", error);
+          }
+        );
+      }
+    });
+
+  }
 
   assignSectionsSelectStore($event) {
     console.log("SELECT STORS:--", $event);
