@@ -16,9 +16,9 @@
             <h6>Total Projects</h6>
           </div>
           <div class="value">
-            <span>0</span>
-            <!-- <span *ngIf="!apiLoading">0</span> -->
-            <!-- <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+            <!-- <span>0</span> -->
+            <span *ngIf="!apiLoading">{{projectStats?.preCount + projectStats?.extCount}}</span>
+            <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
             <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
           </div>
         </div>
@@ -33,9 +33,9 @@
             <h6>Primary Appraisal Requests</h6>
           </div>
           <div class="value">
-            <span>0</span>
-            <!-- <span *ngIf="!apiLoading">0</span> -->
-            <!-- <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+            <!-- <span>0</span> -->
+            <span *ngIf="!apiLoading">{{projectStats?.preCount}}</span>
+            <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
             <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
           </div>
         </div>
@@ -50,9 +50,9 @@
             <h6>Extended Appraisal Requests</h6>
           </div>
           <div class="value">
-            <span>0</span>
-            <!-- <span *ngIf="!apiLoading">0</span> -->
-            <!-- <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+            <!-- <span>0</span> -->
+            <span *ngIf="!apiLoading">{{projectStats?.extCount}}</span>
+            <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
             <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
           </div>
         </div>
