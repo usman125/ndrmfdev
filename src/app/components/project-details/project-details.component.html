@@ -249,7 +249,8 @@
     </mat-card-actions>
   </mat-card>
   <mat-card class="m-20 p-4"
-    *ngIf="(loggedUser.role === 'sme' || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner') && (viewType === 'propapp' || viewType === 'po' || viewType === 'extapp')">
+    *ngIf="(loggedUser.role === 'sme' || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner') && 
+    (viewType === 'propapp' || viewType === 'po' || viewType === 'extapp')">
     <mat-card-title>
       <h5 class="review-box pb-0">Add General Remarks</h5>
     </mat-card-title>
