@@ -86,7 +86,4 @@ export class AddExtendedAppraisalSmeComponent implements OnInit {
     );
   }
 
-  goBack(){
-    this._location.back();
-  }
 }

@@ -1,3 +1,17 @@
 <!-- <app-project-details [viewType]="viewType" [showFillApprasialBtn]="showFillApprasialBtn"></app-project-details> -->
+<mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>{{'Extended Appresial'}}</span>
+    <div class="example-spacer"></div>
+    <button class="mr-2" (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })"
+      mat-raised-button>
+      <mat-icon class="mr-1">folder</mat-icon> Visit Proposal
+    </button>
+    <button (click)="goBack()" color="accent" mat-raised-button>
+      <mat-icon class="mr-1">undo</mat-icon> Go Back
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
 <app-add-extended-appraisal-sme></app-add-extended-appraisal-sme>
+<span #myTopElement></span>
 <app-project-details [viewType]="viewType"></app-project-details>

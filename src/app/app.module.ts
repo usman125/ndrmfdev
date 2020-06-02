@@ -100,6 +100,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 // import { MatGridListModule } from "@angular/material/grid-list";
 // import { GiaProjectsModule } from "./modules/gia-projects/gia-projects.module";
 import { JwtModule } from "@auth0/angular-jwt";
+// import { DmpamHomeComponent } from './components/dmpam-home/dmpam-home.component';
 // import { CeoHomeComponent } from './components/ceo-home/ceo-home.component';
 // import { CeoProposalComponent } from './components/ceo-proposal/ceo-proposal.component';
 // import { GmProposalComponent } from './components/gm-proposal/gm-proposal.component';
@@ -126,6 +127,7 @@ export function tokenGetter() {
     LoginComponent,
     NoHeaderLayoutComponent,
     AddProjectComponent,
+    // DmpamHomeComponent,
     // CeoHomeComponent,
     // CeoProposalComponent,
     // GmProposalComponent,

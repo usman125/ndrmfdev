@@ -4,6 +4,9 @@
     <mat-toolbar-row>
       <span>{{preAppViewType === 'fill' ? 'Submit Primary Appresial' : 'View Primary Appraisal'}}</span>
       <div class="example-spacer"></div>
+      <button class="mr-2" (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })" mat-raised-button>
+        <mat-icon class="mr-1">folder</mat-icon> Visit Proposal
+      </button>
       <button mat-raised-button color="accent" (click)="goBack()">
         <mat-icon class="mr-2">undo</mat-icon>Go Back
       </button>
@@ -50,6 +53,6 @@
         SUBMITTED - {{selectedProject?.preAppraisal.completedDate | date:'fullDate' | uppercase}}</button>
     </mat-card-actions>
   </mat-card>
-
+  <span #myTopElement></span>  
   <app-project-details [viewType]="viewType" [showFillApprasialBtn]="showFillApprasialBtn"></app-project-details>
 </ng-container>

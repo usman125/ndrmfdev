@@ -430,6 +430,12 @@ const routes: Routes = [
     data: { roles: [Role.Ceo] }
   },
   {
+    path: 'dmpamhome',
+    loadChildren: () => import('./modules/dmpam-home/dmpam-home.module').then(m => m.DmpamHomeModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Dm] }
+  },
+  {
     path: 'ceoproposals',
     loadChildren: () => import('./modules/ceo-proposals/ceo-proposals.module').then(m => m.CeoProposalsModule),
     canActivate: [AuthGuard],

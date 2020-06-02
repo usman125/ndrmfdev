@@ -57,3 +57,4 @@ export { CeoHomeComponent } from './ceo-home/ceo-home.component';
 export { CeoProposalComponent } from './ceo-proposal/ceo-proposal.component';
 export { GmProposalComponent } from './gm-proposal/gm-proposal.component';
 export { GmHomeComponent } from './gm-home/gm-home.component';
+export { DmpamHomeComponent } from './dmpam-home/dmpam-home.component';

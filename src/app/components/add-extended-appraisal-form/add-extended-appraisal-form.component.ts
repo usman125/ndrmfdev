@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { PrimaryAppraisalFormsStore } from "../../stores/primary-appraisal-forms/primary-appraisal-forms-store";
 import { Subscription } from "rxjs";
 
@@ -19,6 +20,7 @@ export class AddExtendedAppraisalFormComponent implements OnInit {
 
   constructor(
     private _activatedRoute: ActivatedRoute,
+    private _location: Location,
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
   ) { }
 
@@ -45,6 +47,10 @@ export class AddExtendedAppraisalFormComponent implements OnInit {
         this.selectedProject = data.selectedProject;
       })
     )
+  }
+
+  goBack() {
+    this._location.back();
   }
 
 }
