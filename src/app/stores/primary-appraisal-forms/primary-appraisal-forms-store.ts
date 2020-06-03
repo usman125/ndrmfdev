@@ -89,6 +89,16 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     })
   }
 
+  setProjectStage(stage) {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        status: stage,
+      }
+    })
+  }
+
 
   setPreAppraisalExpiry() {
     this.setState({

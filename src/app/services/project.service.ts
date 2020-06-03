@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from "./config";
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -167,12 +167,37 @@ export class ProjectService {
     );
   }
 
+  setProjectStage(id, stage) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=${stage}`;
+    const status = 'MARKED_TO_GM';
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
   approvePreApparisalByGm(id) {
     const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=PRELIMINARY_APPRAISAL`;
     const status = 'PRELIMINARY_APPRAISAL';
     return this._httpClient.put(
       url,
       null
+    );
+  }
+
+  uploadFiles(id, stage, file) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}/attachment/add?stage=${stage}`;
+    let body = {
+      file: file,
+    }
+    let header = new HttpHeaders()
+    header.append("Content-Type", "multipart/form-data;")
+    return this._httpClient.post(
+      url,
+      file,
+      {
+        headers: header
+      }
     );
   }
 

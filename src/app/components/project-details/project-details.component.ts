@@ -33,6 +33,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   proposalSections: any = [];
   proposalForms: any = [];
   proposalRequests: any = [];
+  files: any = [];
   groupType: any = null;
   costTabsType: any = null;
   loggedUser: any = null;
@@ -65,6 +66,19 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   sectionStats: any = null;
   assignedProposalSections: any = [];
   unassignedProposalSections: any = [];
+
+
+  /** Link text */
+  @Input() text = 'Upload';
+  /** Name used in form which will be sent in HTTP request. */
+  @Input() param = 'file';
+  /** Target URL for file uploading. */
+  // @Input() target = 'https://file.io';
+  /** File extension that accepted, same as 'accept' of <input type="file" />. 
+      By the default, it's set to 'image/*'. */
+  @Input() accept = 'image/*';
+  /** Allow you to add handler after its completion. Bubble up response text from remote. */
+  // @Output() complete = new EventEmitter<string>();
 
 
   constructor(
@@ -292,7 +306,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     console.log(this.groupType);
   }
 
-  elementClicked(item){
+  elementClicked(item) {
     console.log("ELEMENT CLICKED:--", item);
     this.groupType = item;
     this.tabChanged(item);
@@ -411,6 +425,22 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         // );
       }
     });
+  }
+
+  uploadFile() {
+    const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
+    fileUpload.onchange = () => {
+      for (let index = 0; index < fileUpload.files.length; index++) {
+        const file = fileUpload.files[index];
+        this.files.push({
+          data: file, state: 'in',
+          inProgress: false, progress: 0, canRetry: false, canCancel: true
+        });
+      }
+      // this.uploadFiles();
+      console.log("Uploaded Files:---", this.files);
+    };
+    fileUpload.click();
   }
 
   fillApprasial() {
@@ -591,7 +621,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     console.log("ADDING REVIEW:--", this.unAssignSections.value, this.sectionUnassignComments);
     var sectionIds: any = [];
     if (this.unAssignSections.value) {
-
       for (let i = 0; i < this.unAssignSections.value.length; i++) {
         let key = this.unAssignSections.value[i];
         sectionIds.push(key.id)
@@ -601,32 +630,76 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       comment: this.sectionUnassignComments,
       sectionIds: sectionIds.length ? sectionIds : null
     }
-    this._projectService.submitProposalGeneralReview(
-      this.selectedProjectId,
-      object
-    ).subscribe(
-      result => {
-        console.log("RESULT AFTER PROPOSAL GENERAL REVIEW:--", result);
-        const options = {
-          title: 'Successfully Added!',
-          message: 'Click OK to exit',
-          cancelText: 'CANCEL',
-          confirmText: 'OK',
-          add: true,
-          confirm: false,
-          setStatus: false,
-        };
-
-        this._confirmModelService.open(options);
-
-        this._confirmModelService.confirmed().subscribe(confirmed => {
-          console.log("CONFIRMED FROM MODEL", confirmed);
-        });
-      },
-      error => {
-        console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
-      },
-    );
+    if (this.files.length) {
+      let stage = null;
+      if (this.selectedProject.status === 'Preliminary Appraisal') stage = 'PRELIMINARY_APPRAISAL'
+      if (this.selectedProject.status === 'Extended Appraisal') stage = 'EXTENDED_APPRAISAL'
+      if (this.selectedProject.status === 'TAC Meeting') stage = 'TAC_MEETING'
+      if (this.selectedProject.status === 'RMC Meeting') stage = 'RMC_MEETING'
+      if (this.selectedProject.status === 'BOD Meeting') stage = 'BOD_MEETING'
+      if (this.selectedProject.status === 'Offer Letter') stage = 'OFFER_LETTER'
+      const fd = new FormData();
+      fd.append(this.param, this.files[0].data);
+      this._projectService.uploadFiles(
+        this.selectedProjectId,
+        stage,
+        fd
+      ).subscribe(
+        (result: any) => {
+          console.log("RESULT AFTER UPLOADING FILE:--", result);
+          const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
+          fileUpload.value = '';
+          this._projectService.submitProposalGeneralReview(
+            this.selectedProjectId,
+            object
+          ).subscribe(
+            (result: any) => {
+              this.sectionUnassignComments = null;
+              console.log("RESULT AFTER PROPOSAL GENERAL REVIEW:--", result);
+              const options = {
+                title: 'Successfully Added!',
+                message: 'Click OK to exit',
+                cancelText: 'CANCEL',
+                confirmText: 'OK',
+                add: true,
+                confirm: false,
+                setStatus: false,
+              };
+              this._confirmModelService.open(options);
+            },
+            error => {
+              console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
+            }
+          );
+        },
+        error => {
+          console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
+        }
+      );
+    } else {
+      this._projectService.submitProposalGeneralReview(
+        this.selectedProjectId,
+        object
+      ).subscribe(
+        result => {
+          console.log("RESULT AFTER PROPOSAL GENERAL REVIEW:--", result);
+          this.sectionUnassignComments = null;
+          const options = {
+            title: 'Successfully Added!',
+            message: 'Click OK to exit',
+            cancelText: 'CANCEL',
+            confirmText: 'OK',
+            add: true,
+            confirm: false,
+            setStatus: false,
+          };
+          this._confirmModelService.open(options);
+        },
+        error => {
+          console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
+        },
+      );
+    }
   }
 
 
@@ -695,13 +768,13 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   setProjectStages() {
     const options = {
       title: 'Set one of the following state!',
-      message: 'By any of it will change the status',
+      message: 'Select any of the following',
       cancelText: 'CANCEL',
       confirmText: 'OK',
       add: false,
       confirm: false,
       setStatus: false,
-      assignToGm: true,
+      assignToGm: false,
       setStages: true,
     };
 
@@ -709,19 +782,78 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
     this._confirmModelService.confirmed().subscribe(confirmed => {
       console.log("MARK TO GM STATUS", confirmed);
-      // if (confirmed) {
-      //   this._projectService.approvePreApparisalByGm(this.selectedProjectId).subscribe(
-      //     result => {
-      //       console.log("RESULT FROM MARK TO GM:--", result);
-      //       this._primaryAppraisalFormsStore.approvePreApparisalByGm();
-      //     },
-      //     error => {
-      //       console.log("ERROR FROM MARK TO GM:--", error);
-      //     }
-      //   );
-      // }
+      if (confirmed) {
+        this._projectService.setProjectStage(this.selectedProjectId, confirmed.status).subscribe(
+          result => {
+            console.log("RESULT FROM MARK TO GM:--", result);
+            let stage = null;
+            if (confirmed.status === 'PRELIMINARY_APPRAISAL') stage = 'Preliminary Appraisal'
+            if (confirmed.status === 'EXTENDED_APPRAISAL') stage = 'Extended Appraisal'
+            if (confirmed.status === 'TAC_MEETING') stage = 'TAC Meeting'
+            if (confirmed.status === 'RMC_MEETING') stage = 'RMC Meeting'
+            if (confirmed.status === 'BOD_MEETING') stage = 'BOD Meeting'
+            if (confirmed.status === 'OFFER_LETTER') stage = 'Offer Letter'
+            this._primaryAppraisalFormsStore.setProjectStage(stage);
+          },
+          error => {
+            console.log("ERROR FROM MARK TO GM:--", error);
+          }
+        );
+      }
     });
 
+  }
+
+  uploadTacMoms(type) {
+    const fd = new FormData();
+    fd.append(this.param, this.files[0].data);
+    this._projectService.uploadFiles(
+      this.selectedProjectId,
+      'TAC_MEETING',
+      fd
+    ).subscribe(
+      (result: any) => {
+        console.log("RESULT AFTER UPLOADING FILE MOMS TAC MEETING:--", result);
+        const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
+        fileUpload.value = '';
+        if (type === 'yestac') {
+          this._projectService.setProjectStage(this.selectedProjectId, 'RMC_MEETING').subscribe(
+            result => {
+              console.log("RESULT FROM PROJECT STAGE SET BOD:--", result);
+              this._primaryAppraisalFormsStore.setProjectStage('RMC Meeting');
+            },
+            error => {
+              console.log("ERROR FROM MARK TO GM:--", error);
+            }
+          );
+        }
+        if (type === 'yesrmc') {
+          this._projectService.setProjectStage(this.selectedProjectId, 'BOD_MEETING').subscribe(
+            result => {
+              console.log("RESULT FROM PROJECT STAGE SET BOD:--", result);
+              this._primaryAppraisalFormsStore.setProjectStage('BOD Meeting');
+            },
+            error => {
+              console.log("ERROR FROM MARK TO GM:--", error);
+            }
+          );
+        }
+        if (type === 'yesbod') {
+          this._projectService.setProjectStage(this.selectedProjectId, 'OFFER_LETTER').subscribe(
+            result => {
+              console.log("RESULT FROM PROJECT STAGE SET BOD:--", result);
+              this._primaryAppraisalFormsStore.setProjectStage('Offer Letter');
+            },
+            error => {
+              console.log("ERROR FROM MARK TO GM:--", error);
+            }
+          );
+        }
+      },
+      error => {
+        console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
+      }
+    );
   }
 
   assignSectionsSelectStore($event) {
