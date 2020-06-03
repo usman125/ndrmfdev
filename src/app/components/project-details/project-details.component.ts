@@ -804,12 +804,12 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   }
 
-  uploadTacMoms(type) {
+  uploadTacMoms(stage, type) {
     const fd = new FormData();
     fd.append(this.param, this.files[0].data);
     this._projectService.uploadFiles(
       this.selectedProjectId,
-      'TAC_MEETING',
+      stage,
       fd
     ).subscribe(
       (result: any) => {
@@ -817,43 +817,13 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
         fileUpload.value = '';
         if (type === 'yestac') {
-          this._projectService.setProjectStage(this.selectedProjectId, 'RMC_MEETING').subscribe(
-            result => {
-              console.log("RESULT FROM PROJECT STAGE SET BOD:--", result);
-              const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
-              fileUpload.value = '';
-              this._primaryAppraisalFormsStore.setProjectStage('RMC Meeting');
-            },
-            error => {
-              console.log("ERROR FROM MARK TO GM:--", error);
-            }
-          );
+          this.updateStageMoms('RMC_MEETING', 'RMC Meeting');
         }
         if (type === 'yesrmc') {
-          this._projectService.setProjectStage(this.selectedProjectId, 'BOD_MEETING').subscribe(
-            result => {
-              console.log("RESULT FROM PROJECT STAGE SET BOD:--", result);
-              const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
-              fileUpload.value = '';
-              this._primaryAppraisalFormsStore.setProjectStage('BOD Meeting');
-            },
-            error => {
-              console.log("ERROR FROM MARK TO GM:--", error);
-            }
-          );
+          this.updateStageMoms('BOD_MEETING', 'BOD Meeting');
         }
         if (type === 'yesbod') {
-          this._projectService.setProjectStage(this.selectedProjectId, 'OFFER_LETTER').subscribe(
-            result => {
-              console.log("RESULT FROM PROJECT STAGE SET BOD:--", result);
-              const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
-              fileUpload.value = '';
-              this._primaryAppraisalFormsStore.setProjectStage('Offer Letter');
-            },
-            error => {
-              console.log("ERROR FROM MARK TO GM:--", error);
-            }
-          );
+          this.updateStageMoms('OFFER_LETTER', 'Offer Letter');
         }
       },
       error => {
@@ -862,16 +832,14 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
-  uploadStageMoms(stage1, stage2){
+  updateStageMoms(stage1, stage2) {
     this._projectService.setProjectStage(this.selectedProjectId, stage1).subscribe(
       result => {
-        console.log("RESULT FROM PROJECT STAGE SET BOD:--", result);
-        const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
-        fileUpload.value = '';
+        console.log("RESULT AFTER UPDATING MOM STAUS:--", result);
         this._primaryAppraisalFormsStore.setProjectStage(stage2);
       },
       error => {
-        console.log("ERROR FROM MARK TO GM:--", error);
+        console.log("ERROR AFTER UPDATING MOM STAUS:--", error);
       }
     );
   }
