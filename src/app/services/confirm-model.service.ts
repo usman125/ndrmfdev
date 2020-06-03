@@ -22,6 +22,7 @@ export class ConfirmModelService {
         endDate: options.endDate,
         setStatus: options.setStatus,
         assignToGm: options.assignToGm,
+        setStages: options.setStages,
       }
     });
   }

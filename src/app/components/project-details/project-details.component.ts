@@ -650,12 +650,76 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         this._projectService.markToGm(this.selectedProjectId).subscribe(
           result => {
             console.log("RESULT FROM MARK TO GM:--", result);
+            this._primaryAppraisalFormsStore.markToGm();
           },
           error => {
             console.log("ERROR FROM MARK TO GM:--", error);
           }
         );
       }
+    });
+
+  }
+
+  approvePreApprasial() {
+    const options = {
+      title: 'Approve Preliminary Appraisal!',
+      message: 'By Clicking "Yes" project status will be changed',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: true,
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("MARK TO GM STATUS", confirmed);
+      if (confirmed) {
+        this._projectService.approvePreApparisalByGm(this.selectedProjectId).subscribe(
+          result => {
+            console.log("RESULT FROM MARK TO GM:--", result);
+            this._primaryAppraisalFormsStore.approvePreApparisalByGm();
+          },
+          error => {
+            console.log("ERROR FROM MARK TO GM:--", error);
+          }
+        );
+      }
+    });
+
+  }
+
+  setProjectStages() {
+    const options = {
+      title: 'Set one of the following state!',
+      message: 'By any of it will change the status',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: true,
+      setStages: true,
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("MARK TO GM STATUS", confirmed);
+      // if (confirmed) {
+      //   this._projectService.approvePreApparisalByGm(this.selectedProjectId).subscribe(
+      //     result => {
+      //       console.log("RESULT FROM MARK TO GM:--", result);
+      //       this._primaryAppraisalFormsStore.approvePreApparisalByGm();
+      //     },
+      //     error => {
+      //       console.log("ERROR FROM MARK TO GM:--", error);
+      //     }
+      //   );
+      // }
     });
 
   }

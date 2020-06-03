@@ -13,6 +13,7 @@ export interface ConfirmData {
   endDate: string;
   comments: string;
   assignToGm: boolean;
+  setStages: boolean;
 }
 
 @Component({

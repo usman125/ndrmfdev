@@ -25,14 +25,10 @@
         </div>
         <div class="bottom-content">
           <span class="mb-1" id="answer">{{item.status}}</span>
-          <!-- <span class="mb-1" id="answer">{{'Submit Extended Appraisal'}}</span>
-          <span class="mb-1" id="answer">{{'Submit Section Review'}}</span> -->
+           <span class="mb-1" id="comment">{{item.subStatus}}</span>
+          <!-- <span class="mb-1" id="answer">{{'Submit Section Review'}}</span> -->
           <!-- <span *ngIf="item?.preAppraisal !== null" id="comment">{{item?.preAppraisal.status}}</span> -->
           <!-- <span *ngIf="item.preAppraisal === null" id="comment">{{item.preAppraisal.status}}</span> -->
-        </div>
-        <div class="bottom-btns" *ngIf="loggedUser.role === 'process owner' && 
-        item.subStatus === 'Completed' && item.status === 'Primary Appraisal'">
-          <a style="font-size: 10px;" class="mb-1" [routerLink]="['/view-primary-appraisal', item.id]" id="answer">View Primary Appraisal</a>
         </div>
       </div>
     </mat-grid-tile>

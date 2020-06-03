@@ -165,7 +165,15 @@ export class ProjectService {
       url,
       null
     );
+  }
 
+  approvePreApparisalByGm(id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=PRELIMINARY_APPRAISAL`;
+    const status = 'PRELIMINARY_APPRAISAL';
+    return this._httpClient.put(
+      url,
+      null
+    );
   }
 
 

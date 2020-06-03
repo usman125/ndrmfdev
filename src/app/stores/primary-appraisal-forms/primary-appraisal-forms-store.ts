@@ -69,6 +69,26 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     })
   }
 
+  markToGm() {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        status: 'Marked to GM',
+      }
+    })
+  }
+
+  approvePreApparisalByGm() {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        status: 'Preliminary Appraisal',
+      }
+    })
+  }
+
 
   setPreAppraisalExpiry() {
     this.setState({

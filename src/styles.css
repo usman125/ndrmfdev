@@ -273,8 +273,18 @@ table {
   z-index: 1111;
 }
 
-
 .own-tiles .mat-figure {
-    margin: 20px !important;
-    justify-content: flex-start;
+  margin: 20px !important;
+  justify-content: flex-start;
+}
+
+.display-block {
+  display: block;
+}
+
+.display-flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
 }

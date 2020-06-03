@@ -68,7 +68,7 @@
     <div class="mt-5 mb-4 no-submit margin-5" *ngFor="let item of unassignedSections">
       <div class="top-info-bar">
         <span style="display: flex;align-items:center;font-weight: bold;">
-          <mat-icon class="mr-2" [color]="item.status === 'Pending' ? 'warn' : 'accent'">
+          <mat-icon class="mr-2" [style.color]="item.status === 'Pending' ? '#F57F17' : null" [color]="item.status === 'Pending' ? 'warn' : 'accent'">
             {{item.status === 'Pending' ? 'info' : 'check'}}</mat-icon>
           SME:
           <span id="answer" class="ml-2">{{item.sme.name}}</span>
@@ -76,7 +76,7 @@
         <div class="dates">
           <small *ngIf="extendedAppraisal.status === 'Pending'" style="display: block;font-weight: bold;">
             PENDING:
-            <span class="warn-comment ml-1">{{extendedAppraisal.endDate | date:'fullDate' | uppercase}}</span>
+            <span class="info-comment ml-1">{{extendedAppraisal.endDate | date:'fullDate' | uppercase}}</span>
           </small>
           <small *ngIf="extendedAppraisal.status === 'Completed'" style="display: block;font-weight: bold;">
             COMPLETED:

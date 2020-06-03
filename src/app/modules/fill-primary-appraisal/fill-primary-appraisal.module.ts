@@ -8,6 +8,8 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { ProjectDetailsModule } from "../project-details/project-details.module";
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { ProjectDetailsModule } from "../project-details/project-details.module"
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
+    MatChipsModule,
+    MatProgressSpinnerModule
   ],
   exports: [FillPrimaryAppraisalComponent]
 })

@@ -7,6 +7,7 @@ import { PrimaryAppraisalRequestsStore } from "../../stores/primary-appraisal-re
 import { Subscription } from "rxjs";
 import { setCurrentProject, currentProjectReplay } from "../../stores/projects/project-replay";
 import { ProjectService } from "../../services/project.service";
+import { AuthStore } from 'src/app/stores/auth/auth-store';
 
 @Component({
   selector: 'app-fill-primary-appraisal',
@@ -31,12 +32,13 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
   @Input() viewType: string = 'dm';
 
   pendingAppraisalDays: any = null;
+  apiLoading: boolean = false;
 
   constructor(
     private _projectsStore: ProjectsStore,
     private _router: Router,
     private _Location: Location,
-
+    private _authStore: AuthStore,
     private _activatedRoute: ActivatedRoute,
     private _projectService: ProjectService,
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
@@ -70,8 +72,16 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
     // })
     // this.getPreAppraisalRequests();
     this.Subscription.add(
+      this._authStore.state$.subscribe(data => {
+        this.apiLoading = data.auth.apiCall;
+        console.log("API CALL:--", this.apiLoading);
+      })
+    );
+    this.Subscription.add(
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
         // this.form = data.primaryAppraisals[0];
+        // this._authStore.setLoading();
+        this.apiLoading = true;
         this.selectedProject = data.selectedProject;
         if (this.selectedProject && this.selectedProject.preAppraisal) {
           if (typeof (this.selectedProject.preAppraisal.template) === 'string') {
@@ -99,6 +109,8 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
 
           console.log("TIME DIFFERENCE:", Difference_In_Days, Math.trunc(Difference_In_Days));
         }
+        // this._authStore.removeLoading();
+        this.apiLoading = false;
       })
     );
     this.Subscription.add(
@@ -112,18 +124,6 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
     );
 
   }
-
-  getPreAppraisalRequests() {
-    this._projectService.getPreAppraisalRequests().subscribe(
-      result => {
-        console.log("RESULT FROM PRE APPRAISAL:--", result);
-      },
-      error => {
-        console.log("ERROR FROM PRE APPRAISAL:--", error);
-      }
-    );
-  }
-
 
   onSubmit($event) {
     console.log("FORM SUBMIT DATA:---", $event.data);
@@ -173,7 +173,7 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
     // currentProjectReplay.unsubscribe();
   }
 
-  goBack(){
+  goBack() {
     this._Location.back();
   }
 

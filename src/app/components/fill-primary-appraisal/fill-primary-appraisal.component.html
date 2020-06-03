@@ -4,7 +4,8 @@
     <mat-toolbar-row>
       <span>{{preAppViewType === 'fill' ? 'Submit Primary Appresial' : 'View Primary Appraisal'}}</span>
       <div class="example-spacer"></div>
-      <button class="mr-2" (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })" mat-raised-button>
+      <button class="mr-2" (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })"
+        mat-raised-button>
         <mat-icon class="mr-1">folder</mat-icon> Visit Proposal
       </button>
       <button mat-raised-button color="accent" (click)="goBack()">
@@ -26,33 +27,42 @@
   </mat-card> -->
 
   <mat-card class="m-20 p-4">
-    <mat-card-title>
-      <!-- <span>Fill Report</span> -->
-      <!-- <span>Fill Report for {{selectedProject?.initiatedBy?.name}}</span> -->
-      <button disabled (click)="completeTask()" mat-raised-button color="accent"
-        *ngIf="selectedProject?.preAppraisal.data === null">PENDING TASK -
-        {{pendingAppraisalDays ? pendingAppraisalDays+' DAYS REMAINING' : '0' | uppercase}}</button>
-        <!-- {{selectedProject?.preAppraisal.endDate | date:'fullDate' | uppercase}}</button> -->
-      <button mat-raised-button color="warn" disabled *ngIf="selectedProject?.preAppraisal.status === 'Completed'">TASK
-        SUBMITTED - {{selectedProject?.preAppraisal.completedDate | date:'fullDate' | uppercase}}</button>
-    </mat-card-title>
-    <mat-card-content>
-      <formio *ngIf="selectedProject !== null && selectedProject?.preAppraisal.status === 'Pending'"
-        [form]="selectedProject.preAppraisal.template" [submission]="{data:selectedProject.preAppraisal.data}"
-        (submit)="onSubmit($event)"></formio>
-      <formio *ngIf="selectedProject !== null && selectedProject?.preAppraisal.status === 'Completed'"
-        [form]="selectedProject.preAppraisal.template" readOnly="true"
-        [submission]="{data:selectedProject.preAppraisal.data}"></formio>
-    </mat-card-content>
-    <mat-card-actions class="m-1">
-      <button (click)="completeTask()" disabled mat-raised-button color="accent"
-        *ngIf="selectedProject?.preAppraisal?.data === null">PENDING
-        TASK - {{pendingAppraisalDays ? pendingAppraisalDays+' DAYS REMAINING' : '0' | uppercase}}</button>
-        <!-- TASK - {{selectedProject?.preAppraisal.endDate | date:'fullDate' | uppercase}}</button> -->
-      <button mat-raised-button color="warn" disabled *ngIf="selectedProject?.preAppraisal.status === 'Completed'">TASK
-        SUBMITTED - {{selectedProject?.preAppraisal.completedDate | date:'fullDate' | uppercase}}</button>
-    </mat-card-actions>
+    <ng-container *ngIf="!apiLoading">
+      <mat-card-title>
+        <button disabled (click)="completeTask()" mat-raised-button color="accent"
+          *ngIf="selectedProject?.preAppraisal.data === null">PENDING TASK -
+          {{pendingAppraisalDays ? pendingAppraisalDays+' DAYS REMAINING' : '0' | uppercase}}</button>
+        <button mat-raised-button color="warn" disabled
+          *ngIf="selectedProject?.preAppraisal.status === 'Completed'">TASK
+          SUBMITTED - {{selectedProject?.preAppraisal.completedDate | date:'fullDate' | uppercase}}</button>
+        <mat-chip-list class="mt-2 display-block" *ngIf="selectedProject?.status === 'Marked to GM'">
+          <mat-chip color="warn" selected>{{'marked to gm' | uppercase}}</mat-chip>
+        </mat-chip-list>
+        <mat-chip-list class="mt-2 display-block" *ngIf="loggedUser?.role === 'gm' && selectedProject?.status === 'Preliminary Appraisal'">
+          <mat-chip color="accent" selected>{{'approved by gm' | uppercase}}</mat-chip>
+        </mat-chip-list>
+      </mat-card-title>
+      <mat-card-content>
+        <formio *ngIf="loggedUser?.role === 'fip' && selectedProject !== null && selectedProject?.preAppraisal.status === 'Pending'"
+          [form]="selectedProject.preAppraisal.template" [submission]="{data:selectedProject.preAppraisal.data}"
+          (submit)="onSubmit($event)"></formio>
+        <formio *ngIf="selectedProject !== null && selectedProject?.preAppraisal.status === 'Completed'"
+          [form]="selectedProject.preAppraisal.template" readOnly="true"
+          [submission]="{data:selectedProject.preAppraisal.data}"></formio>
+      </mat-card-content>
+      <mat-card-actions class="m-1">
+        <button (click)="completeTask()" disabled mat-raised-button color="accent"
+          *ngIf="selectedProject?.preAppraisal?.data === null">PENDING
+          TASK - {{pendingAppraisalDays ? pendingAppraisalDays+' DAYS REMAINING' : '0' | uppercase}}</button>
+        <button mat-raised-button color="warn" disabled
+          *ngIf="selectedProject?.preAppraisal.status === 'Completed'">TASK
+          SUBMITTED - {{selectedProject?.preAppraisal.completedDate | date:'fullDate' | uppercase}}</button>
+      </mat-card-actions>
+    </ng-container>
+    <ng-container *ngIf="apiLoading">
+      <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
+    </ng-container>
   </mat-card>
-  <span #myTopElement></span>  
+  <span #myTopElement></span>
   <app-project-details [viewType]="viewType" [showFillApprasialBtn]="showFillApprasialBtn"></app-project-details>
 </ng-container>

@@ -4,8 +4,8 @@
       <span>Proposal Summary</span>
       <div class="example-spacer"></div>
       <button *ngIf="!apiLoading && viewType === 'user' && loggedUser.role === 'fip'"
-        [disabled]="submitSections === proposalSections.length && 
-        selectedProject?.status === 'Under Review' || proposalSections.length !== submitSections && selectedProject?.status === 'Draft'" mat-raised-button (click)="submitRequest()">
+        [disabled]="(submitSections === proposalSections.length && 
+        selectedProject?.status === 'Under Review') || (proposalSections.length !== submitSections && selectedProject?.status === 'Draft')" mat-raised-button (click)="submitRequest()">
         <mat-icon>publish</mat-icon> SUBMIT
       </button>
     </mat-toolbar-row>
@@ -41,9 +41,8 @@
     </mat-card-content>
 
     <mat-card-actions *ngIf="viewType === 'po' && loggedUser.role !== 'sme'">
-
       <div class="expiry-section mb-3">
-        <button class="mt-1 mb-1" mat-button color="primary" [disabled]="(selectedProject?.status === 'Preliminary Appraisal' && 
+        <button class="mt-1 mb-1" mat-button color="primary" [disabled]="(selectedProject?.status === 'Marked to GM' || 
       selectedProject?.preAppraisal?.status === 'Pending' || selectedProject?.status === 'Extended Appraisal')"
           (click)="confirmApprasial()">
           {{selectedProject?.preAppraisal && selectedProject?.preAppraisal.status === 'Expired' ? 'EXTEND PRELIMINARY APPRAISAL' : 'Prepare Preliminary appraisal' | uppercase}}
@@ -68,25 +67,34 @@
           </mat-chip>
         </mat-chip-list>
       </div>
-      <button *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button color="primary"
-        (click)="viewPreApprasial()">
-        {{'View preliminary appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
-      </button>
-      <button (click)="markToGm()" *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button
-        color="primary" [disabled]="selectedProject?.preAppraisal?.status === 'Marked to gm'">
-        {{'Mark pre appraisal to gm' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
-      </button>
+      <div class="expiry-sections">
+        <button *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button color="primary"
+          (click)="viewPreApprasial()">
+          {{'View preliminary appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+        </button>
+      </div>
+      <div class="expiry-sections">
+        <button (click)="markToGm()" *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button
+          color="primary"
+          [disabled]="selectedProject?.extendedAppraisal !== null || selectedProject?.preAppraisal?.status === 'Pending' || selectedProject?.status === 'Marked to GM'">
+          {{'Mark preliminary appraisal to gm' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+        </button>
+        <mat-chip-list *ngIf="selectedProject?.status === 'Marked to GM'">
+          <mat-chip color="warn" selected>{{'marked to gm' | uppercase}}</mat-chip>
+        </mat-chip-list>
+      </div>
     </mat-card-actions>
+
     <mat-card-actions *ngIf="viewType === 'po' && loggedUser.role !== 'sme'">
       <div class="expiry-section mb-3">
         <button class="mt-1 mb-1" *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button
-          color="primary" [disabled]="selectedProject?.extendedAppraisal !== null && 
-        selectedProject?.extendedAppraisal.status === 'Pending'
-        && selectedProject?.status === 'Extended Appraisal'" (click)="prepareExtAppraisal()">
+          color="primary" [disabled]="selectedProject?.extendedAppraisal !== null && selectedProject?.extendedAppraisal?.status === 'Pending'
+        || selectedProject?.status === 'Marked to GM'" (click)="prepareExtAppraisal()">
           {{selectedProject?.extendedAppraisal && 
             selectedProject?.extendedAppraisal.status === 'Expired' ? 
-            'EXTEND EXTENDED APPRAISAL' : selectedProject?.extendedAppraisal.status === 'Completed' ?
-            'RE-ASSIGN EXTENDED APPRAISAL' : 'Prepare extended appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+            'EXTEND EXTENDED APPRAISAL' : selectedProject?.extendedAppraisal && selectedProject?.extendedAppraisal.status === 'Completed' ?
+            'RE-ASSIGN EXTENDED APPRAISAL' : 'Prepare extended appraisal' | uppercase}} <mat-icon
+            style="margin-left: 5px;">description</mat-icon>
         </button>
         <mat-chip-list>
           <mat-chip class="ml-3 mt-3" color="accent" selected
@@ -108,15 +116,27 @@
           </mat-chip>
         </mat-chip-list>
       </div>
-      <button class="mt-1 mb-1"
-        *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed' || selectedProject?.status === 'Extended Appraisal'"
-        mat-button color="primary" (click)="viewExtAppraisal()">
-        {{'View extended appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
-      </button>
-      <button *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed'" mat-button color="primary"
-        [disabled]="selectedProject?.extendedAppraisal?.status === 'Marked to gm'">
-        {{'Mark extended appraisal to gm' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
-      </button>
+      <div class="expiry-sections">
+        <button class="mt-1 mb-1"
+          *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed' || selectedProject?.status === 'Extended Appraisal'"
+          mat-button color="primary" (click)="viewExtAppraisal()">
+          {{'View extended appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+        </button>
+      </div>
+      <div class="expiry-sections">
+        <button *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed'" mat-button color="primary"
+          [disabled]="selectedProject?.extendedAppraisal?.status === 'Marked to gm'">
+          {{'Mark extended appraisal to gm' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+        </button>
+      </div>
+
+      <div class="expiry-sections">
+        <button (click)="setProjectStages()" [disabled]="selectedProject?.extendedAppraisal?.status === 'Pending'"
+          *ngIf="selectedProject?.status === 'Extended Appraisal' && selectedProject?.extendedAppraisal  !== null"
+          mat-button color="primary">
+          {{'Enable Project stages' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+        </button>
+      </div>
     </mat-card-actions>
 
     <mat-card-actions *ngIf="viewType === 'propapp' && loggedUser.role !== 'sme'">
@@ -137,6 +157,17 @@
     <mat-card-actions *ngIf="loggedUser.role !== 'sme'">
       <button (click)="viewCommentsMatrix()" class="m-1" mat-button color="warn">{{'View Comments Matrix' | uppercase}}
         <mat-icon style="margin-left: 5px;">view_module</mat-icon>
+      </button>
+    </mat-card-actions>
+
+    <mat-card-actions *ngIf="loggedUser.role === 'gm'">
+      <button *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button color="primary"
+        (click)="viewPreApprasial()">
+        {{'View preliminary appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+      </button>
+      <button mat-button color="accent" [disabled]="selectedProject?.status === 'Preliminary Appraisal'"
+        (click)="approvePreApprasial()">
+        {{'Approve preliminary appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
       </button>
     </mat-card-actions>
 
@@ -192,7 +223,8 @@
         <h6 id="answer" class="mb-4">Proposal Sections</h6>
         <div class="info mt-2" (click)="elementClicked(item);" *ngFor="let item of assignedProposalSections">
           <span class="box-title">
-            <mat-icon class="mr-2" color="warn" *ngIf="item.reviewStatus === 'Pending' || item.reviewStatus === null">
+            <mat-icon class="mr-2" style="color:#F57F17;"
+              *ngIf="item.reviewStatus === 'Pending' || item.reviewStatus === null">
               info</mat-icon>
             <mat-icon class="mr-2" color="accent" *ngIf="item.reviewStatus === 'Completed'">check</mat-icon>
             {{item.name}}
@@ -201,10 +233,11 @@
             <span style="font-weight: 600;">{{'Submitted' | uppercase}}:</span>
             {{item.reviewCompletedDate | date:'fullDate' | uppercase}}
           </small>
-          <small *ngIf="item.reviewStatus === 'Pending'" class="task warn-comment">
+          <small *ngIf="item.reviewStatus === 'Pending'" class="task info-comment">
             <span style="font-weight: 600;">{{'Pending' | uppercase}}:</span>
             {{item.reviewDeadline | date:'fullDate' | uppercase}}
           </small>
+
         </div>
         <div class="input-box mt-4" *ngIf="assignedProposalSections.length">
           <mat-form-field appearance="outline">
@@ -238,8 +271,16 @@
     <mat-card-actions>
       <div class="info" class="m-20" style="display: flex;flex-direction: column;">
         <div class="block">
-          <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
+          <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">warning</mat-icon>
+          <span style="font-size: 10px;"> Unassigned Sections</span>
+        </div>
+        <div class="block">
+          <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">info</mat-icon>
           <span style="font-size: 10px;"> Pending Reviews</span>
+        </div>
+        <div class="block">
+          <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
+          <span style="font-size: 10px;"> Expired Reviews</span>
         </div>
         <div class="block">
           <mat-icon style="font-size: 16px;height:16px;" color="accent">check</mat-icon>
@@ -248,9 +289,8 @@
       </div>
     </mat-card-actions>
   </mat-card>
-  <mat-card class="m-20 p-4"
-    *ngIf="(loggedUser.role === 'sme' || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner') && 
-    (viewType === 'propapp' || viewType === 'po' || viewType === 'extapp')">
+  <mat-card class="m-20 p-4" *ngIf="loggedUser.role === 'gm' || (loggedUser.role === 'sme' || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner' && 
+    viewType === 'propapp' || viewType === 'po' || viewType === 'extapp')">
     <mat-card-title>
       <h5 class="review-box pb-0">Add General Remarks</h5>
     </mat-card-title>
@@ -260,8 +300,10 @@
         <div class="info mt-2" (click)="elementClicked(item);" *ngFor="let item of unassignedProposalSections">
           <!-- <span>{{item.name}}</span> -->
           <span class="box-title">
-            <mat-icon class="mr-2" color="warn" *ngIf="item.reviewStatus === 'Pending' || item.reviewStatus === null">
+            <mat-icon class="mr-2" style="color:#F57F17;" *ngIf="item.reviewStatus === 'Pending'">
               info</mat-icon>
+            <mat-icon class="mr-2" style="color:#F57F17;" *ngIf="item.reviewStatus === null">
+              warning</mat-icon>
             <mat-icon class="mr-2" color="accent" *ngIf="item.reviewStatus === 'Completed'">check</mat-icon>
             {{item.name}}
           </span>
@@ -269,16 +311,16 @@
             <span style="font-weight: 600;">{{'Submitted' | uppercase}}:</span>
             {{item.reviewCompletedDate | date:'fullDate' | uppercase}}
           </small>
-          <small *ngIf="item.reviewStatus === 'Pending'" class="task warn-comment">
+          <small *ngIf="item.reviewStatus === 'Pending'" class="task info-comment">
             <span style="font-weight: 600;">{{'Pending' | uppercase}}:</span>
             {{item.reviewDeadline | date:'fullDate' | uppercase}}
           </small>
-          <small *ngIf="item.reviewStatus === null" class="task warn-comment">
+          <small *ngIf="item.reviewStatus === null" class="task info-comment">
             <span style="font-weight: 600;">{{'not assigned' | uppercase}}:</span>
           </small>
         </div>
         <div class="input-box mt-3"
-          *ngIf="assignedProposalSections.length || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner'">
+          *ngIf="assignedProposalSections.length || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner' || loggedUser.role === 'gm' || loggedUser.role === 'ceo'">
           <mat-form-field appearance="outline">
             <mat-select (selectionChange)="unassignSectionsSelectStore($event)" placeholder="Select Sections"
               [formControl]="unAssignSections" multiple>
@@ -296,7 +338,7 @@
           </mat-form-field>
         </div>
         <div class="input-box mt-3"
-          *ngIf="assignedProposalSections.length || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner'">
+          *ngIf="assignedProposalSections.length || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner' || loggedUser.role === 'gm' || loggedUser.role === 'ceo'">
           <mat-form-field appearance="outline">
             <mat-label>General remarks</mat-label>
             <textarea (input)="sectionUnassignComments = $event.target.value" [value]="sectionUnassignComments" matInput
@@ -310,8 +352,16 @@
     <mat-card-actions>
       <div class="info" class="m-20" style="display: flex;flex-direction: column;">
         <div class="block">
-          <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
+          <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">warning</mat-icon>
+          <span style="font-size: 10px;"> Unassigned Sections</span>
+        </div>
+        <div class="block">
+          <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">info</mat-icon>
           <span style="font-size: 10px;"> Pending Reviews</span>
+        </div>
+        <div class="block">
+          <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
+          <span style="font-size: 10px;"> Expired Reviews</span>
         </div>
         <div class="block">
           <mat-icon style="font-size: 16px;height:16px;" color="accent">check</mat-icon>
@@ -322,8 +372,8 @@
   </mat-card>
 
 
-<span id="myTopElement" #myTopElement>
-</span>
+  <span id="myTopElement" #myTopElement>
+  </span>
   <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary"
     *ngIf="viewType === 'po' || viewType === 'dm' || viewType === 'propapp' || viewType === 'extapp'">
     <mat-toolbar-row>
@@ -346,19 +396,25 @@
         </div>
         <div class="top-info-bar">
           <span style="display: flex;align-items:center;font-weight: bold;">
-          <mat-icon class="mr-2" [color]="groupType?.reviewStatus === 'Pending' ? 'warn' : 'accent'">
-            {{groupType?.reviewStatus === 'Pending' ? 'info' : 'check'}}</mat-icon>
+            <mat-icon class="mr-2"
+              [style.color]="groupType?.reviewStatus === null || groupType?.reviewStatus === 'Pending' ? '#F57F17' : null"
+              [color]="groupType?.reviewStatus === 'Pending' ? 'warn' : 'accent'">
+              {{groupType?.reviewStatus === 'Pending' ? 'info' : groupType?.reviewStatus === null ? 'warning' : 'check'}}
+            </mat-icon>
             SME:
             <span id="comment" class="ml-2">{{groupType.sme.name}}</span>
           </span>
           <div class="dates">
             <small *ngIf="groupType.reviewStatus === 'Pending'" style="display: block;font-weight: bold;">
               PENDING:
-              <span class="warn-comment ml-1">{{groupType.reviewDeadline | date:'fullDate' | uppercase}}</span>
+              <span class="info-comment ml-1">{{groupType.reviewDeadline | date:'fullDate' | uppercase}}</span>
             </small>
             <small *ngIf="groupType.reviewStatus === 'Completed'" style="display: block;font-weight: bold;">
               COMPLETED:
               <span id="comment" class="ml-1">{{groupType.reviewCompletedDate | date:'fullDate' | uppercase}}</span>
+            </small>
+            <small *ngIf="groupType.reviewStatus === null" style="display: block;font-weight: bold;">
+              <span class="info-comment"> NOT ASSIGNED:</span>
             </small>
           </div>
         </div>
@@ -375,12 +431,20 @@
     <mat-card-actions>
       <div class="info" class="m-20" style="display: flex;flex-direction: column;">
         <div class="block">
-          <mat-icon style="font-size: 16px;height:16px;" color="accent">done</mat-icon>
-          <span style="font-size: 10px;"> Submitted Sections/Reviews</span>
+          <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">warning</mat-icon>
+          <span style="font-size: 10px;"> Unassigned Sections</span>
+        </div>
+        <div class="block">
+          <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">info</mat-icon>
+          <span style="font-size: 10px;"> Pending Reviews</span>
         </div>
         <div class="block">
           <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
-          <span style="font-size: 10px;"> Pending Reviews</span>
+          <span style="font-size: 10px;"> Expired Reviews</span>
+        </div>
+        <div class="block">
+          <mat-icon style="font-size: 16px;height:16px;" color="accent">check</mat-icon>
+          <span style="font-size: 10px;"> Submitted Reviews</span>
         </div>
       </div>
     </mat-card-actions>

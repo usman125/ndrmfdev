@@ -343,7 +343,7 @@ const routes: Routes = [
     path: 'view-primary-appraisal/:projectId',
     loadChildren: () => import('./modules/view-primary-appraisal/view-primary-appraisal.module').then(m => m.ViewPrimaryAppraisalModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Po, Role.Dm] }
+    data: { roles: [Role.Po, Role.Dm, Role.Gm] }
   },
   {
     path: 'primary-appraisal-forms',
@@ -391,7 +391,7 @@ const routes: Routes = [
     path: 'project-details/:projectId',
     loadChildren: () => import('./modules/project-details/project-details.module').then(m => m.ProjectDetailsModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Fip] }
+    data: { roles: [Role.Fip, Role.Gm] }
   },
   {
     path: 'pohome',

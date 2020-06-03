@@ -54,7 +54,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     if (this.loggedUser.role === 'gm') this.getGmProjects();
     if (this.loggedUser.role === 'process owner') this.getPoProjects();
     if (this.loggedUser.role === 'dm pam' && this.viewType === 'dm') this.getDmPamProjects();
-    if (this.loggedUser.role === 'dm pam' && (this.viewType === 'extapp' || this.viewType === 'propapp')) this.getExtAppraisalProjects();
+    if (this.loggedUser.role === 'dm pam' && this.viewType === 'extapp') this.getExtAppraisalProjects();
+    if (this.loggedUser.role === 'dm pam' && this.viewType === 'propapp') this.getAllProjects();
     if (this.loggedUser.role === 'sme') this.getExtAppraisalProjects();
     console.log("SHOW BUTTON VALUE:--", this.showAddBtn, this.viewType, this.loggedUser);
     this.Subscriptions.add(
