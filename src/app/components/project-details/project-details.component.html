@@ -142,13 +142,7 @@
         </button>
       </div>
 
-      <div class="expiry-sections mt-2">
-        <mat-chip-list *ngIf="selectedProject?.status === 'TAC Meeting'">
-          <mat-chip class="ml-3 mt-3" color="warn" selected>
-            TAC Meeting Enabled
-          </mat-chip>
-        </mat-chip-list>
-      </div>
+      
     </mat-card-actions>
 
     <mat-card-actions *ngIf="viewType === 'propapp' && loggedUser.role !== 'sme'">
@@ -167,14 +161,30 @@
     </mat-card-actions>
 
     <mat-card-actions *ngIf="loggedUser.role !== 'sme'">
+      <div class="expiry-sections mt-2 mb-2">
+        <mat-chip-list>
+          <mat-chip *ngIf="selectedProject?.status === 'TAC Meeting'" class="ml-3 mt-3" color="warn" selected>
+            TAC Meeting Enabled
+          </mat-chip>
+          <mat-chip *ngIf="selectedProject?.status === 'RMC Meeting'" class="ml-3 mt-3" color="warn" selected>
+            RMC Meeting Enabled
+          </mat-chip>
+          <mat-chip *ngIf="selectedProject?.status === 'BOD Meeting'" class="ml-3 mt-3" color="warn" selected>
+            BOD Meeting Enabled
+          </mat-chip>
+          <mat-chip *ngIf="selectedProject?.status === 'Offer Letter'" class="ml-3 mt-3" color="warn" selected>
+            Offer Letter Enabled
+          </mat-chip>
+        </mat-chip-list>
+      </div>
       <button (click)="viewCommentsMatrix()" class="m-1" mat-button color="warn">{{'View Comments Matrix' | uppercase}}
         <mat-icon style="margin-left: 5px;">view_module</mat-icon>
       </button>
-      <button *ngIf="viewType === 'po'" (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })"
+      <button (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })"
         class="m-1" mat-button color="accent">{{'View porposal details' | uppercase}}
         <mat-icon style="margin-left: 5px;">folder</mat-icon>
       </button>
-      <button *ngIf="viewType === 'po'" (click)="myTopElement2.scrollIntoView({ behavior: 'smooth', block: 'center' })"
+      <button (click)="myTopElement2.scrollIntoView({ behavior: 'smooth', block: 'center' })"
         class="m-1" mat-button color="accent">{{'add general remarks' | uppercase}}
         <mat-icon style="margin-left: 5px;">view_module</mat-icon>
       </button>
@@ -193,14 +203,14 @@
 
   </mat-card>
 
-  <mat-toolbar *ngIf="selectedProject?.status === 'TAC Meeting'" class="mat-elevation-z8" style="padding: 15px 0px;"
+  <mat-toolbar *ngIf="selectedProject?.status === 'TAC Meeting' && loggedUser?.role === 'process owner'" class="mat-elevation-z8" style="padding: 15px 0px;"
     color="primary">
     <mat-toolbar-row>
       <span>TAC Meeting MOMs</span>
       <div class="example-spacer"></div>
     </mat-toolbar-row>
   </mat-toolbar>
-  <mat-card class="m-20" *ngIf="selectedProject?.status === 'TAC Meeting'">
+  <mat-card class="m-20" *ngIf="selectedProject?.status === 'TAC Meeting' && loggedUser?.role === 'process owner'">
     <mat-card-content>
       <div class="input-box mt-3">
         <ul>
@@ -224,14 +234,14 @@
     </mat-card-actions>
   </mat-card>
 
-  <mat-toolbar *ngIf="selectedProject?.status === 'RMC Meeting'" class="mat-elevation-z8" style="padding: 15px 0px;"
+  <mat-toolbar *ngIf="selectedProject?.status === 'RMC Meeting' && loggedUser?.role === 'process owner'" class="mat-elevation-z8" style="padding: 15px 0px;"
     color="primary">
     <mat-toolbar-row>
       <span>RMC Meeting MOMs</span>
       <div class="example-spacer"></div>
     </mat-toolbar-row>
   </mat-toolbar>
-  <mat-card class="m-20" *ngIf="selectedProject?.status === 'RMC Meeting'">
+  <mat-card class="m-20" *ngIf="selectedProject?.status === 'RMC Meeting' && loggedUser?.role === 'process owner'">
     <mat-card-content>
       <div class="input-box mt-3">
         <ul>
@@ -255,14 +265,14 @@
     </mat-card-actions>
   </mat-card>
 
-  <mat-toolbar *ngIf="selectedProject?.status === 'BOD Meeting'" class="mat-elevation-z8" style="padding: 15px 0px;"
+  <mat-toolbar *ngIf="selectedProject?.status === 'BOD Meeting' && loggedUser?.role === 'process owner'" class="mat-elevation-z8" style="padding: 15px 0px;"
     color="primary">
     <mat-toolbar-row>
       <span>BOD Meeting MOMs</span>
       <div class="example-spacer"></div>
     </mat-toolbar-row>
   </mat-toolbar>
-  <mat-card class="m-20" *ngIf="selectedProject?.status === 'BOD Meeting'">
+  <mat-card class="m-20" *ngIf="selectedProject?.status === 'BOD Meeting' && loggedUser?.role === 'process owner'">
     <mat-card-content>
       <div class="input-box mt-3">
         <ul>

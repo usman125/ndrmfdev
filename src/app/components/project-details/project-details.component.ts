@@ -820,6 +820,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this._projectService.setProjectStage(this.selectedProjectId, 'RMC_MEETING').subscribe(
             result => {
               console.log("RESULT FROM PROJECT STAGE SET BOD:--", result);
+              const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
+              fileUpload.value = '';
               this._primaryAppraisalFormsStore.setProjectStage('RMC Meeting');
             },
             error => {
@@ -831,6 +833,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this._projectService.setProjectStage(this.selectedProjectId, 'BOD_MEETING').subscribe(
             result => {
               console.log("RESULT FROM PROJECT STAGE SET BOD:--", result);
+              const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
+              fileUpload.value = '';
               this._primaryAppraisalFormsStore.setProjectStage('BOD Meeting');
             },
             error => {
@@ -842,6 +846,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this._projectService.setProjectStage(this.selectedProjectId, 'OFFER_LETTER').subscribe(
             result => {
               console.log("RESULT FROM PROJECT STAGE SET BOD:--", result);
+              const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
+              fileUpload.value = '';
               this._primaryAppraisalFormsStore.setProjectStage('Offer Letter');
             },
             error => {
@@ -852,6 +858,20 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       },
       error => {
         console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
+      }
+    );
+  }
+
+  uploadStageMoms(stage1, stage2){
+    this._projectService.setProjectStage(this.selectedProjectId, stage1).subscribe(
+      result => {
+        console.log("RESULT FROM PROJECT STAGE SET BOD:--", result);
+        const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
+        fileUpload.value = '';
+        this._primaryAppraisalFormsStore.setProjectStage(stage2);
+      },
+      error => {
+        console.log("ERROR FROM MARK TO GM:--", error);
       }
     );
   }
