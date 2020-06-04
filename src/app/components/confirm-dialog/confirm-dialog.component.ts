@@ -14,6 +14,7 @@ export interface ConfirmData {
   comments: string;
   assignToGm: boolean;
   setStages: boolean;
+  offerLetter: boolean;
 }
 
 @Component({
@@ -61,6 +62,10 @@ export class ConfirmDialogComponent implements OnInit {
   }
 
   assignToGm(status) {
+    this.close({ status });
+  }
+  
+  uploadOfferLetter(status) {
     this.close({ status });
   }
 

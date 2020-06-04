@@ -23,6 +23,7 @@ export class ConfirmModelService {
         setStatus: options.setStatus,
         assignToGm: options.assignToGm,
         setStages: options.setStages,
+        offerLetter: options.offerLetter,
       }
     });
   }

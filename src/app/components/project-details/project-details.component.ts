@@ -649,6 +649,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           console.log("RESULT AFTER UPLOADING FILE:--", result);
           const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
           fileUpload.value = '';
+          this.files = [];
           this._projectService.submitProposalGeneralReview(
             this.selectedProjectId,
             object
@@ -730,6 +731,38 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           }
         );
       }
+    });
+
+  }
+
+  uploadOfferLetter() {
+    const options = {
+      title: 'Select a due date for the Signing!',
+      message: 'By Clicking "OK" offer letter will be generated',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: false,
+      offerLetter: true,
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("MARK TO GM STATUS", confirmed);
+      // if (confirmed) {
+      //   this._projectService.markToGm(this.selectedProjectId).subscribe(
+      //     result => {
+      //       console.log("RESULT FROM MARK TO GM:--", result);
+      //       this._primaryAppraisalFormsStore.markToGm();
+      //     },
+      //     error => {
+      //       console.log("ERROR FROM MARK TO GM:--", error);
+      //     }
+      //   );
+      // }
     });
 
   }
@@ -816,6 +849,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         console.log("RESULT AFTER UPLOADING FILE MOMS TAC MEETING:--", result);
         const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
         fileUpload.value = '';
+        this.files = [];
         if (type === 'yestac') {
           this.updateStageMoms('RMC_MEETING', 'RMC Meeting');
         }
