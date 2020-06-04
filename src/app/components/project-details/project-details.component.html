@@ -1,669 +1,689 @@
 <ng-container *ngIf="!apiLoading">
-  <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
-    <mat-toolbar-row>
-      <span>Proposal Summary</span>
-      <div class="example-spacer"></div>
-      <button *ngIf="!apiLoading && viewType === 'user' && loggedUser.role === 'fip'"
-        [disabled]="(submitSections === proposalSections.length && 
-        selectedProject?.status === 'Under Review') || (proposalSections.length !== submitSections && selectedProject?.status === 'Draft')" mat-raised-button (click)="submitRequest()">
-        <mat-icon>publish</mat-icon> SUBMIT
-      </button>
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <mat-card class="m-20" style="padding: 30px;" *ngIf="loggedUser.role !== 'fip'">
-    <mat-card-content>
-      <div class="project-details">
-        <div class="field">
-          <div class="title">Name</div>
-          <div class="value">{{selectedProjectInfo?.projectName}}</div>
-        </div>
-        <div class="field">
-          <div class="title">Company</div>
-          <div class="value">{{selectedProjectInfo?.nameOfAgency}}</div>
-        </div>
-        <div class="field">
-          <div class="title">Time of submission</div>
-          <div class="value">{{selectedProjectInfo?.timeOfSubmission | date:'fullDate'}}</div>
-        </div>
-        <div class="field">
-          <div class="title">Duration</div>
-          <div class="value">{{selectedProjectInfo?.duration}} Months</div>
-        </div>
-        <div class="field">
-          <div class="title">Start Date</div>
-          <div class="value">{{selectedProjectInfo?.startDate | date:'fullDate'}}</div>
-        </div>
-        <div class="field">
-          <div class="title">End Date</div>
-          <div class="value">{{selectedProjectInfo?.endDate | date:'fullDate'}}</div>
-        </div>
-      </div>
-    </mat-card-content>
-
-    <mat-card-actions *ngIf="viewType === 'po' && loggedUser.role !== 'sme'">
-      <div class="expiry-section mb-3">
-        <button class="mt-1 mb-1" mat-button color="primary" [disabled]="(selectedProject?.status === 'Marked to GM' ||
-        selectedProject?.status === 'TAC Meeting' || selectedProject?.preAppraisal?.status === 'Pending' || 
-        selectedProject?.status === 'BOD Meeting' || selectedProject?.status === 'RMC Meeting' || 
-        selectedProject?.status === 'Offer Letter' || selectedProject?.status === 'Extended Appraisal')"
-          (click)="confirmApprasial()">
-          {{selectedProject?.preAppraisal && selectedProject?.preAppraisal.status === 'Expired' ? 'EXTEND PRELIMINARY APPRAISAL' : 'Prepare Preliminary appraisal' | uppercase}}
-          <mat-icon style="margin-left: 5px;">description</mat-icon>
-        </button>
-        <mat-chip-list>
-          <mat-chip class="ml-3 mt-3" color="accent" selected
-            *ngIf="selectedProject?.preAppraisal?.status === 'Pending'">
-            <span *ngIf="selectedProject?.preAppraisal.expiryDays !== 0">
-              Pending {{selectedProject?.preAppraisal.expiryDays}} Day(s) Remaining
-            </span>
-            <span *ngIf="selectedProject?.preAppraisal.expiryDays === 0">
-              Due Today
-            </span>
-          </mat-chip>
-          <mat-chip class="ml-3 mt-3" color="warn" selected *ngIf="selectedProject?.preAppraisal?.status === 'Expired'">
-            Expired {{-1*(selectedProject?.preAppraisal.expiryDays)}} Day(s) Before
-          </mat-chip>
-          <mat-chip class="ml-3 mt-3" color="accent" selected
-            *ngIf="selectedProject?.preAppraisal?.status === 'Completed'">
-            Submitted on {{selectedProject?.preAppraisal.completedDate | date:'fullDate'}}
-          </mat-chip>
-        </mat-chip-list>
-      </div>
-      <div class="expiry-sections">
-        <button *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button color="primary"
-          (click)="viewPreApprasial()">
-          {{'View preliminary appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
-        </button>
-      </div>
-      <div class="expiry-sections">
-        <button (click)="markToGm()" *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button
-          color="primary" [disabled]="selectedProject?.extendedAppraisal !== null || 
-          selectedProject?.preAppraisal?.status === 'Pending' || 
-          selectedProject?.status === 'Marked to GM' || 
-          selectedProject?.status === 'Tac Meeting' || selectedProject?.status === 'BOD Meeting' || 
-          selectedProject?.status === 'RMC Meeting' || selectedProject?.status === 'Offer Letter'">
-          {{'Mark preliminary appraisal to gm' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
-        </button>
-        <mat-chip-list *ngIf="selectedProject?.status === 'Marked to GM'">
-          <mat-chip color="warn" selected>{{'marked to gm' | uppercase}}</mat-chip>
-        </mat-chip-list>
-      </div>
-    </mat-card-actions>
-
-    <mat-card-actions *ngIf="viewType === 'po' && loggedUser.role !== 'sme'">
-      <div class="expiry-section mb-3">
-        <button class="mt-1 mb-1" *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button
-          color="primary" [disabled]="selectedProject?.extendedAppraisal !== null && 
-          selectedProject?.extendedAppraisal?.status === 'Pending' || selectedProject?.status === 'Marked to GM' || 
-          selectedProject?.status === 'BOD Meeting' || selectedProject?.status === 'RMC Meeting' || 
-          selectedProject?.status === 'Offer Letter' || selectedProject?.status === 'TAC Meeting'"
-          (click)="prepareExtAppraisal()">
-          {{selectedProject?.extendedAppraisal && 
-            selectedProject?.extendedAppraisal.status === 'Expired' ? 
-            'EXTEND EXTENDED APPRAISAL' : selectedProject?.extendedAppraisal && selectedProject?.extendedAppraisal.status === 'Completed' ?
-            'RE-ASSIGN EXTENDED APPRAISAL' : 'Prepare extended appraisal' | uppercase}} <mat-icon
-            style="margin-left: 5px;">description</mat-icon>
-        </button>
-        <mat-chip-list>
-          <mat-chip class="ml-3 mt-3" color="accent" selected
-            *ngIf="selectedProject?.extendedAppraisal?.status === 'Pending'">
-            <span *ngIf="selectedProject?.extendedAppraisal.expiryDays !== 0">
-              Pending {{selectedProject?.extendedAppraisal.expiryDays}} Day(s) Remaining
-            </span>
-            <span *ngIf="selectedProject?.extendedAppraisal.expiryDays === 0">
-              Due Today
-            </span>
-          </mat-chip>
-          <mat-chip class="ml-3 mt-3" color="warn" selected
-            *ngIf="selectedProject?.extendedAppraisal?.status === 'Expired'">
-            Expired {{-1*(selectedProject?.preAppraisal.expiryDays)}} Day(s) Before
-          </mat-chip>
-          <mat-chip class="ml-3 mt-3" color="accent" selected
-            *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed'">
-            Submitted on {{selectedProject?.extendedAppraisal.completedDate | date:'fullDate'}}
-          </mat-chip>
-        </mat-chip-list>
-      </div>
-      <div class="expiry-sections">
-        <button class="mt-1 mb-1"
-          *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed' || selectedProject?.status === 'Extended Appraisal'"
-          mat-button color="primary" (click)="viewExtAppraisal()">
-          {{'View extended appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
-        </button>
-      </div>
-      <div class="expiry-sections">
-        <button *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed'" mat-button color="primary"
-          [disabled]="selectedProject?.extendedAppraisal?.status === 'Marked to gm' || 
-          selectedProject?.status === 'TAC Meeting' || selectedProject?.status === 'BOD Meeting' || 
-          selectedProject?.status === 'RMC Meeting' || selectedProject?.status === 'Offer Letter'">
-          {{'Mark extended appraisal to gm' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
-        </button>
-      </div>
-
-      <div class="expiry-sections mt-2">
-        <button (click)="setProjectStages()" [disabled]="selectedProject?.extendedAppraisal?.status === 'Pending'"
-          *ngIf="(selectedProject?.status === 'Extended Appraisal' || 
-          selectedProject?.status === 'TAC Meeting' || selectedProject?.status === 'BOD Meeting' || 
-          selectedProject?.status === 'RMC Meeting' || selectedProject?.status === 'Offer Letter') && 
-          selectedProject?.extendedAppraisal  !== null" mat-button color="accent">
-          {{'change Project stage' | uppercase}} <mat-icon style="margin-left: 5px;">loop</mat-icon>
-        </button>
-      </div>
+  <div class="row">
+    <div class="col-md-7">
 
 
-    </mat-card-actions>
-
-    <mat-card-actions *ngIf="viewType === 'propapp' && loggedUser.role !== 'sme'">
-      <button *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button color="primary"
-        (click)="viewPreApprasial()">
-        {{'View preliminary appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
-      </button>
-      <button class="mt-1 mb-1" *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed'" mat-button
-        color="primary" (click)="viewExtAppraisal()">
-        {{'View extended appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
-      </button>
-      <button (click)="assginProposalSections()" class="m-1"
-        *ngIf="selectedProject && selectedProject?.status === 'Extended Appraisal'" mat-button color="accent">ASSIGN
-        PROPOSAL SECTIONS TO DESK <mat-icon style="margin-left: 5px;">description</mat-icon>
-      </button>
-    </mat-card-actions>
-
-    <mat-card-actions *ngIf="loggedUser.role !== 'sme'">
-      <div class="expiry-sections mt-2 mb-2">
-        <mat-chip-list>
-          <mat-chip *ngIf="selectedProject?.status === 'TAC Meeting'" class="ml-3 mt-3" color="warn" selected>
-            TAC Meeting Enabled
-          </mat-chip>
-          <mat-chip *ngIf="selectedProject?.status === 'RMC Meeting'" class="ml-3 mt-3" color="warn" selected>
-            RMC Meeting Enabled
-          </mat-chip>
-          <mat-chip *ngIf="selectedProject?.status === 'BOD Meeting'" class="ml-3 mt-3" color="warn" selected>
-            BOD Meeting Enabled
-          </mat-chip>
-          <mat-chip *ngIf="selectedProject?.status === 'Offer Letter'" class="ml-3 mt-3" color="warn" selected>
-            Offer Letter Enabled
-          </mat-chip>
-        </mat-chip-list>
-      </div>
-      <button (click)="viewCommentsMatrix()" class="m-1" mat-button color="warn">{{'View Comments Matrix' | uppercase}}
-        <mat-icon style="margin-left: 5px;">view_module</mat-icon>
-      </button>
-      <button (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })" class="m-1" mat-button
-        color="accent">{{'View porposal details' | uppercase}}
-        <mat-icon style="margin-left: 5px;">folder</mat-icon>
-      </button>
-      <button (click)="myTopElement2.scrollIntoView({ behavior: 'smooth', block: 'center' })" class="m-1" mat-button
-        color="accent">{{'add general remarks' | uppercase}}
-        <mat-icon style="margin-left: 5px;">view_module</mat-icon>
-      </button>
-    </mat-card-actions>
-
-    <mat-card-actions *ngIf="loggedUser.role === 'gm'">
-      <button *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button color="primary"
-        (click)="viewPreApprasial()">
-        {{'View preliminary appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
-      </button>
-      <button mat-button color="accent" [disabled]="selectedProject?.status === 'Preliminary Appraisal'"
-        (click)="approvePreApprasial()">
-        {{'Approve preliminary appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
-      </button>
-    </mat-card-actions>
-
-  </mat-card>
-
-  <!-- TAC MEETING CARD -->
-  <mat-toolbar *ngIf="selectedProject?.status === 'TAC Meeting' && loggedUser?.role === 'process owner'"
-    class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
-    <mat-toolbar-row>
-      <span>TAC Meeting MOMs</span>
-      <div class="example-spacer"></div>
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <mat-card class="m-20" style="padding: 30px;"
-    *ngIf="selectedProject?.status === 'TAC Meeting' && loggedUser?.role === 'process owner'">
-    <mat-card-content>
-      <div class="input-box mt-3">
-        <ul>
-          <li *ngFor="let file of files" style="list-style-type: none;">
-            <span id="file-label">
-              {{file.data.name}}
-            </span>
-          </li>
-        </ul>
-        <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple"
-          accept="{{accept}}" style="display: none;" />
-        <button mat-raised-button color="warn" (click)="uploadFile()">
-          <mat-icon>file_upload</mat-icon>
-          {{'Upload File(s)'}}
-        </button>
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button color="accent"
-        (click)="uploadTacMoms('TAC_MEETING', 'yestac')">{{'approve' | uppercase}}</button>
-      <button mat-button color="warn" (click)="uploadTacMoms('TAC_MEETING', 'no')">{{'disapprove' | uppercase}}</button>
-    </mat-card-actions>
-  </mat-card>
-
-  <!-- RMC MEETING CARD -->
-  <mat-toolbar *ngIf="selectedProject?.status === 'RMC Meeting' && loggedUser?.role === 'process owner'"
-    class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
-    <mat-toolbar-row>
-      <span>RMC Meeting MOMs</span>
-      <div class="example-spacer"></div>
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <mat-card class="m-20" style="padding: 30px;"
-    *ngIf="selectedProject?.status === 'RMC Meeting' && loggedUser?.role === 'process owner'">
-    <mat-card-content>
-      <div class="input-box mt-3">
-        <ul>
-          <li *ngFor="let file of files" style="list-style-type: none;">
-            <span id="file-label">
-              {{file.data.name}}
-            </span>
-          </li>
-        </ul>
-        <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple"
-          accept="{{accept}}" style="display: none;" />
-        <button mat-raised-button color="warn" (click)="uploadFile()">
-          <mat-icon>file_upload</mat-icon>
-          {{'Upload File(s)'}}
-        </button>
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button color="accent"
-        (click)="uploadTacMoms('RMC_MEETING', 'yesrmc')">{{'approve' | uppercase}}</button>
-      <button mat-button color="warn" (click)="uploadTacMoms('RMC_MEETING', 'no')">{{'disapprove' | uppercase}}</button>
-    </mat-card-actions>
-  </mat-card>
-
-  <!-- BOD Meeting card -->
-  <mat-toolbar *ngIf="selectedProject?.status === 'BOD Meeting' && loggedUser?.role === 'process owner'"
-    class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
-    <mat-toolbar-row>
-      <span>BOD Meeting MOMs</span>
-      <div class="example-spacer"></div>
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <mat-card class="m-20" style="padding: 30px;"
-    *ngIf="selectedProject?.status === 'BOD Meeting' && loggedUser?.role === 'process owner'">
-    <mat-card-content>
-      <div class="input-box mt-3">
-        <ul>
-          <li *ngFor="let file of files" style="list-style-type: none;">
-            <span id="file-label">
-              {{file.data.name}}
-            </span>
-          </li>
-        </ul>
-        <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple"
-          accept="{{accept}}" style="display: none;" />
-        <button mat-raised-button color="warn" (click)="uploadFile()">
-          <mat-icon>file_upload</mat-icon>
-          {{'Upload File(s)'}}
-        </button>
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button color="accent"
-        (click)="uploadTacMoms('BOD_MEETING', 'yesbod')">{{'approve' | uppercase}}</button>
-      <button mat-button color="warn" (click)="uploadTacMoms('BOD_MEETING', 'no')">{{'disapprove' | uppercase}}</button>
-    </mat-card-actions>
-  </mat-card>
-
-  <!-- OFFER LETTER CARD -->
-  <mat-toolbar *ngIf="selectedProject?.status === 'Offer Letter' && loggedUser?.role === 'process owner'"
-    class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
-    <mat-toolbar-row>
-      <span>Upload Offer Letter</span>
-      <div class="example-spacer"></div>
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <mat-card class="m-20" style="padding: 30px;"
-    *ngIf="selectedProject?.status === 'Offer Letter' && loggedUser?.role === 'process owner'">
-    <mat-card-content>
-      <div class="input-box mt-3">
-        <ul>
-          <li *ngFor="let file of files" style="list-style-type: none;">
-            <span id="file-label">
-              {{file.data.name}}
-            </span>
-          </li>
-        </ul>
-        <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple"
-          accept="{{accept}}" style="display: none;" />
-        <button mat-raised-button color="warn" (click)="uploadFile()">
-          <mat-icon>file_upload</mat-icon>
-          {{'Upload File(s)'}}
-        </button>
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button color="accent" (click)="uploadOfferLetter()">{{'assign for signing' | uppercase}}
-        <mat-icon class="ml-2">gesture</mat-icon>
-      </button>
-    </mat-card-actions>
-  </mat-card>
-
-  <!-- PROJECT PROPOSAL SECTION STATS -->
-  <mat-toolbar class="mat-elevation-z8" *ngIf="viewType === 'propapp' || viewType === 'po'" style="padding: 15px 0px;"
-    color="primary">
-    <mat-toolbar-row>
-      <span>Proposal Sections</span>
-      <div class="example-spacer"></div>
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <mat-card class="m-20 mb-0 p-4"
-    *ngIf="(loggedUser.role === 'dm pam' || loggedUser.role === 'process owner') && (viewType === 'propapp' || viewType === 'po')">
-    <mat-card-title>
-    </mat-card-title>
-    <mat-card-content>
-      <mat-list>
-        <mat-list-item>
-          <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
-          <div mat-line>{{'Assigned Tasks'}}</div>
-          <div mat-line>{{sectionStats?.pendingCount}}</div>
-        </mat-list-item>
-        <mat-list-item>
-          <mat-icon mat-list-icon>assignment_late</mat-icon>
-          <div mat-line>{{'Unassigned Tasks'}}</div>
-          <div mat-line>{{sectionStats?.unassignCount}}</div>
-        </mat-list-item>
-        <mat-list-item>
-          <mat-icon mat-list-icon>assignment_returned</mat-icon>
-          <div mat-line>{{'Reviews Submitted'}}</div>
-          <div mat-line>{{sectionStats?.reviewsCount}}</div>
-        </mat-list-item>
-        <mat-list-item>
-          <mat-icon mat-list-icon>folder</mat-icon>
-          <div mat-line>{{'Total Sections'}}</div>
-          <div mat-line>{{sectionStats?.totalSections}}</div>
-        </mat-list-item>
-      </mat-list>
-    </mat-card-content>
-    <mat-card-actions>
-    </mat-card-actions>
-  </mat-card>
-
-  <!-- PROJECT PROPOSAL ADD REVIEWS -->
-  <mat-card class="m-20 p-4" *ngIf="loggedUser.role === 'sme'">
-    <mat-card-title>
-      <h5>Add Section Review</h5>
-    </mat-card-title>
-    <mat-card-content>
-      <div class="review-box" *ngIf="assignedProposalSections.length">
-        <h6 id="answer" class="mb-4">Proposal Sections</h6>
-        <div class="info mt-2" (click)="elementClicked(item);" *ngFor="let item of assignedProposalSections">
-          <span class="box-title">
-            <mat-icon class="mr-2" style="color:#F57F17;"
-              *ngIf="item.reviewStatus === 'Pending' || item.reviewStatus === null">
-              info</mat-icon>
-            <mat-icon class="mr-2" color="accent" *ngIf="item.reviewStatus === 'Completed'">check</mat-icon>
-            {{item.name}}
-          </span>
-          <small id="comment" *ngIf="item.reviewStatus === 'Completed'" class="task">
-            <span style="font-weight: 600;">{{'Submitted' | uppercase}}:</span>
-            {{item.reviewCompletedDate | date:'fullDate' | uppercase}}
-          </small>
-          <small *ngIf="item.reviewStatus === 'Pending'" class="task info-comment">
-            <span style="font-weight: 600;">{{'Pending' | uppercase}}:</span>
-            {{item.reviewDeadline | date:'fullDate' | uppercase}}
-          </small>
-
-        </div>
-        <div class="input-box mt-4" *ngIf="assignedProposalSections.length">
-          <mat-form-field appearance="outline">
-            <mat-select (selectionChange)="assignSectionsSelectStore($event)" placeholder="Select Sections"
-              [formControl]="assignSections" multiple>
-              <mat-select-trigger>
-                <span *ngFor="let item of assignSections?.value; let i=index">
-                  <span *ngIf="i===0">{{item.name}}</span>
+      <!-- TAC MEETING CARD -->
+      <mat-toolbar *ngIf="selectedProject?.status === 'TAC Meeting' && loggedUser?.role === 'process owner'"
+        class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+        <mat-toolbar-row>
+          <span>TAC Meeting MOMs</span>
+          <div class="example-spacer"></div>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-card class="m-20" style="padding: 30px;"
+        *ngIf="selectedProject?.status === 'TAC Meeting' && loggedUser?.role === 'process owner'">
+        <mat-card-content>
+          <div class="input-box mt-3">
+            <ul>
+              <li *ngFor="let file of files" style="list-style-type: none;">
+                <span id="file-label">
+                  {{file.data.name}}
                 </span>
-                <span *ngIf="assignSections.value?.length > 1" class="example-additional-selection">
-                  (+{{assignSections.value.length - 1}} others)
-                </span>
-              </mat-select-trigger>
-              <mat-option *ngFor="let topping of assignedProposalSections" [value]="topping">{{topping.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="input-box mt-3" *ngIf="assignedProposalSections.length">
-          <mat-form-field appearance="outline">
-            <mat-label>Remarks on section</mat-label>
-            <textarea (input)="sectionComments = $event.target.value" [value]="sectionComments" matInput
-              placeholder="Add your remarks..." cols="30" rows="10"></textarea>
-          </mat-form-field>
-          <button (click)="addAssignedSectionReview()"
-            [disabled]="assignSections.value.length === 0 || !sectionComments" mat-raised-button
-            color="accent">SUBMIT</button>
-        </div>
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <div class="info" class="m-20" style="display: flex;flex-direction: column;">
-        <div class="block">
-          <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">warning</mat-icon>
-          <span style="font-size: 10px;"> Unassigned Sections</span>
-        </div>
-        <div class="block">
-          <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">info</mat-icon>
-          <span style="font-size: 10px;"> Pending Reviews</span>
-        </div>
-        <div class="block">
-          <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
-          <span style="font-size: 10px;"> Expired Reviews</span>
-        </div>
-        <div class="block">
-          <mat-icon style="font-size: 16px;height:16px;" color="accent">check</mat-icon>
-          <span style="font-size: 10px;"> Submitted Reviews</span>
-        </div>
-      </div>
-    </mat-card-actions>
-  </mat-card>
-  <span id="myTopElement2" #myTopElement2></span>
-  <mat-card class="m-20 p-4" *ngIf="loggedUser.role === 'gm' || (loggedUser.role === 'sme' || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner' && 
-    viewType === 'propapp' || viewType === 'po' || viewType === 'extapp')">
-    <mat-card-title>
-      <h5 class="review-box pb-0">Add General Remarks</h5>
-    </mat-card-title>
-    <mat-card-content>
-      <div class="review-box" *ngIf="unassignedProposalSections.length">
-        <h6 id="answer" class="mb-4">Proposal Sections</h6>
-        <div class="info mt-2" (click)="elementClicked(item);" *ngFor="let item of unassignedProposalSections">
-          <!-- <span>{{item.name}}</span> -->
-          <span class="box-title">
-            <mat-icon class="mr-2" style="color:#F57F17;" *ngIf="item.reviewStatus === 'Pending'">
-              info</mat-icon>
-            <mat-icon class="mr-2" style="color:#F57F17;" *ngIf="item.reviewStatus === null">
-              warning</mat-icon>
-            <mat-icon class="mr-2" color="accent" *ngIf="item.reviewStatus === 'Completed'">check</mat-icon>
-            {{item.name}}
-          </span>
-          <small id="comment" *ngIf="item.reviewStatus === 'Completed'" class="task">
-            <span style="font-weight: 600;">{{'Submitted' | uppercase}}:</span>
-            {{item.reviewCompletedDate | date:'fullDate' | uppercase}}
-          </small>
-          <small *ngIf="item.reviewStatus === 'Pending'" class="task info-comment">
-            <span style="font-weight: 600;">{{'Pending' | uppercase}}:</span>
-            {{item.reviewDeadline | date:'fullDate' | uppercase}}
-          </small>
-          <small *ngIf="item.reviewStatus === null" class="task info-comment">
-            <span style="font-weight: 600;">{{'not assigned' | uppercase}}:</span>
-          </small>
-        </div>
-        <div class="input-box mt-3"
-          *ngIf="assignedProposalSections.length || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner' || loggedUser.role === 'gm' || loggedUser.role === 'ceo'">
-          <mat-form-field appearance="outline">
-            <mat-select (selectionChange)="unassignSectionsSelectStore($event)" placeholder="Select Sections"
-              [formControl]="unAssignSections" multiple>
-              <mat-select-trigger>
-                <span *ngFor="let item of unAssignSections?.value; let i=index">
-                  <span *ngIf="i===0">{{item.name}}</span>
-                </span>
-                <span *ngIf="unAssignSections.value?.length > 1" class="example-additional-selection">
-                  (+{{unAssignSections.value.length - 1}} others)
-                </span>
-              </mat-select-trigger>
-              <mat-option *ngFor="let topping of unassignedProposalSections" [value]="topping">{{topping.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div class="input-box mt-3"
-          *ngIf="assignedProposalSections.length || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner' || loggedUser.role === 'gm' || loggedUser.role === 'ceo'">
-          <mat-form-field appearance="outline">
-            <mat-label>General remarks</mat-label>
-            <textarea (input)="sectionUnassignComments = $event.target.value" [value]="sectionUnassignComments" matInput
-              placeholder="Add your remarks..." cols="30" rows="10">
-            </textarea>
-          </mat-form-field>
-        </div>
-        <div class="input-box mt-3">
-          <ul>
-            <li *ngFor="let file of files" style="list-style-type: none;">
-              <span id="file-label">
-                {{file.data.name}}
-              </span>
-            </li>
-          </ul>
-          <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple"
-            accept="{{accept}}" style="display: none;" />
-          <button mat-raised-button color="warn" (click)="uploadFile()">
-            <mat-icon>file_upload</mat-icon>
-            {{'Upload File'}}
-          </button>
-
-        </div>
-        <div class="input-box mt-3">
-          <button [disabled]="!sectionUnassignComments" (click)="addUnAssignedSectionReview()" mat-raised-button
-            color="accent">SUBMIT
-          </button>
-        </div>
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <div class="info" class="m-20" style="display: flex;flex-direction: column;">
-        <div class="block">
-          <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">warning</mat-icon>
-          <span style="font-size: 10px;"> Unassigned Sections</span>
-        </div>
-        <div class="block">
-          <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">info</mat-icon>
-          <span style="font-size: 10px;"> Pending Reviews</span>
-        </div>
-        <div class="block">
-          <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
-          <span style="font-size: 10px;"> Expired Reviews</span>
-        </div>
-        <div class="block">
-          <mat-icon style="font-size: 16px;height:16px;" color="accent">check</mat-icon>
-          <span style="font-size: 10px;"> Submitted Reviews</span>
-        </div>
-      </div>
-    </mat-card-actions>
-  </mat-card>
-
-
-  <span id="myTopElement" #myTopElement>
-  </span>
-
-  <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary"
-    *ngIf="viewType === 'po' || viewType === 'dm' || viewType === 'propapp' || viewType === 'extapp'">
-    <mat-toolbar-row>
-      <span>Proposal Section Details</span>
-      <div class="example-spacer"></div>
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <mat-card class="m-20">
-    <mat-card-content>
-      <div class="tabs-top-container">
-        <div class="top-tabs">
-          <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
-            <mat-button-toggle (change)="tabChanged(item)" *ngFor="let item of proposalSections; let i = index;"
-              [value]="item">
-              <mat-icon class="mr-2" *ngIf="item.data !== null">done</mat-icon>
-              <mat-icon class="mr-2" *ngIf="item.data === null">feedback</mat-icon>
-              <span>{{item.name}}</span>
-            </mat-button-toggle>
-          </mat-button-toggle-group>
-        </div>
-        <div class="top-info-bar">
-          <span style="display: flex;align-items:center;font-weight: bold;">
-            <mat-icon class="mr-2"
-              [style.color]="groupType?.reviewStatus === null || groupType?.reviewStatus === 'Pending' ? '#F57F17' : null"
-              [color]="groupType?.reviewStatus === 'Pending' ? 'warn' : 'accent'">
-              {{groupType?.reviewStatus === 'Pending' ? 'info' : groupType?.reviewStatus === null ? 'warning' : 'check'}}
-            </mat-icon>
-            SME:
-            <span id="comment" class="ml-2">{{groupType.sme.name}}</span>
-          </span>
-          <div class="dates">
-            <small *ngIf="groupType.reviewStatus === 'Pending'" style="display: block;font-weight: bold;">
-              PENDING:
-              <span class="info-comment ml-1">{{groupType.reviewDeadline | date:'fullDate' | uppercase}}</span>
-            </small>
-            <small *ngIf="groupType.reviewStatus === 'Completed'" style="display: block;font-weight: bold;">
-              COMPLETED:
-              <span id="comment" class="ml-1">{{groupType.reviewCompletedDate | date:'fullDate' | uppercase}}</span>
-            </small>
-            <small *ngIf="groupType.reviewStatus === null" style="display: block;font-weight: bold;">
-              <span class="info-comment"> NOT ASSIGNED:</span>
-            </small>
+              </li>
+            </ul>
+            <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple"
+              accept="{{accept}}" style="display: none;" />
+            <button mat-raised-button color="warn" (click)="uploadFile()">
+              <mat-icon>file_upload</mat-icon>
+              {{'Upload File(s)'}}
+            </button>
           </div>
-        </div>
-        <div class="top-form pb-0">
-          <formio *ngIf="form && !formSubmitData && loggedUser.role !== 'admin'" [form]="form"
-            (submit)="onSubmit($event)"></formio>
-          <formio *ngIf="form && formSubmitData && loggedUser.role !== 'admin'" readOnly="true"
-            [submission]="{data: formSubmitData}" [form]="form"></formio>
-          <formio *ngIf="form && loggedUser.role === 'admin'" readOnly="true" [submission]="{data: formSubmitData}"
-            [form]="form"></formio>
-        </div>
-      </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <div class="info" class="m-20" style="display: flex;flex-direction: column;">
-        <div class="block">
-          <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">warning</mat-icon>
-          <span style="font-size: 10px;"> Unassigned Sections</span>
-        </div>
-        <div class="block">
-          <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">info</mat-icon>
-          <span style="font-size: 10px;"> Pending Reviews</span>
-        </div>
-        <div class="block">
-          <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
-          <span style="font-size: 10px;"> Expired Reviews</span>
-        </div>
-        <div class="block">
-          <mat-icon style="font-size: 16px;height:16px;" color="accent">check</mat-icon>
-          <span style="font-size: 10px;"> Submitted Reviews</span>
-        </div>
-      </div>
-    </mat-card-actions>
-  </mat-card>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="accent"
+            (click)="uploadTacMoms('TAC_MEETING', 'yestac')">{{'approve' | uppercase}}</button>
+          <button mat-button color="warn"
+            (click)="uploadTacMoms('TAC_MEETING', 'no')">{{'disapprove' | uppercase}}</button>
+        </mat-card-actions>
+      </mat-card>
 
-  <mat-card class="m-20">
-    <mat-card-content>
-      <div class="tabs-top-container">
-        <div class="top-tabs">
-          <mat-button-toggle-group [(ngModel)]="costTabsType" #group="matButtonToggleGroup">
-            <mat-button-toggle (change)="costTabChanged(item)" *ngFor="let item of costSections; let i = index;"
-              [value]="item.name">
-              <span>{{item.name}}</span>
-            </mat-button-toggle>
-          </mat-button-toggle-group>
-        </div>
-        <div class="top-form">
-          <app-project-plan [proMonths]="proMonths" [show]="show"></app-project-plan>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
+      <!-- RMC MEETING CARD -->
+      <mat-toolbar *ngIf="selectedProject?.status === 'RMC Meeting' && loggedUser?.role === 'process owner'"
+        class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+        <mat-toolbar-row>
+          <span>RMC Meeting MOMs</span>
+          <div class="example-spacer"></div>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-card class="m-20" style="padding: 30px;"
+        *ngIf="selectedProject?.status === 'RMC Meeting' && loggedUser?.role === 'process owner'">
+        <mat-card-content>
+          <div class="input-box mt-3">
+            <ul>
+              <li *ngFor="let file of files" style="list-style-type: none;">
+                <span id="file-label">
+                  {{file.data.name}}
+                </span>
+              </li>
+            </ul>
+            <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple"
+              accept="{{accept}}" style="display: none;" />
+            <button mat-raised-button color="warn" (click)="uploadFile()">
+              <mat-icon>file_upload</mat-icon>
+              {{'Upload File(s)'}}
+            </button>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="accent"
+            (click)="uploadTacMoms('RMC_MEETING', 'yesrmc')">{{'approve' | uppercase}}</button>
+          <button mat-button color="warn"
+            (click)="uploadTacMoms('RMC_MEETING', 'no')">{{'disapprove' | uppercase}}</button>
+        </mat-card-actions>
+      </mat-card>
 
+      <!-- BOD Meeting card -->
+      <mat-toolbar *ngIf="selectedProject?.status === 'BOD Meeting' && loggedUser?.role === 'process owner'"
+        class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+        <mat-toolbar-row>
+          <span>BOD Meeting MOMs</span>
+          <div class="example-spacer"></div>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-card class="m-20" style="padding: 30px;"
+        *ngIf="selectedProject?.status === 'BOD Meeting' && loggedUser?.role === 'process owner'">
+        <mat-card-content>
+          <div class="input-box mt-3">
+            <ul>
+              <li *ngFor="let file of files" style="list-style-type: none;">
+                <span id="file-label">
+                  {{file.data.name}}
+                </span>
+              </li>
+            </ul>
+            <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple"
+              accept="{{accept}}" style="display: none;" />
+            <button mat-raised-button color="warn" (click)="uploadFile()">
+              <mat-icon>file_upload</mat-icon>
+              {{'Upload File(s)'}}
+            </button>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="accent"
+            (click)="uploadTacMoms('BOD_MEETING', 'yesbod')">{{'approve' | uppercase}}</button>
+          <button mat-button color="warn"
+            (click)="uploadTacMoms('BOD_MEETING', 'no')">{{'disapprove' | uppercase}}</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- OFFER LETTER CARD -->
+      <mat-toolbar *ngIf="selectedProject?.status === 'Offer Letter' && loggedUser?.role === 'process owner'"
+        class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+        <mat-toolbar-row>
+          <span>Upload Offer Letter</span>
+          <div class="example-spacer"></div>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-card class="m-20" style="padding: 30px;"
+        *ngIf="selectedProject?.status === 'Offer Letter' && loggedUser?.role === 'process owner'">
+        <mat-card-content>
+          <div class="input-box mt-3">
+            <ul>
+              <li *ngFor="let file of files" style="list-style-type: none;">
+                <span id="file-label">
+                  {{file.data.name}}
+                </span>
+              </li>
+            </ul>
+            <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple"
+              accept="{{accept}}" style="display: none;" />
+            <button mat-raised-button color="warn" (click)="uploadFile()">
+              <mat-icon>file_upload</mat-icon>
+              {{'Upload File(s)'}}
+            </button>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="accent" (click)="uploadOfferLetter()">{{'assign for signing' | uppercase}}
+            <mat-icon class="ml-2">gesture</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- PROJECT PROPOSAL SECTION STATS -->
+      <mat-toolbar class="mat-elevation-z8" *ngIf="viewType === 'propapp' || viewType === 'po'"
+        style="padding: 15px 0px;" color="primary">
+        <mat-toolbar-row>
+          <span>Proposal Sections</span>
+          <div class="example-spacer"></div>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-card class="m-20 mb-0 p-4"
+        *ngIf="(loggedUser.role === 'dm pam' || loggedUser.role === 'process owner') && (viewType === 'propapp' || viewType === 'po')">
+        <mat-card-title>
+        </mat-card-title>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
+              <div mat-line>{{'Assigned Tasks'}}</div>
+              <div mat-line>{{sectionStats?.pendingCount}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>assignment_late</mat-icon>
+              <div mat-line>{{'Unassigned Tasks'}}</div>
+              <div mat-line>{{sectionStats?.unassignCount}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>assignment_returned</mat-icon>
+              <div mat-line>{{'Reviews Submitted'}}</div>
+              <div mat-line>{{sectionStats?.reviewsCount}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>folder</mat-icon>
+              <div mat-line>{{'Total Sections'}}</div>
+              <div mat-line>{{sectionStats?.totalSections}}</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+        <mat-card-actions>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- PROJECT PROPOSAL ADD REVIEWS -->
+      <mat-card class="m-20 p-4" *ngIf="loggedUser.role === 'sme'">
+        <mat-card-title>
+          <h5>Add Section Review</h5>
+        </mat-card-title>
+        <mat-card-content>
+          <div class="review-box" *ngIf="assignedProposalSections.length">
+            <h6 id="answer" class="mb-4">Proposal Sections</h6>
+            <div class="info mt-2" (click)="elementClicked(item);" *ngFor="let item of assignedProposalSections">
+              <span class="box-title">
+                <mat-icon class="mr-2" style="color:#F57F17;"
+                  *ngIf="item.reviewStatus === 'Pending' || item.reviewStatus === null">
+                  info</mat-icon>
+                <mat-icon class="mr-2" color="accent" *ngIf="item.reviewStatus === 'Completed'">check</mat-icon>
+                {{item.name}}
+              </span>
+              <small id="comment" *ngIf="item.reviewStatus === 'Completed'" class="task">
+                <span style="font-weight: 600;">{{'Submitted' | uppercase}}:</span>
+                {{item.reviewCompletedDate | date:'fullDate' | uppercase}}
+              </small>
+              <small *ngIf="item.reviewStatus === 'Pending'" class="task info-comment">
+                <span style="font-weight: 600;">{{'Pending' | uppercase}}:</span>
+                {{item.reviewDeadline | date:'fullDate' | uppercase}}
+              </small>
+
+            </div>
+            <div class="input-box mt-4" *ngIf="assignedProposalSections.length">
+              <mat-form-field appearance="outline">
+                <mat-select (selectionChange)="assignSectionsSelectStore($event)" placeholder="Select Sections"
+                  [formControl]="assignSections" multiple>
+                  <mat-select-trigger>
+                    <span *ngFor="let item of assignSections?.value; let i=index">
+                      <span *ngIf="i===0">{{item.name}}</span>
+                    </span>
+                    <span *ngIf="assignSections.value?.length > 1" class="example-additional-selection">
+                      (+{{assignSections.value.length - 1}} others)
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option *ngFor="let topping of assignedProposalSections" [value]="topping">{{topping.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="input-box mt-3" *ngIf="assignedProposalSections.length">
+              <mat-form-field appearance="outline">
+                <mat-label>Remarks on section</mat-label>
+                <textarea (input)="sectionComments = $event.target.value" [value]="sectionComments" matInput
+                  placeholder="Add your remarks..." cols="30" rows="10"></textarea>
+              </mat-form-field>
+              <button (click)="addAssignedSectionReview()"
+                [disabled]="assignSections.value.length === 0 || !sectionComments" mat-raised-button
+                color="accent">SUBMIT</button>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <div class="info" class="m-20" style="display: flex;flex-direction: column;">
+            <div class="block">
+              <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">warning</mat-icon>
+              <span style="font-size: 10px;"> Unassigned Sections</span>
+            </div>
+            <div class="block">
+              <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">info</mat-icon>
+              <span style="font-size: 10px;"> Pending Reviews</span>
+            </div>
+            <div class="block">
+              <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
+              <span style="font-size: 10px;"> Expired Reviews</span>
+            </div>
+            <div class="block">
+              <mat-icon style="font-size: 16px;height:16px;" color="accent">check</mat-icon>
+              <span style="font-size: 10px;"> Submitted Reviews</span>
+            </div>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+      <span id="myTopElement2" #myTopElement2></span>
+      <mat-card class="m-20 p-4" *ngIf="loggedUser.role === 'gm' || (loggedUser.role === 'sme' || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner' && 
+    viewType === 'propapp' || viewType === 'po' || viewType === 'extapp')">
+        <mat-card-title>
+          <h5 class="review-box pb-0">Add General Remarks</h5>
+        </mat-card-title>
+        <mat-card-content>
+          <div class="review-box" *ngIf="unassignedProposalSections.length">
+            <h6 id="answer" class="mb-4">Proposal Sections</h6>
+            <div class="info mt-2" (click)="elementClicked(item);" *ngFor="let item of unassignedProposalSections">
+              <!-- <span>{{item.name}}</span> -->
+              <span class="box-title">
+                <mat-icon class="mr-2" style="color:#F57F17;" *ngIf="item.reviewStatus === 'Pending'">
+                  info</mat-icon>
+                <mat-icon class="mr-2" style="color:#F57F17;" *ngIf="item.reviewStatus === null">
+                  warning</mat-icon>
+                <mat-icon class="mr-2" color="accent" *ngIf="item.reviewStatus === 'Completed'">check</mat-icon>
+                {{item.name}}
+              </span>
+              <small id="comment" *ngIf="item.reviewStatus === 'Completed'" class="task">
+                <span style="font-weight: 600;">{{'Submitted' | uppercase}}:</span>
+                {{item.reviewCompletedDate | date:'fullDate' | uppercase}}
+              </small>
+              <small *ngIf="item.reviewStatus === 'Pending'" class="task info-comment">
+                <span style="font-weight: 600;">{{'Pending' | uppercase}}:</span>
+                {{item.reviewDeadline | date:'fullDate' | uppercase}}
+              </small>
+              <small *ngIf="item.reviewStatus === null" class="task info-comment">
+                <span style="font-weight: 600;">{{'not assigned' | uppercase}}:</span>
+              </small>
+            </div>
+            <div class="input-box mt-3"
+              *ngIf="assignedProposalSections.length || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner' || loggedUser.role === 'gm' || loggedUser.role === 'ceo'">
+              <mat-form-field appearance="outline">
+                <mat-select (selectionChange)="unassignSectionsSelectStore($event)" placeholder="Select Sections"
+                  [formControl]="unAssignSections" multiple>
+                  <mat-select-trigger>
+                    <span *ngFor="let item of unAssignSections?.value; let i=index">
+                      <span *ngIf="i===0">{{item.name}}</span>
+                    </span>
+                    <span *ngIf="unAssignSections.value?.length > 1" class="example-additional-selection">
+                      (+{{unAssignSections.value.length - 1}} others)
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option *ngFor="let topping of unassignedProposalSections" [value]="topping">{{topping.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="input-box mt-3"
+              *ngIf="assignedProposalSections.length || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner' || loggedUser.role === 'gm' || loggedUser.role === 'ceo'">
+              <mat-form-field appearance="outline">
+                <mat-label>General remarks</mat-label>
+                <textarea (input)="sectionUnassignComments = $event.target.value" [value]="sectionUnassignComments"
+                  matInput placeholder="Add your remarks..." cols="30" rows="10">
+            </textarea>
+              </mat-form-field>
+            </div>
+            <div class="input-box mt-3">
+              <ul>
+                <li *ngFor="let file of files" style="list-style-type: none;">
+                  <span id="file-label">
+                    {{file.data.name}}
+                  </span>
+                </li>
+              </ul>
+              <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple"
+                accept="{{accept}}" style="display: none;" />
+              <button mat-raised-button color="warn" (click)="uploadFile()">
+                <mat-icon>file_upload</mat-icon>
+                {{'Upload File'}}
+              </button>
+
+            </div>
+            <div class="input-box mt-3">
+              <button [disabled]="!sectionUnassignComments" (click)="addUnAssignedSectionReview()" mat-raised-button
+                color="accent">SUBMIT
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <div class="info" class="m-20" style="display: flex;flex-direction: column;">
+            <div class="block">
+              <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">warning</mat-icon>
+              <span style="font-size: 10px;"> Unassigned Sections</span>
+            </div>
+            <div class="block">
+              <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">info</mat-icon>
+              <span style="font-size: 10px;"> Pending Reviews</span>
+            </div>
+            <div class="block">
+              <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
+              <span style="font-size: 10px;"> Expired Reviews</span>
+            </div>
+            <div class="block">
+              <mat-icon style="font-size: 16px;height:16px;" color="accent">check</mat-icon>
+              <span style="font-size: 10px;"> Submitted Reviews</span>
+            </div>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+
+
+      <span id="myTopElement" #myTopElement>
+      </span>
+
+      <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary"
+        *ngIf="viewType === 'po' || viewType === 'dm' || viewType === 'propapp' || viewType === 'extapp'">
+        <mat-toolbar-row>
+          <span>Proposal Section Details</span>
+          <div class="example-spacer"></div>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-card class="m-20">
+        <mat-card-content>
+          <div class="tabs-top-container">
+            <div class="top-tabs">
+              <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
+                <mat-button-toggle (change)="tabChanged(item)" *ngFor="let item of proposalSections; let i = index;"
+                  [value]="item">
+                  <mat-icon class="mr-2" *ngIf="item.data !== null">done</mat-icon>
+                  <mat-icon class="mr-2" *ngIf="item.data === null">feedback</mat-icon>
+                  <span>{{item.name}}</span>
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+            <div class="top-info-bar">
+              <span style="display: flex;align-items:center;font-weight: bold;">
+                <mat-icon class="mr-2"
+                  [style.color]="groupType?.reviewStatus === null || groupType?.reviewStatus === 'Pending' ? '#F57F17' : null"
+                  [color]="groupType?.reviewStatus === 'Pending' ? 'warn' : 'accent'">
+                  {{groupType?.reviewStatus === 'Pending' ? 'info' : groupType?.reviewStatus === null ? 'warning' : 'check'}}
+                </mat-icon>
+                SME:
+                <span id="comment" class="ml-2">{{groupType.sme.name}}</span>
+              </span>
+              <div class="dates">
+                <small *ngIf="groupType.reviewStatus === 'Pending'" style="display: block;font-weight: bold;">
+                  PENDING:
+                  <span class="info-comment ml-1">{{groupType.reviewDeadline | date:'fullDate' | uppercase}}</span>
+                </small>
+                <small *ngIf="groupType.reviewStatus === 'Completed'" style="display: block;font-weight: bold;">
+                  COMPLETED:
+                  <span id="comment" class="ml-1">{{groupType.reviewCompletedDate | date:'fullDate' | uppercase}}</span>
+                </small>
+                <small *ngIf="groupType.reviewStatus === null" style="display: block;font-weight: bold;">
+                  <span class="info-comment"> NOT ASSIGNED:</span>
+                </small>
+              </div>
+            </div>
+            <div class="top-form pb-0">
+              <formio *ngIf="form && !formSubmitData && loggedUser.role !== 'admin'" [form]="form"
+                (submit)="onSubmit($event)"></formio>
+              <formio *ngIf="form && formSubmitData && loggedUser.role !== 'admin'" readOnly="true"
+                [submission]="{data: formSubmitData}" [form]="form"></formio>
+              <formio *ngIf="form && loggedUser.role === 'admin'" readOnly="true" [submission]="{data: formSubmitData}"
+                [form]="form"></formio>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <div class="info" class="m-20" style="display: flex;flex-direction: column;">
+            <div class="block">
+              <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">warning</mat-icon>
+              <span style="font-size: 10px;"> Unassigned Sections</span>
+            </div>
+            <div class="block">
+              <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">info</mat-icon>
+              <span style="font-size: 10px;"> Pending Reviews</span>
+            </div>
+            <div class="block">
+              <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
+              <span style="font-size: 10px;"> Expired Reviews</span>
+            </div>
+            <div class="block">
+              <mat-icon style="font-size: 16px;height:16px;" color="accent">check</mat-icon>
+              <span style="font-size: 10px;"> Submitted Reviews</span>
+            </div>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card class="m-20">
+        <mat-card-content>
+          <div class="tabs-top-container">
+            <div class="top-tabs">
+              <mat-button-toggle-group [(ngModel)]="costTabsType" #group="matButtonToggleGroup">
+                <mat-button-toggle (change)="costTabChanged(item)" *ngFor="let item of costSections; let i = index;"
+                  [value]="item.name">
+                  <span>{{item.name}}</span>
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+            <div class="top-form">
+              <app-project-plan [proMonths]="proMonths" [show]="show"></app-project-plan>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- BUTTON ADN INFO -->
+    <div class="col-md-5 pl-0 mt-4">
+
+
+      <mat-card class="m-20 ml-0" style="padding: 0px;" *ngIf="loggedUser.role !== 'fip'">
+        <mat-toolbar class="mat-elevation-z8 no-margin" style="padding: 15px 0px;" color="primary">
+          <mat-toolbar-row>
+            <span>Proposal Summary</span>
+            <div class="example-spacer"></div>
+            <button *ngIf="!apiLoading && viewType === 'user' && loggedUser.role === 'fip'"
+              [disabled]="(submitSections === proposalSections.length && 
+                  selectedProject?.status === 'Under Review') || (proposalSections.length !== submitSections && selectedProject?.status === 'Draft')" mat-raised-button (click)="submitRequest()">
+              <mat-icon>publish</mat-icon> SUBMIT
+            </button>
+          </mat-toolbar-row>
+        </mat-toolbar>
+        <mat-card-content>
+          <div class="project-details p-3">
+            <div class="field">
+              <div class="title">Name</div>
+              <div class="value">{{selectedProjectInfo?.projectName}}</div>
+            </div>
+            <div class="field">
+              <div class="title">Company</div>
+              <div class="value">{{selectedProjectInfo?.nameOfAgency}}</div>
+            </div>
+            <div class="field">
+              <div class="title">Time of submission</div>
+              <div class="value">{{selectedProjectInfo?.timeOfSubmission | date:'fullDate'}}</div>
+            </div>
+            <div class="field">
+              <div class="title">Duration</div>
+              <div class="value">{{selectedProjectInfo?.duration}} Months</div>
+            </div>
+            <div class="field">
+              <div class="title">Start Date</div>
+              <div class="value">{{selectedProjectInfo?.startDate | date:'fullDate'}}</div>
+            </div>
+            <div class="field">
+              <div class="title">End Date</div>
+              <div class="value">{{selectedProjectInfo?.endDate | date:'fullDate'}}</div>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions class="p-3 footer-btns" *ngIf="viewType === 'po' && loggedUser.role !== 'sme'">
+          <div class="appraisals">
+            <div class="pre-section">
+              <div class="expiry-section mb-3">
+                <button class="mt-1 mb-1" mat-button color="primary" [disabled]="(selectedProject?.status === 'Marked to GM' ||
+                selectedProject?.status === 'TAC Meeting' || selectedProject?.preAppraisal?.status === 'Pending' || 
+                selectedProject?.status === 'BOD Meeting' || selectedProject?.status === 'RMC Meeting' || 
+                selectedProject?.status === 'Offer Letter' || selectedProject?.status === 'Extended Appraisal')"
+                  (click)="confirmApprasial()">
+                  {{selectedProject?.preAppraisal && selectedProject?.preAppraisal.status === 'Expired' ? 'EXTEND PRELIMINARY APPRAISAL' : 'Prepare Preliminary appraisal' | uppercase}}
+                  <mat-icon style="margin-left: 5px;">description</mat-icon>
+                </button>
+                <mat-chip-list>
+                  <mat-chip class="ml-3 mt-3" color="accent" selected
+                    *ngIf="selectedProject?.preAppraisal?.status === 'Pending'">
+                    <span *ngIf="selectedProject?.preAppraisal.expiryDays !== 0">
+                      Pending {{selectedProject?.preAppraisal.expiryDays}} Day(s) Remaining
+                    </span>
+                    <span *ngIf="selectedProject?.preAppraisal.expiryDays === 0">
+                      Due Today
+                    </span>
+                  </mat-chip>
+                  <mat-chip class="ml-3 mt-3" color="warn" selected
+                    *ngIf="selectedProject?.preAppraisal?.status === 'Expired'">
+                    Expired {{-1*(selectedProject?.preAppraisal.expiryDays)}} Day(s) Before
+                  </mat-chip>
+                  <mat-chip class="ml-3 mt-3" color="accent" selected
+                    *ngIf="selectedProject?.preAppraisal?.status === 'Completed'">
+                    Submitted on {{selectedProject?.preAppraisal.completedDate | date:'fullDate'}}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <div class="expiry-sections">
+                <button *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button color="primary"
+                  (click)="viewPreApprasial()">
+                  {{'View preliminary appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description
+                  </mat-icon>
+                </button>
+              </div>
+              <div class="expiry-sections">
+                <button (click)="markToGm()" *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button
+                  color="primary" [disabled]="selectedProject?.extendedAppraisal !== null || 
+                  selectedProject?.preAppraisal?.status === 'Pending' || 
+                  selectedProject?.status === 'Marked to GM' || 
+                  selectedProject?.status === 'Tac Meeting' || selectedProject?.status === 'BOD Meeting' || 
+                  selectedProject?.status === 'RMC Meeting' || selectedProject?.status === 'Offer Letter'">
+                  {{'Mark preliminary appraisal to gm' | uppercase}} <mat-icon style="margin-left: 5px;">description
+                  </mat-icon>
+                </button>
+                <mat-chip-list *ngIf="selectedProject?.status === 'Marked to GM'">
+                  <mat-chip color="warn" selected>{{'marked to gm' | uppercase}}</mat-chip>
+                </mat-chip-list>
+              </div>
+            </div>
+            <div class="pre-section">
+              <!-- <mat-card-actions class="p-3 footer-btns" *ngIf="viewType === 'po' && loggedUser.role !== 'sme'"> -->
+              <div class="expiry-section mb-3">
+                <button class="mt-1 mb-1" *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button
+                  color="primary" [disabled]="selectedProject?.extendedAppraisal !== null && 
+                  selectedProject?.extendedAppraisal?.status === 'Pending' || selectedProject?.status === 'Marked to GM' || 
+                  selectedProject?.status === 'BOD Meeting' || selectedProject?.status === 'RMC Meeting' || 
+                  selectedProject?.status === 'Offer Letter' || selectedProject?.status === 'TAC Meeting'"
+                  (click)="prepareExtAppraisal()">
+                  {{selectedProject?.extendedAppraisal && 
+                    selectedProject?.extendedAppraisal.status === 'Expired' ? 
+                    'EXTEND EXTENDED APPRAISAL' : selectedProject?.extendedAppraisal && selectedProject?.extendedAppraisal.status === 'Completed' ?
+                    'RE-ASSIGN EXTENDED APPRAISAL' : 'Prepare extended appraisal' | uppercase}} <mat-icon
+                    style="margin-left: 5px;">description</mat-icon>
+                </button>
+                <mat-chip-list>
+                  <mat-chip class="ml-3 mt-3" color="accent" selected
+                    *ngIf="selectedProject?.extendedAppraisal?.status === 'Pending'">
+                    <span *ngIf="selectedProject?.extendedAppraisal.expiryDays !== 0">
+                      Pending {{selectedProject?.extendedAppraisal.expiryDays}} Day(s) Remaining
+                    </span>
+                    <span *ngIf="selectedProject?.extendedAppraisal.expiryDays === 0">
+                      Due Today
+                    </span>
+                  </mat-chip>
+                  <mat-chip class="ml-3 mt-3" color="warn" selected
+                    *ngIf="selectedProject?.extendedAppraisal?.status === 'Expired'">
+                    Expired {{-1*(selectedProject?.preAppraisal.expiryDays)}} Day(s) Before
+                  </mat-chip>
+                  <mat-chip class="ml-3 mt-3" color="accent" selected
+                    *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed'">
+                    Submitted on {{selectedProject?.extendedAppraisal.completedDate | date:'fullDate'}}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <div class="expiry-sections">
+                <button class="mt-1 mb-1"
+                  *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed' || selectedProject?.status === 'Extended Appraisal'"
+                  mat-button color="primary" (click)="viewExtAppraisal()">
+                  {{'View extended appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+                </button>
+              </div>
+              <div class="expiry-sections">
+                <button *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed'" mat-button color="primary"
+                  [disabled]="selectedProject?.extendedAppraisal?.status === 'Marked to gm' || 
+                  selectedProject?.status === 'TAC Meeting' || selectedProject?.status === 'BOD Meeting' || 
+                  selectedProject?.status === 'RMC Meeting' || selectedProject?.status === 'Offer Letter'">
+                  {{'Mark extended appraisal to gm' | uppercase}} <mat-icon style="margin-left: 5px;">description
+                  </mat-icon>
+                </button>
+              </div>
+
+              <div class="expiry-sections mt-2">
+                <button (click)="setProjectStages()"
+                  [disabled]="selectedProject?.extendedAppraisal?.status === 'Pending'" *ngIf="(selectedProject?.status === 'Extended Appraisal' || 
+                  selectedProject?.status === 'TAC Meeting' || selectedProject?.status === 'BOD Meeting' || 
+                  selectedProject?.status === 'RMC Meeting' || selectedProject?.status === 'Offer Letter') && 
+                  selectedProject?.extendedAppraisal  !== null" mat-button color="accent">
+                  {{'change Project stage' | uppercase}} <mat-icon style="margin-left: 5px;">loop</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </mat-card-actions>
+
+        <mat-card-actions class="p-3 footer-btns" *ngIf="viewType === 'propapp' && loggedUser.role !== 'sme'">
+          <button *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button color="primary"
+            (click)="viewPreApprasial()">
+            {{'View preliminary appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+          </button>
+          <button class="mt-1 mb-1" *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed'" mat-button
+            color="primary" (click)="viewExtAppraisal()">
+            {{'View extended appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+          </button>
+          <button (click)="assginProposalSections()" class="m-1"
+            *ngIf="selectedProject && selectedProject?.status === 'Extended Appraisal'" mat-button color="accent">ASSIGN
+            PROPOSAL SECTIONS TO DESK <mat-icon style="margin-left: 5px;">description</mat-icon>
+          </button>
+        </mat-card-actions>
+
+        <mat-card-actions class="p-3 footer-btns" *ngIf="loggedUser.role !== 'sme'">
+          <div class="expiry-sections mt-2 mb-2">
+            <mat-chip-list>
+              <mat-chip *ngIf="selectedProject?.status === 'TAC Meeting'" class="ml-3 mt-3" color="warn" selected>
+                TAC Meeting Enabled
+              </mat-chip>
+              <mat-chip *ngIf="selectedProject?.status === 'RMC Meeting'" class="ml-3 mt-3" color="warn" selected>
+                RMC Meeting Enabled
+              </mat-chip>
+              <mat-chip *ngIf="selectedProject?.status === 'BOD Meeting'" class="ml-3 mt-3" color="warn" selected>
+                BOD Meeting Enabled
+              </mat-chip>
+              <mat-chip *ngIf="selectedProject?.status === 'Offer Letter'" class="ml-3 mt-3" color="warn" selected>
+                Offer Letter Enabled
+              </mat-chip>
+            </mat-chip-list>
+          </div>
+          <button (click)="viewCommentsMatrix()" class="m-1" mat-button
+            color="warn">{{'View Comments Matrix' | uppercase}}
+            <mat-icon style="margin-left: 5px;">view_module</mat-icon>
+          </button>
+          <button (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })" class="m-1" mat-button
+            color="accent">{{'View porposal details' | uppercase}}
+            <mat-icon style="margin-left: 5px;">folder</mat-icon>
+          </button>
+          <button (click)="myTopElement2.scrollIntoView({ behavior: 'smooth', block: 'center' })" class="m-1" mat-button
+            color="accent">{{'add general remarks' | uppercase}}
+            <mat-icon style="margin-left: 5px;">view_module</mat-icon>
+          </button>
+        </mat-card-actions>
+
+        <mat-card-actions class="p-3 footer-btns" *ngIf="loggedUser.role === 'gm'">
+          <button *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button color="primary"
+            (click)="viewPreApprasial()">
+            {{'View preliminary appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+          </button>
+          <button mat-button color="accent" [disabled]="selectedProject?.status === 'Preliminary Appraisal'"
+            (click)="approvePreApprasial()">
+            {{'Approve preliminary appraisal' | uppercase}} <mat-icon style="margin-left: 5px;">description</mat-icon>
+          </button>
+        </mat-card-actions>
+
+      </mat-card>
+    </div>
+  </div>
 </ng-container>
 <ng-container *ngIf="apiLoading">
   <mat-card class="m-20">

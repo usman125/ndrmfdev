@@ -105,3 +105,11 @@ mat-button-toggle-group {
   margin: 3px 0px;
   /* justify-content: space-between; */
 }
+
+.footer-btns {
+    margin-bottom: -20px;
+}
+
+.mat-chip{
+  height: auto;
+}
