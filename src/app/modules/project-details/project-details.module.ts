@@ -18,6 +18,7 @@ import { FormioModule } from "angular-formio";
 // import { ViewPrimaryAppraisalModule } from "../view-primary-appraisal/view-primary-appraisal.module";
 import { ProjectPlanModule } from "../project-plan/project-plan.module";
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatInputModule,
     MatChipsModule,
     MatSelectModule,
+    MatTooltipModule
   ],
   exports: [ProjectDetailsComponent]
 })

@@ -30,21 +30,26 @@
   padding: 0 30px;
   padding: 0 30px 30px;
 }
-
-.field {
+.project-details{
+  /* padding-bottom: 0px !important; */
+}
+.project-details .field {
   display: flex;
   justify-content: space-between;
   padding: 8px;
   background: #f8f8f8;
   margin: 5px 0px;
 }
-.field .value {
+.project-details .field .value {
   text-transform: capitalize;
+  width: 68%;
+  text-align: right;
 }
 
-.title {
-  font-weight: bold;
+.project-details .field .title {
+  font-weight: 500;
   text-transform: uppercase;
+  width: 42%;
 }
 
 .gia-link {
@@ -77,11 +82,11 @@ mat-button-toggle-group {
 }
 .review-box .info {
   display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: rgba(235, 235, 235, 0.5);
-    padding: 10px;
-    cursor: pointer;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(235, 235, 235, 0.5);
+  padding: 10px;
+  cursor: pointer;
 }
 
 .mat-list-item {
@@ -98,7 +103,7 @@ mat-button-toggle-group {
   align-content: center;
   margin: 25px auto;
 }
-.block{
+.block {
   display: flex;
   align-items: center;
   align-content: center;
@@ -107,9 +112,9 @@ mat-button-toggle-group {
 }
 
 .footer-btns {
-    margin-bottom: -20px;
+  margin-bottom: -20px;
 }
 
-.mat-chip{
+.mat-chip {
   height: auto;
 }

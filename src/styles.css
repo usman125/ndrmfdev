@@ -288,3 +288,8 @@ table {
   align-items: center;
   align-content: center;
 }
+
+.mat-toolbar-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

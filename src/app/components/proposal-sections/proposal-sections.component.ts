@@ -36,7 +36,7 @@ export class ProposalSectionsComponent implements OnInit, OnDestroy {
         this.apiLoading = data.auth.apiCall;
       })
     );
-    
+
   }
 
   editSection(section) {
@@ -46,13 +46,12 @@ export class ProposalSectionsComponent implements OnInit, OnDestroy {
   goToAdd() {
     // this._router.navigate(['add-proposal-section']);
     this._authStore.setLoading();
-    this._settingsService.addThematicArea({ name: this.areaName, processOwnerId: null}).subscribe(
-      result => {
+    this._settingsService.addThematicArea({ name: this.areaName, processOwnerId: null }).subscribe(
+      (result: any) => {
         console.log("ADDED SUCCEFULLY:--", result);
-        this._authStore.removeLoading();
-        // setThematicAreaValue(null, null, false, null);
-        // this._proposalFormsStore.addProposalForm(this.areaName, this.areaName, true, null);
+        this._proposalFormsStore.addProposalForm(result.id, result.name, result.enabled, result.processOwner);
         this.areaName = null;
+        this._authStore.removeLoading();
       },
       error => {
         this._authStore.removeLoading();
