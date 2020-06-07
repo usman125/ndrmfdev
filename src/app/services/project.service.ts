@@ -185,6 +185,29 @@ export class ProjectService {
     );
   }
 
+  getCostingHeads() {
+    const url = `${AppConfig.apiUrl}/setting/cost-head`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  addCostingHeads(data) {
+    const url = `${AppConfig.apiUrl}/setting/cost-head/add`;
+    return this._httpClient.post(
+      url,
+      data
+    );
+  }
+
+  submitPip(data, proposalId) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${proposalId}/pip/submit`;
+    return this._httpClient.post(
+      url,
+      data
+    );
+  }
+
   uploadFiles(id, stage, file) {
     const url = `${AppConfig.apiUrl}/project-proposal/${id}/attachment/add?stage=${stage}`;
     let body = {

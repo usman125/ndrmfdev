@@ -168,6 +168,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this.groupType = this.proposalSections[0];
           this.tabChanged(this.groupType);
           this.assignSections.patchValue([this.assignedProposalSections[0]], { onlySelf: true });
+          this.costTabsType = this.costSections[0].name;
+          this.costTabChanged(this.costSections[0]);
           this.apiLoading = false;
         }
       })

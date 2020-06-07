@@ -153,7 +153,8 @@
             <mat-icon class="mr-2">table_chart</mat-icon>
             <!-- {{'Quick View' | uppercase}} -->
           </button>
-          <button matTooltip="View Comments Matrix!" (click)="viewCommentsMatrix()" class="m-1" mat-button>
+          <button *ngIf="loggedUser.role !== 'sme'" matTooltip="View Comments Matrix!" (click)="viewCommentsMatrix()"
+            class="m-1" mat-button>
             <mat-icon class="mr-2">view_module</mat-icon>
             <!-- {{'View Comments Matrix' | uppercase}} -->
           </button>
@@ -457,7 +458,7 @@
       </mat-card>
 
       <!-- PROJECT PLAN AND IMPLEMENTATION -->
-      <mat-card class="m-20">
+      <mat-card class="m-20 p-0">
         <mat-card-content>
           <div class="tabs-top-container">
             <div class="top-tabs">
@@ -468,9 +469,7 @@
                 </mat-button-toggle>
               </mat-button-toggle-group>
             </div>
-            <div class="top-form">
-              <app-project-plan [proMonths]="proMonths" [show]="show"></app-project-plan>
-            </div>
+            <app-project-plan [proMonths]="proMonths" [show]="show"></app-project-plan>
           </div>
         </mat-card-content>
       </mat-card>
@@ -537,7 +536,8 @@
           </div>
         </mat-card-content>
 
-        <mat-card-actions class="pr-3 pl-3 pt-0 pb-3 footer-btns" *ngIf="viewType === 'po' && loggedUser.role !== 'sme'">
+        <mat-card-actions class="pr-3 pl-3 pt-0 pb-3 footer-btns"
+          *ngIf="viewType === 'po' && loggedUser.role !== 'sme'">
           <div class="appraisals">
             <div class="pre-section">
               <div class="expiry-section mb-2">
@@ -668,7 +668,7 @@
         </mat-card-actions>
 
         <mat-card-actions class="p-3 footer-btns" *ngIf="loggedUser.role !== 'sme'">
-          
+
           <button (click)="viewCommentsMatrix()" class="m-1" mat-button color="basic">
             <mat-icon class="mr-1">view_module</mat-icon> {{'View Comments Matrix' | uppercase}}
           </button>

@@ -7,6 +7,8 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SettingsService } from '../../services/settings.service';
 import { AuthStore } from "../../stores/auth/auth-store";
+import { ProjectService } from 'src/app/services/project.service';
+import { PrimaryAppraisalFormsStore } from 'src/app/stores/primary-appraisal-forms/primary-appraisal-forms-store';
 
 
 export class FoodNode {
@@ -20,6 +22,7 @@ export class FoodNode {
   mainCostId: string;
   rfEntry: boolean;
   rfEntryData: any;
+  glCode: any;
 }
 
 /** Flat node with expandable and level information */
@@ -35,6 +38,7 @@ export class ExampleFlatNode {
   mainCostId: string;
   rfEntry: boolean;
   rfEntryData: any;
+  glCode: any;
 }
 
 
@@ -63,6 +67,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   financer = null;
   allCosts: any = [];
   cost = null;
+  glCode = null;
   allSubCosts: any = [];
   subcost = null;
   totalSummaryCost = 0;
@@ -90,16 +95,22 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
 
   rfForm: any = null;
 
-  options: Object = {
-    submitMessage: "",
-    disableAlerts: true,
-    noAlerts: true
-  }
+  loggedUser: any = null;
+  selectedProject: any = null;
+
+  // options: Object = {
+  //   submitMessage: "",
+  //   disableAlerts: true,
+  //   noAlerts: true,
+  //   viewOnly: true
+  // }
 
   constructor(
     public _CostSummaryStore: CostSummaryStore,
     public _settingsService: SettingsService,
     public _authStore: AuthStore,
+    public _projectService: ProjectService,
+    public _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
     // public _checklistDatabase: ChecklistDatabase,
   ) {
 
@@ -198,19 +209,125 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       level: level,
       rfEntry: node.rfEntry,
       rfEntryData: node.rfEntryData,
+      glCode: node.glCode,
       expandable: !!node.children && true,
     };
   }
 
   ngOnInit(): void {
+    this.loggedUser = JSON.parse(localStorage.getItem('user'));
     this.getRfMeta();
-    // this.Subscription.add(
-    // this._CostSummaryStore.state$.subscribe((data) => {
-    // console.log("DATA FROM STORE:--", data.costs);
-    // this.dataSource.data = data.costs;
-    // this.treeControl.expandAll();
-    //   })
-    // );
+    this.Subscription.add(
+      this._primaryAppraisalFormsStore.state$.subscribe((data) => {
+        this.selectedProject = data.selectedProject;
+        if (this.loggedUser.role === 'admin') {
+          this.getCostingHeads();
+        }
+        if (data.selectedProject && this.loggedUser.role !== 'admin') {
+          if (data.selectedProject.implementationPlan === null) {
+            this.getCostingHeads();
+          } else {
+            this.allCosts = JSON.parse(data.selectedProject.implementationPlan);
+            this.prepareForm(this.allCosts);
+            this.totalProcurementCost();
+          }
+        }
+        console.log("DATA FROM PIP STORE MANIPULATION:--", data.selectedProject, this.allCosts);
+      })
+    );
+  }
+
+
+  getCostingHeads() {
+    this._projectService.getCostingHeads().subscribe(
+      (result: any) => {
+        console.log("DATA BASE RESULTS ALL COSTS:--", result);
+        this.allCosts = [];
+        // this.allCosts = result;
+
+        if (result) {
+          for (let i = 0; i < result.length; i++) {
+            var cost = {
+              title: result[i].name,
+              financers: [],
+              _id: result[i].id,
+              totalCost: 0,
+              procurement: false,
+              procurementCost: 0,
+              showChildren: true,
+              mainCostId: null,
+              showInput: true,
+              rfEntry: false,
+              rfEntryData: null,
+              glCode: result[i].glCode,
+            }
+            var allArray = [];
+            for (let i = 0; i < this.financersMonthsArray.length; i++) {
+              var test2 = {
+                title: '',
+                financers: [],
+                totalCost: 0,
+                _id: '',
+              }
+              var financers = [];
+              for (let j = 0; j < this.financersMonthsArray[i].financers.length; j++) {
+                var test = {
+                  title: this.financersMonthsArray[i].financers[j].title,
+                  cost: this.financersMonthsArray[i].financers[j].cost,
+                  _id: this.financersMonthsArray[i].financers[j]._id,
+                  totalCost: this.financersMonthsArray[i].financers[j].totalCost,
+                }
+                financers.push(test);
+              }
+              test2.title = this.financersMonthsArray[i].title;
+              test2.financers = financers;
+              test2.totalCost = this.financersMonthsArray[i].totalCost;
+              test2._id = this.financersMonthsArray[i]._id;
+              allArray.push(test2);
+            }
+            cost.financers = allArray;
+            this.allCosts.push(cost);
+          }
+          this.prepareForm(this.allCosts);
+        }
+        console.log("RESULT AFTER COSTING HEADS:--", this.allCosts);
+      },
+      error => {
+        console.log("ERROR AFTER COSTING HEADS:--", error);
+      }
+    );
+  }
+
+  saveCostingHeads() {
+    if (this.loggedUser.role === 'admin') {
+      for (let i = 0; i < this.allCosts.length; i++) {
+        let object = {
+          "glCode": this.allCosts[i].glCode,
+          "name": this.allCosts[i].title
+        }
+        console.log("KEY TO SAVE:--", object);
+        this._projectService.addCostingHeads(object).subscribe(
+          result => {
+            console.log("RESULT ADDING COSTING HEADS:--", result);
+          },
+          error => {
+            console.log("ERROR ADDING COSTING HEADS:--", error);
+          }
+        );
+      }
+    } else {
+      var object = {
+        implementationPlan: JSON.stringify(this.allCosts)
+      }
+      this._projectService.submitPip(object, this.selectedProject.id).subscribe(
+        result => {
+          console.log("RESULT ADDING PROJECT IMPLEMENTATION PLAN:--", result);
+        },
+        error => {
+          console.log("ERROR ADDING PROJECT IMPLEMENTATION PLAN:--", error);
+        }
+      );
+    }
   }
 
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
@@ -282,6 +399,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       showInput: true,
       rfEntry: false,
       rfEntryData: null,
+      glCode: this.glCode,
     }
     var allArray = [];
     for (let i = 0; i < this.financersMonthsArray.length; i++) {
@@ -318,6 +436,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     // })
     this.allCosts.push(cost);
     this.cost = null;
+    this.glCode = null;
     this.prepareForm(cost);
   }
 
@@ -647,8 +766,9 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     for (let i = 0; i < this.allCosts.length; i++) {
       if (this.allCosts[i]._id === node._id) {
         this.allCosts[i].rfEntry = node.rfEntry;
-        this.allCosts[i].rfEntryData = node.rfEntryData;
+        // this.allCosts[i].rfEntryData = node.rfEntryData;
         console.log("NODE TO ADD IN LINK RF:---", node, this.allCosts[i]);
+        break;
       }
     }
     // if (node.rfEntry === true){
@@ -768,11 +888,18 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     for (let i = 0; i < this.allCosts.length; i++) {
       if (this.allCosts[i]._id === node._id) {
         // this.allCosts[i].rfEntry = node.rfEntry;
-        this.allCosts[i].rfEntryData = $event.data;
         node.rfEntryData = $event.data;
+        this.allCosts[i].rfEntryData = $event.data;
         console.log("NODE TO ADD IN LINK RF:---", node, this.allCosts[i]);
+        break;
       }
     }
+  }
+
+  getSubmittedData(node) {
+    var submitData = _.find(this.allCosts, {_id: node._id});
+    // console.log("GET SUBMITTE DATA FROM FORMIO:---", submitData);
+    return submitData.rfEntryData;
   }
 }
 

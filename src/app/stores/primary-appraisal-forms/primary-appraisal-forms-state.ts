@@ -340,6 +340,7 @@ export class PrimaryAppraisalFormsState {
     subStatus: any,
     submittedAt: any,
     id: any,
+    implementationPlan: any,
   } = null;
 }
 
