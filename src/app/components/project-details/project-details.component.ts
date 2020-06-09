@@ -812,9 +812,9 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       assignToGm: false,
       setStages: true,
     };
-
+    
     this._confirmModelService.open(options);
-
+    
     this._confirmModelService.confirmed().subscribe(confirmed => {
       console.log("MARK TO GM STATUS", confirmed);
       if (confirmed) {
@@ -828,7 +828,13 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             if (confirmed.status === 'RMC_MEETING') stage = 'RMC Meeting'
             if (confirmed.status === 'BOD_MEETING') stage = 'BOD Meeting'
             if (confirmed.status === 'OFFER_LETTER') stage = 'Offer Letter'
+            if (confirmed.status === 'GIA') stage = 'GIA'
             this._primaryAppraisalFormsStore.setProjectStage(stage);
+            options.setStages = false;
+            options.add = true;
+            options.title = 'Successfull!',
+            options.message = 'Project stage has been changed',
+            this._confirmModelService.open(options);
           },
           error => {
             console.log("ERROR FROM MARK TO GM:--", error);

@@ -5,11 +5,11 @@
     <div class="project-info">
       <div class="info-box">
         <mat-icon style="margin:0 5px;">work</mat-icon>
-        <small>{{selectedProject.name}}</small>
+        <small>{{selectedProject?.name}}</small>
       </div>
       <div class="info-box">
         <mat-icon style="margin:0 5px;">account_circle</mat-icon>
-        <small>{{selectedProject.userRef}}</small>
+        <small>{{selectedProject?.userRef}}</small>
       </div>
     </div>
   </mat-toolbar-row>
@@ -19,11 +19,6 @@
   <mat-card-content>
     <mat-form-field *ngIf="allProposalSections">
       <mat-label>Select Section</mat-label>
-      <!-- <mat-select (ngModelChange)="smeChanged($event)">
-        <mat-option *ngFor="let item of allProposalSections" [value]="item.key">
-          {{item.name}}
-        </mat-option>
-      </mat-select> -->
       <mat-select (selectionChange)="smeChanged($event)" placeholder="Select Sections" [formControl]="sections"
         multiple>
         <mat-select-trigger>
@@ -34,7 +29,7 @@
             (+{{sections.value.length - 1}} others)
           </span>
         </mat-select-trigger>
-        <mat-option *ngFor="let object of allProposalSections;" [value]="object">{{object.name}}</mat-option>
+        <mat-option *ngFor="let object of selectedProject?.sections;" [value]="object">{{object.name}}</mat-option>
       </mat-select>
     </mat-form-field>
 

@@ -503,6 +503,9 @@
                 <mat-chip *ngIf="selectedProject?.status === 'Offer Letter'" class="ml-3 mt-3" color="warn" selected>
                   Offer Letter Enabled
                 </mat-chip>
+                <mat-chip *ngIf="selectedProject?.status === 'GIA'" class="ml-3 mt-3" color="warn" selected>
+                  GIA Enabled
+                </mat-chip>
               </mat-chip-list>
             </div>
           </mat-toolbar-row>
@@ -643,7 +646,8 @@
                 <button (click)="setProjectStages()"
                   [disabled]="selectedProject?.extendedAppraisal?.status === 'Pending'" *ngIf="(selectedProject?.status === 'Extended Appraisal' || 
                   selectedProject?.status === 'TAC Meeting' || selectedProject?.status === 'BOD Meeting' || 
-                  selectedProject?.status === 'RMC Meeting' || selectedProject?.status === 'Offer Letter') && 
+                  selectedProject?.status === 'RMC Meeting' || selectedProject?.status === 'Offer Letter'
+                   || selectedProject?.status === 'GIA') && 
                   selectedProject?.extendedAppraisal  !== null" mat-button color="accent">
                   <mat-icon class="mr-1">sync_alt</mat-icon> {{'change Project stage' | uppercase}}
                 </button>

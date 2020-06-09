@@ -52,7 +52,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     // this.getAllProjects();
     if (this.loggedUser.role === 'fip') this.getAllProjects();
     if (this.loggedUser.role === 'gm') this.getGmProjects();
-    if (this.loggedUser.role === 'process owner') this.getPoProjects();
+    if (this.loggedUser.role === 'process owner' && this.viewType !== 'gia') this.getPoProjects();
+    if (this.loggedUser.role === 'process owner' && this.viewType === 'gia') this.getGiaProjects();
     if (this.loggedUser.role === 'dm pam' && this.viewType === 'dm') this.getDmPamProjects();
     if (this.loggedUser.role === 'dm pam' && this.viewType === 'extapp') this.getExtAppraisalProjects();
     if (this.loggedUser.role === 'dm pam' && this.viewType === 'propapp') this.getAllProjects();
@@ -74,6 +75,18 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       },
       error => {
         console.log("ERROR ALL PROJECT:---", error);
+      }
+    );
+  }
+
+  getGiaProjects() {
+    this._projectService.getGiaProjects().subscribe(
+      (result: any) => {
+        console.log("RESULT ALL GIA PROJECT:---", result);
+        this._projectsStore.addAllProjects(result);
+      },
+      error => {
+        console.log("ERROR ALL GIA PROJECT:---", error);
       }
     );
   }
@@ -162,6 +175,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
     else if (this.loggedUser.role === 'sme' && this.viewType === 'propapp') {
       this._router.navigate(['/add-primary-appraisal-form', item.id]);
+    }
+    else if (this.loggedUser.role === 'process owner' && this.viewType === 'gia') {
+      this._router.navigate(['/gia-appraisal', item.id]);
     }
     else {
       this._router.navigate(['/project-details', item.id]);

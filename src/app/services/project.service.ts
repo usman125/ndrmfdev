@@ -40,6 +40,13 @@ export class ProjectService {
     );
   }
 
+  getGiaProjects() {
+    const url = `${AppConfig.apiUrl}/project-proposal/?status=GIA`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
   getCeoProjects() {
     const url = `${AppConfig.apiUrl}/project-proposal/?status=MARKED_TO_CEO`;
     return this._httpClient.get(

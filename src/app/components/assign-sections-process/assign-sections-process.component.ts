@@ -21,6 +21,8 @@ export class AssignSectionsProcessComponent implements OnInit {
   apiLoading: boolean = false;
   apiProcessLoading: boolean = false;
 
+  selectedProcess: any = null;
+
 
   userType = [
     'SME',
@@ -77,7 +79,7 @@ export class AssignSectionsProcessComponent implements OnInit {
         this.apiLoading = true;
         this.getProcessOwners();
         this.getSMES();
-        if ($event === 'EXTENDED_APPRAISAL'){
+        if ($event === 'EXTENDED_APPRAISAL') {
           this.getDmPams();
         }
       },
@@ -149,16 +151,18 @@ export class AssignSectionsProcessComponent implements OnInit {
       sections: []
     }
     let dummySections = [];
-    this.allProcessType.sections.forEach(element => {
-      if (element.sme !== null) {
-        let section = {
-          id: element.id,
-          smeId: element.sme.id
+    if (this.allProcessType.sections) {
+      this.allProcessType.sections.forEach(element => {
+        if (element.sme !== null) {
+          let section = {
+            id: element.id,
+            smeId: element.sme.id
+          }
+          dummySections.push(section);
         }
-        dummySections.push(section);
-      }
-    });
-    object.sections = dummySections;
+      });
+    }
+    object.sections = dummySections.length ? dummySections : null;
     this._settingsService.updateProcess(this.process, object).subscribe(
       result => {
         this.apiLoading = false;
@@ -188,16 +192,14 @@ export class AssignSectionsProcessComponent implements OnInit {
   }
 
   comparePoObjects(o1: any, o2: any): boolean {
-    if (o2 !== null) {
+    if (o2) {
       return o1.name === o2.name && o1.id === o2.id;
     }
     return false;
   }
 
   compareSmeObjects(o1: any, o2: any): boolean {
-    // console.log(o1, o2)
-    // return o1.name === o2.name && o1.id === o2.id;
-    if (o2 !== null) {
+    if (o2) {
       return o1.name === o2.name && o1.id === o2.id;
     }
     return false;

@@ -307,13 +307,13 @@ const routes: Routes = [
     path: 'prepare-gia',
     loadChildren: () => import('./modules/prepare-gia/prepare-gia.module').then(m => m.PrepareGiaModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Admin, Role.Po] }
   },
   {
     path: 'gia-appraisal/:projectId',
     loadChildren: () => import('./modules/gia-projects/gia-projects.module').then(m => m.GiaProjectsModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Admin, Role.Po] }
   },
   {
     path: 'primary-appraisal',

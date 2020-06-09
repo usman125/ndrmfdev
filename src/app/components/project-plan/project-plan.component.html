@@ -154,7 +154,7 @@
                 (submit)="onSubmit($event, node)" [form]="rfForm"></formio>
               <!-- <formio *ngIf="node.rfEntry && loggedUser.role !== 'fip'" [submission]="{data:getSubmittedData(node)}" [renderOptions]="options"
                 (submit)="onSubmit($event, node)" [form]="rfForm"></formio> -->
-              <formio [hidden]="!node.rfEntry && loggedUser.role === 'fip'" [submission]="{data:getSubmittedData(node)}" readOnly="true"
+              <formio *ngIf="node.rfEntry && loggedUser.role !== 'fip'" [submission]="{data:getSubmittedData(node)}" readOnly="true"
                 (submit)="onSubmit($event, node)" [form]="rfForm"></formio>
             </div>
           </mat-tree-node>
