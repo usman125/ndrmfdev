@@ -15,12 +15,13 @@
     <div class="col-md-4 item"><h6> Comments</h6></div>
   </div>
   <div class="row data-row" *ngFor="let item of allComments;">
-    <div class="col-md-4 item">{{item.addedBy || 'N/A'}}</div>
+    <div class="col-md-4 item"><span class="mobileheads">Name</span><span>{{item.addedBy || 'N/A'}}</span></div>
     <div class="col-md-4 item">
+      <span class="mobileheads">Section(s)</span>
       <mat-chip-list>
         <mat-chip *ngFor="let section of item.sections;">{{section}}</mat-chip>
       </mat-chip-list>
     </div>
-    <div class="col-md-4 item">{{item.comment || 'N/A'}}</div>
+    <div class="col-md-4 item"><span class="mobileheads">Comments</span><span>{{item.comment || 'N/A'}}</span></div>
   </div>
 </div>

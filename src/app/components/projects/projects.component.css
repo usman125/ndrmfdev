@@ -3,7 +3,7 @@
     align-items: flex-start;
     justify-content: flex-start;
     flex-direction: column;
-    height: 150px;
+    height: 72px;
 }
 
 .info {
@@ -16,14 +16,25 @@
 .example-spacer {
     flex: 1 1 auto;
 }
-
+.mat-grid-tile {
+    display: block;
+    position: relative;
+    overflow: visible;
+    width: 187px !important;
+    float: left;
+    top: unset !important;
+    left: unset !important;
+    margin-bottom: 6px !important;
+    padding-bottom: 0;
+    height: 176px !important;
+}
 .bottom-content {
-    height: 90px;
+    height: 80px;
     font-size: 13px;
     font-weight: 600;
     display: flex;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: flex-end;
     flex-direction: column;
 }
 .bottom-content .icon {
@@ -34,8 +45,18 @@
     padding: 15px;
     background: #fff;
     width: 100%;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+    border: 1px solid transparent;
+    height: 100%;
+    border-radius: 3px;
+    padding-bottom: 0 !important;
 }
 .searchField {
     width: 85%;
     margin: 0 auto;
+}
+.content span {
+    font-size: 13px;
+    font-style: italic;
+    color: #666;
 }
