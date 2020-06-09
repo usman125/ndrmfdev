@@ -199,13 +199,14 @@ table {
   background: #eff4f9 !important;
   color: #333 !important;
   margin-top: 20px;
-  padding: 10px 0 !important;
+  padding: 3px 0 !important;
   margin-left: 20px;
   width: calc(100% - 40px);
   font-weight: 300;
   margin-top: 20px !important;
-  box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14),
-    0px 10px 14px 2px rgba(0, 0, 0, 0.12);
+  /* box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0px 10px 14px 2px rgba(0, 0, 0, 0.12); */
+  box-shadow: none;
 }
 .example-container,
 .mat-card {
@@ -261,10 +262,11 @@ table {
 }
 .box-heading span {
   font-weight: 300;
-  font-size: 20px;
-  padding: 20px;
-  margin: 10px;
+  font-size: 18px;
+  padding: 11px 20px;
+  margin: 0 10px;
   display: block;
+  position: relative;
 }
 
 .toolbar-sticky {
@@ -274,8 +276,11 @@ table {
 }
 
 .own-tiles .mat-figure {
-  margin: 20px !important;
-  justify-content: flex-start;
+  margin: 5px 3px !important;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .display-block {
@@ -292,4 +297,67 @@ table {
 .mat-toolbar-row span {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/*Generic Classes*/
+.h6,h6{
+  font-weight: 400;
+  font-size: 0.94rem;
+}
+#answer {
+  font-weight: 500;
+  color: #0070b1 !important;
+}
+#comment {
+  color: #6e8c1f !important;
+  font-weight: 400;
+  font-style: italic;
+}
+.mat-standard-chip{
+  padding: 0px 12px !important;
+  font-size: 11px !important;
+}
+.mat-card{
+  box-shadow: none !important;
+}
+.mat-card-content{
+  margin-bottom: 2px !important;
+}
+.mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary {
+  color: #0070b1 !important;
+}
+.mat-button.mat-primary[disabled], .mat-button.mat-accent[disabled], .mat-button.mat-warn[disabled], .mat-button[disabled][disabled], .mat-icon-button.mat-primary[disabled], .mat-icon-button.mat-accent[disabled], .mat-icon-button.mat-warn[disabled], .mat-icon-button[disabled][disabled], .mat-stroked-button.mat-primary[disabled], .mat-stroked-button.mat-accent[disabled], .mat-stroked-button.mat-warn[disabled], .mat-stroked-button[disabled][disabled]{
+  color: rgba(0, 0, 0, 0.26) !important;
+}
+/*Card Layout Dashboard*/
+.mat-grid-tile {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  width: 187px !important;
+  max-height: 178px;
+  float: left;
+  top: unset !important;
+  left: unset !important;
+  margin-bottom: 6px;
+}
+.trackpad .mat-card{
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.15) !important;
+  border-radius: 3px !important;
+  border: 1px solid transparent;
+  padding-bottom: 4px;
+}
+.trackpad .box .heading {
+  min-height: 106px;
+  font-weight: lighter;
+}
+.trackpad .box .value {
+  align-items: end;
+  justify-content: flex-end;
+}
+@media only screen and (min-width: 768px) {
+  .trackpad .col-md-3{
+    flex: 0 0 190px;
+    margin-bottom: 6px;
+  }
 }

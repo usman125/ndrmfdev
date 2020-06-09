@@ -8,29 +8,32 @@
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
-  <mat-grid-list cols="6" rowHeight="130px">
-    <mat-grid-tile colspan="6" rowspan="1" *ngIf="showAddBtn">
-      <div class="searchField">
-        <mat-form-field>
-          <mat-label>Filter Project</mat-label>
-          <input [(ngModel)]="filterQuery" matInput type="text" />
-        </mat-form-field>
-      </div>
-    </mat-grid-tile>
-    <mat-grid-tile class="own-tiles" rowspan="2" colspan="2" *ngFor="let item of allProjects | dataFilter:filterQuery">
-      <div class="inner-content mat-elevation-z8" (click)="goToDetails(item)">
-        <div class="content">
-          <h6>{{item?.name}}</h6>
-          <span>{{item?.thematicAreaName}}</span>
+  <div class="m-20">
+    <mat-grid-list cols="7" rowHeight="96px">
+      <mat-grid-tile colspan="6" rowspan="1" *ngIf="showAddBtn">
+        <div class="searchField">
+          <mat-form-field>
+            <mat-label>Filter Project</mat-label>
+            <input [(ngModel)]="filterQuery" matInput type="text" />
+          </mat-form-field>
         </div>
-        <div class="bottom-content">
-          <span class="mb-1" id="answer">{{item.status}}</span>
-           <span class="mb-1" id="comment">{{item.subStatus}}</span>
-          <!-- <span class="mb-1" id="answer">{{'Submit Section Review'}}</span> -->
-          <!-- <span *ngIf="item?.preAppraisal !== null" id="comment">{{item?.preAppraisal.status}}</span> -->
-          <!-- <span *ngIf="item.preAppraisal === null" id="comment">{{item.preAppraisal.status}}</span> -->
+      </mat-grid-tile>
+      <mat-grid-tile class="own-tiles" rowspan="2" colspan="1"
+        *ngFor="let item of allProjects | dataFilter:filterQuery">
+        <div class="inner-content mat-elevation-z8" (click)="goToDetails(item)">
+          <div class="content">
+            <h6>{{item?.name}}</h6>
+            <span>{{item?.thematicAreaName}}</span>
+          </div>
+          <div class="bottom-content">
+            <span class="mb-1" id="answer"> - {{item.status}}</span>
+            <span class="mb-1" id="comment">{{item.subStatus}}</span>
+            <!-- <span class="mb-1" id="answer">{{'Submit Section Review'}}</span> -->
+            <!-- <span *ngIf="item?.preAppraisal !== null" id="comment">{{item?.preAppraisal.status}}</span> -->
+            <!-- <span *ngIf="item.preAppraisal === null" id="comment">{{item.preAppraisal.status}}</span> -->
+          </div>
         </div>
-      </div>
-    </mat-grid-tile>
-  </mat-grid-list>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
 </ng-container>
