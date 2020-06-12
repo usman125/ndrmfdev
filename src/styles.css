@@ -329,7 +329,7 @@ table {
   color: rgba(0, 0, 0, 0.26) !important;
 }
 /*Card Layout Dashboard*/
-.mat-grid-tile {
+.custom-card .mat-grid-tile {
   display: block;
   position: relative;
   overflow: hidden;
