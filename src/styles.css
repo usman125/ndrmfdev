@@ -263,7 +263,7 @@ table {
 .box-heading span {
   font-weight: 300;
   font-size: 18px;
-  padding: 11px 20px;
+  padding: 4px 25px;
   margin: 0 10px;
   display: block;
   position: relative;
@@ -309,9 +309,8 @@ table {
   color: #0070b1 !important;
 }
 #comment {
-  color: #6e8c1f !important;
+  /* color: #6e8c1f !important; */
   font-weight: 400;
-  font-style: italic;
 }
 .mat-standard-chip{
   padding: 0px 12px !important;
@@ -330,7 +329,7 @@ table {
   color: rgba(0, 0, 0, 0.26) !important;
 }
 /*Card Layout Dashboard*/
-.mat-grid-tile {
+.custom-card .mat-grid-tile {
   display: block;
   position: relative;
   overflow: hidden;

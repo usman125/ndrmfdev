@@ -8,7 +8,7 @@
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
-  <div class="m-20">
+  <div class="m-20 custom-card">
     <mat-grid-list cols="7" rowHeight="96px">
       <mat-grid-tile colspan="6" rowspan="1" *ngIf="showAddBtn">
         <div class="searchField">
@@ -23,6 +23,7 @@
         <div class="inner-content mat-elevation-z8" (click)="goToDetails(item)">
           <div class="content">
             <h6>{{item?.name}}</h6>
+            <span id="comment">{{item?.initiatorFullName}}</span>
             <span>{{item?.thematicAreaName}}</span>
           </div>
           <div class="bottom-content">

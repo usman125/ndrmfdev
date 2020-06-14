@@ -130,10 +130,16 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
               submitCount = submitCount + 1;
             }
             let result = c.name.match(/glance/g);
+            let result1 = c.name.match(/Beneficiaries/g);
             if (result !== null) {
               if (c.data) {
                 this.selectedProjectInfo = c.data;
                 this._authStore.setProjectMonths(c.data.duration);
+              }
+            }
+            if (result1 !== null) {
+              if (c.data) {
+                this.selectedProjectInfo.pb = c.data;
               }
             }
             if (c.assigned === false) {
