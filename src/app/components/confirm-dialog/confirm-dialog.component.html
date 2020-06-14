@@ -1,4 +1,4 @@
-<div class="dialog">
+<div class="dialog" appNoRightClick>
   <div class="header">
     <h1 mat-dialog-title>{{ data.title  }}</h1>
   </div>
@@ -53,8 +53,7 @@
         <button mat-raised-button (click)="setStatus('OFFER_LETTER')" color="accent"
           class="m-2">{{'Enable Offer Letter' | uppercase}}
         </button>
-        <button mat-raised-button (click)="setStatus('GIA')" color="accent"
-          class="m-2">{{'Enable gia' | uppercase}}
+        <button mat-raised-button (click)="setStatus('GIA')" color="accent" class="m-2">{{'Enable gia' | uppercase}}
         </button>
         <button color="warn" mat-raised-button style="margin-right:10px;" (click)="cancel()">{{ data.cancelText }}
         </button>
@@ -68,6 +67,20 @@
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
+    </div>
+
+    <div class="controls" *ngIf="data?.selectThematic">
+      <mat-select (selectionChange)="areaChanged($event)" placeholder="Select Areas" [formControl]="areas" multiple>
+        <mat-select-trigger>
+          <span *ngFor="let item of areas.value; let i=index">
+            <span *ngIf="i===0">{{item.name}}</span>
+          </span>
+          <span *ngIf="areas.value?.length > 1" class="example-additional-selection">
+            (+{{areas.value.length - 1}} others)
+          </span>
+        </mat-select-trigger>
+        <mat-option *ngFor="let object of data?.areas;" [value]="object">{{object.name}}</mat-option>
+      </mat-select>
     </div>
 
   </div>
@@ -86,7 +99,13 @@
     <!-- OFFER LETTER -->
     <button *ngIf="data?.offerLetter" mat-raised-button (click)="cancel()" color="warn"
       class="m-2">{{data.cancelText | uppercase}}</button>
-    <button *ngIf="data?.offerLetter" [disabled]="!data.endDate" mat-raised-button (click)="uploadOfferLetter('ASSIGN')" color="primary"
-      class="m-2">{{data.confirmText | uppercase}}</button>
+    <button *ngIf="data?.offerLetter" [disabled]="!data.endDate" mat-raised-button (click)="uploadOfferLetter('ASSIGN')"
+      color="primary" class="m-2">{{data.confirmText | uppercase}}</button>
+
+
+    <button *ngIf="data?.selectThematic" [disabled]="areas.value?.length === 0 || !areas.value" mat-raised-button
+      (click)="addThematicAreas()" color="primary" class="m-2">{{data.confirmText | uppercase}}</button>
+    <button *ngIf="data?.selectThematic" mat-raised-button (click)="cancel()" color="warn"
+      class="m-2">{{data.cancelText | uppercase}}</button>
   </div>
 </div>

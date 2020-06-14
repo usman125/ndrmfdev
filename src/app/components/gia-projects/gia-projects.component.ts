@@ -6,6 +6,7 @@ import { ProjectsStore } from "../../stores/projects/projects-store";
 import { ProposalFormsStore } from "../../stores/proposal-forms/proposal-forms-store";
 import { FormControl } from "@angular/forms";
 import { PrimaryAppraisalFormsStore } from 'src/app/stores/primary-appraisal-forms/primary-appraisal-forms-store';
+import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-gia-projects',
@@ -23,6 +24,8 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
   content: any = null;
   sections = new FormControl();
 
+  apiLoading: boolean = false;
+
   appraisalDoc: any = [
 
   ];
@@ -30,6 +33,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
   constructor(
     private _proposalSectionsStore: ProposalSectionsStore,
     private _proposalFormsStore: ProposalFormsStore,
+    private _projectService: ProjectService,
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
     private _activatedRoute: ActivatedRoute,
     private _projectsStore: ProjectsStore,
@@ -55,6 +59,15 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
         this.selectedProject = data.selectedProject;
         console.log("SELECTED PROJECT IN STORE:--", this.selectedProject);
+        if (this.selectedProject) {
+          if (this.selectedProject.gia.data !== null) {
+            if (typeof (this.selectedProject.gia.data) === 'string') {
+              this.appraisalDoc = JSON.parse(this.selectedProject.gia.data);
+            } else {
+              this.appraisalDoc = this.selectedProject.gia.data;
+            }
+          }
+        }
         // if (this.selectedProject && this.selectedProject.commentsMatrix) {
         //   this._accreditationCommentsMatrixStore.addCommentsArray(this.selectedProject.commentsMatrix);
         // }
@@ -81,19 +94,34 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
       content: this.content,
       forms: null
     }
-    let tempForms = [];
     for (let i = 0; i < this.sections.value.length; i++) {
-      for (let j = 0; j < this.allProposalForms.length; j++) {
-        if (this.sections.value[i].key === this.allProposalForms[j].smeRef) {
-          tempForms.push(this.allProposalForms[j]);
-        }
+      if (typeof (this.sections.value[i].template) === 'string') {
+        this.sections.value[i].template = JSON.parse(this.sections.value[i].template);
+      } else {
+        this.sections.value[i].template = this.sections.value[i].template;
+      }
+      if (typeof (this.sections.value[i].data) === 'string') {
+        this.sections.value[i].data = JSON.parse(this.sections.value[i].data);
+      } else {
+        this.sections.value[i].data = this.sections.value[i].data;
       }
     }
-    object.forms = tempForms;
+    object.forms = this.sections.value;
     this.appraisalDoc.push(object);
     console.log("APPRESIAL DOC:--", this.appraisalDoc);
     this.content = null;
     this.sections.reset();
+  }
+
+  submitGia() {
+    this._projectService.submitGia(this.selectedProjectId, { data: JSON.stringify(this.appraisalDoc) }).subscribe(
+      (result: any) => {
+        console.log("RESULT AFTER SUBMIT GIA:---", result);
+      },
+      error => {
+        console.log("RESULT AFTER SUBMIT GIA:---", error);
+      }
+    );
   }
 
   removeEntry(i) {

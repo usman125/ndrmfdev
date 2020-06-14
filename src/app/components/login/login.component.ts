@@ -33,69 +33,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     private _loginService: LoginService,
   ) {
     this._buildLoginForm();
-
-    // this._userService.getAllUsers().subscribe(
-    //   result => {
-    //     this._authStore.removeLoading();
-    //     console.log(result);
-    //     let usersArray = [];
-    //     if (result['userInfoList']) {
-    //       for (let i = 0; i < result['userInfoList'].length; i++) {
-    //         var object = {
-    //           name: result['userInfoList'][i].firstName,
-    //           email: result['userInfoList'][i].email,
-    //           role: result['userInfoList'][i].typeName,
-    //           smeRef: result['userInfoList'][i].roleName,
-    //           department: null,
-    //           username: result['userInfoList'][i].username,
-    //           password: null,
-    //           active: result['userInfoList'][i].active,
-    //           eligibileFlag: result['userInfoList'][i].eligible,
-    //           qualificationFlag: result['userInfoList'][i].qualified,
-    //           roleNames: result['userInfoList'][i].roleNames,
-    //           groupNames: result['userInfoList'][i].groupNames,
-    //         }
-    //         if (result['userInfoList'][i].typeName === 'ndrmf') {
-    //           if (result['userInfoList'][i].roleNames.length) {
-    //             object.role = result['userInfoList'][i].roleNames[0];
-    //           }
-    //         }
-    //         if (result['userInfoList'][i].typeName === 'fip') {
-    //           if (result['userInfoList'][i].roleNames.length) {
-    //             object.role = result['userInfoList'][i].roleNames[0];
-    //           }
-    //         }
-    //         if (object.role === 'sme') {
-    //           this._smeService.getAllSmes().subscribe(
-    //             result => {
-    //               console.log("ALL SMES FROM APi:--", result);
-    //               if (result['sectionInfos']) {
-    //                 this.allSections = result['sectionInfos']
-    //                 result['sectionInfos'].forEach(element => {
-    //                   console.log(element.userName)
-    //                   if (element.userName === object.username) object.smeRef = element.sectionKey || null;
-    //                 });
-    //               }
-    //             },
-    //             error => { }
-    //           )
-    //         }
-    //         usersArray.push(object);
-    //       }
-    //       this._usersStore.setAllUsers(usersArray);
-    //     }
-    //     this.Subscription.add(
-    //       this._usersStore.state$.subscribe(data => {
-    //         this.allUsers = data.users;
-    //         console.log(this.allUsers)
-    //       })
-    //     );
-    //   },
-    //   error => {
-    //     this._authStore.removeLoading();
-    //     console.log("ERROR FROM ALL USERS:--", error);
-    //   }
-    // );
   }
 
   _buildLoginForm() {
@@ -170,7 +107,13 @@ export class LoginComponent implements OnInit, OnDestroy {
           orgName: result['user']['orgName'],
           org: [{ 'id': result['user']['orgId'], 'name': result['user']['orgName'] }],
           authToken: result['accessToken'],
+          canInitiate: null,
+          accredited: null,
 
+        }
+
+        if (this.user.roles.indexOf('FIP') > -1) {
+          this.user.role = 'fip';
         }
         console.log("USER:---", this.user);
         this._authStore.setAuthToken(this.user.authToken);
@@ -224,8 +167,13 @@ export class LoginComponent implements OnInit, OnDestroy {
         console.log("RESULT FROM ACCREDIATED SATUS:--", result);
         this.user.eligibileFlag = result.eligibilityStatus;
         this.user.qualificationFlag = result.qualificationStatus;
+        this.user.canInitiate = result.canInitiate;
+        this.user.accredited = result.accredited;
         this._authStore.setEligibleFlag(this.user.eligibileFlag);
         this._authStore.setQualificationFlag(this.user.qualificationFlag);
+        this._authStore.setCanInitiate(this.user.canInitiate);
+        this._authStore.setAccredited(this.user.accredited);
+
         this._authStore.setLoginState(true);
         this._authStore.openSideNav();
         var newUser = JSON.stringify(this.user);

@@ -14,12 +14,19 @@ export class FipHomeComponent implements OnInit, OnDestroy {
   qualificationFlag: string;
   Subscription: Subscription = new Subscription();
 
+  loggedUser: any = null;
+
+  accredited: boolean = false;
+  canInitiate: boolean = false;
+
   constructor(
     private _authStore: AuthStore,
     private _router: Router,
   ) { }
 
   ngOnInit() {
+    this.loggedUser = JSON.parse(localStorage.getItem('user'));
+    console.log(this.loggedUser);
     setTimeout(() => {
       this._authStore.setRouteName('FIP-HOME');
     })
@@ -27,16 +34,18 @@ export class FipHomeComponent implements OnInit, OnDestroy {
       this._authStore.state$.subscribe((data) => {
         this.eligibilityFlag = data.auth.eligibaleFlag;
         this.qualificationFlag = data.auth.qualifiationFlag;
+        this.accredited = data.auth.accredited;
+        this.canInitiate = data.auth.canInitiate;
         // console.log("FLAGS FROM FIP HOME:--", data.auth.eligibaleFlag)
       })
     )
   }
 
-  goToRoute(route){
+  goToRoute(route) {
     this._router.navigate([route]);
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.Subscription.unsubscribe();
   }
 

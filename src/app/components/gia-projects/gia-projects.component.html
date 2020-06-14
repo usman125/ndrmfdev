@@ -2,16 +2,6 @@
   <mat-toolbar-row>
     <span>Prepare Project GIA</span>
     <div class="example-spacer"></div>
-    <div class="project-info">
-      <div class="info-box">
-        <mat-icon style="margin:0 5px;">work</mat-icon>
-        <small>{{selectedProject?.name}}</small>
-      </div>
-      <div class="info-box">
-        <mat-icon style="margin:0 5px;">account_circle</mat-icon>
-        <small>{{selectedProject?.userRef}}</small>
-      </div>
-    </div>
   </mat-toolbar-row>
 </mat-toolbar>
 <div class="m-20" [(froalaModel)]="content" [froalaEditor]></div>
@@ -41,12 +31,10 @@
 </mat-card>
 
 <mat-card class="m-20">
-  <!-- <mat-card-header> -->
   <div class="card-header">
     <h6> Created GIA </h6>
-    <button [disabled]="appraisalDoc.length === 0" color="primary" mat-raised-button>SAVE GIA</button>
+    <button (click)="submitGia()" [disabled]="appraisalDoc.length === 0" color="primary" mat-raised-button>SAVE GIA</button>
   </div>
-  <!-- </mat-card-header> -->
   <mat-card-content>
     <div *ngFor="let item of appraisalDoc;let i = index;">
       <div class="appraisal-box">
@@ -56,20 +44,18 @@
           </button>
         </div>
         <div class="content">
-          <!-- {{item.content}} -->
           <div [froalaView]="item.content"></div>
         </div>
         <div *ngIf="item.forms.length">
-          <div class="form" *ngFor="let form of item.forms">
-            <formio [form]="form"></formio>
+          <div class="form margin-5 appraisal-box" *ngFor="let form of item.forms">
+            <formio [form]="form.template" [submission]="{data: form.data}" readOnly="true"></formio>
           </div>
         </div>
       </div>
     </div>
   </mat-card-content>
   <mat-card-actions style="padding: 6px;">
-    <button [disabled]="appraisalDoc.length === 0" color="primary" mat-raised-button>SAVE GIA</button>
-    <!-- <button (click)="addSection()" color="primary" mat-raised-button>ADD SECTION</button> -->
+    <button (click)="submitGia()" [disabled]="appraisalDoc.length === 0" color="primary" mat-raised-button>SAVE GIA</button>
   </mat-card-actions>
 </mat-card>
 

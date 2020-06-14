@@ -64,7 +64,8 @@ export class SettingsService {
       page: values.page,
       display: values.type,
       passingScore: values.passingScore,
-      totalScore: values.totalScore
+      totalScore: values.totalScore,
+      name: values.name
     }
     const url = `${AppConfig.apiUrl}/setting/section/${sectionId}/template/add`;
     return this._httpClient.post(

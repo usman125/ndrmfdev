@@ -12,62 +12,43 @@
     <div style="position: relative;">
       <mat-card class="m-20">
         <mat-card-content>
-          <mat-grid-list cols="1" rowHeight="60px">
 
-            <!-- <mat-grid-tile>
-              <mat-form-field>
-                <mat-label>Department</mat-label>
-                <mat-select [formControl]="addUserForm.controls['department']"
-                  (ngModelChange)="departmentChanged($event)">
-                  <mat-option *ngFor="let item of allDepartments" [value]="item.key">
-                    {{item.name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </mat-grid-tile> -->
+          <mat-form-field>
+            <mat-label>First Name</mat-label>
+            <input matInput type="text" placeholder="e.g. Legal" formControlName="firstName"
+              [formControl]="addUserForm.controls['firstName']" />
+          </mat-form-field>
 
-            <mat-grid-tile>
-              <mat-form-field>
-                <mat-label>First Name</mat-label>
-                <input matInput type="text" placeholder="e.g. Legal" formControlName="firstName"
-                  [formControl]="addUserForm.controls['firstName']" />
-              </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile>
-              <mat-form-field>
-                <mat-label>Last Name</mat-label>
-                <input matInput type="text" placeholder="e.g. Legal" formControlName="lastName"
-                  [formControl]="addUserForm.controls['lastName']" />
-              </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile>
-              <mat-form-field>
-                <mat-label>Email</mat-label>
-                <input matInput type="text" placeholder="e.g. abc124" formControlName="email"
-                  [formControl]="addUserForm.controls['email']" />
-              </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile>
-              <mat-form-field>
-                <mat-label>Username</mat-label>
-                <input matInput type="text" placeholder="e.g. abc124" formControlName="username"
-                  [formControl]="addUserForm.controls['username']" />
-              </mat-form-field>
-            </mat-grid-tile>
-            <mat-grid-tile>
-              <mat-form-field>
-                <mat-label>Password</mat-label>
-                <input matInput type="text" placeholder="Password" formControlName="password"
-                  [formControl]="addUserForm.controls['password']" />
-              </mat-form-field>
-            </mat-grid-tile>
-          </mat-grid-list>
-          <mat-grid-list cols="4">
-            <mat-grid-tile colspan="1" rowspan="3">
+          <mat-form-field>
+            <mat-label>Last Name</mat-label>
+            <input matInput type="text" placeholder="e.g. Legal" formControlName="lastName"
+              [formControl]="addUserForm.controls['lastName']" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput type="text" placeholder="e.g. abc124" formControlName="email"
+              [formControl]="addUserForm.controls['email']" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input matInput type="text" placeholder="e.g. abc124" formControlName="username"
+              [formControl]="addUserForm.controls['username']" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput type="text" placeholder="Password" formControlName="password"
+              [formControl]="addUserForm.controls['password']" />
+          </mat-form-field>
+
+          <div class="row">
+            <div class="col-md-6">
               <mat-card style="width: 90%;">
-                <mat-card-header>
-                  <mat-card-title>Select Org</mat-card-title>
-                </mat-card-header>
+                <div class="card-title">
+                  <h4>Select Org</h4>
+                </div>
                 <mat-card-content>
                   <mat-radio-group [formControl]="addUserForm.controls['org']" (change)="orgChanged($event)"
                     class="example-radio-group">
@@ -77,12 +58,12 @@
                   </mat-radio-group>
                 </mat-card-content>
               </mat-card>
-            </mat-grid-tile>
-            <mat-grid-tile colspan="1" rowspan="3">
+            </div>
+            <div class="col-md-6">
               <mat-card style="width: 90%;">
-                <mat-card-header>
-                  <mat-card-title>Select Role</mat-card-title>
-                </mat-card-header>
+                <div class="card-title">
+                  <h4>Select Role</h4>
+                </div>
                 <mat-card-content>
                   <mat-radio-group *ngIf="addUserForm.controls['org']" class="example-radio-group"
                     (change)="roleChanged($event)" [formControl]="addUserForm.controls['role']">
@@ -92,14 +73,13 @@
                   </mat-radio-group>
                 </mat-card-content>
               </mat-card>
-            </mat-grid-tile>
-            <mat-grid-tile>
-              <button [disabled]="!addUserForm.valid" mat-raised-button color="primary"
-                type="submit">
-                {{'Add' | uppercase}}
-              </button>
-            </mat-grid-tile>
-          </mat-grid-list>
+            </div>
+          </div>
+
+          <button [disabled]="!addUserForm.valid" mat-raised-button color="primary" type="submit">
+            {{'Add' | uppercase}}
+          </button>
+
         </mat-card-content>
       </mat-card>
     </div>

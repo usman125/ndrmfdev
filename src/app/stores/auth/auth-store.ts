@@ -189,4 +189,24 @@ export class AuthStore extends Store<AuthState> {
     })
   }
 
+  setCanInitiate(canInitiate){
+    this.setState({
+      ...this.state,
+      auth: {
+        ...this.state.auth,
+        canInitiate: canInitiate
+      }
+    })
+  }
+
+  setAccredited(accredited){
+    this.setState({
+      ...this.state,
+      auth: {
+        ...this.state.auth,
+        accredited: accredited
+      }
+    })
+  }
+
 }

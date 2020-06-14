@@ -100,6 +100,9 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 // import { MatGridListModule } from "@angular/material/grid-list";
 // import { GiaProjectsModule } from "./modules/gia-projects/gia-projects.module";
 import { JwtModule } from "@auth0/angular-jwt";
+// import { ViewGovtAgencyRequestComponent } from './components/view-govt-agency-request/view-govt-agency-request.component';
+// import { GovtAgencyHomeComponent } from './components/govt-agency-home/govt-agency-home.component';
+// import { GovtAccreditRequestsComponent } from './components/govt-accredit-requests/govt-accredit-requests.component';
 // import { DmpamHomeComponent } from './components/dmpam-home/dmpam-home.component';
 // import { CeoHomeComponent } from './components/ceo-home/ceo-home.component';
 // import { CeoProposalComponent } from './components/ceo-proposal/ceo-proposal.component';
@@ -111,6 +114,7 @@ import { JwtModule } from "@auth0/angular-jwt";
 // import { PoHomeComponent } from './components/po-home/po-home.component';
 // import { AssignSectionsProcessComponent } from './components/assign-sections-process/assign-sections-process.component';
 // import { PendingSignupsComponent } from './components/pending-signups/pending-signups.component';
+import { NoRightClickDirective } from './services/no-right-click.directive';
 
 export function tokenGetter() {
   let user = JSON.parse(localStorage.getItem('user'));
@@ -127,6 +131,10 @@ export function tokenGetter() {
     LoginComponent,
     NoHeaderLayoutComponent,
     AddProjectComponent,
+    NoRightClickDirective
+    // ViewGovtAgencyRequestComponent,
+    // GovtAgencyHomeComponent,
+    // GovtAccreditRequestsComponent,
     // DmpamHomeComponent,
     // CeoHomeComponent,
     // CeoProposalComponent,

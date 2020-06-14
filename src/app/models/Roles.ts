@@ -6,4 +6,5 @@ export enum Role {
   Dm = 'dm pam',
   Gm = 'gm',
   Ceo = 'ceo',
+  Govt = 'govt',
 }

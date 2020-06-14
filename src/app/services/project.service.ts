@@ -215,6 +215,14 @@ export class ProjectService {
     );
   }
 
+  submitGia(proposalId, data) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${proposalId}/gia/submit`;
+    return this._httpClient.post(
+      url,
+      data
+    );
+  }
+
   uploadFiles(id, stage, file) {
     const url = `${AppConfig.apiUrl}/project-proposal/${id}/attachment/add?stage=${stage}`;
     let body = {

@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from "./config";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+// import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient, HttpResponse, HttpRequest,
+  HttpEventType, HttpErrorResponse
+} from '@angular/common/http';
+
 import { AuthStore } from '../stores/auth/auth-store';
+
+import { of } from 'rxjs/observable/of';
+import { catchError, last, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,15 +23,15 @@ export class AccreditationRequestService {
     private _httpClient: HttpClient,
     private _authStore: AuthStore,
   ) {
-    this._authStore.state$.subscribe((data) => {
-      this.authToken = data.auth.authToken;
-      this.httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Authorization': this.authToken,
-        })
-      };
-    });
+    // this._authStore.state$.subscribe((data) => {
+    //   this.authToken = data.auth.authToken;
+    //   this.httpOptions = {
+    //     headers: new HttpHeaders({
+    //       'Content-Type': 'application/json',
+    //       'Authorization': this.authToken,
+    //     })
+    //   };
+    // });
   }
 
   getAllAccreditationRequests() {
@@ -143,7 +151,7 @@ export class AccreditationRequestService {
       values
     );
   }
-  
+
   assignTaskToSme(values, sectionId) {
     const url = `${AppConfig.apiUrl}/accreditation/qualification/section/${sectionId}/task/add`;
     return this._httpClient.post(
@@ -165,11 +173,48 @@ export class AccreditationRequestService {
       url
     );
   }
-  
-  reassignFipSection(id, values){
+
+  getPendingAccreditation() {
+    const url = `${AppConfig.apiUrl}/accreditation/questionairre/pending`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  submitPendingAccreditation(id, data) {
+    const url = `${AppConfig.apiUrl}/accreditation/questionairre/${id}/submit`;
+    return this._httpClient.post(
+      url,
+      data
+    );
+
+    // const req = new HttpRequest('POST', url, data, {
+    //   reportProgress: true
+    // });
+
+    // const sub = this._httpClient.request(req).pipe(
+    //   map(event => {
+    //     switch (event.type) {
+    //       case HttpEventType.UploadProgress:
+    //         let progress = Math.round(event.loaded * 100 / event.total);
+    //         return progress;
+    //       case HttpEventType.Response:
+    //         return event;
+    //     }
+    //   }),
+    //   tap(message => { }),
+    //   last(),
+    //   catchError((error: HttpErrorResponse) => {
+    //     return of(error);
+    //   })
+    // )
+    // return sub;
+  }
+
+  reassignFipSection(id, values) {
     const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}/reassign`;
     return this._httpClient.post(
-      url, 
+      url,
       values
     );
 

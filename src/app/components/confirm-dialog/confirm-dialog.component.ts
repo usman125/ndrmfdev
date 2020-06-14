@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl } from '@angular/forms';
 
 export interface ConfirmData {
   cancelText: string;
@@ -15,6 +16,9 @@ export interface ConfirmData {
   assignToGm: boolean;
   setStages: boolean;
   offerLetter: boolean;
+  disableClose: boolean;
+  selectThematic: boolean;
+  areas: any;
 }
 
 @Component({
@@ -25,6 +29,7 @@ export interface ConfirmData {
 export class ConfirmDialogComponent implements OnInit {
 
   checked: boolean = false;
+  areas = new FormControl();
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
@@ -32,7 +37,10 @@ export class ConfirmDialogComponent implements OnInit {
     this.data.startDate = new Date().toISOString();
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    // console.log("ALL THEMATIC AREAS:--", this.data.areas);
+    // this.areas.patchValue(this.data.areas, { onlySelf: true });
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -64,9 +72,20 @@ export class ConfirmDialogComponent implements OnInit {
   assignToGm(status) {
     this.close({ status });
   }
-  
+
   uploadOfferLetter(status) {
     this.close({ status });
+  }
+
+  areaChanged($event) {
+    console.log("AREA CHANGED:--", $event);
+  }
+
+  addThematicAreas() {
+    this.close({
+      areas: this.areas.value,
+      status: 'ok'
+    })
   }
 
   @HostListener("keydown.esc")

@@ -266,6 +266,7 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
 
   markEligibleFlag() {
     console.log("MARK ELIGIBLE CALLED:--", this.selectedRequest);
+    this.loadingApi = true;
     this._userService.updateEligibleStatus(this.selectedRequest.id).subscribe(
       result => {
         console.log("RESULR FROM MARKING ELIGIBLE:--", result);
@@ -274,8 +275,10 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
         // this._authStore.setEligibleFlag('Approved');
         // this.toggleBtn = this._usersStore.findEligibleUser(this.selectedRequest.user);
         this.toggleBtn = true;
+        this.loadingApi = false;
       },
       error => {
+        this.loadingApi = false;
         console.log("ERROR FROM MARKING ELIGIBLE:--", error);
       }
     );

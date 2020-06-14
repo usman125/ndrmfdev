@@ -12,6 +12,8 @@ const AUTH = {
   apiCall: false,
   authToken: null,
   proMonths: null,
+  canInitiate: null,
+  accredited: null,
 }
 
 export class AuthState {
@@ -29,5 +31,7 @@ export class AuthState {
     apiCall: boolean,
     authToken: string,
     proMonths: any,
+    canInitiate: any,
+    accredited: any,
   } = AUTH;
 }

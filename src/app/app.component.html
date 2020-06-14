@@ -95,7 +95,7 @@
         </mat-accordion>
         <mat-accordion multi="true">
 
-          <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel *ngIf="canInitiate === true" [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Accreditation Requests
@@ -111,15 +111,33 @@
                 routerLink="/fip-qualification">Qualification Management</a>
             </mat-nav-list>
           </mat-expansion-panel>
-          <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel *ngIf="canInitiate === true" [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Projects
               </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-nav-list>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/user-projects">Add a
-                new project</a>
+              <a *ngIf="accredited === true" mat-list-item routerLinkActive="active-menu-item"
+                routerLink="/user-projects">Post a
+                project</a>
+              <a *ngIf="accredited === false" mat-list-item disabled href="javascript: void(0);">Post a
+                Project</a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel *ngIf="canInitiate === false" [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Projects
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a *ngIf="accredited === false" mat-list-item disabled href="javascript: void(0);">Post a
+                Project</a>
+              <a *ngIf="accredited === true" mat-list-item routerLinkActive="active-menu-item"
+                routerLink="/govt-agency-home">Post a
+                project</a>
             </mat-nav-list>
           </mat-expansion-panel>
 
@@ -263,6 +281,8 @@
         </mat-accordion>
       </div>
 
+
+      <!-- PROCESS OWNER -->
       <div class="hero" *ngIf="loggedUserRole === 'process owner'">
         <mat-accordion multi="true">
 
@@ -290,6 +310,9 @@
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/eligibility-requests">Eligibility
                 Requests</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/accreditation-requests">Qualification
+                Requests</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/govt-accredit-requests">Govt.
+                Accreditation
                 Requests</a>
             </mat-nav-list>
           </mat-expansion-panel>

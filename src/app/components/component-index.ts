@@ -58,3 +58,7 @@ export { CeoProposalComponent } from './ceo-proposal/ceo-proposal.component';
 export { GmProposalComponent } from './gm-proposal/gm-proposal.component';
 export { GmHomeComponent } from './gm-home/gm-home.component';
 export { DmpamHomeComponent } from './dmpam-home/dmpam-home.component';
+export { GovtAccreditRequestsComponent } from './govt-accredit-requests/govt-accredit-requests.component';
+export { GovtAgencyHomeComponent } from './govt-agency-home/govt-agency-home.component';
+
+export { ViewGovtAgencyRequestComponent } from './view-govt-agency-request/view-govt-agency-request.component';

@@ -4,64 +4,67 @@
     <span class="example-spacer"></span>
   </mat-toolbar-row>
 </mat-toolbar>
-<mat-card style="margin: 20px;">
+<mat-card class="m-20 p-2">
   <mat-card-content>
-    <pre *ngIf="eligibilityFlag === 'Under Review' || eligibilityFlag === 'Not Initiated'">
-      You must apply for <code><a color="primary" routerLink="/fip-eligibility">Eligibility Accreditation</a></code>
-      
-      in order to proceed for <code><a color="primary" href="javascript: void(0);">Qualification Accreditation</a></code> 
-      
-      once your <code id="answer">Accredication Status</code> is set you can to apply for projects.
-    </pre>
-    <pre *ngIf="eligibilityFlag === 'Approved'">
-    <!-- <pre> -->
-      You are eligible for <code><a color="primary" routerLink="/fip-eligibility">Eligibility Accreditation</a></code>
-      
-      now you can apply for <code><a color="primary" routerLink="/fip-qualification">Qualification Accreditation</a></code> 
-      
-      in order to set your <code id="answer">Accredication Status</code> for project posting.
+  <pre *ngIf="canInitiate && (eligibilityFlag === 'Under Review' || eligibilityFlag === 'Not Initiated')">
+  You must apply for <code><a color="primary" routerLink="/fip-eligibility">Eligibility Accreditation</a></code>
+  
+  in order to proceed for <code><a color="primary" href="javascript: void(0);">Qualification Accreditation</a></code> 
+  
+  once your <code id="answer">Accredication Status</code> is set you can to apply for projects.
+  </pre>
+  <pre *ngIf="canInitiate && eligibilityFlag === 'Approved'">
+  You are eligible for <code><a color="primary" routerLink="/fip-eligibility">Eligibility Accreditation</a></code>
+  
+  now you can apply for <code><a color="primary" routerLink="/fip-qualification">Qualification Accreditation</a></code> 
+  
+  in order to set your <code id="answer">Accredication Status</code> for project posting.
+  </pre>
+    <pre *ngIf="canInitiate === false">
+    You are <code><span id="answer">Accredited</span></code> for <code><span id="answer">Project Posting</span></code>. 
     </pre>
   </mat-card-content>
 </mat-card>
 
-<div class="box-heading">
-  <span>Eligibility Request</span>
-</div>
-<div class="row m-20">
-  <div class="col-md-3" (click)="goToRoute('eligibility-requests')">
-    <mat-card>
-      <mat-card-content>
-        <div class="box">
-          <div class="heading">
-            <h6>Status</h6>
+<div *ngIf="loggedUser?.eligibileFlag !== null">
+  <div class="box-heading">
+    <span>Eligibility Request</span>
+  </div>
+  <div class="row m-20">
+    <div class="col-md-3" (click)="goToRoute('eligibility-requests')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Status</h6>
+            </div>
+            <div class="value">
+              <span>{{'Draft'}}</span>
+              <!-- <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+            </div>
           </div>
-          <div class="value">
-            <span>{{'Draft'}}</span>
-            <!-- <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="box-heading">
+    <span>Qualifciation Request</span>
+  </div>
+  <div class="row m-20">
+    <div class="col-md-3" (click)="goToRoute('accreditation-requests')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Status</h6>
+            </div>
+            <div class="value">
+              <span>{{'Draft'}}</span>
+              <!-- <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+            </div>
           </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
 </div>
-<div class="box-heading">
-  <span>Qualifciation Request</span>
-</div>
-<div class="row m-20">
-  <div class="col-md-3" (click)="goToRoute('accreditation-requests')">
-    <mat-card>
-      <mat-card-content>
-        <div class="box">
-          <div class="heading">
-            <h6>Status</h6>
-          </div>
-          <div class="value">
-            <span>{{'Draft'}}</span>
-            <!-- <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner> -->
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
-</div>
-

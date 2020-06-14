@@ -29,6 +29,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   userQualificationStatus: string;
   appRouteActive: any = null;
   themeName: any = null;
+  accredited: any = null;
+  canInitiate: any = null;
+  orgName: any = null;
   checked: boolean = false;
 
   addMobileClasses: boolean = false;
@@ -43,35 +46,40 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     this.loading = true;
     this.currentUser = JSON.parse(localStorage.getItem('user'));
-    if (this.currentUser) {
-      this._authStore.setLoginState(true);
-      this._authStore.setEligibleFlag(this.currentUser.eligibileFlag);
-      this._authStore.setAuthToken(this.currentUser.authToken);
-    }
+    console.log("APP COMPONENT USER:--", this.currentUser);
+    // if (this.currentUser) {
+    //   this._authStore.setEligibleFlag(this.currentUser.eligibileFlag);
+    //   this._authStore.setAuthToken(this.currentUser.authToken);
+    //   // this._authStore.setAuthToken(this.currentUser.authToken);
+    // }
   }
-
+  
   ngAfterViewInit() {
     this._router.events
-      .subscribe((event) => {
-        if (event instanceof NavigationStart) {
-          this.loading = true;
-        }
-        else if (
-          event instanceof NavigationEnd ||
-          event instanceof NavigationCancel
+    .subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.loading = true;
+      }
+      else if (
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel
         ) {
           this.loading = false;
         }
       });
-  }
-
-  ngOnInit() {
-    // console.log("APP COMPONENT");
-    this._authStore.setThemeName('material-base-theme');
-    if (this.currentUser) {
+    }
+    
+    ngOnInit() {
+      // console.log("APP COMPONENT");
+      this._authStore.setThemeName('material-base-theme');
+      if (this.currentUser) {
+        this._authStore.setLoginState(true);
       this._authStore.setUserRole(this.currentUser.role);
       this._authStore.setEligibleFlag(this.currentUser.eligibileFlag);
       this._authStore.setQualificationFlag(this.currentUser.qualificationFlag);
+      this._authStore.setAccredited(this.currentUser.accredited);
+      this._authStore.setCanInitiate(this.currentUser.canInitiate);
+      this.orgName = this.currentUser.orgName.toLowerCase();
       this.subscriptions.add(
         this._authStore.state$.subscribe((auth) => {
           this.loggedUser = auth.auth.loggedUser;
@@ -81,6 +89,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           this.userEligibleStatus = auth.auth.eligibaleFlag;
           this.userQualificationStatus = auth.auth.qualifiationFlag;
           this.checked = auth.auth.checked;
+          this.accredited = auth.auth.accredited;
+          this.canInitiate = auth.auth.canInitiate;
           this.themeName = auth.auth.checkedThemeName;
           this.addMobileClasses = auth.auth.applyMobileClasses;
           if (this.themeName === 'unicorn-dark-theme') {
@@ -91,7 +101,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
             this._overlayContainer.getContainerElement().classList.add('unicorn-light-theme');
             this._overlayContainer.getContainerElement().classList.remove('unicorn-dark-theme');
             this._overlayContainer.getContainerElement().classList.remove('material-base-theme');
-            
+
           } else if (this.themeName === 'material-base-theme') {
             this._overlayContainer.getContainerElement().classList.remove('unicorn-light-theme');
             this._overlayContainer.getContainerElement().classList.remove('unicorn-dark-theme');

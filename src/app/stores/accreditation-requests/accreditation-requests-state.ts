@@ -92,17 +92,10 @@ const REQUESTS = [
 
 export class AccreditationRequestState {
   requests: {
-    userRef: string,
-    formSubmitData: any,
-    formData: any,
-    status: string,
-    formIdentity: string,
-    startDate: string,
-    endDate: string,
-    previousReview: string,
-    currentReview: string,
-    requestKey: string,
-    userUpdateFlag: boolean,
-    rating: number,
+    id: string,
+    forUser: any,
+    assignee: any,
+    assigned: any,
+    pending: any,
   }[] = REQUESTS;
 }

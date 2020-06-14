@@ -1,14 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, EventEmitter, Output, HostListener } from '@angular/core';
 import { Subscription, from } from "rxjs";
-import { filter, count } from "rxjs/operators";
-import { SurveysStore } from "../../stores/surveys/surveys-store";
 import { AuthStore } from "../../stores/auth/auth-store";
-import { SmeStore } from "../../stores/sme/sme-store";
-import { AccreditationRequestStore } from "../../stores/accreditation-requests/accreditation-requests-store";
 import * as _ from "lodash";
 import { fipIntimationsStore } from "../../stores/fip-intimations/fip-intimations-store";
 import { fipIntimationsState } from "../../stores/fip-intimations/fip-intimations-state";
-import { setCommentValue, shareStoreReplay } from "../../stores/CurrentCommentReplay";
+import { setCommentValue } from "../../stores/CurrentCommentReplay";
 import {
   trigger,
   style,
@@ -17,18 +13,16 @@ import {
   query,
   stagger
 } from '@angular/animations';
-import { SurveysService } from "../../services/surveys.service";
 import { Router } from "@angular/router";
-import { SmeService } from "../../services/sme.service";
 import { AccreditationRequestService } from "../../services/accreditation-request.service";
 import { SettingsService } from "../../services/settings.service";
-import { Formio } from "formiojs";
+import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 
 @Component({
   selector: 'app-fip-qualification',
   templateUrl: './fip-qualification.component.html',
   styleUrls: ['./fip-qualification.component.css'],
-  providers: [],
+  providers: [ConfirmModelService],
   animations: [
     trigger('pageAnimations', [
       transition(':enter', [
@@ -76,244 +70,74 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   justSubmittedId: any = null;
   justSubmittedName: any = null;
 
+  accredited: any = false;
+  canInitiate: any = false;
+  userThematicAreas: any = null;
+
+
 
   @Output() fipComments: any = [];
 
   constructor(
-    private _surveysStore: SurveysStore,
     private _authStore: AuthStore,
-    private _smeStore: SmeStore,
     private _router: Router,
-    private _surveysService: SurveysService,
     private _fipIntimationsStore: fipIntimationsStore,
-    private _smeService: SmeService,
-    private _accreditationRequestStore: AccreditationRequestStore,
     private _accreditationRequestService: AccreditationRequestService,
     private _settingsService: SettingsService,
+    private _confirmModelService: ConfirmModelService,
   ) {
   }
 
   ngOnInit() {
-    this.loggedUser = JSON.parse(localStorage.getItem('user'));
-    console.log(this.loggedUser.username)
-    // this._smeService.getAllSmes().subscribe(
-    //   result => {
-    //     // console.log("ALL SMES FROM APi:--", result);
-    //     let smesArray = [];
-    //     if (result['sectionInfos']) {
-    //       result['sectionInfos'].forEach(element => {
-    //         var object = {
-    //           name: element.sectionName,
-    //           userRef: element.userName,
-    //           formGenerated: element.formGenerated,
-    //           key: element.sectionKey,
-    //           formIdentity: element.formIdentity,
-    //         }
-    //         if (object.formIdentity && object.formIdentity != 'eligibilty')
-    //           smesArray.push(object);
-    //       });
-    //       this._smeStore.addAllSmes(smesArray);
-    //     }
-    //   },
-    //   error => { }
-    // );
-    // this._surveysService.getAllSurveys().subscribe(
-    //   result => {
-    //     let surveysArray = []
-    //     // console.log("ALL SURVEYS FROM API:--", result['formInfoList']);
-    //     if (result['formInfoList']) {
-    //       result['formInfoList'].forEach(element => {
-    //         var object = {
-    //           name: element.sectionName,
-    //           smeRef: element.sectionKey,
-    //           formIdentity: element.formIdentity,
-    //           passScore: element.passingScore,
-    //           totalScore: element.totalScore,
-    //           display: element.displayType,
-    //           page: element.page,
-    //           numPages: element.numOfPages,
-    //           components: JSON.parse(element.component),
-    //         }
-    //         surveysArray.push(object)
-    //       });
-    //       this._surveysStore.addAllForms(surveysArray);
-    //     }
-    //     this._accreditationRequestService.getAllAccreditationRequests().subscribe(
-    //       result => {
-    //         console.log("RESULT FROM ALL API REQUESTS:--", result['accreditationInfos']);
-    //         let tempRequestsArray = [];
-    //         if (result['accreditationInfos']) {
-    //           result['accreditationInfos'].forEach(element => {
-    //             var object = {
-    //               userRef: element.userName,
-    //               formSubmitData: JSON.parse(element.formSubmitData),
-    //               formData: element.formData,
-    //               status: element.status,
-    //               formIdentity: element.sectionKey,
-    //               startDate: element.startDate,
-    //               endDate: element.endDate,
-    //               previousReview: element.prevReview,
-    //               currentReview: element.currentReview,
-    //               requestKey: element.requestKey,
-    //               userUpdateFlag: element.userUpdateFlag,
-    //               rating: element.ratings,
-    //             }
-    //             tempRequestsArray.push(object);
-    //           })
-    //         }
-    //         this._accreditationRequestStore.addAllRequests(tempRequestsArray);
-    //         // this.getRequestsFromApi();
-    //         this.setDefaults();
-    //       },
-    //       error => {
-    //         console.log("ERROR FROM ALL REQUESTS:--", error);
-    //       }
-    //     );
-    //   },
-    //   error => {
-    //     console.log("ERROR SURVEYS API:--", error);
-    //   }
-    // );
-
-    setTimeout(() => {
-      this._authStore.setRouteName('FIP-QUALIFICATION');
-    });
-
     this.Subscription.add(
       this._authStore.state$.subscribe(data => {
         this.qualificationFlag = data.auth.qualifiationFlag;
+        this.accredited = data.auth.accredited;
+        this.canInitiate = data.auth.canInitiate;
         console.log("QUALIFICATION FLAG:--", data.auth, this.qualificationFlag);
       })
     );
-
-    // this.Subscription.add(
-    //   this._smeStore.state$.subscribe(data => {
-    //     this.allSmes = data.smes;
-    //     console.log("ALL SECTiONS:--", this.allSmes);
-    //     // this.groupType = this.allSmes[0].key;
-    //     this.allSectionsCount = this.allSmes.length;
-    //   })
-    // );
-
-    // this.Subscription.add(
-    //   this._accreditationRequestStore.state$.subscribe(data => {
-    //     var count1 = 0;
-    //     var count2 = 0;
-    //     this.allRequests = [];
-    //     this.allRequests = data.requests;
-    //     console.log("ALL REQUESTS IN SUBSCRIBE:--", this.allRequests, data);
-    //     if (data.requests.length) {
-    //       from(data.requests).pipe(
-    //         filter((request: any) =>
-    //           request.status === 'pending' &&
-    //           request.requestKey === 'qualification' &&
-    //           request.userRef === this.loggedUser.username
-    //         ),
-    //       ).subscribe((request) => {
-    //         // this.pendingSectionsCount = this.pendingSectionsCount + 1;
-    //         count1 = count1 + 1;
-    //         console.log(request);
-    //         // this.allRequests.push(request);
-    //         // console.log("PENDING REQESTED:---", this.pendingSectionsCount);
-    //       }).unsubscribe();
-    //       from(data.requests).pipe(
-    //         filter((request: any) =>
-    //           request.status === 'submit' &&
-    //           request.requestKey === 'qualification' &&
-    //           request.userRef === this.loggedUser.username
-    //         ),
-    //       ).subscribe((request) => {
-    //         // this.submitSectionsCount = this.submitSectionsCount + 1;
-    //         count2 = count2 + 1;
-    //         console.log(request);
-    //       }).unsubscribe();
-    //       this.pendingSectionsCount = count1;
-    //       this.submitSectionsCount = count2;
-    //       console.log("SUBMITTED REQESTED:---", this.submitSectionsCount, this.pendingSectionsCount);
-    //     }
-    //   })
-
-    // );
-
-
-    this.Subscription.add(
-      this._fipIntimationsStore.state$.subscribe(data => {
-        // this.allInitimations['intimations'] = data.intimations;
-        // const result = _.filter(data.intimations, { intimation_status: 'pending', userRef: this.loggedUser.email });
-        this.allInitimations['intimations'] = data.intimations;
-        console.log("ALL INTIMATIONS FROM USER:--", this.allInitimations);
-      })
-    );
-
-    // shareStoreReplay.subscribe((c) => {
-    //   this.currentIntimation = c;
-    // })
-
-    this.loadingApi = true;
-    if (this.qualificationFlag === 'Not Initiated') {
-      this._settingsService.getAccrediattionCommence().subscribe(
-        (result: any) => {
-          console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
-          // this.allSections = result.sections;
-          // this.allSmes = result.sections.map((c) => {
-          //   return {
-          //     ...c,
-          //     template: JSON.parse(c.template)
-          //   }
-          // })
-          // this.groupType = this.allSmes[0];
-          // this.form = this.allSmes[0].template;
-          // this.allSectionsCount = this.allSmes.length;
-          // this.loadingApi = false;
-          this.getCommenceFromApi(result.id);
-        },
-        error => {
-          this.loadingApi = false;
-          console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
-        }
-      );
+    if (this.canInitiate === false) {
+      this._router.navigate(['fip-home']);
     } else {
-      this.getQualificationRequest(null);
+      this.loggedUser = JSON.parse(localStorage.getItem('user'));
+      setTimeout(() => {
+        this._authStore.setRouteName('FIP-QUALIFICATION');
+      });
+      this.Subscription.add(
+        this._fipIntimationsStore.state$.subscribe(data => {
+          this.allInitimations['intimations'] = data.intimations;
+          console.log("ALL INTIMATIONS FROM USER:--", this.allInitimations);
+        })
+      );
+      if (this.qualificationFlag === 'Not Initiated') {
+        this.loadingApi = true;
+        this._settingsService.getAccrediattionCommence().subscribe(
+          (result: any) => {
+            console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
+            this.getCommenceFromApi(result.id);
+            this.openThematicModel();
+          },
+          error => {
+            this.loadingApi = false;
+            console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
+          }
+        );
+      } else {
+        this.getQualificationRequest(null);
+        this.openThematicModel();
+      }
     }
-
-
   }
 
   ngAfterViewInit() {
     // console.log("FIP QUALIFICATION STARTED:---", this.loggedUser)
-    if (this.loggedUser.eligibileFlag === 'Not Initiated' || this.loggedUser.eligibileFlag === 'Under Review') {
-      this._router.navigate(['fip-home']);
+    if (this.canInitiate === true) {
+      if (this.loggedUser.eligibileFlag === 'Not Initiated' || this.loggedUser.eligibileFlag === 'Under Review') {
+        this._router.navigate(['fip-home']);
+      }
     }
-
   }
-
-  // ngAfterContentInit() {
-
-  //   this.groupType = this.allSmes[0];
-  //   this.form = this.allSmes[0].template;
-  //   if (this.groupType.data !== null) {
-  //     this.form.exists = true;
-  //     this.secondForm = this.allSmes[0].data;
-  //   } else {
-  //     this.form.exists = false;
-  //     this.secondForm = null;
-  //   }
-  //   console.log("RESULT FROM WITHOUT COMMECNCE:---", this.secondForm, this.form, this.groupType);
-  // }
-
-  // ngAfterContentChecked() {
-  //   this.groupType = this.allSmes[0];
-  //   this.form = this.allSmes[0].template;
-  //   if (this.groupType.data !== null) {
-  //     this.form.exists = true;
-  //     this.secondForm = this.allSmes[0].data;
-  //   } else {
-  //     this.form.exists = false;
-  //     this.secondForm = null;
-  //   }
-  //   console.log("RESULT FROM WITHOUT COMMECNCE:---", this.secondForm, this.form, this.groupType);
-
-  // }
 
   getCommenceFromApi(commenceId) {
     this.userQualificationRequestId = commenceId;
@@ -416,57 +240,10 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   }
 
   setDefaults() {
-    // if (this.groupType == null) {
-    //   this.secondForm = null;
-    //   this.groupType = this.allSmes[0].key;
-    //   var resultForm = _.find(this.allProfiles, { 'smeRef': this.groupType });
-    //   var request = _.find(this.allRequests, { 'formIdentity': this.groupType, 'userRef': this.loggedUser.username });
-    //   this.form = resultForm;
-    //   if (request) {
-    //     const flag = _.find(this.allInitimations.intimations, { userRef: this.loggedUser.email, formIdentity: this.groupType })
-    //     if (flag) {
-    //       setCommentValue(flag.endDate, flag.formIdentity, flag.comments);
-    //     } else {
-    //       setCommentValue('', '', []);
-    //     }
-    //     this.secondForm = request.formSubmitData;
-    //     if (!request.userUpdateFlag) {
-    //       this.form.exists = true;
-    //     } else {
-    //       this.form.exists = false;
-    //     }
-    //   } else {
-    //     this.form.exists = false;
-    //   }
-    // } else {
-    // this.secondForm = null;
-    // var resultForm = _.find(this.allProfiles, { 'smeRef': this.groupType });
-    // var request = _.find(this.allRequests, { 'formIdentity': this.groupType, 'userRef': this.loggedUser.username });
-    // this.form = resultForm;
-    // if (request) {
-    //   const flag = _.find(this.allInitimations.intimations, { userRef: this.loggedUser.email, formIdentity: this.groupType })
-    //   if (flag) {
-    //     setCommentValue(flag.endDate, flag.formIdentity, flag.comments);
-    //   } else {
-    //     setCommentValue('', '', []);
-    //   }
-    //   this.secondForm = request.formSubmitData;
-    //   if (!request.userUpdateFlag) {
-    //     this.form.exists = true;
-    //   } else {
-    //     this.form.exists = false;
-    //   }
-    // } else {
-    //   this.form.exists = false;
-    // }
-    // }
     console.log(this.groupType);
-    // this.justSubmittedName = null;
-    // this.justSubmittedId = null;
     this.justSubmittedId = this.groupType ? this.groupType.id : null;
     this.justSubmittedName = this.groupType ? this.groupType.name : null;
     this.form = this.groupType.template;
-    // this.secondForm = this.groupType.data;
     if (this.groupType.data !== null) {
       this.form.exists = true;
       this.secondForm = this.groupType.data;
@@ -488,72 +265,55 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     // });
   }
 
+  openThematicModel() {
+    const options = {
+      title: 'Select Thematic Areas!',
+      message: 'Select one or more areas to get Accredit for!',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: false,
+      disableClose: true,
+      selectThematic: true,
+      areas: null,
+    };
+    if (this.accredited === false && this.canInitiate === true) {
+      this._settingsService.getAllThematicAreas().subscribe(
+        (result: any) => {
+          options.areas = result;
+          this._confirmModelService.open(options);
+          this._confirmModelService.confirmed().subscribe(confirmed => {
+            console.log("CONFIRMED FROM MODEL", confirmed);
+            if (confirmed === false) {
+              this._router.navigate(['fip-home']);
+            }
+          });
+        },
+        error => {
+          options.areas = [];
+          this._confirmModelService.open(options);
+          this._confirmModelService.confirmed().subscribe(confirmed => {
+            console.log("CONFIRMED FROM MODEL", confirmed);
+            if (confirmed === false) {
+              this._router.navigate(['fip-home']);
+            }
+          });
+          console.log("ERROR THEMATIC AREAS:--", error);
+        }
+      );
+    }
+  }
+
   onSubmit($event) {
     // console.log("FORM AFTER SUBMIT:---", $event.data, $event, this.form.formIdentity);
     this.secondForm = $event.data;
     this.form.exists = true;
-    // var flag: any = _.find(this.allRequests, { userRef: this.loggedUser.username, formIdentity: this.groupType })
-    // if (!flag) {
-    //   var values = {
-    //     "currentReview": null,
-    //     "endDate": null,
-    //     "formData": 'values',
-    //     "formIdentity": this.form.formIdentity,
-    //     "formSubmitData": this.secondForm,
-    //     "prevReview": null,
-    //     "ratings": 0,
-    //     "requestKey": 'qualification',
-    //     "sectionKey": this.groupType,
-    //     "startDate": null,
-    //     "status": 'pending',
-    //     "userName": this.loggedUser.username,
-    //     "userUpdateFlag": false
-    //   }
-    //   console.log("T+REQUEST FOR API:---", values);
-    //   this._accreditationRequestService.addAccreditationRequest(values).subscribe(
-    //     result => {
-    //       this.form.exists = true;
-    //       console.log("RESULT AFTER ADDING REQUEST:--", result);
-    //       this._accreditationRequestStore.addRequest(
-    //         this.loggedUser.email,
-    //         $event.data,
-    //         this.form,
-    //         'pending',
-    //         this.groupType,
-    //         null,
-    //         null,
-    //         null,
-    //         null,
-    //         'qualification',
-    //         false,
-    //         0
-    //       );
-    //       this.getRequestsFromApi();
-    //     },
-    //     error => {
-    //       console.log("ERROR AFTER ADDING REQUEST:--", error);
-    //     }
-    //   );
-    // } else {
-    //   var object = {
-    //     userRef: this.loggedUser.email,
-    //     submitData: $event.data,
-    //     formIdentity: this.groupType,
-    //     userUpdateFlag: false,
-    //     endDate: new Date(),
-    //   }
-    //   console.log('ALREADY SUBMITTED:--', object, this.currentIntimation);
-    //   this._accreditationRequestStore.unSetUserUpdateFlag(this.loggedUser.email, this.currentIntimation.formIdentity, $event.data);
-    //   this._fipIntimationsStore.updateIntimationStatus(this.loggedUser.email, this.currentIntimation.formIdentity);
-    //   setCommentValue(null, null, []);
-    //   this.form.exists = true;
-    // }
-
     let object = {
       data: JSON.stringify($event.data),
       id: this.groupType.id
     }
-
     this.groupType.reassignmentStatus === 'Pending' ? this.groupType.reassignmentStatus = 'Completed' : this.groupType.reassignmentStatus = null
     // console.log("OBJECT TO STORE:--", object, this.userQualificationRequest[0].id);
     if (this.userQualificationRequestId) {
@@ -578,18 +338,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
           console.log("ERROR AFTER ADDING QUALIFICATION:--", error);
         }
       );
-
     }
-
-    // {
-    //   "sections": [
-    //     {
-    //       "data": "string",
-    //       "id": "string"
-    //     }
-    //   ]
-    // }
-
   }
 
   setInitmationSection(item) {
@@ -630,35 +379,6 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
         console.log("ERROR AFTER ADDING QUALIFICATION:--", error);
       }
     );
-    // tempRequestsArray.push(object);
-    // });
-    // this.allRequests.forEach(element => {
-    //   var object = {
-    //     currentReview: element.currentReview,
-    //     endDate: element.endDate,
-    //     formData: "string",
-    //     formSubmitData: JSON.stringify(element.formSubmitData),
-    //     prevReview: element.previousReview,
-    //     ratings: element.rating,
-    //     sectionKey: element.formIdentity,
-    //     startDate: element.startDate,
-    //     status: "submit",
-    //     userName: element.userRef,
-    //     userUpdateFlag: element.userUpdateFlag,
-    //   }
-    //   // console.log(object)
-    //   this._accreditationRequestService.updateAccreditationRequest(object).subscribe(
-    //     result => {
-    //       console.log("RESULT FROM UPDATE ACCREDTITAION:--", result);
-    //       this._accreditationRequestStore.submitAllRequests(this.loggedUser.username, object.sectionKey);
-    //     },
-    //     error => {
-    //       console.log("ERROR FROM UPDATE ACCREDTITAION:--", error);
-    //     }
-    //   );
-    //   // tempRequestsArray.push(object);
-    // });
-
   }
 
   // @HostListener('window:resize', ['$event'])
@@ -685,5 +405,6 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   //     //  this.sidenav.open();
   //   }
   // }
+
 
 }

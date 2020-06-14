@@ -441,6 +441,25 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Ceo] }
   },
+  {
+    path: 'govt-accredit-requests',
+    loadChildren: () => import('./modules/govt-accredit-requests/govt-accredit-requests.module').then(m => m.GovtAccreditRequestsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po] }
+  },
+  {
+    path: 'govt-agency-home',
+    loadChildren: () => import('./modules/govt-agency-home/govt-agency-home.module').then(m => m.GovtAgencyHomeModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Fip] }
+  },
+  {
+    // path: 'view-govt-agency-request/:requestId',
+    path: 'view-govt-agency-request',
+    loadChildren: () => import('./modules/view-govt-agency-request/view-govt-agency-request.module').then(m => m.ViewGovtAgencyRequestModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po] }
+  },
 ];
 
 @NgModule({
