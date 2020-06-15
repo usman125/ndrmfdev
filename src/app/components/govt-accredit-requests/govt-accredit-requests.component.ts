@@ -40,13 +40,29 @@ export class GovtAccreditRequestsComponent implements OnInit, AfterViewInit, OnD
 
 
   ngOnInit(): void {
-
     this.Subscription.add(
       this._authStore.state$.subscribe(data => {
         this.apiLoading = data.auth.apiCall;
       })
     )
+    this.Subscription.add(
+      this._accreditationRequestStore.state$.subscribe(data => {
+        console.log("AFTER VIEW INIT:--", data.requests);
+        let newArray = [];
+        data.requests.forEach((c) => {
+          if (c.pending) {
+            newArray.push(c);
+          }
+        });
+        this.dataSource = new MatTableDataSource(newArray);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      })
+    );
+    this.getPendingRequests();
+  }
 
+  getPendingRequests() {
     this._authStore.setLoading();
     this._accreditationRequestService.getPendingAccreditation().subscribe(
       (result: any) => {
@@ -64,20 +80,6 @@ export class GovtAccreditRequestsComponent implements OnInit, AfterViewInit, OnD
         this._authStore.removeLoading();
         console.log("ERROR FROM PENDING ACCREDITATIONS:--", error);
       }
-    );
-    this.Subscription.add(
-      this._accreditationRequestStore.state$.subscribe(data => {
-        console.log("AFTER VIEW INIT:--", data.requests);
-        let newArray = [];
-        data.requests.forEach((c) => {
-          if (c.pending) {
-            newArray.push(c);
-          }
-        });
-        this.dataSource = new MatTableDataSource(newArray);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      })
     );
   }
 
@@ -99,7 +101,7 @@ export class GovtAccreditRequestsComponent implements OnInit, AfterViewInit, OnD
 
   trackTask(index: number, item): string {
     // console.log("TRACK BY CALLED:---", index, item)
-    return `${item.id}`;
+    return `${item.id}+${index}`;
   }
 
   ngOnDestroy() {

@@ -33,6 +33,7 @@
             <mat-nav-list>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/users">Users</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/smes">Sections</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/departments">Departments</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/pending-signups">Pending Signups</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/create-survey">Create
                 Templates</a>
@@ -58,7 +59,7 @@
             </mat-nav-list>
           </mat-expansion-panel>
 
-          <mat-expansion-panel [expanded]="true">
+          <!-- <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Projects
@@ -73,7 +74,7 @@
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal-projects">
                 Priliminary Appraisal Requests</a>
             </mat-nav-list>
-          </mat-expansion-panel>
+          </mat-expansion-panel> -->
 
         </mat-accordion>
       </div>
@@ -95,7 +96,7 @@
         </mat-accordion>
         <mat-accordion multi="true">
 
-          <mat-expansion-panel *ngIf="canInitiate === true" [expanded]="true">
+          <mat-expansion-panel *ngIf="orgName === 'fip'" [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Accreditation Requests
@@ -111,22 +112,21 @@
                 routerLink="/fip-qualification">Qualification Management</a>
             </mat-nav-list>
           </mat-expansion-panel>
-          <mat-expansion-panel *ngIf="canInitiate === true" [expanded]="true">
+          <mat-expansion-panel *ngIf="orgName === 'fip'" [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Projects
               </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-nav-list>
-              <a *ngIf="accredited === true" mat-list-item routerLinkActive="active-menu-item"
-                routerLink="/user-projects">Post a
+              <a *ngIf="accredited === true" mat-list-item routerLinkActive="active-menu-item" routerLink="/user-projects">Post a
                 project</a>
               <a *ngIf="accredited === false" mat-list-item disabled href="javascript: void(0);">Post a
                 Project</a>
             </mat-nav-list>
           </mat-expansion-panel>
 
-          <mat-expansion-panel *ngIf="canInitiate === false" [expanded]="true">
+          <mat-expansion-panel *ngIf="orgName === 'govt'" [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Projects

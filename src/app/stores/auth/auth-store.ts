@@ -179,7 +179,7 @@ export class AuthStore extends Store<AuthState> {
     });
   }
 
-  setProjectMonths(months){
+  setProjectMonths(months) {
     this.setState({
       ...this.state,
       auth: {
@@ -189,7 +189,7 @@ export class AuthStore extends Store<AuthState> {
     })
   }
 
-  setCanInitiate(canInitiate){
+  setCanInitiate(canInitiate) {
     this.setState({
       ...this.state,
       auth: {
@@ -199,12 +199,22 @@ export class AuthStore extends Store<AuthState> {
     })
   }
 
-  setAccredited(accredited){
+  setAccredited(accredited) {
     this.setState({
       ...this.state,
       auth: {
         ...this.state.auth,
         accredited: accredited
+      }
+    })
+  }
+
+  setOrgName(name) {
+    this.setState({
+      ...this.state,
+      auth: {
+        ...this.state.auth,
+        orgName: name
       }
     })
   }

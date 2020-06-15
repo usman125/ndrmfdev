@@ -35,7 +35,6 @@ export class UserService {
   }
 
   getAllUsers() {
-    console.log("AUTH TOKEN IN USER SERVICE:--", this.authToken);
     const url = `${AppConfig.apiUrl}/user/`;
     return this._httpClient.get(
       url,

@@ -19,8 +19,7 @@ $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
   color: mat-color($candy-app-primary);
 }
 
-
-.mat-toolbar.mat-primary.no-margin{
+.mat-toolbar.mat-primary.no-margin {
   margin: 0px !important;
   // margin-top: 10px !important;
   width: 100%;
@@ -603,8 +602,21 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
   // color: map_get($mat-red, 800);
 }
 .info-comment {
-  color: #F57F17;
+  color: #f57f17;
   // color: map_get($mat-red, 800);
+}
+
+.tabs-top-container .top-tabs .mat-button-toggle-group .mat-button-toggle-button .mat-button-toggle-label-content {
+  line-height: 30px;
+  padding: 8px 12px;
+  display: flex;
+  // align-items: center;
+  // flex-direction: column;
+  white-space: pre-line;
+  justify-content: center;
+}
+.tabs-top-container .top-tabs .mat-button-toggle-group {
+  overflow-x: hidden;
 }
 
 // .mat-button-toggle-checked {

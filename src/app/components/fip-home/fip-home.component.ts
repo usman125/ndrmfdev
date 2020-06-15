@@ -15,6 +15,7 @@ export class FipHomeComponent implements OnInit, OnDestroy {
   Subscription: Subscription = new Subscription();
 
   loggedUser: any = null;
+  orgName: any = null;
 
   accredited: boolean = false;
   canInitiate: boolean = false;
@@ -36,6 +37,7 @@ export class FipHomeComponent implements OnInit, OnDestroy {
         this.qualificationFlag = data.auth.qualifiationFlag;
         this.accredited = data.auth.accredited;
         this.canInitiate = data.auth.canInitiate;
+        this.orgName = data.auth.orgName;
         // console.log("FLAGS FROM FIP HOME:--", data.auth.eligibaleFlag)
       })
     )

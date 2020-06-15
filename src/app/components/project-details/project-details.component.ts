@@ -137,9 +137,12 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
                 this._authStore.setProjectMonths(c.data.duration);
               }
             }
-            if (result1 !== null) {
-              if (c.data) {
-                this.selectedProjectInfo.pb = c.data;
+            if (this.selectedProjectInfo) {
+
+              if (result1 !== null) {
+                if (c.data) {
+                  this.selectedProjectInfo.pb = c.data;
+                }
               }
             }
             if (c.assigned === false) {
@@ -818,9 +821,9 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       assignToGm: false,
       setStages: true,
     };
-    
+
     this._confirmModelService.open(options);
-    
+
     this._confirmModelService.confirmed().subscribe(confirmed => {
       console.log("MARK TO GM STATUS", confirmed);
       if (confirmed) {
@@ -839,8 +842,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             options.setStages = false;
             options.add = true;
             options.title = 'Successfull!',
-            options.message = 'Project stage has been changed',
-            this._confirmModelService.open(options);
+              options.message = 'Project stage has been changed',
+              this._confirmModelService.open(options);
           },
           error => {
             console.log("ERROR FROM MARK TO GM:--", error);

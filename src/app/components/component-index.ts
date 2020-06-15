@@ -62,3 +62,4 @@ export { GovtAccreditRequestsComponent } from './govt-accredit-requests/govt-acc
 export { GovtAgencyHomeComponent } from './govt-agency-home/govt-agency-home.component';
 
 export { ViewGovtAgencyRequestComponent } from './view-govt-agency-request/view-govt-agency-request.component';
+export { DepartmentsComponent } from './departments/departments.component';

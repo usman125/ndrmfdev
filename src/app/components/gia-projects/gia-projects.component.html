@@ -8,7 +8,7 @@
 <mat-card class="m-20">
   <mat-card-content>
     <mat-form-field *ngIf="allProposalSections">
-      <mat-label>Select Section</mat-label>
+      <mat-label>Select Section(s)</mat-label>
       <mat-select (selectionChange)="smeChanged($event)" placeholder="Select Sections" [formControl]="sections"
         multiple>
         <mat-select-trigger>
@@ -24,7 +24,7 @@
     </mat-form-field>
 
     <mat-card-actions style="padding: 6px;">
-      <button (click)="addSection()" color="primary" mat-raised-button>ADD SECTION</button>
+      <button (click)="addSection()" color="primary" mat-raised-button>ADD GIA SECTION</button>
     </mat-card-actions>
 
   </mat-card-content>
@@ -59,4 +59,4 @@
   </mat-card-actions>
 </mat-card>
 
-<app-project-details></app-project-details>
+<app-project-details [viewType]="viewType"></app-project-details>

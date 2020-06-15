@@ -14,6 +14,7 @@ const AUTH = {
   proMonths: null,
   canInitiate: null,
   accredited: null,
+  orgName: null,
 }
 
 export class AuthState {
@@ -33,5 +34,6 @@ export class AuthState {
     proMonths: any,
     canInitiate: any,
     accredited: any,
+    orgName: any,
   } = AUTH;
 }

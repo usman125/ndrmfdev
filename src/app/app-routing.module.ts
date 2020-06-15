@@ -370,6 +370,12 @@ const routes: Routes = [
     data: { roles: [Role.Admin] }
   },
   {
+    path: 'departments',
+    loadChildren: () => import('./modules/departments/departments.module').then(m => m.DepartmentsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
     path: 'add-extended-appraisal-form/:projectId',
     loadChildren: () => import('./modules/add-extended-appraisal-form/add-extended-appraisal-form.module').then(m => m.AddExtendedAppraisalFormModule),
     canActivate: [AuthGuard],

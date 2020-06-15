@@ -4,24 +4,27 @@
     <span class="example-spacer"></span>
   </mat-toolbar-row>
 </mat-toolbar>
-<mat-card class="m-20 p-2">
+<mat-card class="m-20 p-4">
   <mat-card-content>
-  <pre *ngIf="canInitiate && (eligibilityFlag === 'Under Review' || eligibilityFlag === 'Not Initiated')">
+  <pre *ngIf="orgName === 'fip' && (eligibilityFlag === 'Under Review' || eligibilityFlag === 'Not Initiated')">
   You must apply for <code><a color="primary" routerLink="/fip-eligibility">Eligibility Accreditation</a></code>
   
   in order to proceed for <code><a color="primary" href="javascript: void(0);">Qualification Accreditation</a></code> 
   
   once your <code id="answer">Accredication Status</code> is set you can to apply for projects.
   </pre>
-  <pre *ngIf="canInitiate && eligibilityFlag === 'Approved'">
+  <pre *ngIf="orgName === 'fip' && eligibilityFlag === 'Approved'">
   You are eligible for <code><a color="primary" routerLink="/fip-eligibility">Eligibility Accreditation</a></code>
   
   now you can apply for <code><a color="primary" routerLink="/fip-qualification">Qualification Accreditation</a></code> 
   
   in order to set your <code id="answer">Accredication Status</code> for project posting.
   </pre>
-    <pre *ngIf="canInitiate === false">
-    You are <code><span id="answer">Accredited</span></code> for <code><span id="answer">Project Posting</span></code>. 
+    <pre *ngIf="!accredited && canInitiate === false && orgName === 'govt'">
+    You are not<code><span id="answer">Accredited</span></code> for <code><span id="answer">Project Posting</span></code>. 
+    </pre>
+    <pre *ngIf="accredited && canInitiate === false && orgName === 'govt'">
+    You are <code><span id="answer">Accredited</span></code> for <code><a routerLink="/govt-agency-home">Project Posting</a></code>. 
     </pre>
   </mat-card-content>
 </mat-card>

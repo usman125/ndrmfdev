@@ -30,7 +30,7 @@
   padding: 0 30px;
   padding: 0 30px 30px;
 }
-.project-details{
+.project-details {
   /* padding-bottom: 0px !important; */
 }
 .project-details .field {
@@ -101,7 +101,7 @@ mat-button-toggle-group {
   padding: 25px;
   align-items: center;
   align-content: center;
-  margin: 25px auto;
+  margin: 16px auto 25px;
 }
 .block {
   display: flex;
@@ -118,3 +118,5 @@ mat-button-toggle-group {
 .mat-chip {
   height: auto;
 }
+
+

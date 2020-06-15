@@ -11,6 +11,7 @@ import { Subscription } from "rxjs";
 import { Router } from "@angular/router";
 import { UserService } from "../../services/user.service";
 import { UsersStore } from "../../stores/users/users-store";
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-add-user',
@@ -32,7 +33,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
     private _departmentsStore: DepartmentsStore,
     private _authStore: AuthStore,
     private _userService: UserService,
-    private _usersStore: UsersStore,
+    private _settingsService: SettingsService,
     private _router: Router,
   ) { }
 
@@ -42,6 +43,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
     });
     this._buildAddUserForm();
     this.getRolesAndOrgs();
+    this.getAllDepartments();
     this.Subscription.add(
       this._departmentsStore.state$.subscribe((data) => {
         this.allDepartments = data.departments;
@@ -76,6 +78,22 @@ export class AddUserComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+  getAllDepartments() {
+    // this.apiLoading = true;
+    this._settingsService.getAllDepartments().subscribe(
+      (result: any) => {
+        console.log("RESULT FROM DEPARTMENTS:--", result);
+        this._departmentsStore.addAllDepartments(result);
+        // this.apiLoading = false;
+      },
+      error => {
+        // this.apiLoading = false;
+        console.log("ERROR FROM DEPARTMENTS:--", error);
+      }
+    );
+  }
+
 
   roleChanged($event) {
     console.log("ROLE CHANGED:--", $event, this.addUserForm.value);

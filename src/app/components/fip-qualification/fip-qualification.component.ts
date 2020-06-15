@@ -72,6 +72,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
 
   accredited: any = false;
   canInitiate: any = false;
+  orgName: any = null;
   userThematicAreas: any = null;
 
 
@@ -94,10 +95,11 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
         this.qualificationFlag = data.auth.qualifiationFlag;
         this.accredited = data.auth.accredited;
         this.canInitiate = data.auth.canInitiate;
+        this.orgName = data.auth.orgName;
         console.log("QUALIFICATION FLAG:--", data.auth, this.qualificationFlag);
       })
     );
-    if (this.canInitiate === false) {
+    if (this.orgName === 'govt') {
       this._router.navigate(['fip-home']);
     } else {
       this.loggedUser = JSON.parse(localStorage.getItem('user'));
@@ -132,7 +134,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit() {
     // console.log("FIP QUALIFICATION STARTED:---", this.loggedUser)
-    if (this.canInitiate === true) {
+    if (this.orgName === 'fip') {
       if (this.loggedUser.eligibileFlag === 'Not Initiated' || this.loggedUser.eligibileFlag === 'Under Review') {
         this._router.navigate(['fip-home']);
       }

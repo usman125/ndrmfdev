@@ -1,17 +1,17 @@
 const DEPARTMENTS = [
-  {name:"CEO", key:'ceo'},
-  {name:"P&OG", key:'pog'},
-  {name:"HR", key:'hr'},
-  {name:"Finance", key:'finance'},
-  {name:"FMG", key:'fmg'},
-  {name:"PAM", key:'pam'},
-  {name:"Procurement", key:'proc'},
+  {name:"CEO", id:'ceo'},
+  {name:"P&OG", id:'pog'},
+  {name:"HR", id:'hr'},
+  {name:"Finance", id:'finance'},
+  {name:"FMG", id:'fmg'},
+  {name:"PAM", id:'pam'},
+  {name:"Procurement", id:'proc'},
 ];
 
 export class DepartmentsState {
   departments: {
     name: string, 
-    key: string
-  }[] = DEPARTMENTS;
+    id: string
+  }[] = [];
 }
 

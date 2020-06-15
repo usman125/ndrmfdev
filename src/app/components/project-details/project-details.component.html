@@ -451,7 +451,7 @@
             </div>
             <div class="field">
               <div class="title">Male Benificiaries</div>
-              <div class="value">{{selectedProjectInfo?.pb["benefeceries"][0]["male"]}}</div>
+              <div class="value">{{selectedProjectInfo?.pb ? selectedProjectInfo?.pb["benefeceries"][0]["male"] : null}}</div>
             </div>
           </div>
         </mat-card-content>
@@ -615,100 +615,109 @@
     </div>
     <div class="col-md-12">
       <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary"
-      *ngIf="viewType === 'po' || viewType === 'dm' || viewType === 'propapp' || viewType === 'extapp'">
-      <mat-toolbar-row>
-        <span>Submitted Details</span>
-        <div class="example-spacer"></div>
-      </mat-toolbar-row>
-    </mat-toolbar>
-    <mat-card class="m-20">
-      <mat-card-content>
-        <div class="tabs-top-container">
-          <div class="top-tabs">
-            <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup" vertical="true">
-              <mat-button-toggle (change)="tabChanged(item)" *ngFor="let item of proposalSections; let i = index;"
-                [value]="item">
-                <mat-icon class="mr-2" *ngIf="item.data !== null">done</mat-icon>
-                <mat-icon class="mr-2" *ngIf="item.data === null">feedback</mat-icon>
-                <span>{{item.name}}</span>
-              </mat-button-toggle>
-            </mat-button-toggle-group>
-          </div>
-          <div class="proposaldisplay">
-            <div class="top-info-bar">
-              <span style="display: flex;align-items:center;font-weight: bold;">
-                <mat-icon class="mr-2"
-                  [style.color]="groupType?.reviewStatus === null || groupType?.reviewStatus === 'Pending' ? '#F57F17' : null"
-                  [color]="groupType?.reviewStatus === 'Pending' ? 'warn' : 'accent'">
-                  {{groupType?.reviewStatus === 'Pending' ? 'pending_actions' : groupType?.reviewStatus === null ? 'warning' : 'check'}}
-                </mat-icon>
-                SME:
-                <span id="comment" class="ml-2">{{groupType.sme.name}}</span>
-              </span>
-              <div class="dates">
-                <small *ngIf="groupType.reviewStatus === 'Pending'" style="display: block;font-weight: bold;">
-                  PENDING:
-                  <span class="info-comment ml-1">{{groupType.reviewDeadline | date:'fullDate' | uppercase}}</span>
-                </small>
-                <small *ngIf="groupType.reviewStatus === 'Completed'" style="display: block;font-weight: bold;">
-                  COMPLETED:
-                  <span id="comment"
-                    class="ml-1">{{groupType.reviewCompletedDate | date:'fullDate' | uppercase}}</span>
-                </small>
-                <small *ngIf="groupType.reviewStatus === null" style="display: block;font-weight: bold;">
-                  <span class="info-comment"> NOT ASSIGNED:</span>
-                </small>
+        *ngIf="viewType === 'po' || viewType === 'dm' || viewType === 'propapp' || viewType === 'extapp'">
+        <mat-toolbar-row>
+          <span>Submitted Details</span>
+          <div class="example-spacer"></div>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary"
+        *ngIf="viewType === 'user'">
+        <mat-toolbar-row>
+          <span>Submit(ted) Details</span>
+          <div class="example-spacer"></div>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-card class="m-20">
+        <mat-card-content>
+          <div class="tabs-top-container">
+            <div class="top-tabs">
+              <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup" vertical="true">
+                <mat-button-toggle (change)="tabChanged(item)" *ngFor="let item of proposalSections; let i = index;"
+                  [value]="item">
+                  <!-- <mat-icon class="mr-2" *ngIf="item.data !== null">done</mat-icon>
+                <mat-icon class="mr-2" *ngIf="item.data === null">feedback</mat-icon> -->
+                  <span>{{item.name}}</span>
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+            <div class="proposaldisplay">
+              <div class="top-info-bar" *ngIf="loggedUser?.role !== 'fip'">
+                <span style="display: flex;align-items:center;font-weight: bold;">
+                  <mat-icon class="mr-2"
+                    [style.color]="groupType?.reviewStatus === null || groupType?.reviewStatus === 'Pending' ? '#F57F17' : null"
+                    [color]="groupType?.reviewStatus === 'Pending' ? 'warn' : 'accent'">
+                    {{groupType?.reviewStatus === 'Pending' ? 'pending_actions' : groupType?.reviewStatus === null ? 'warning' : 'check'}}
+                  </mat-icon>
+                  SME:
+                  <span id="comment" class="ml-2">{{groupType.sme.name}}</span>
+                </span>
+                <div class="dates">
+                  <small *ngIf="groupType.reviewStatus === 'Pending'" style="display: block;font-weight: bold;">
+                    PENDING:
+                    <span class="info-comment ml-1">{{groupType.reviewDeadline | date:'fullDate' | uppercase}}</span>
+                  </small>
+                  <small *ngIf="groupType.reviewStatus === 'Completed'" style="display: block;font-weight: bold;">
+                    COMPLETED:
+                    <span id="comment"
+                      class="ml-1">{{groupType.reviewCompletedDate | date:'fullDate' | uppercase}}</span>
+                  </small>
+                  <small *ngIf="groupType.reviewStatus === null" style="display: block;font-weight: bold;">
+                    <span class="info-comment"> NOT ASSIGNED:</span>
+                  </small>
+                </div>
+              </div>
+              <div class="top-form pb-0">
+                <formio *ngIf="form && !formSubmitData && loggedUser.role !== 'admin'" [form]="form"
+                  (submit)="onSubmit($event)"></formio>
+                <formio *ngIf="form && formSubmitData && loggedUser.role !== 'admin'" readOnly="true"
+                  [submission]="{data: formSubmitData}" [form]="form"></formio>
+                <formio *ngIf="form && loggedUser.role === 'admin'" readOnly="true"
+                  [submission]="{data: formSubmitData}" [form]="form"></formio>
               </div>
             </div>
-            <div class="top-form pb-0">
-              <formio *ngIf="form && !formSubmitData && loggedUser.role !== 'admin'" [form]="form"
-                (submit)="onSubmit($event)"></formio>
-              <formio *ngIf="form && formSubmitData && loggedUser.role !== 'admin'" readOnly="true"
-                [submission]="{data: formSubmitData}" [form]="form"></formio>
-              <formio *ngIf="form && loggedUser.role === 'admin'" readOnly="true"
-                [submission]="{data: formSubmitData}" [form]="form"></formio>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <div class="info" class="m-20" style="display: flex;flex-direction: column;">
+            <div class="block">
+              <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">warning</mat-icon>
+              <span style="font-size: 10px;"> Unassigned Sections</span>
+            </div>
+            <div class="block">
+              <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">pending_actions</mat-icon>
+              <span style="font-size: 10px;"> Pending Reviews</span>
+            </div>
+            <div class="block">
+              <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
+              <span style="font-size: 10px;"> Expired Reviews</span>
+            </div>
+            <div class="block">
+              <mat-icon style="font-size: 16px;height:16px;" color="accent">check</mat-icon>
+              <span style="font-size: 10px;"> Submitted Reviews</span>
             </div>
           </div>
-        </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <div class="info" class="m-20" style="display: flex;flex-direction: column;">
-          <div class="block">
-            <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">warning</mat-icon>
-            <span style="font-size: 10px;"> Unassigned Sections</span>
-          </div>
-          <div class="block">
-            <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">pending_actions</mat-icon>
-            <span style="font-size: 10px;"> Pending Reviews</span>
-          </div>
-          <div class="block">
-            <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
-            <span style="font-size: 10px;"> Expired Reviews</span>
-          </div>
-          <div class="block">
-            <mat-icon style="font-size: 16px;height:16px;" color="accent">check</mat-icon>
-            <span style="font-size: 10px;"> Submitted Reviews</span>
-          </div>
-        </div>
-      </mat-card-actions>
-    </mat-card>
+        </mat-card-actions>
+      </mat-card>
 
-    <!-- PROJECT PLAN AND IMPLEMENTATION -->
-    <mat-card class="m-20 p-0">
-      <mat-card-content>
-        <div class="tabs-top-container">
-          <div class="top-tabs">
-            <mat-button-toggle-group [(ngModel)]="costTabsType" #group="matButtonToggleGroup">
-              <mat-button-toggle (change)="costTabChanged(item)" *ngFor="let item of costSections; let i = index;"
-                [value]="item.name">
-                <span>{{item.name}}</span>
-              </mat-button-toggle>
-            </mat-button-toggle-group>
+      <!-- PROJECT PLAN AND IMPLEMENTATION -->
+      <mat-card class="m-20 p-0">
+        <mat-card-content>
+          <!-- <div class="tabs-top-container"> -->
+          <div class="">
+            <!-- <div class="top-tabs"> -->
+            <div class="">
+              <mat-button-toggle-group [(ngModel)]="costTabsType" #group="matButtonToggleGroup">
+                <mat-button-toggle (change)="costTabChanged(item)" *ngFor="let item of costSections; let i = index;"
+                  [value]="item.name">
+                  <span>{{item.name}}</span>
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+            <app-project-plan [proMonths]="proMonths" [show]="show"></app-project-plan>
           </div>
-          <app-project-plan [proMonths]="proMonths" [show]="show"></app-project-plan>
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
 </ng-container>

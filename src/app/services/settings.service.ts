@@ -57,6 +57,21 @@ export class SettingsService {
     );
   }
 
+  getAllDepartments() {
+    const url = `${AppConfig.apiUrl}/setting/department`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
+  addDepartments(data) {
+    const url = `${AppConfig.apiUrl}/setting/department/add`;
+    return this._httpClient.post(
+      url,
+      data
+    );
+  }
+
   addSectionTemplate(sectionId, values) {
     console.log("VALUES IN SERVICE:--", values);
     var template = {

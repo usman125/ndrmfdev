@@ -104,7 +104,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             result['user']['roles'] :
             [{ id: result['user']['orgId'], name: result['user']['orgName'] }],
           orgId: result['user']['orgId'],
-          orgName: result['user']['orgName'],
+          orgName: result['user']['orgName'].toLowerCase(),
           org: [{ 'id': result['user']['orgId'], 'name': result['user']['orgName'] }],
           authToken: result['accessToken'],
           canInitiate: null,
@@ -119,6 +119,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this._authStore.setAuthToken(this.user.authToken);
         this._authStore.setUserRole(this.user.role);
         this._authStore.setThemeName(this.themeName);
+        this._authStore.setOrgName(this.user.orgName);
 
         this._authStore.setEligibleFlag(this.user.eligibileFlag);
         this._authStore.setQualificationFlag(this.user.qualificationFlag);

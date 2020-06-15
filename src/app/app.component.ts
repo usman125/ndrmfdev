@@ -53,33 +53,33 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     //   // this._authStore.setAuthToken(this.currentUser.authToken);
     // }
   }
-  
+
   ngAfterViewInit() {
     this._router.events
-    .subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        this.loading = true;
-      }
-      else if (
-        event instanceof NavigationEnd ||
-        event instanceof NavigationCancel
+      .subscribe((event) => {
+        if (event instanceof NavigationStart) {
+          this.loading = true;
+        }
+        else if (
+          event instanceof NavigationEnd ||
+          event instanceof NavigationCancel
         ) {
           this.loading = false;
         }
       });
-    }
-    
-    ngOnInit() {
-      // console.log("APP COMPONENT");
-      this._authStore.setThemeName('material-base-theme');
-      if (this.currentUser) {
-        this._authStore.setLoginState(true);
+  }
+
+  ngOnInit() {
+    // console.log("APP COMPONENT");
+    this._authStore.setThemeName('material-base-theme');
+    if (this.currentUser) {
+      this._authStore.setLoginState(true);
       this._authStore.setUserRole(this.currentUser.role);
       this._authStore.setEligibleFlag(this.currentUser.eligibileFlag);
       this._authStore.setQualificationFlag(this.currentUser.qualificationFlag);
       this._authStore.setAccredited(this.currentUser.accredited);
       this._authStore.setCanInitiate(this.currentUser.canInitiate);
-      this.orgName = this.currentUser.orgName.toLowerCase();
+      this._authStore.setOrgName(this.currentUser.orgName);
       this.subscriptions.add(
         this._authStore.state$.subscribe((auth) => {
           this.loggedUser = auth.auth.loggedUser;
@@ -93,6 +93,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           this.canInitiate = auth.auth.canInitiate;
           this.themeName = auth.auth.checkedThemeName;
           this.addMobileClasses = auth.auth.applyMobileClasses;
+          this.orgName = auth.auth.orgName;
           if (this.themeName === 'unicorn-dark-theme') {
             this._overlayContainer.getContainerElement().classList.remove('unicorn-light-theme');
             this._overlayContainer.getContainerElement().classList.remove('material-base-theme');

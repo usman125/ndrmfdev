@@ -1,16 +1,12 @@
 <mat-card class="m-20">
   <mat-card-content>
-    <!-- <div class="row-flex"> -->
-    <!-- <mat-form-field class="p-2"> -->
     <mat-form-field>
       <mat-label>Area Name</mat-label>
       <input type="text" matInput placeholder="e.g. Health" [(ngModel)]="areaName">
     </mat-form-field>
-    <button *ngIf="!apiLoading" [disabled]="!areaName" mat-raised-button color="primary"
-      (click)="goToAdd()">ADD</button>
-    <div *ngIf="apiLoading && areaName" class="p-3">
+    <button [disabled]="!areaName || apiLoading" mat-raised-button color="primary" (click)="goToAdd()">ADD NEW</button>
+    <!-- <div *ngIf="apiLoading && areaName" class="p-3">
       <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
-    </div>
-    <!-- </div> -->
+    </div> -->
   </mat-card-content>
 </mat-card>

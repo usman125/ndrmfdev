@@ -43,6 +43,16 @@
               [formControl]="addUserForm.controls['password']" />
           </mat-form-field>
 
+          <mat-form-field>
+            <mat-label>Select Department</mat-label>
+            <select matNativeControl [formControl]="addUserForm.controls['department']" formControlName="department">
+              <option value="" selected></option>
+              <option *ngFor="let department of allDepartments" [value]="department.id">
+                {{department.name}}
+              </option>
+            </select>
+          </mat-form-field>
+
           <div class="row">
             <div class="col-md-6">
               <mat-card style="width: 90%;">

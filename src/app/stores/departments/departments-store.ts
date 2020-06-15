@@ -10,7 +10,7 @@ export class DepartmentsStore extends Store<DepartmentsState> {
 
   addDepartment(
     name: string,
-    key: string,
+    id: string,
   ): void {
     this.setState({
       ...this.state,
@@ -18,9 +18,18 @@ export class DepartmentsStore extends Store<DepartmentsState> {
         ...this.state.departments,
         {
           name: name,
-          key: key,
+          id: id,
         }
       ]
+    });
+  }
+
+  addAllDepartments(
+    departments
+  ): void {
+    this.setState({
+      ...this.state,
+      departments: departments
     });
   }
 }

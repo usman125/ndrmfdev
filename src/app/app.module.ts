@@ -115,6 +115,7 @@ import { JwtModule } from "@auth0/angular-jwt";
 // import { AssignSectionsProcessComponent } from './components/assign-sections-process/assign-sections-process.component';
 // import { PendingSignupsComponent } from './components/pending-signups/pending-signups.component';
 import { NoRightClickDirective } from './services/no-right-click.directive';
+// import { DepartmentsComponent } from './components/departments/departments.component';
 
 export function tokenGetter() {
   let user = JSON.parse(localStorage.getItem('user'));
@@ -131,7 +132,8 @@ export function tokenGetter() {
     LoginComponent,
     NoHeaderLayoutComponent,
     AddProjectComponent,
-    NoRightClickDirective
+    NoRightClickDirective,
+    // DepartmentsComponent
     // ViewGovtAgencyRequestComponent,
     // GovtAgencyHomeComponent,
     // GovtAccreditRequestsComponent,
