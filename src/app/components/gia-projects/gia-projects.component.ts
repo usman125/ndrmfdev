@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from "rxjs";
 import { ProposalSectionsStore } from "../../stores/proposal-sections/proposal-sections-store";
@@ -10,11 +10,13 @@ import { ProjectService } from 'src/app/services/project.service';
 import { UsersStore } from 'src/app/stores/users/users-store';
 import { UserService } from 'src/app/services/user.service';
 import { AuthStore } from 'src/app/stores/auth/auth-store';
+import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 
 @Component({
   selector: 'app-gia-projects',
   templateUrl: './gia-projects.component.html',
-  styleUrls: ['./gia-projects.component.css']
+  styleUrls: ['./gia-projects.component.css'],
+  providers: [ConfirmModelService]
 })
 export class GiaProjectsComponent implements OnInit, OnDestroy {
 
@@ -24,16 +26,23 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
   allProposalForms: any = [];
   allUsers: any = [];
   selectedProjectId: any = null;
+  sectionStats: any = null;
   selectedProject: any = null;
   content: any = null;
+  generalRemarks: any = null;
+  assignedSection: any = null;
+  loggedUser: any = null;
+
   sections = new FormControl();
+  reviewUsers = new FormControl();
 
   apiLoading: boolean = false;
 
   appraisalDoc: any = [];
+  reviewersArray: any = [];
 
 
-  @Output() viewType: string = 'extapp';
+  @Input() viewType: string = 'add-gia';
 
   constructor(
     private _userService: UserService,
@@ -42,15 +51,18 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
     private _activatedRoute: ActivatedRoute,
     private _authStore: AuthStore,
+    private _confirmModelService: ConfirmModelService,
   ) { }
 
   ngOnInit() {
+    this.loggedUser = JSON.parse(localStorage.getItem('user'));
     this._activatedRoute.paramMap.subscribe(params => {
       this.selectedProjectId = params.get("projectId");
       console.log("SELCTED PROJECT ID IN GIA IS:--", this.selectedProjectId);
     });
     this.Subscription.add(
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
+        this.apiLoading = true;
         this.selectedProject = data.selectedProject;
         console.log("SELECTED PROJECT IN STORE:--", this.selectedProject);
         if (this.selectedProject) {
@@ -61,54 +73,70 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
               this.appraisalDoc = this.selectedProject.gia.data;
             }
           }
+          var reviewsCount = 0;
+          var assignedUsers = [];
+          if (this.selectedProject.gia.reviews !== null) {
+            for (let i = 0; i < this.selectedProject.gia.reviews.length; i++) {
+              var key = this.selectedProject.gia.reviews[i];
+              if (key.comments !== null) {
+                reviewsCount = reviewsCount + 1;
+              } else {
+                assignedUsers.push(key.assignee);
+              }
+              if (key.assigned === true) {
+                this.assignedSection = key;
+              }
+            }
+          }
+          this.reviewUsers.patchValue(assignedUsers, { onlySelf: true });
+          this.sectionStats = {
+            reviewsCount
+          }
+          this.apiLoading = false;
+          console.log("REVIEW COUNT + ASSIGNED:--", reviewsCount, assignedUsers);
         }
       })
     );
     this.getAllUsers();
+    this.getProjectDetails();
+  }
+
+  getProjectDetails() {
+    this.apiLoading = true;
+    this._projectService.getSingleProject(this.selectedProjectId).subscribe(
+      (result: any) => {
+        this._primaryAppraisalFormsStore.addSelectedProject(result);
+        // console.log("PROJECT DETAILS FROM DATABASE:--", this.selectedProject);
+        this.apiLoading = false;
+      },
+      error => {
+        console.log("ERROR DETAILS FROM DATABASE:--", error);
+      },
+    );
   }
 
   smeChanged($event) {
     console.log("SME CHNAGED:--", $event);
   }
 
-  getAllUsers(){
-    this._userService.getAllUsers().subscribe(
+  getAllUsers() {
+    this._userService.getAllDepartmentUsers().subscribe(
       (result: any) => {
-        this._authStore.removeLoading();
-        let mainArray = [];
-        mainArray.push(result);
-        let usersArray = [];
-        for (let i = 0; i < result.length; i++) {
-          var object = {
-            firstName: result[i].firstName,
-            lastName: result[i].lastName,
-            email: result[i].email,
-            username: result[i].username,
-            password: result[i].password || null,
-            role: result[i].roles ?
-              result[i].roles[0] ?
-                result[i].roles[0].name.toLowerCase() : 'FIP'.toLowerCase()
-              : null,
-            smeRef: null,
-            department: result[i].departmentId || null,
-            active: result[i].enabled,
-            eligibileFlag: false,
-            qualificationFlag: false,
-            roles: result[i].roles,
-            orgId: result[i].orgId,
-            orgName: result[i].orgName,
-            org: [{ 'id': result[i].orgId, 'name': result[i].orgName }]
+        console.log("RESULT DEPARTMENT USERS:--", result);
+        this.allUsers = [];
+        for (var key of Object.keys(result)) {
+          let object = {
+            name: null,
+            users: []
           }
-          usersArray.push(object);
+          console.log(key + " -> " + result[key])
+          object.name = key;
+          for (let i = 0; i < result[key].length; i++) {
+            object.users.push(result[key][i]);
+          }
+          this.allUsers.push(object);
         }
-        this._usersStore.setAllUsers(usersArray);
-
-        this.Subscription.add(
-          this._usersStore.state$.subscribe(data => {
-            this.allUsers = data.users;
-            console.log("ALL USERS ARE:--", this.allUsers);
-          })
-        );
+        console.log("USERS FOR DROP DOWN:---", this.allUsers);
       },
       error => {
         this._authStore.removeLoading();
@@ -120,21 +148,23 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
   addSection() {
     var object = {
       content: this.content,
-      forms: null
+      forms: []
     }
-    for (let i = 0; i < this.sections.value.length; i++) {
-      if (typeof (this.sections.value[i].template) === 'string') {
-        this.sections.value[i].template = JSON.parse(this.sections.value[i].template);
-      } else {
-        this.sections.value[i].template = this.sections.value[i].template;
+    if (this.sections.value) {
+      for (let i = 0; i < this.sections.value.length; i++) {
+        if (typeof (this.sections.value[i].template) === 'string') {
+          this.sections.value[i].template = JSON.parse(this.sections.value[i].template);
+        } else {
+          this.sections.value[i].template = this.sections.value[i].template;
+        }
+        if (typeof (this.sections.value[i].data) === 'string') {
+          this.sections.value[i].data = JSON.parse(this.sections.value[i].data);
+        } else {
+          this.sections.value[i].data = this.sections.value[i].data;
+        }
       }
-      if (typeof (this.sections.value[i].data) === 'string') {
-        this.sections.value[i].data = JSON.parse(this.sections.value[i].data);
-      } else {
-        this.sections.value[i].data = this.sections.value[i].data;
-      }
+      object.forms = this.sections.value;
     }
-    object.forms = this.sections.value;
     this.appraisalDoc.push(object);
     console.log("APPRESIAL DOC:--", this.appraisalDoc);
     this.content = null;
@@ -142,9 +172,24 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
   }
 
   submitGia() {
-    this._projectService.submitGia(this.selectedProjectId, { data: JSON.stringify(this.appraisalDoc) }).subscribe(
+    const options = {
+      title: 'Successfull!',
+      message: 'GIA saved',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
+    };
+    this._projectService.submitGia(
+      this.selectedProjectId,
+      {
+        data: JSON.stringify(this.appraisalDoc),
+        reviewers: this.reviewersArray
+      }
+    ).subscribe(
       (result: any) => {
         console.log("RESULT AFTER SUBMIT GIA:---", result);
+        this._confirmModelService.open(options);
       },
       error => {
         console.log("RESULT AFTER SUBMIT GIA:---", error);
@@ -152,8 +197,90 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
     );
   }
 
+  addUsersForReview() {
+    const options = {
+      title: 'Assign Users For Reviews!',
+      message: 'Select a due date and click "OK"',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: true,
+    };
+
+    let reviewersArray = [];
+
+    if (this.reviewUsers.value) {
+      for (let i = 0; i < this.reviewUsers.value.length; i++) {
+        reviewersArray.push(this.reviewUsers.value[i].id)
+      }
+    }
+    console.log("REVIEW ARRAY:--", reviewersArray);
+
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      if (confirmed) {
+        this.reviewersArray = reviewersArray;
+        this.submitGia();
+        console.log("CONFIRMED FROM ASSIGN REVIEWS MODEL", confirmed);
+      }
+    });
+  }
+
+  markGiaToGm() {
+    const options = {
+      title: 'Mark GIA to GM!',
+      message: 'Select a due date and click "OK"',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: true,
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      if (confirmed) {
+        console.log("CONFIRMED FROM MARK GIA MODEL", confirmed);
+      }
+    });
+  }
+
   removeEntry(i) {
     this.appraisalDoc.splice(i, 1);
+  }
+
+  addReview($event) {
+    console.log("CHANGE CALYED:--", $event);
+    this.generalRemarks = $event;
+  }
+
+  submitGiaReviews() {
+    this._projectService.submitGiaReview(
+      this.selectedProjectId,
+      {
+        comments: this.generalRemarks
+      }
+    ).subscribe(
+      result => {
+        console.log("RESULT AFTER ADDING REVIEW:--", result);
+        this._primaryAppraisalFormsStore.updateGiaReview(this.assignedSection, this.generalRemarks);
+        this.generalRemarks = null;
+      },
+      error => {
+        console.log("ERROR AFTER ADDING REVIEW:--", error);
+      }
+    )
+  }
+
+
+  compareSmeObjects(o1: any, o2: any): boolean {
+    // console.log("COMPARE SME:--", o1, o2)
+    if (o2) {
+      return o1.name === o2.name && o1.id === o2.id;
+    }
+    return false;
   }
 
 

@@ -99,7 +99,7 @@
     <!-- OFFER LETTER -->
     <button *ngIf="data?.offerLetter" mat-raised-button (click)="cancel()" color="warn"
       class="m-2">{{data.cancelText | uppercase}}</button>
-    <button *ngIf="data?.offerLetter" [disabled]="!data.endDate" mat-raised-button (click)="uploadOfferLetter('ASSIGN')"
+    <button *ngIf="data?.offerLetter" [disabled]="!data.endDate" mat-raised-button (click)="uploadOfferLetter('ASSIGN', data.endDate)"
       color="primary" class="m-2">{{data.confirmText | uppercase}}</button>
 
 

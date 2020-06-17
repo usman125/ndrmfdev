@@ -118,7 +118,7 @@
             <mat-form-field>
               <mat-label>Select SME</mat-label>
               <mat-select [compareWith]="compareSmeObjects" [(ngModel)]="obj.sme" (ngModelChange)="smeChanged($event)">
-                <mat-option *ngFor="let sme of smeUsers;" [value]="sme">
+                <mat-option [disabled]="compareSmeObjects" *ngFor="let sme of smeUsers;" [value]="sme">
                   {{sme.name}}
                 </mat-option>
               </mat-select>

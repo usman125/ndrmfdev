@@ -1,0 +1,27 @@
+<mat-toolbar class="mat-elevation-z8" color="primary">
+  <mat-toolbar-row>
+    <span>Fill Checklist</span>
+    <span class="example-spacer"></span>
+    <button mat-raised-button color="accent" (click)="goBack()">
+      <mat-icon>undo</mat-icon> Go Back
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-card class="m-20">
+  <mat-card-content>
+    <div *ngIf="!apiLoading">
+      <formio (submit)="onSubmit($event)" *ngIf="selectedProject?.giaChecklist?.data === null"
+        [form]="selectedRequestTemplate"></formio>
+      <formio (submit)="onSubmit($event)" *ngIf="selectedProject?.giaChecklist?.data !== null"
+        [form]="selectedRequestTemplate" readOnly="true" [submission]="{data: selectedProject.giaChecklist.data}">
+      </formio>
+      <div *ngIf="selectedRequestTemplate === null">
+        <span id="answer">No entry selected</span>
+      </div>
+    </div>
+    <div *ngIf="apiLoading">
+      <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
+    </div>
+  </mat-card-content>
+</mat-card>

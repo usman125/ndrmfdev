@@ -340,7 +340,9 @@ export class PrimaryAppraisalFormsState {
     subStatus: any,
     submittedAt: any,
     id: any,
+    gia: any,
     implementationPlan: any,
+    giaChecklist: any,
   } = null;
 }
 

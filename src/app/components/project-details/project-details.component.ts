@@ -80,6 +80,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   /** Allow you to add handler after its completion. Bubble up response text from remote. */
   // @Output() complete = new EventEmitter<string>();
 
+  giaDoc: any = [];
+
 
   constructor(
     private _proposalSectionsStore: ProposalSectionsStore,
@@ -454,6 +456,22 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     fileUpload.click();
   }
 
+  uploadGiaDoc() {
+    const fileUpload = document.getElementById('giaDocUpload') as HTMLInputElement;
+    fileUpload.onchange = () => {
+      for (let index = 0; index < fileUpload.files.length; index++) {
+        const file = fileUpload.files[index];
+        this.giaDoc.push({
+          data: file, state: 'in',
+          inProgress: false, progress: 0, canRetry: false, canCancel: true
+        });
+      }
+      // this.uploadFiles();
+      console.log("Uploaded Files:---", this.files);
+    };
+    fileUpload.click();
+  }
+
   fillApprasial() {
     this._router.navigate(['/fill-primary-appraisal', this.selectedProjectId]);
   }
@@ -778,6 +796,70 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   }
 
+  uploadGIA() {
+    const options = {
+      title: 'Select a due date for the Signing!',
+      message: 'By Clicking "OK" GIA will be generated',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: false,
+      offerLetter: true,
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("UPLOAD GIA DOCUMENT", confirmed);
+      if (confirmed) {
+        this._projectService.appriveGia(this.selectedProjectId, confirmed.endDate.toISOString()).subscribe(
+          result => {
+            console.log("RESULT UPDATINGGIA:--", result);
+            this.uploadTacMoms('GIA', 'yesgia');
+            this._primaryAppraisalFormsStore.addGiaCheckList(confirmed.endDate);
+          },
+          error => {
+            console.log("ERROR FROM UPDATINGGIA:--", error);
+          }
+        );
+      }
+    });
+
+  }
+
+  extendGIATimeline() {
+    const options = {
+      title: 'Select a due date for the Signing!',
+      message: 'By Clicking "OK" signing timeline will be extended.',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: false,
+      offerLetter: true,
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("UPLOAD GIA DOCUMENT", confirmed);
+      if (confirmed) {
+        this._projectService.appriveGia(this.selectedProjectId, confirmed.endDate.toISOString()).subscribe(
+          result => {
+            console.log("TIME LINE EXTENDED:--", result);
+          },
+          error => {
+            console.log("ERROR TIME LINE EXTENSION:--", error);
+          }
+        );
+      }
+    });
+
+  }
+
   approvePreApprasial() {
     const options = {
       title: 'Approve Preliminary Appraisal!',
@@ -876,6 +958,10 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         if (type === 'yesbod') {
           this.updateStageMoms('OFFER_LETTER', 'Offer Letter');
         }
+        if (type === 'yesgia') {
+          this.updateStageMoms('GIA_CHECKLIST', 'Checklist to FIP');
+
+        }
       },
       error => {
         console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
@@ -893,6 +979,14 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         console.log("ERROR AFTER UPDATING MOM STAUS:--", error);
       }
     );
+  }
+
+  viewGia() {
+    this._router.navigate(['/gia-appraisal', this.selectedProjectId]);
+  }
+
+  goToGiaChecklist() {
+    this._router.navigate(['view-gia-checklist', this.selectedProjectId]);
   }
 
   assignSectionsSelectStore($event) {

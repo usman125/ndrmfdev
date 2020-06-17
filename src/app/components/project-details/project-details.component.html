@@ -142,6 +142,65 @@
         </mat-card-actions>
       </mat-card>
 
+      <!-- GIA CARD -->
+      <mat-toolbar
+        *ngIf="(selectedProject?.status === 'GIA' || selectedProject?.status === 'Checklist to FIP') && loggedUser?.role === 'process owner'"
+        class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+        <mat-toolbar-row>
+          <span>{{selectedProject?.status === 'Checklist to FIP' ? 'Uploaded Final GIA' : 'Upload Final GIA'}}</span>
+          <div class="example-spacer"></div>
+          <mat-chip-list *ngIf="selectedProject?.gia.data !== null">
+            <mat-chip (click)="viewGia()" color="primary" selected>View GIA</mat-chip>
+          </mat-chip-list>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-card class="m-20 p-3"
+        *ngIf="(selectedProject?.status === 'GIA' || selectedProject?.status === 'Checklist to FIP') && loggedUser?.role === 'process owner'">
+        <mat-card-content>
+          <div class="input-box mt-3" *ngIf="selectedProject?.status === 'GIA'">
+            <ul>
+              <li *ngFor="let file of files" style="list-style-type: none;">
+                <span id="file-label">
+                  {{file.data.name}}
+                </span>
+              </li>
+            </ul>
+            <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple"
+              accept="{{accept}}" style="display: none;" />
+            <button mat-raised-button color="warn" (click)="uploadFile()">
+              <mat-icon>file_upload</mat-icon>
+              {{'Upload File(s)'}}
+            </button>
+          </div>
+          <mat-chip-list *ngIf="selectedProject?.status === 'Checklist to FIP'">
+            <mat-chip *ngIf="selectedProject?.giaChecklist?.data === null" color="warn" selected>
+              Checklist Pending: {{selectedProject?.giaChecklist?.deadline | date:'fullDate'}}
+            </mat-chip>
+            <mat-chip *ngIf="selectedProject?.giaChecklist?.data !== null" color="accent" selected>
+              Checklist Submitted
+            </mat-chip>
+          </mat-chip-list>
+        </mat-card-content>
+        <mat-card-actions>
+          <button *ngIf="selectedProject?.status === 'GIA'" mat-button color="primary" (click)="uploadGIA()">
+            <mat-icon class="mr-1">description</mat-icon>
+            {{'enable gia checklist' | uppercase}}
+          </button>
+          <button disabled
+            *ngIf="selectedProject?.status === 'Checklist to FIP'  && selectedProject?.giaChecklist?.data === null"
+            mat-button color="primary" (click)="extendGIATimeline()">
+            <mat-icon class="mr-1">alarm</mat-icon>
+            {{'extend timeline for gia checklist' | uppercase}}
+          </button>
+          <a mat-button [routerLink]="['/view-gia-checklist', selectedProjectId]"
+            *ngIf="selectedProject?.status === 'Checklist to FIP' && selectedProject?.giaChecklist?.data !== null"
+            color="primary">
+            <mat-icon class="mr-1">grading</mat-icon>
+            {{'view checklist' | uppercase}}
+          </a>
+        </mat-card-actions>
+      </mat-card>
+
       <!-- PROJECT PROPOSAL SECTION STATS -->
       <mat-toolbar class="mat-elevation-z8" *ngIf="viewType === 'propapp' || viewType === 'po'"
         style="padding: 15px 0px;" color="primary">
@@ -415,6 +474,10 @@
                 <mat-chip *ngIf="selectedProject?.status === 'GIA'" class="ml-3 mt-3" color="warn" selected>
                   GIA Enabled
                 </mat-chip>
+                <mat-chip *ngIf="selectedProject?.status === 'Checklist to FIP'" class="ml-3 mt-3" color="warn"
+                  selected>
+                  GIA Checklist Enabled
+                </mat-chip>
               </mat-chip-list>
             </div>
           </mat-toolbar-row>
@@ -451,7 +514,8 @@
             </div>
             <div class="field">
               <div class="title">Male Benificiaries</div>
-              <div class="value">{{selectedProjectInfo?.pb ? selectedProjectInfo?.pb["benefeceries"][0]["male"] : null}}</div>
+              <div class="value">{{selectedProjectInfo?.pb ? selectedProjectInfo?.pb["benefeceries"][0]["male"] : null}}
+              </div>
             </div>
           </div>
         </mat-card-content>
@@ -613,7 +677,69 @@
 
       </mat-card>
     </div>
+
+    <!-- PROJECCT SUBMITTED DETAILS -->
     <div class="col-md-12">
+      <div *ngIf="viewType === 'user' && selectedProject?.status !== 'Draft'">
+        <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+          <mat-toolbar-row>
+            <span>Pending Actions</span>
+            <div class="example-spacer"></div>
+          </mat-toolbar-row>
+        </mat-toolbar>
+        <mat-card class="m-20">
+          <mat-card-content>
+            <ng-container>
+              <div *ngIf="selectedProject?.giaChecklist !== null && selectedProject?.status === 'Checklist to FIP'">
+                <mat-list>
+                  <mat-list-item>
+                    <mat-icon mat-list-icon *ngIf="selectedProject?.giaChecklist?.data === null">alarm</mat-icon>
+                    <div mat-line *ngIf="selectedProject?.giaChecklist?.data === null">{{'Pending GIA Checklist'}}</div>
+                    <mat-icon mat-list-icon *ngIf="selectedProject?.giaChecklist?.data !== null">assignment_turned_in
+                    </mat-icon>
+                    <div mat-line *ngIf="selectedProject?.giaChecklist?.data !== null">{{'GIA Checklist Submitted'}}
+                    </div>
+                    <div mat-line>{{selectedProject?.giaChecklist?.deadline | date:'fullDate'}}</div>
+                    <div mat-line><a [routerLink]="['/submit-gia-reviews', selectedProjectId]">Print GIA</a></div>
+                  </mat-list-item>
+                </mat-list>
+
+                <div class="input-box mt-3">
+                  <!-- <ul>
+                    <li *ngFor="let file of giaDoc" style="list-style-type: none;">
+                      <span id="file-label">
+                        {{file.data.name}}
+                      </span>
+                    </li>
+                  </ul>
+                  <input class="display-block" type="file" id="giaDocUpload" name="giaDocUpload" multiple="multiple"
+                    accept="{{accept}}" style="display: none;" />
+                  <button [disabled]="selectedProject?.giaChecklist?.data === null" mat-raised-button color="warn"
+                    (click)="uploadGiaDoc()">
+                    <mat-icon>file_upload</mat-icon>
+                    {{'Upload Signed GIA'}}
+                  </button> -->
+                  <button class="ml-2" mat-raised-button color="primary" (click)="goToGiaChecklist()">
+                    <mat-icon>grading</mat-icon>
+                    {{selectedProject?.giaChecklist?.data !== null ? 'View Checklist' : 'Fill Checklist'}}
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="selectedProject?.status === 'Offer Letter'"></ng-container>
+          </mat-card-content>
+          <mat-card-actions>
+            <!-- <div class="info" class="m-20" style="display: flex;flex-direction: column;">
+              <div class="block">
+                <mat-icon style="font-size: 14px;height:14px;">warning</mat-icon>
+                <span style="font-size: 10px;"> You need to submit the signed documents before asked date after filling
+                  checklist</span>
+              </div>
+            </div> -->
+          </mat-card-actions>
+        </mat-card>
+      </div>
+      <!-- SUBMIITED SECTIONS -->
       <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary"
         *ngIf="viewType === 'po' || viewType === 'dm' || viewType === 'propapp' || viewType === 'extapp'">
         <mat-toolbar-row>
@@ -621,8 +747,7 @@
           <div class="example-spacer"></div>
         </mat-toolbar-row>
       </mat-toolbar>
-      <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary"
-        *ngIf="viewType === 'user'">
+      <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary" *ngIf="viewType === 'user'">
         <mat-toolbar-row>
           <span>Submit(ted) Details</span>
           <div class="example-spacer"></div>

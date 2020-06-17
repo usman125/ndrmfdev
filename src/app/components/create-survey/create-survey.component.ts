@@ -10,7 +10,7 @@ import { SettingsService } from "../../services/settings.service";
   selector: 'app-create-survey',
   templateUrl: './create-survey.component.html',
   styleUrls: ['./create-survey.component.css'],
-  providers:[]
+  providers: []
 })
 export class CreateSurveyComponent implements OnInit {
 
@@ -95,7 +95,7 @@ export class CreateSurveyComponent implements OnInit {
 
   fetchSectons(item) {
     if (item) {
-      if (item !== 'QUALIFICATION') {
+      if (item !== 'QUALIFICATION' || item === 'GIA_CHECKLIST') {
         this.createProfileForm.patchValue({
           'passingScore': 0,
           'totalScore': 0,
@@ -157,11 +157,12 @@ export class CreateSurveyComponent implements OnInit {
     values.components = this.form.components
     values.page = this.form.page;
     values.numOfPages = this.form.numPages;
-    this._settingsService.addSectionTemplate(this.selectedSme.id, values).subscribe(
+    let smeId = this.selectedSme ? this.selectedSme.id : null;
+    this._settingsService.addSectionTemplate(smeId, values).subscribe(
       result => {
         console.log("RESULT FROM ADD SURVEY:--", result);
         this.createProfileForm.reset();
-        this.createProfileForm.patchValue({type: 'form'}, {onlySelf: true});
+        this.createProfileForm.patchValue({ type: 'form' }, { onlySelf: true });
         this.form = {
           components: [],
           display: "form",

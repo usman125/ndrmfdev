@@ -20,7 +20,7 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     });
   }
 
-  changeProjectStatus(staus){
+  changeProjectStatus(staus) {
     this.setState({
       ...this.state,
       selectedProject: {
@@ -162,7 +162,53 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     })
   }
 
+  updateGiaReview(section, comments) {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        gia: {
+          ...this.state.selectedProject.gia,
+          reviews: this.state.selectedProject.gia.reviews.map((c) => {
+            if (c.id === section.id) {
+              return {
+                ...c,
+                comments: comments
+              }
+            }
+            return c;
+          })
+        }
+      }
+    })
+  }
 
+  submitGiaCheckList(data) {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        giaChecklist: {
+          ...this.state.selectedProject.giaChecklist,
+          data: data
+        }
+      }
+    })
+  }
+
+  addGiaCheckList(deadline) {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        giaChecklist: {
+          ...this.state.selectedProject.giaChecklist,
+          data: null,
+          deadline: deadline
+        }
+      }
+    })
+  }
 
   addSelectedProject(selectedProject) {
     this.setState({

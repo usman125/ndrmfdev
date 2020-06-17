@@ -63,3 +63,8 @@ export { GovtAgencyHomeComponent } from './govt-agency-home/govt-agency-home.com
 
 export { ViewGovtAgencyRequestComponent } from './view-govt-agency-request/view-govt-agency-request.component';
 export { DepartmentsComponent } from './departments/departments.component';
+export { GiaReviewProjectsComponent } from './gia-review-projects/gia-review-projects.component';
+export { SubmitGiaReviewsComponent } from './submit-gia-reviews/submit-gia-reviews.component';
+
+export { GiaChecklistComponent } from './gia-checklist/gia-checklist.component';
+export { ViewGiaChecklistComponent } from './view-gia-checklist/view-gia-checklist.component';

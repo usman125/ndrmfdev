@@ -10,9 +10,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
-import { ViewGovtAgencyRequestRoutingModule } from './view-govt-agency-request-routing.module';
-import { ViewGovtAgencyRequestComponent } from 'src/app/components/component-index';
 import { FormioModule } from 'angular-formio';
+import { ViewGovtAgencyRequestRoutingModule } from './view-govt-agency-request-routing.module';
+import { ViewGovtAgencyRequestComponent } from '../../components/component-index';
 
 
 @NgModule({

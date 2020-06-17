@@ -41,6 +41,13 @@ export class UserService {
     );
   }
 
+  getAllDepartmentUsers() {
+    const url = `${AppConfig.apiUrl}/user/grouped-by-department`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
   getAllUserOrgs() {
     const url = `${AppConfig.apiUrl}/user/orgs`;
     return this._httpClient.get(

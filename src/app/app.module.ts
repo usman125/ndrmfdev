@@ -36,6 +36,7 @@ import {
   IntimateFip,
   CoffeeElectionComponent,
   AddProjectComponent,
+  // DataFilterPipe
   // ProjectPlanComponent,
 } from './components/component-index';
 
@@ -115,7 +116,13 @@ import { JwtModule } from "@auth0/angular-jwt";
 // import { AssignSectionsProcessComponent } from './components/assign-sections-process/assign-sections-process.component';
 // import { PendingSignupsComponent } from './components/pending-signups/pending-signups.component';
 import { NoRightClickDirective } from './services/no-right-click.directive';
+// import { GiaChecklistComponent } from './components/gia-checklist/gia-checklist.component';
+// import { ViewGiaChecklistComponent } from './components/view-gia-checklist/view-gia-checklist.component';
+// import { SubmitGiaReviewsComponent } from './components/submit-gia-reviews/submit-gia-reviews.component';
+// import { GiaReviewProjectsComponent } from './components/gia-review-projects/gia-review-projects.component';
 // import { DepartmentsComponent } from './components/departments/departments.component';
+// import { ProjectsComponent, DataFilterPipe } from "../../components/component-index";
+// import { NgxPrintModule } from 'ngx-print';
 
 export function tokenGetter() {
   let user = JSON.parse(localStorage.getItem('user'));
@@ -133,6 +140,11 @@ export function tokenGetter() {
     NoHeaderLayoutComponent,
     AddProjectComponent,
     NoRightClickDirective,
+    // GiaChecklistComponent,
+    // ViewGiaChecklistComponent,
+    // SubmitGiaReviewsComponent,
+    // DataFilterPipe
+    // GiaReviewProjectsComponent,
     // DepartmentsComponent
     // ViewGovtAgencyRequestComponent,
     // GovtAgencyHomeComponent,
@@ -175,6 +187,7 @@ export function tokenGetter() {
     ReactiveFormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    // NgxPrintModule,
     MatToolbarModule,
     MatIconModule,
     MatCardModule,
@@ -267,6 +280,7 @@ export function tokenGetter() {
     // TreeComponent,
     // ProjectPlanComponent
     // ProjectPlanModule
+    // DataFilterPipe
   ],
   entryComponents: [
     IntimateFip,

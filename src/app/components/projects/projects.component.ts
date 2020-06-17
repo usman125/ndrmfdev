@@ -6,6 +6,7 @@ import { AddProjectModelService } from "../../services/add-project-model.service
 import { setCurrentProject } from "../../stores/projects/project-replay";
 // import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ProjectService } from "../../services/project.service";
+// import { DataFilterPipe } from "../../pipes/data-filter.pipe";
 
 @Component({
   selector: 'app-projects',
@@ -54,6 +55,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     if (this.loggedUser.role === 'gm') this.getGmProjects();
     if (this.loggedUser.role === 'process owner' && this.viewType !== 'gia') this.getPoProjects();
     if (this.loggedUser.role === 'process owner' && this.viewType === 'gia') this.getGiaProjects();
+    // if (this.viewType === 'gia-review') this.getGiaProjects();
     if (this.loggedUser.role === 'dm pam' && this.viewType === 'dm') this.getDmPamProjects();
     if (this.loggedUser.role === 'dm pam' && this.viewType === 'extapp') this.getExtAppraisalProjects();
     if (this.loggedUser.role === 'dm pam' && this.viewType === 'propapp') this.getAllProjects();

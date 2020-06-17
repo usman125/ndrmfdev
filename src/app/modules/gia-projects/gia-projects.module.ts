@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GiaProjectsRoutingModule } from "./gia-projects-routing.module";
 import { GiaProjectsComponent } from "../../components/component-index";
-import { ProjectsModule } from "../projects/projects.module";
+// import { ProjectsModule } from "../projects/projects.module";
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
@@ -11,7 +11,12 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatIconModule } from "@angular/material/icon";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FormioModule } from "angular-formio";
-import { ProjectDetailsModule } from "../project-details/project-details.module";
+// import { ProjectDetailsModule } from "../project-details/project-details.module";
+import { MatListModule } from '@angular/material/list';
+import { MatInputModule } from '@angular/material/input';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NgxPrintModule } from 'ngx-print';
 
 @NgModule({
   declarations: [
@@ -22,8 +27,8 @@ import { ProjectDetailsModule } from "../project-details/project-details.module"
     FroalaEditorModule.forRoot(),
     FroalaViewModule.forRoot(),
     GiaProjectsRoutingModule,
-    ProjectDetailsModule,
-    ProjectsModule,
+    // ProjectDetailsModule,
+    // ProjectsModule,
     MatCardModule,
     MatToolbarModule,
     MatSelectModule,
@@ -32,6 +37,12 @@ import { ProjectDetailsModule } from "../project-details/project-details.module"
     MatIconModule,
     FormioModule,
     ReactiveFormsModule,
-  ]
+    MatListModule,
+    MatInputModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
+    NgxPrintModule,
+  ],
+  exports: [GiaProjectsComponent]
 })
 export class GiaProjectsModule { }

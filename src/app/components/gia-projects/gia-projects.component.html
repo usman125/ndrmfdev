@@ -1,14 +1,17 @@
 <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
   <mat-toolbar-row>
-    <span>Prepare Project GIA</span>
+    <span>{{viewType === 'add-gia' ? 'Prepare Project GIA' : 'Review Project GIA'}}</span>
     <div class="example-spacer"></div>
+    <small>{{selectedProject?.initiatedBy.name}}</small>
+    <div class="example-spacer"></div>
+    <small>{{selectedProject?.submittedAt | date:'shortDate'}}</small>
   </mat-toolbar-row>
 </mat-toolbar>
-<div class="m-20" [(froalaModel)]="content" [froalaEditor]></div>
-<mat-card class="m-20">
+<div *ngIf="viewType === 'add-gia'" class="m-20" [(froalaModel)]="content" [froalaEditor]></div>
+<mat-card class="m-20" *ngIf="viewType === 'add-gia'">
   <mat-card-content>
     <mat-form-field *ngIf="allProposalSections">
-      <mat-label>Select Section(s)</mat-label>
+      <mat-label>Select Proposal Section(s)</mat-label>
       <mat-select (selectionChange)="smeChanged($event)" placeholder="Select Sections" [formControl]="sections"
         multiple>
         <mat-select-trigger>
@@ -29,34 +32,159 @@
 
   </mat-card-content>
 </mat-card>
+<ng-container>
 
-<mat-card class="m-20">
-  <div class="card-header">
-    <h6> Created GIA </h6>
-    <button (click)="submitGia()" [disabled]="appraisalDoc.length === 0" color="primary" mat-raised-button>SAVE GIA</button>
-  </div>
-  <mat-card-content>
-    <div *ngFor="let item of appraisalDoc;let i = index;">
-      <div class="appraisal-box">
-        <div class="remove-btn">
-          <button (click)="removeEntry(i)" color="warn" mat-mini-fab>
-            <mat-icon>close</mat-icon>
+
+  <div class="row" *ngIf="!apiLoading">
+    <div [ngClass]="{'mt-4': viewType === 'view-gia', 
+                     'col-md-8 pr-0': loggedUser?.role !== 'fip', 
+                     'col-md-12': loggedUser?.role === 'fip'}">
+      <mat-card class="m-20">
+        <div class="card-header">
+          <h5> Created GIA </h5>
+          <button [useExistingCss]="true" printSectionId="print-section" ngxPrint *ngIf="viewType==='add-gia'"
+            color="primary" mat-icon-button>
+            <mat-icon>print</mat-icon>
           </button>
+          <button [useExistingCss]="true" printSectionId="print-section" ngxPrint
+            *ngIf="viewType==='view-gia' && loggedUser?.role === 'fip'" color="primary" mat-icon-button>
+            <mat-icon>print</mat-icon>
+          </button>
+          <!-- <button>
+            <mat-icon>print</mat-icon>
+          </button> -->
+          <button *ngIf="viewType==='add-gia'" (click)=" submitGia()" [disabled]="appraisalDoc.length === 0"
+            color="primary" mat-raised-button>
+            SAVE GIA
+          </button>
+          <mat-chip-list
+            *ngIf="viewType==='view-gia' && assignedSection?.comments !== null && loggedUser?.role !== 'fip'">
+            <mat-chip color="accent" selected>Review Submitted</mat-chip>
+          </mat-chip-list>
+          <mat-chip-list
+            *ngIf="viewType==='view-gia' && assignedSection?.comments === null && loggedUser?.role !== 'fip'">
+            <mat-chip color="warn" selected>Review Pending</mat-chip>
+          </mat-chip-list>
+          <mat-chip-list *ngIf="viewType==='view-gia' && loggedUser?.role === 'fip'">
+            <mat-chip color="warn" selected>Pending: {{selectedProject?.giaChecklist?.deadline | date:'fullDate'}}
+            </mat-chip>
+          </mat-chip-list>
         </div>
-        <div class="content">
-          <div [froalaView]="item.content"></div>
-        </div>
-        <div *ngIf="item.forms.length">
-          <div class="form margin-5 appraisal-box" *ngFor="let form of item.forms">
-            <formio [form]="form.template" [submission]="{data: form.data}" readOnly="true"></formio>
+        <mat-card-content>
+          <div id="print-section">
+            <div *ngFor="let item of appraisalDoc;let i = index;">
+              <div class="appraisal-box">
+                <div class="remove-btn">
+                  <button *ngIf="viewType === 'add-gia'" (click)="removeEntry(i)" color="warn" mat-icon-button>
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+                <div class="content">
+                  <div [froalaView]="item.content"></div>
+                </div>
+                <div *ngIf="item.forms.length">
+                  <div class="form margin-5 appraisal-box" *ngFor="let form of item.forms">
+                    <formio [form]="form.template" [submission]="{data: form.data}" readOnly="true"></formio>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </mat-card-content>
+        <mat-card-actions style="padding: 6px;">
+          <button *ngIf="viewType === 'add-gia'" (click)="submitGia()" [disabled]="appraisalDoc.length === 0"
+            color="primary" mat-raised-button>
+            SAVE GIA
+          </button>
+        </mat-card-actions>
+      </mat-card>
     </div>
-  </mat-card-content>
-  <mat-card-actions style="padding: 6px;">
-    <button (click)="submitGia()" [disabled]="appraisalDoc.length === 0" color="primary" mat-raised-button>SAVE GIA</button>
-  </mat-card-actions>
-</mat-card>
+    <div class="col-md-4 pl-0">
+      <mat-card class="m-20 ml-0" *ngIf="viewType === 'add-gia'">
+        <div class="card-title">Select Users for review</div>
+        <mat-card-content>
+          <mat-form-field>
+            <mat-label>Select User(s)</mat-label>
+            <mat-select matNativeControl [compareWith]="compareSmeObjects" [formControl]="reviewUsers" multiple>
+              <mat-select-trigger>
+                <span *ngFor="let item of reviewUsers.value; let i=index">
+                  <span *ngIf="i===0">{{item.name}}</span>
+                </span>
+                <span *ngIf="reviewUsers.value?.length > 1">
+                  (+{{reviewUsers.value.length - 1}} others)
+                </span>
+              </mat-select-trigger>
+              <mat-optgroup *ngFor="let user of allUsers" [label]="user.name">
+                <mat-option *ngFor="let item of user.users" [value]="item">{{item.name}}</mat-option>
+              </mat-optgroup>
+            </mat-select>
+          </mat-form-field>
+          <mat-chip-list *ngIf="selectedProject?.gia.subStatus" class="mt-2 mb-2">
+            <mat-chip color="accent" selected>{{selectedProject?.gia.subStatus}}</mat-chip>
+          </mat-chip-list>
+        </mat-card-content>
+        <mat-card-actions>
+          <button [disabled]="selectedProject?.gia.status !== 'Pending'  || 
+          selectedProject?.gia.subStatus === 'Reviews Pending' || selectedProject?.gia.data === null" mat-button
+            color="primary" (click)="addUsersForReview()">
+            {{'Assign users' | uppercase}}
+          </button>
+          <!-- <button [disabled]="appraisalDoc.length === 0 || selectedProject?.gia.data === null" mat-button color="warn"
+            (click)="finalizeGia()">
+            {{'Finalize Gia' | uppercase}}
+          </button> -->
+        </mat-card-actions>
+      </mat-card>
+      <mat-card class="m-20 ml-0" *ngIf="viewType === 'add-gia'">
+        <mat-card-content>
+          <mat-list>
+            <!-- <mat-list-item>
+            <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
+            <div mat-line>{{'Assigned Tasks'}}</div>
+            <div mat-line>{{sectionStats?.pendingCount || 0}}</div>
+          </mat-list-item> -->
+            <mat-list-item>
+              <mat-icon mat-list-icon>assignment_returned</mat-icon>
+              <div mat-line>{{'Reviews Submitted'}}</div>
+              <div mat-line>{{sectionStats?.reviewsCount || 0}}</div>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="addUsersForReview()">
+            <!-- <mat-icon class="mr-1">view_module</mat-icon>  -->
+            {{'View comments matrix' | uppercase}}
+          </button>
+        </mat-card-actions>
+      </mat-card>
+      <mat-card style="margin-top:1.5rem!important;" class="m-20 ml-0 mt-4"
+        *ngIf="viewType === 'view-gia' && loggedUser?.role !== 'fip'">
+        <mat-card-title class="mb-2 card-header">
+          <h5> General Remarks </h5>
+        </mat-card-title>
+        <mat-card-content>
+          <mat-form-field class="mb-2" appearance="outline">
+            <mat-label>Add genaral remarks</mat-label>
+            <textarea (ngModelChange)="addReview($event)" matInput [ngModel]="generalRemarks" cols="30" rows="5"
+              placeholder="write your comments..."></textarea>
+          </mat-form-field>
+          <button (click)="submitGiaReviews()" [disabled]="!generalRemarks || assignedSection?.comments !== null"
+            mat-raised-button color="accent">
+            {{'add remarks' | uppercase}}
+          </button>
+        </mat-card-content>
+        <mat-card-actions>
+        </mat-card-actions>
+      </mat-card>
+    </div>
 
-<app-project-details [viewType]="viewType"></app-project-details>
+  </div>
+</ng-container>
+<ng-container>
+  <mat-card *ngIf="apiLoading" class="m-20">
+    <mat-card-content>
+      <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
+    </mat-card-content>
+  </mat-card>
+</ng-container>
+<!-- <app-project-details [viewType]="viewType"></app-project-details> -->

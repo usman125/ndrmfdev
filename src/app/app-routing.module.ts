@@ -460,6 +460,24 @@ const routes: Routes = [
     data: { roles: [Role.Fip] }
   },
   {
+    path: 'gia-review-projects',
+    loadChildren: () => import('./modules/gia-review-projects/gia-review-projects.module').then(m => m.GiaReviewProjectsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po, Role.Ceo, Role.Gm, Role.Sme, Role.Po] }
+  },
+  {
+    path: 'submit-gia-reviews/:projectId',
+    loadChildren: () => import('./modules/submit-gia-reviews/submit-gia-reviews.module').then(m => m.SubmitGiaReviewsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po, Role.Ceo, Role.Gm, Role.Sme, Role.Po, Role.Fip] }
+  },
+  {
+    path: 'view-gia-checklist/:projectId',
+    loadChildren: () => import('./modules/view-gia-checklist/view-gia-checklist.module').then(m => m.ViewGiaChecklistModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po, Role.Ceo, Role.Gm, Role.Sme, Role.Po, Role.Fip] }
+  },
+  {
     // path: 'view-govt-agency-request/:requestId',
     path: 'view-govt-agency-request',
     loadChildren: () => import('./modules/view-govt-agency-request/view-govt-agency-request.module').then(m => m.ViewGovtAgencyRequestModule),

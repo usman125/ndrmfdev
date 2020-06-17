@@ -1,42 +1,35 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProjectsRoutingModule } from "./projects-routing.module";
-import {
-  ProjectsComponent,
-  DataFilterPipe
-} from "../../components/component-index";
+import { GiaReviewProjectsComponent } from 'src/app/components/component-index';
+import { GiaReviewProjectsRoutingModule } from './gia-review-projects-routing.module';
+
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
-// import { MatInputModule } from '@angular/material/label';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
-import {
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
-    ProjectsComponent,
-    DataFilterPipe,
+    GiaReviewProjectsComponent
   ],
   imports: [
     CommonModule,
-    ProjectsRoutingModule,
+    GiaReviewProjectsRoutingModule,
     MatGridListModule,
     MatInputModule,
     MatCardModule,
     MatButtonModule,
-    MatToolbarModule,
     MatIconModule,
+    MatProgressSpinnerModule,
+    MatToolbarModule,
     FormsModule,
     ReactiveFormsModule,
-    MatProgressSpinnerModule,
-  ],
-  exports: [ProjectsComponent]
+    MatChipsModule
+  ]
 })
-export class ProjectsModule { }
+export class GiaReviewProjectsModule { }

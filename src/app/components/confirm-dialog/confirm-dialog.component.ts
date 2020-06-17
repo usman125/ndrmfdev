@@ -73,8 +73,8 @@ export class ConfirmDialogComponent implements OnInit {
     this.close({ status });
   }
 
-  uploadOfferLetter(status) {
-    this.close({ status });
+  uploadOfferLetter(status, endDate) {
+    this.close({ status, endDate });
   }
 
   areaChanged($event) {

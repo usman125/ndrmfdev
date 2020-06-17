@@ -223,6 +223,30 @@ export class ProjectService {
     );
   }
 
+  submitGiaReview(proposalId, data) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${proposalId}/gia/review/add`;
+    return this._httpClient.post(
+      url,
+      data
+    );
+  }
+
+  submitGiaChecklist(proposalId, data) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${proposalId}/gia-checklist/submit`;
+    return this._httpClient.post(
+      url,
+      data
+    );
+  }
+
+  appriveGia(proposalId, date) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${proposalId}/gia?status=APPROVED&checklist-deadline=${date}`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
   uploadFiles(id, stage, file) {
     const url = `${AppConfig.apiUrl}/project-proposal/${id}/attachment/add?stage=${stage}`;
     let body = {

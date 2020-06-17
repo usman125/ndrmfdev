@@ -119,7 +119,8 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-nav-list>
-              <a *ngIf="accredited === true" mat-list-item routerLinkActive="active-menu-item" routerLink="/user-projects">Post a
+              <a *ngIf="accredited === true" mat-list-item routerLinkActive="active-menu-item"
+                routerLink="/user-projects">Post a
                 project</a>
               <a *ngIf="accredited === false" mat-list-item disabled href="javascript: void(0);">Post a
                 Project</a>
@@ -140,6 +141,19 @@
                 project</a>
             </mat-nav-list>
           </mat-expansion-panel>
+
+          <!-- <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                GIA
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/gia-review-projects">
+                Submit GIA Reviews
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel> -->
 
         </mat-accordion>
       </div>
@@ -189,6 +203,23 @@
             </mat-nav-list>
           </mat-expansion-panel>
         </mat-accordion>
+        
+        <mat-accordion multi="true">
+
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                GIA
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/gia-review-projects">
+                GIA Reviews Requests
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </div>
 
       <div class="hero" *ngIf="loggedUserRole === 'dm pam'">
@@ -223,6 +254,23 @@
             </mat-nav-list>
           </mat-expansion-panel>
         </mat-accordion>
+
+        <mat-accordion multi="true">
+
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                GIA
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/gia-review-projects">
+                GIA Reviews Requests
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </div>
 
       <div class="hero" *ngIf="loggedUserRole === 'gm'">
@@ -251,6 +299,22 @@
             </mat-nav-list>
           </mat-expansion-panel>
         </mat-accordion>
+
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                GIA
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/gia-review-projects">
+                GIA Reviews Requests
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </div>
 
       <div class="hero" *ngIf="loggedUserRole === 'ceo'">
@@ -279,6 +343,22 @@
             </mat-nav-list>
           </mat-expansion-panel>
         </mat-accordion>
+
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                GIA
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/gia-review-projects">
+                GIA Reviews Requests
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </div>
 
 
@@ -332,6 +412,22 @@
             </mat-nav-list>
           </mat-expansion-panel>
         </mat-accordion>
+
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                GIA
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/gia-review-projects">
+                GIA Reviews Requests
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </div>
 
     </mat-sidenav>
