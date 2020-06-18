@@ -43,7 +43,8 @@
         </mat-chip-list>
       </mat-card-title>
       <mat-card-content>
-        <formio *ngIf="loggedUser?.role === 'fip' && selectedProject !== null && selectedProject?.preAppraisal.status === 'Pending'"
+        <formio *ngIf="(loggedUser?.role === 'dm pam' || loggedUser?.role === 'process owner') && 
+        selectedProject !== null && selectedProject?.preAppraisal.status === 'Pending'"
           [form]="selectedProject.preAppraisal.template" [submission]="{data:selectedProject.preAppraisal.data}"
           (submit)="onSubmit($event)"></formio>
         <formio *ngIf="selectedProject !== null && selectedProject?.preAppraisal.status === 'Completed'"

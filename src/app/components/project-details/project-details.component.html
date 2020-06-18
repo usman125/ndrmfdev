@@ -182,8 +182,8 @@
           </mat-chip-list>
         </mat-card-content>
         <mat-card-actions>
-          <button *ngIf="selectedProject?.status === 'GIA'" mat-button color="primary" (click)="uploadGIA()">
-            <mat-icon class="mr-1">description</mat-icon>
+          <button [disabled]="files.length === 0" *ngIf="selectedProject?.status === 'GIA'" mat-button color="primary" (click)="uploadGIA()">
+            <mat-icon class="mr-1">grading</mat-icon>
             {{'enable gia checklist' | uppercase}}
           </button>
           <button disabled
@@ -452,11 +452,12 @@
           <mat-toolbar-row>
             <span>Proposal Summary</span>
             <div class="example-spacer"></div>
-            <button *ngIf="!apiLoading && viewType === 'user' && loggedUser.role === 'fip'"
-              [disabled]="(submitSections === proposalSections.length && 
-                  selectedProject?.status === 'Under Review') || (proposalSections.length !== submitSections && selectedProject?.status === 'Draft')" mat-raised-button (click)="submitRequest()">
+            <!-- <button *ngIf="!apiLoading && viewType === 'user' && loggedUser.role === 'fip'" [disabled]="(submitSections === proposalSections.length && 
+                  selectedProject?.status === 'Under Review') || 
+                  (proposalSections.length !== submitSections && 
+                  selectedProject?.status === 'Draft')" mat-raised-button (click)="submitRequest()">
               <mat-icon>publish</mat-icon> SUBMIT
-            </button>
+            </button> -->
             <div class="expiry-sections mb-2" *ngIf="loggedUser.role !== 'fip'">
               <mat-chip-list>
                 <mat-chip *ngIf="selectedProject?.status === 'TAC Meeting'" class="ml-3 mt-3" color="warn" selected>
@@ -751,6 +752,12 @@
         <mat-toolbar-row>
           <span>Submit(ted) Details</span>
           <div class="example-spacer"></div>
+          <button *ngIf="!apiLoading && viewType === 'user' && loggedUser.role === 'fip'" [disabled]="(submitSections === proposalSections.length && 
+                            selectedProject?.status === 'Under Review') || 
+                            (proposalSections.length !== submitSections && 
+                            selectedProject?.status === 'Draft')" mat-raised-button (click)="submitRequest()">
+            <mat-icon>publish</mat-icon> SUBMIT
+          </button>
         </mat-toolbar-row>
       </mat-toolbar>
       <mat-card class="m-20">

@@ -618,6 +618,10 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 .tabs-top-container .top-tabs .mat-button-toggle-group {
   overflow-x: hidden;
 }
+.fr-toolbar.fr-top{
+  border-radius: 0 !important;
+  -webkit-border-radius: 0 !important;
+}
 
 // .mat-button-toggle-checked {
 //   color: #fff !important;

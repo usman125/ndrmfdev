@@ -394,6 +394,10 @@ h6 {
   overflow-x: scroll;
 }
 
+.second-toolbar{
+  display: none !important;
+}
+
 /* .tabs-top-container
   .top-tabs
   .mat-button-toggle-group

@@ -467,7 +467,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         });
       }
       // this.uploadFiles();
-      console.log("Uploaded Files:---", this.files);
+      console.log("Uploaded Files:---", this.giaDoc);
     };
     fileUpload.click();
   }
@@ -824,6 +824,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             console.log("ERROR FROM UPDATINGGIA:--", error);
           }
         );
+      } else {
+        this.files = [];
       }
     });
 

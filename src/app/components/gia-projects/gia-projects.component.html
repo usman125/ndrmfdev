@@ -7,8 +7,8 @@
     <small>{{selectedProject?.submittedAt | date:'shortDate'}}</small>
   </mat-toolbar-row>
 </mat-toolbar>
-<div *ngIf="viewType === 'add-gia'" class="m-20" [(froalaModel)]="content" [froalaEditor]></div>
-<mat-card class="m-20" *ngIf="viewType === 'add-gia'">
+<div *ngIf="viewType === 'add-gia'" class="m-20 mb-0" [(froalaModel)]="content" [froalaEditor]></div>
+<mat-card class="proposal-section" *ngIf="viewType === 'add-gia'">
   <mat-card-content>
     <mat-form-field *ngIf="allProposalSections">
       <mat-label>Select Proposal Section(s)</mat-label>
