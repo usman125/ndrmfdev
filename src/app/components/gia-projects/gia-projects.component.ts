@@ -180,6 +180,16 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
       add: true,
       confirm: false,
     };
+
+    let reviewersArray = [];
+    if (this.reviewUsers.value) {
+      for (let i = 0; i < this.reviewUsers.value.length; i++) {
+        reviewersArray.push(this.reviewUsers.value[i].id)
+      }
+    }
+    this.reviewersArray = reviewersArray;
+    console.log("REVIEW ARRAY:--", reviewersArray);
+
     this._projectService.submitGia(
       this.selectedProjectId,
       {
@@ -190,6 +200,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
       (result: any) => {
         console.log("RESULT AFTER SUBMIT GIA:---", result);
         this._confirmModelService.open(options);
+        this._primaryAppraisalFormsStore.submitGia(this.appraisalDoc);
       },
       error => {
         console.log("RESULT AFTER SUBMIT GIA:---", error);
@@ -207,22 +218,45 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
       confirm: true,
     };
 
-    let reviewersArray = [];
-
-    if (this.reviewUsers.value) {
-      for (let i = 0; i < this.reviewUsers.value.length; i++) {
-        reviewersArray.push(this.reviewUsers.value[i].id)
-      }
-    }
-    console.log("REVIEW ARRAY:--", reviewersArray);
-
 
     this._confirmModelService.open(options);
 
     this._confirmModelService.confirmed().subscribe(confirmed => {
       if (confirmed) {
+        let reviewersArray = [];
+        let storeArray = [];
+        if (this.reviewUsers.value) {
+          for (let i = 0; i < this.reviewUsers.value.length; i++) {
+            var object = {
+              id: null,
+              assignee: this.reviewUsers.value[i],
+              comments: null,
+              assigned: false
+            }
+            storeArray.push(object);
+            reviewersArray.push(this.reviewUsers.value[i].id)
+          }
+        }
         this.reviewersArray = reviewersArray;
-        this.submitGia();
+        console.log("REVIEW ARRAY:--", reviewersArray);
+        this._projectService.submitGia(
+          this.selectedProjectId,
+          {
+            data: JSON.stringify(this.appraisalDoc),
+            reviewers: this.reviewersArray
+          }
+        ).subscribe(
+          (result: any) => {
+            console.log("RESULT AFTER SUBMIT GIA:---", result);
+            options.title = 'Users Assigned Successfully!'
+            options.message = 'click OK to close!'
+            this._confirmModelService.open(options);
+            // this._primaryAppraisalFormsStore.submitGia(this.appraisalDoc);
+          },
+          error => {
+            console.log("RESULT AFTER SUBMIT GIA:---", error);
+          }
+        );
         console.log("CONFIRMED FROM ASSIGN REVIEWS MODEL", confirmed);
       }
     });

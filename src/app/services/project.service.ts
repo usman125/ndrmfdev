@@ -174,6 +174,15 @@ export class ProjectService {
     );
   }
 
+  markToCeo(id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=MARKED_TO_CEO`;
+    const status = 'MARKED_TO_GM';
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
   setProjectStage(id, stage) {
     const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=${stage}`;
     const status = 'MARKED_TO_GM';
@@ -185,6 +194,15 @@ export class ProjectService {
 
   approvePreApparisalByGm(id) {
     const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=PRELIMINARY_APPRAISAL`;
+    const status = 'PRELIMINARY_APPRAISAL';
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
+  approveExtApparisalByGm(id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=EXTENDED_APPRAISAL`;
     const status = 'PRELIMINARY_APPRAISAL';
     return this._httpClient.put(
       url,

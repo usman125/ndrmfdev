@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 })
 export class CeoHomeComponent implements OnInit {
 
+  apiLoading: any = false;
+
   constructor(
     private _router: Router
   ) { }

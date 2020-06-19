@@ -179,8 +179,10 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this.groupType = this.proposalSections[0];
           this.tabChanged(this.groupType);
           this.assignSections.patchValue([this.assignedProposalSections[0]], { onlySelf: true });
-          this.costTabsType = this.costSections[0].name;
-          this.costTabChanged(this.costSections[0]);
+          if (pendingCount === 0) {
+            this.costTabsType = this.costSections[0].name;
+            this.costTabChanged(this.costSections[0]);
+          }
           this.apiLoading = false;
         }
       })
@@ -534,24 +536,38 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   submitRequest() {
-    this.apiLoading = true;
-    this._projectService.updateProjectRequest(
-      {
-        data: JSON.stringify(this.proposalSections[0].data),
-        id: this.proposalSections[0].id
-      },
-      this.selectedProjectId
-    ).subscribe(
-      result => {
-        console.log("RESULT AFTER UPDATING THE REQUEST:---", result);
-        this.selectedProject.status = 'Under Review';
-        this.apiLoading = false;
-      },
-      error => {
-        this.apiLoading = false;
-        console.log("ERROR AFTER UPDATING THE REQUEST:---", error);
-      }
-    )
+    if (this.selectedProject.implementationPlan === null) {
+      const options = {
+        title: 'Save implementation plan first to submit!',
+        message: 'Click OK to exit',
+        cancelText: 'CANCEL',
+        confirmText: 'OK',
+        add: true,
+        confirm: false,
+        setStatus: false,
+      };
+      this._confirmModelService.open(options);
+    } else {
+
+      this.apiLoading = true;
+      this._projectService.updateProjectRequest(
+        {
+          data: JSON.stringify(this.proposalSections[0].data),
+          id: this.proposalSections[0].id
+        },
+        this.selectedProjectId
+      ).subscribe(
+        result => {
+          console.log("RESULT AFTER UPDATING THE REQUEST:---", result);
+          this.selectedProject.status = 'Under Review';
+          this.apiLoading = false;
+        },
+        error => {
+          this.apiLoading = false;
+          console.log("ERROR AFTER UPDATING THE REQUEST:---", error);
+        }
+      );
+    }
   }
 
   viewPreApprasial() {
@@ -583,38 +599,53 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
     this._confirmModelService.confirmed().subscribe(confirmed => {
       console.log("CONFIRMED FROM MODEL", confirmed);
-      for (let i = 0; i < this.proposalSections.length; i++) {
-        let key = this.proposalSections[i];
-        if (key.reviewStatus === 'Completed' || key.reviewStatus === null) {
-          this._projectService.assignProposalSectionTasks(key.id, confirmed).subscribe(
-            (result: any) => {
-              console.log("RESULT ADDING PROPOSAL TASK:--", result);
-              this._proposalSectionsStore.assignTasksToSmes(key.id);
-            },
-            error => {
-              console.log("ERROR ADDING PROPOSAL TASK:--", error);
-            }
-          );
+      if (confirmed) {
+        for (let i = 0; i < this.proposalSections.length; i++) {
+          let key = this.proposalSections[i];
+          if (key.reviewStatus === 'Completed' || key.reviewStatus === null) {
+            this._projectService.assignProposalSectionTasks(key.id, confirmed).subscribe(
+              (result: any) => {
+                console.log("RESULT ADDING PROPOSAL TASK:--", result);
+                this._proposalSectionsStore.assignTasksToSmes(key.id);
+              },
+              error => {
+                console.log("ERROR ADDING PROPOSAL TASK:--", error);
+              }
+            );
+          }
         }
       }
-      // if (confirmed) {
-      //   this.apiLoading = true;
-      //   this._accreditationRequestService.updateAccreditationRequest(this.selectedRequest.id, confirmed.status).subscribe(
-      //     result => {
-      //       this.apiLoading = false;
-      //       console.log("RESULT AFTER UPDATING STATUS:---", result);
-      //     },
-      //     error => {
-      //       this.apiLoading = false;
-      //       console.log("ERROR AFTER UPDATING STATUS:---", error);
-      //     }
-      //   );
-      // }
     });
   }
 
   addAssignedSectionReview() {
     console.log("ADDING REVIEW:--", this.assignSections.value, this.sectionComments);
+    if (this.files.length) {
+      let stage = null;
+      if (this.selectedProject.status === 'Preliminary Appraisal') stage = 'PRELIMINARY_APPRAISAL'
+      if (this.selectedProject.status === 'Extended Appraisal') stage = 'EXTENDED_APPRAISAL'
+      if (this.selectedProject.status === 'TAC Meeting') stage = 'TAC_MEETING'
+      if (this.selectedProject.status === 'RMC Meeting') stage = 'RMC_MEETING'
+      if (this.selectedProject.status === 'BOD Meeting') stage = 'BOD_MEETING'
+      if (this.selectedProject.status === 'Offer Letter') stage = 'OFFER_LETTER'
+      if (this.selectedProject.status === 'GIA') stage = 'GIA'
+      if (this.selectedProject.status === 'Checklist to FIP') stage = 'GIA_CHECKLIST'
+      const fd = new FormData();
+      fd.append(this.param, this.files[0].data);
+      this._projectService.uploadFiles(
+        this.selectedProjectId,
+        stage,
+        fd
+      ).subscribe(
+        (result: any) => {
+          console.log("RESULT AFTER UPLOADING FILE:--", result);
+          this.files = [];
+        },
+        error => {
+          console.log("ERROR AFTER UPLOADING FILE:--", error);
+        }
+      )
+    }
     for (let i = 0; i < this.assignSections.value.length; i++) {
       let key = this.assignSections.value[i];
       if (key.reviewStatus === 'Pending' || key.reviewStatus === null) {
@@ -644,6 +675,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         );
       }
     }
+    this.sectionComments = null;
   }
 
   addUnAssignedSectionReview() {
@@ -667,6 +699,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       if (this.selectedProject.status === 'RMC Meeting') stage = 'RMC_MEETING'
       if (this.selectedProject.status === 'BOD Meeting') stage = 'BOD_MEETING'
       if (this.selectedProject.status === 'Offer Letter') stage = 'OFFER_LETTER'
+      if (this.selectedProject.status === 'GIA') stage = 'GIA'
+      if (this.selectedProject.status === 'Checklist to FIP') stage = 'GIA_CHECKLIST'
       const fd = new FormData();
       fd.append(this.param, this.files[0].data);
       this._projectService.uploadFiles(
@@ -676,8 +710,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       ).subscribe(
         (result: any) => {
           console.log("RESULT AFTER UPLOADING FILE:--", result);
-          const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
-          fileUpload.value = '';
+          // const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
+          // fileUpload.value = '';
           this.files = [];
           this._projectService.submitProposalGeneralReview(
             this.selectedProjectId,
@@ -757,6 +791,37 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           },
           error => {
             console.log("ERROR FROM MARK TO GM:--", error);
+          }
+        );
+      }
+    });
+
+  }
+
+  markToCeo() {
+    const options = {
+      title: 'Mark To CEO!',
+      message: 'By Clicking "Yes" project status will be changed',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: true,
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("MARK TO GM STATUS", confirmed);
+      if (confirmed) {
+        this._projectService.markToCeo(this.selectedProjectId).subscribe(
+          result => {
+            console.log("RESULT FROM MARK TO CEO:--", result);
+            this._primaryAppraisalFormsStore.markToCeo();
+          },
+          error => {
+            console.log("ERROR FROM MARK TO CEO:--", error);
           }
         );
       }
@@ -881,11 +946,42 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       if (confirmed) {
         this._projectService.approvePreApparisalByGm(this.selectedProjectId).subscribe(
           result => {
-            console.log("RESULT FROM MARK TO GM:--", result);
+            console.log("RESULT FROM APPROVE PRE_APPRAISAL:--", result);
             this._primaryAppraisalFormsStore.approvePreApparisalByGm();
           },
           error => {
-            console.log("ERROR FROM MARK TO GM:--", error);
+            console.log("ERROR FROM APPROVE PRE_APPRAISAL:--", error);
+          }
+        );
+      }
+    });
+
+  }
+
+  approveExtApprasial() {
+    const options = {
+      title: 'Approve Extended Appraisal!',
+      message: 'By Clicking "Yes" project status will be changed',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: true,
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("MARK TO GM STATUS", confirmed);
+      if (confirmed) {
+        this._projectService.approveExtApparisalByGm(this.selectedProjectId).subscribe(
+          result => {
+            console.log("RESULT FROM APPROVE EXT_APPRAISAL:--", result);
+            this._primaryAppraisalFormsStore.approveExtApparisalByGm();
+          },
+          error => {
+            console.log("ERROR FROM APPROVE EXT_APPRAISAL:--", error);
           }
         );
       }
@@ -939,36 +1035,53 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   uploadTacMoms(stage, type) {
-    const fd = new FormData();
-    fd.append(this.param, this.files[0].data);
-    this._projectService.uploadFiles(
-      this.selectedProjectId,
-      stage,
-      fd
-    ).subscribe(
-      (result: any) => {
-        console.log("RESULT AFTER UPLOADING FILE MOMS TAC MEETING:--", result);
-        const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
-        fileUpload.value = '';
-        this.files = [];
-        if (type === 'yestac') {
-          this.updateStageMoms('RMC_MEETING', 'RMC Meeting');
+    if (stage !== 'GIA') {
+      const fd = new FormData();
+      fd.append(this.param, this.files[0].data);
+      this._projectService.uploadFiles(
+        this.selectedProjectId,
+        stage,
+        fd
+      ).subscribe(
+        (result: any) => {
+          console.log("RESULT AFTER UPLOADING FILE MOMS TAC MEETING:--", result);
+          // const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
+          // fileUpload.value = '';
+          this.files = [];
+          if (type === 'yestac') {
+            this.updateStageMoms('RMC_MEETING', 'RMC Meeting');
+          }
+          if (type === 'yesrmc') {
+            this.updateStageMoms('BOD_MEETING', 'BOD Meeting');
+          }
+          if (type === 'yesbod') {
+            this.updateStageMoms('OFFER_LETTER', 'Offer Letter');
+          }
+        },
+        error => {
+          console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
         }
-        if (type === 'yesrmc') {
-          this.updateStageMoms('BOD_MEETING', 'BOD Meeting');
+      );
+    } else {
+      const fd = new FormData();
+      fd.append(this.param, this.giaDoc[0].data);
+      this._projectService.uploadFiles(
+        this.selectedProjectId,
+        stage,
+        fd
+      ).subscribe(
+        (result: any) => {
+          console.log("RESULT AFTER UPLOADING FINAL GIA:--", result);
+          this.giaDoc = [];
+          if (type === 'yesgia') {
+            this.updateStageMoms('GIA_CHECKLIST', 'Checklist to FIP');
+          }
+        },
+        error => {
+          console.log("ERROR AFTER UPLOADING FINAL GIA:--", error);
         }
-        if (type === 'yesbod') {
-          this.updateStageMoms('OFFER_LETTER', 'Offer Letter');
-        }
-        if (type === 'yesgia') {
-          this.updateStageMoms('GIA_CHECKLIST', 'Checklist to FIP');
-
-        }
-      },
-      error => {
-        console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
-      }
-    );
+      );
+    }
   }
 
   updateStageMoms(stage1, stage2) {

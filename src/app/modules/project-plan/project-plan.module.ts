@@ -14,6 +14,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { FormioModule } from "angular-formio";
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { FormioModule } from "angular-formio";
     MatToolbarModule,
     ProjectPlanRoutingModule,
     FormioModule,
+    MatProgressSpinnerModule,
   ],
   entryComponents: [],
   exports: [ProjectPlanComponent]

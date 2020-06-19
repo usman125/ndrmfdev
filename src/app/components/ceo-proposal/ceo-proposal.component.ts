@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-ceo-proposal',
@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ceo-proposal.component.css']
 })
 export class CeoProposalComponent implements OnInit {
+
+  @Output() viewType: any = 'ceo';
+  @Output() showAddBtn: boolean = false;
 
   constructor() { }
 

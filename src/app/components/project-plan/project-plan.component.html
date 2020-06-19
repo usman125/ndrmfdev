@@ -10,7 +10,8 @@
     </mat-toolbar-row>
   </mat-toolbar>
 
-  <mat-card *ngIf="loggedUser.role === 'admin' || loggedUser.role === 'fip'" style="margin: 25px;margin-top: 20px !important;">
+  <mat-card *ngIf="loggedUser.role === 'admin' || loggedUser.role === 'fip'"
+    style="margin: 25px;margin-top: 20px !important;">
     <mat-card-content>
 
 
@@ -140,8 +141,8 @@
                   <div class="inputs">
                     <div *ngFor="let item of month.financers;let i =index;">
                       <mat-form-field>
-                        <input [disabled]="loggedUser.role !== 'fip'" (ngModelChange)="costChnaged(node, month)" [placeholder]="item.title"
-                          [(ngModel)]="item.cost" matInput type="number" />
+                        <input [disabled]="loggedUser.role !== 'fip'" (ngModelChange)="costChnaged(node, month)"
+                          [placeholder]="item.title" [(ngModel)]="item.cost" matInput type="number" />
                       </mat-form-field>
                       <div *ngIf="(mI+1)%4 === 0" class="spacer"></div>
                     </div>
@@ -154,8 +155,8 @@
                 (submit)="onSubmit($event, node)" [form]="rfForm"></formio>
               <!-- <formio *ngIf="node.rfEntry && loggedUser.role !== 'fip'" [submission]="{data:getSubmittedData(node)}" [renderOptions]="options"
                 (submit)="onSubmit($event, node)" [form]="rfForm"></formio> -->
-              <formio *ngIf="node.rfEntry && loggedUser.role !== 'fip'" [submission]="{data:getSubmittedData(node)}" readOnly="true"
-                (submit)="onSubmit($event, node)" [form]="rfForm"></formio>
+              <formio *ngIf="node.rfEntry && loggedUser.role !== 'fip'" [submission]="{data:getSubmittedData(node)}"
+                readOnly="true" (submit)="onSubmit($event, node)" [form]="rfForm"></formio>
             </div>
           </mat-tree-node>
 
@@ -184,7 +185,9 @@
         display: flex;
         justify-content: flex-end;
         padding: 15px;">
-        <button [disabled]="allCosts.length === 0" mat-raised-button color="primary" (click)="saveCostingHeads()">SAVE</button>
+        <button [disabled]="selectedProject.implementationPlan !== null || selectedProject?.status !== 'Draft'" *ngIf="!apiLoading" [disabled]="allCosts.length === 0" mat-raised-button color="primary"
+          (click)="saveCostingHeads()">SAVE</button>
+        <mat-progress-spinner mode="indeterminate" diameter="35" *ngIf="apiLoading"></mat-progress-spinner>
       </div>
     </mat-card-actions>
   </mat-card>

@@ -171,6 +171,7 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     // currentProjectReplay.unsubscribe();
+    this.Subscription.unsubscribe();
   }
 
   goBack() {

@@ -79,12 +79,32 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     })
   }
 
+  markToCeo() {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        status: 'Marked to CEO',
+      }
+    })
+  }
+
   approvePreApparisalByGm() {
     this.setState({
       ...this.state,
       selectedProject: {
         ...this.state.selectedProject,
         status: 'Preliminary Appraisal',
+      }
+    })
+  }
+
+  approveExtApparisalByGm() {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        status: 'Extended Appraisal',
       }
     })
   }
@@ -196,6 +216,21 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     })
   }
 
+  submitGia(data) {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        gia: {
+          ...this.state.selectedProject.gia,
+          subStatus: null,
+          status: 'Pending',
+          data: data,
+        }
+      }
+    });
+  }
+
   addGiaCheckList(deadline) {
     this.setState({
       ...this.state,
@@ -215,5 +250,16 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
       ...this.state,
       selectedProject: selectedProject
     })
+  }
+
+  addPipToProject(allCosts) {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        implementationPlan: allCosts
+      }
+    });
+
   }
 }

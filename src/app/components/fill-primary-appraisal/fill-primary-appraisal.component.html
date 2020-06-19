@@ -2,7 +2,8 @@
 
   <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
     <mat-toolbar-row>
-      <span>{{preAppViewType === 'fill' ? 'Submit Primary Appresial' : 'View Primary Appraisal'}}</span>
+      <!-- <span>{{preAppViewType === 'fill' ? 'Submit Primary Appresial' : 'View Primary Appraisal'}}</span> -->
+      <span>{{selectedProject?.preAppraisal?.data === null ? 'Submit Primary Appresial' : 'View Primary Appraisal'}}</span>
       <div class="example-spacer"></div>
       <button class="mr-2" (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })"
         mat-raised-button>

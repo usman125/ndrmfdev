@@ -9,6 +9,7 @@ import { SettingsService } from '../../services/settings.service';
 import { AuthStore } from "../../stores/auth/auth-store";
 import { ProjectService } from 'src/app/services/project.service';
 import { PrimaryAppraisalFormsStore } from 'src/app/stores/primary-appraisal-forms/primary-appraisal-forms-store';
+import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 
 
 export class FoodNode {
@@ -47,7 +48,7 @@ export class ExampleFlatNode {
   selector: 'app-project-plan',
   templateUrl: './project-plan.component.html',
   styleUrls: ['./project-plan.component.css'],
-  providers: [CostSummaryStore]
+  providers: [CostSummaryStore, ConfirmModelService]
 })
 export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   allFinancers: any = [
@@ -105,12 +106,15 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   //   viewOnly: true
   // }
 
+  apiLoading: boolean = false;
+
   constructor(
     public _CostSummaryStore: CostSummaryStore,
     public _settingsService: SettingsService,
     public _authStore: AuthStore,
     public _projectService: ProjectService,
     public _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
+    public _confirmModelService: ConfirmModelService,
     // public _checklistDatabase: ChecklistDatabase,
   ) {
 
@@ -299,6 +303,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   saveCostingHeads() {
+    this.apiLoading = true;
     if (this.loggedUser.role === 'admin') {
       for (let i = 0; i < this.allCosts.length; i++) {
         let object = {
@@ -308,9 +313,11 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log("KEY TO SAVE:--", object);
         this._projectService.addCostingHeads(object).subscribe(
           result => {
+            this.apiLoading = false;
             console.log("RESULT ADDING COSTING HEADS:--", result);
           },
           error => {
+            this.apiLoading = false;
             console.log("ERROR ADDING COSTING HEADS:--", error);
           }
         );
@@ -322,8 +329,20 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       this._projectService.submitPip(object, this.selectedProject.id).subscribe(
         result => {
           console.log("RESULT ADDING PROJECT IMPLEMENTATION PLAN:--", result);
+          const options = {
+            title: 'Implementation Plan has been Sumitted!',
+            message: 'click "OK" to close',
+            cancelText: 'CANCEL',
+            confirmText: 'OK',
+            add: true,
+            confirm: false,
+          };
+          this.apiLoading = false;
+          this._confirmModelService.open(options);
+          this._primaryAppraisalFormsStore.addPipToProject(this.allCosts);
         },
         error => {
+          this.apiLoading = false;
           console.log("ERROR ADDING PROJECT IMPLEMENTATION PLAN:--", error);
         }
       );
@@ -897,7 +916,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getSubmittedData(node) {
-    var submitData = _.find(this.allCosts, {_id: node._id});
+    var submitData = _.find(this.allCosts, { _id: node._id });
     // console.log("GET SUBMITTE DATA FROM FORMIO:---", submitData);
     return submitData.rfEntryData;
   }

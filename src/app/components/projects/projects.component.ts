@@ -53,6 +53,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     // this.getAllProjects();
     if (this.loggedUser.role === 'fip') this.getAllProjects();
     if (this.loggedUser.role === 'gm') this.getGmProjects();
+    if (this.loggedUser.role === 'ceo') this.getCeoProjects();
     if (this.loggedUser.role === 'process owner' && this.viewType !== 'gia') this.getPoProjects();
     if (this.loggedUser.role === 'process owner' && this.viewType === 'gia') this.getGiaProjects();
     // if (this.viewType === 'gia-review') this.getGiaProjects();
@@ -127,6 +128,19 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       },
       error => {
         console.log("ERROR ALL GM PROJECT:---", error);
+      }
+    );
+  }
+
+  getCeoProjects() {
+    this._projectService.getCeoProjects().subscribe(
+      (result: any) => {
+        console.log("RESULT ALL CEO PROJECT:---", result);
+        this._projectsStore.addAllProjects(result);
+        // this.getExtAppraisalProjects();
+      },
+      error => {
+        console.log("ERROR ALL CEO PROJECT:---", error);
       }
     );
   }

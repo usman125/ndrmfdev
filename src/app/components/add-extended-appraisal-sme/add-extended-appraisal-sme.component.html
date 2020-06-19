@@ -1,24 +1,24 @@
 <ng-container>
-  
+
   <mat-card class="m-20 p-4">
     <mat-card-title>
     </mat-card-title>
     <mat-card-content>
       <mat-list>
         <mat-list-item>
-          <mat-icon mat-list-icon>folder</mat-icon>
-          <div mat-line>{{'Total Sections'}}</div>
-          <div mat-line>{{totalSections}}</div>
-        </mat-list-item>
-        <mat-list-item>
-          <mat-icon mat-list-icon>assignment_late</mat-icon>
+          <mat-icon mat-list-icon>pending_actions</mat-icon>
           <div mat-line>{{'Pending'}}</div>
           <div mat-line>{{sectionStats?.pendingCount}}</div>
         </mat-list-item>
         <mat-list-item>
-          <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
+          <mat-icon mat-list-icon>check</mat-icon>
           <div mat-line>{{'Submitted'}}</div>
           <div mat-line>{{sectionStats?.submitCount}}</div>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon mat-list-icon>folder</mat-icon>
+          <div mat-line>{{'Total Sections'}}</div>
+          <div mat-line>{{totalSections}}</div>
         </mat-list-item>
       </mat-list>
     </mat-card-content>
@@ -41,8 +41,9 @@
     <div class="mb-4" *ngFor="let item of appraisalSections">
       <div class="top-info-bar">
         <span style="display: flex;align-items:center;font-weight: bold;">
-          <mat-icon class="mr-2" [color]="item.status === 'Pending' ? 'warn' : 'accent'">
-            {{item.status === 'Pending' ? 'info' : 'check'}}</mat-icon>
+          <mat-icon class="mr-2" [style.color]="item.status === 'Pending' ? '#F57F17' : null"
+            [color]="item.status === 'Pending' ? 'warn' : 'accent'">
+            {{item.status === 'Pending' ? 'pending_actions' : 'check'}}</mat-icon>
           SME:
           <span id="answer" class="ml-2">{{item.sme.name}}</span>
         </span>
@@ -68,8 +69,9 @@
     <div class="mt-5 mb-4 no-submit margin-5" *ngFor="let item of unassignedSections">
       <div class="top-info-bar">
         <span style="display: flex;align-items:center;font-weight: bold;">
-          <mat-icon class="mr-2" [style.color]="item.status === 'Pending' ? '#F57F17' : null" [color]="item.status === 'Pending' ? 'warn' : 'accent'">
-            {{item.status === 'Pending' ? 'info' : 'check'}}</mat-icon>
+          <mat-icon class="mr-2" [style.color]="item.status === 'Pending' ? '#F57F17' : null"
+            [color]="item.status === 'Pending' ? 'warn' : 'accent'">
+            {{item.status === 'Pending' ? 'pending_actions' : 'check'}}</mat-icon>
           SME:
           <span id="answer" class="ml-2">{{item.sme.name}}</span>
         </span>

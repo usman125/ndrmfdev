@@ -379,7 +379,7 @@ const routes: Routes = [
     path: 'add-extended-appraisal-form/:projectId',
     loadChildren: () => import('./modules/add-extended-appraisal-form/add-extended-appraisal-form.module').then(m => m.AddExtendedAppraisalFormModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Dm, Role.Sme, Role.Po] }
+    data: { roles: [Role.Dm, Role.Sme, Role.Po, Role.Gm, Role.Ceo] }
   },
   {
     path: 'extended-appraisal-smes/:projectId',

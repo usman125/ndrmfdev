@@ -119,7 +119,7 @@
               </mat-optgroup>
             </mat-select>
           </mat-form-field>
-          <mat-chip-list *ngIf="selectedProject?.gia.subStatus" class="mt-2 mb-2">
+          <mat-chip-list *ngIf="selectedProject?.gia.subStatus !== null" class="mt-2 mb-2">
             <mat-chip color="accent" selected>{{selectedProject?.gia.subStatus}}</mat-chip>
           </mat-chip-list>
         </mat-card-content>
