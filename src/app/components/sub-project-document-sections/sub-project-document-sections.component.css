@@ -1,0 +1,8 @@
+.section-state {
+  background-color: rgba(235, 235, 235, 0.5);
+  /* padding: 20; */
+}
+.mat-list-item {
+  background: rgba(235, 235, 235, 0.5);
+  margin-bottom: 5px;
+}

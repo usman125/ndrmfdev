@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, Output, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ProposalSectionsStore } from "../../stores/proposal-sections/proposal-sections-store";
-import { ProposalFormsStore } from "../../stores/proposal-forms/proposal-forms-store";
-import { ProposalRequestsStore } from "../../stores/proposal-requests/proposal-requests-store";
+// import { ProposalFormsStore } from "../../stores/proposal-forms/proposal-forms-store";
+// import { ProposalRequestsStore } from "../../stores/proposal-requests/proposal-requests-store";
 import { PrimaryAppraisalFormsStore } from "../../stores/primary-appraisal-forms/primary-appraisal-forms-store";
-import { ProjectsStore } from "../../stores/projects/projects-store";
+// import { ProjectsStore } from "../../stores/projects/projects-store";
 import { Subscription } from "rxjs";
-import { switchMap } from "rxjs/operators";
-import { setCurrentProject, currentProjectReplay } from "../../stores/projects/project-replay";
+// import { switchMap } from "rxjs/operators";
+// import { setCurrentProject, currentProjectReplay } from "../../stores/projects/project-replay";
 import { Router, ActivatedRoute } from "@angular/router";
 import { ConfirmModelService } from "../../services/confirm-model.service";
 import { ProjectService } from "../../services/project.service";
@@ -63,7 +63,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   pendingAppraisalDays: any = null;
 
-  sectionStats: any = null;
+  sectionStats: any = {};
   assignedProposalSections: any = [];
   unassignedProposalSections: any = [];
 
@@ -85,9 +85,9 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private _proposalSectionsStore: ProposalSectionsStore,
-    private _proposalFormsStore: ProposalFormsStore,
-    private _proposalRequestsStore: ProposalRequestsStore,
-    private _projectsStore: ProjectsStore,
+    // private _proposalFormsStore: ProposalFormsStore,
+    // private _proposalRequestsStore: ProposalRequestsStore,
+    // private _projectsStore: ProjectsStore,
     private _confirmModelService: ConfirmModelService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
@@ -111,7 +111,15 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._proposalSectionsStore.state$.subscribe(data => {
         this.apiLoading = true;
-        this.proposalSections = data.sections;
+        this.proposalSections = [];
+        for (let i = 0; i < data.sections.length; i++) {
+          var key = data.sections[i];
+          let result = key.name.match(/Framework/g);
+          // console.log("RESULT IN PROPOSAL SECTIONS", result);
+          if (result === null) {
+            this.proposalSections.push(key);
+          }
+        }
         console.log("PROPOSAL SECTION FROM STORE:---", this.proposalSections);
         let pendingCount = 0;
         let submitCount = 0;
@@ -165,16 +173,32 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
               unassignCount = unassignCount + 1;
             }
           });
+          var pipSection = {
+            assigned: null,
+            data: null,
+            id: 'pip',
+            name: 'Project Implementation Plan',
+            passingScore: null,
+            reassignmentStatus: null,
+            review: null,
+            reviewCompletedDate: null,
+            reviewDeadline: null,
+            reviewHistory: null,
+            reviewStatus: null,
+            sme: null,
+            template: this.selectedProject.implementationPlan,
+            templateType: null,
+            totalScore: null,
+          }
+          this.unassignedProposalSections.push(pipSection);
           this.submitSections = submitCount;
           this.pendingSections = pendingCount;
           let totalSections = pendingCount + unassignCount;
-          this.sectionStats = {
-            submitCount,
-            pendingCount,
-            totalSections,
-            reviewsCount,
-            unassignCount,
-          }
+          this.sectionStats.submitCount = submitCount;
+          this.sectionStats.pendingCount = pendingCount;
+          this.sectionStats.totalSections = totalSections;
+          this.sectionStats.reviewsCount = reviewsCount;
+          this.sectionStats.unassignCount = unassignCount;
           console.log("PENDING?SUBMITTED:--", pendingCount, submitCount, this.selectedProjectInfo, this.proMonths);
           this.groupType = this.proposalSections[0];
           this.tabChanged(this.groupType);
@@ -190,15 +214,46 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
         this.selectedProject = data.selectedProject;
-        console.log("SELECTED PROJECT IN STORE:--", this.selectedProject);
         if (this.selectedProject && this.selectedProject.commentsMatrix) {
           this._accreditationCommentsMatrixStore.addCommentsArray(this.selectedProject.commentsMatrix);
+        }
+        if (this.selectedProject && this.selectedProject.gia.status !== "Not Initiated") {
+          if (this.selectedProject.gia.reviews !== null) {
+            var giaReviewsCount = 0;
+            var assignedUsers = [];
+            for (let i = 0; i < this.selectedProject.gia.reviews.length; i++) {
+              var key = this.selectedProject.gia.reviews[i];
+              if (key.comments !== null) {
+                giaReviewsCount = giaReviewsCount + 1;
+              } else {
+                assignedUsers.push(key.assignee);
+              }
+            }
+          }
+          if (this.sectionStats) {
+            this.sectionStats.giaReviewsCount = giaReviewsCount;
+            this.sectionStats.giaPendingCount = assignedUsers.length - giaReviewsCount;
+          }
         }
         if (this.selectedProject &&
           this.selectedProject.extendedAppraisal &&
           this.selectedProject.extendedAppraisal !== null) {
+          var extReviewsCount = 0;
+          var extPendingCount = 0;
+          // var assignedUsers = [];
+          // for (let i = 0; i < this.selectedProject.extendedAppraisal.sections.length; i++) {
+          //   var key = this.selectedProject.extendedAppraisal.sections[i];
+          //   if (key.status === 'Pending') {
+          //     extPendingCount = extPendingCount + 1;
+          //   } else {
+          //     extReviewsCount = extReviewsCount + 1;
+          //   }
+          // }
+          // this.sectionStats.extPendingCount = extPendingCount;
+          // this.sectionStats.extReviewsCount = extReviewsCount;
           this._extendedAppraisalSmesStore.addAppraisal(this.selectedProject.extendedAppraisal);
         }
+        console.log("SELECTED PROJECT IN STORE:--", this.selectedProject, this.sectionStats);
       })
     );
   }
@@ -284,8 +339,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   tabChanged($event) {
-    this.form = this.groupType.template;
-    this.form.sme = this.groupType.sme.name;
+    this.form = typeof (this.groupType.template) === 'string' ? JSON.parse(this.groupType.template) : this.groupType.template;
+    this.form.sme = this.groupType.sme ? this.groupType.sme.name : null;
     // this.form.status = this.groupType.status;
     // this.form.endDate = this.groupType.endDate;
     // this.form.completeDate = this.groupType.completeDate;
@@ -323,9 +378,14 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   elementClicked(item) {
     console.log("ELEMENT CLICKED:--", item);
-    this.groupType = item;
-    this.tabChanged(item);
-    document.querySelector('#myTopElement').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (item.id !== 'pip') {
+
+      this.groupType = item;
+      this.tabChanged(item);
+      document.querySelector('#myTopElement').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      document.querySelector('#myTopElement3').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   confirmApprasial() {
@@ -469,7 +529,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         });
       }
       // this.uploadFiles();
-      console.log("Uploaded Files:---", this.giaDoc);
+      console.log("Uploaded Files GIA DOC UPLOAD:---", this.giaDoc);
     };
     fileUpload.click();
   }
@@ -576,6 +636,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
+    this._authStore.setProjectMonths(0);
     this._proposalSectionsStore.addAllSections([]);
     this.Subscription.unsubscribe();
   }
@@ -887,6 +948,21 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           },
           error => {
             console.log("ERROR FROM UPDATINGGIA:--", error);
+            if (error.status === 422) {
+              const options = {
+                title: error.error.message,
+                message: 'Click "OK" to exit',
+                cancelText: 'CANCEL',
+                confirmText: 'OK',
+                add: true,
+                confirm: false,
+                setStatus: false,
+                assignToGm: false,
+                offerLetter: false,
+              };
+              this._confirmModelService.open(options);
+              this.giaDoc = [];
+            }
           }
         );
       } else {
@@ -1118,6 +1194,21 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   viewCommentsMatrix() {
     this._router.navigate(['extended-appraisal-smes', this.selectedProjectId]);
+  }
+
+  prepareGia() {
+    this._router.navigate(['/gia-appraisal', this.selectedProjectId]);
+  }
+
+  commenceSubProjectDoc() {
+    this._projectService.commenceSubProjectDoc(this.selectedProjectId).subscribe(
+      result => {
+        console.log("RESULT AFTER COMMENCING:--", result);
+      },
+      error => {
+        console.log("ERROR AFTER COMMENCING:--", error);
+      }
+    );
   }
 
 }

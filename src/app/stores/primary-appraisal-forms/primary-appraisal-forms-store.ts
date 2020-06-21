@@ -231,6 +231,20 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     });
   }
 
+  addGiaReviewers(reviews) {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        gia: {
+          ...this.state.selectedProject.gia,
+          reviews: reviews,
+          subStatus: 'Pending Reviews',
+        }
+      }
+    });
+  }
+
   addGiaCheckList(deadline) {
     this.setState({
       ...this.state,

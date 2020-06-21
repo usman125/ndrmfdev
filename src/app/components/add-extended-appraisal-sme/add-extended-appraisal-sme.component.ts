@@ -16,6 +16,7 @@ export class AddExtendedAppraisalSmeComponent implements OnInit {
   unassignedSections: any = [];
   extendedAppraisal: any = null;
   sectionStats: any = null;
+  apiLoading: boolean = false;
   @Output() totalSections: any = null;
   options: Object = {
     readOnly: false
@@ -28,6 +29,7 @@ export class AddExtendedAppraisalSmeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.apiLoading = true;
     this.Subscription.add(
       this._extendedAppraisalSmesStore.state$.subscribe(data => {
         this.extendedAppraisal = data.extendedAppraisal;
@@ -65,6 +67,7 @@ export class AddExtendedAppraisalSmeComponent implements OnInit {
             submitCount
           }
         }
+        this.apiLoading = false;
       })
     );
   }

@@ -6,6 +6,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { NgxPrintModule } from 'ngx-print';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -18,7 +20,9 @@ import { MatButtonModule } from '@angular/material/button';
     MatChipsModule,
     MatToolbarModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    NgxPrintModule,
+    MatProgressSpinnerModule
   ],
   exports: [ExtendedAppraisalSmesComponent]
 })

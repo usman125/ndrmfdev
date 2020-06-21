@@ -124,6 +124,8 @@
                 project</a>
               <a *ngIf="accredited === false" mat-list-item disabled href="javascript: void(0);">Post a
                 Project</a>
+              <a *ngIf="accredited === true" mat-list-item routerLinkActive="active-menu-item"
+                routerLink="/sub-project-document">Sub Project Documents</a>
             </mat-nav-list>
           </mat-expansion-panel>
 
@@ -200,10 +202,12 @@
                 Project Proposal Requests</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/extended-appraisals">Extended
                 Appraisal Requests</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sub-project-document">Sub
+                Project Documents</a>
             </mat-nav-list>
           </mat-expansion-panel>
         </mat-accordion>
-        
+
         <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
@@ -251,6 +255,7 @@
                 Priliminary Appraisal Requests</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/extended-appraisals">Extended
                 Appraisal Requests</a>
+
             </mat-nav-list>
           </mat-expansion-panel>
         </mat-accordion>
@@ -409,6 +414,8 @@
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal">Proposal
                 Requests</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/prepare-gia">Prepare Gia</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sub-project-document">Sub
+                Project Documents</a>
             </mat-nav-list>
           </mat-expansion-panel>
         </mat-accordion>

@@ -3,11 +3,11 @@
   <mat-toolbar-row>
     <span>{{'Extended Appraisal'}}</span>
     <div class="example-spacer"></div>
-    <button class="mr-2" (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })"
-      mat-raised-button>
-      <mat-icon class="mr-1">folder</mat-icon> Visit Proposal
+    <button matTooltip="Submitted Details!" class="mr-2" (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })"
+      mat-icon-button>
+      <mat-icon class="mr-1">table_chart</mat-icon>
     </button>
-    <button (click)="goBack()" color="accent" mat-raised-button>
+    <button (click)="goBack()" color="primary" mat-button>
       <mat-icon class="mr-1">undo</mat-icon> Go Back
     </button>
   </mat-toolbar-row>

@@ -14,15 +14,15 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { LayoutModule } from '@angular/cdk/layout';
 import { BarRatingModule } from "ngx-bar-rating";
-import { MatSliderModule } from '@angular/material/slider';
+// import { MatSliderModule } from '@angular/material/slider';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HeaderComponent } from './components/common/header/header.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatBadgeModule } from '@angular/material/badge';
+// import { MatRadioModule } from '@angular/material/radio';
+// import { MatBadgeModule } from '@angular/material/badge';
 import { SiteLayout } from "./components/common/layouts/sitelayout/sitelayout.component";
 import { MatExpansionModule } from '@angular/material/expansion';
 import { AppConfig } from './services/config';
@@ -61,12 +61,13 @@ import { PrimaryAppraisalRequestsStore } from './stores/primary-appraisal-reques
 import { PendingSignupsStore } from './stores/pending-signups/pending-signups-store';
 import { ExtendedAppraisalSmesStore } from "./stores/extended-appraisal-smes/extended-appraisal-smes-store";
 import { ExtendedAppraisalFormsStore } from "./stores/extended-appraisal-forms/extended-appraisal-forms-store";
-
+import { SubProjectDocStore } from "./stores/sub-proj-doc/sub-proj-doc-store";
+import { SubProjectDocSectionsStore } from "./stores/sub-proj-doc-sections/sub-proj-doc-sections-store";
 
 import { IntimateFipModule } from './modules/fip-intimations/fip-intimations.module';
 import { AssigntaskModule } from './modules/assigntask/assigntask.module';
 import { ConfirmDialogModule } from './modules/confirm-dialog/confirm-dialog.module';
-import { ProjectPlanModule } from './modules/project-plan/project-plan.module';
+// import { ProjectPlanModule } from './modules/project-plan/project-plan.module';
 import { AddProjectDialogModule } from './modules/add-project-dialog/add-project-dialog.module';
 import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-layout/no-header-layout.component';
 
@@ -76,8 +77,8 @@ import { NoHeaderLayoutComponent } from './components/common/layouts/no-header-l
 // import { MatButtonModule } from "@angular/material/button";
 // import { MatCardModule } from "@angular/material/card";
 // import { MatIconModule } from "@angular/material/icon";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatTreeModule } from "@angular/material/tree";
+// import { MatDividerModule } from "@angular/material/divider";
+// import { MatTreeModule } from "@angular/material/tree";
 // import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 // import { EditUserComponent } from './components/edit-user/edit-user.component';
@@ -115,7 +116,13 @@ import { JwtModule } from "@auth0/angular-jwt";
 // import { PoHomeComponent } from './components/po-home/po-home.component';
 // import { AssignSectionsProcessComponent } from './components/assign-sections-process/assign-sections-process.component';
 // import { PendingSignupsComponent } from './components/pending-signups/pending-signups.component';
-import { NoRightClickDirective } from './services/no-right-click.directive';
+// import { NoRightClickDirective } from './services/no-right-click.directive';
+// import { GiaCommentsMatrixComponent } from './components/gia-comments-matrix/gia-comments-matrix.component';
+// import { ProposalFileMatrixComponent } from './components/proposal-file-matrix/proposal-file-matrix.component';
+// import { SubProjectDocumentSectionsComponent } from './components/sub-project-document-sections/sub-project-document-sections.component';
+// import { FillSubProjectDocumentSectionsComponent } from './components/fill-sub-project-document-sections/fill-sub-project-document-sections.component';
+// import { ViewSubProjectDocumentSectionsComponent } from './components/view-sub-project-document-sections/view-sub-project-document-sections.component';
+// import { SubProjectDocumentComponent } from './components/sub-project-document/sub-project-document.component';
 // import { GiaChecklistComponent } from './components/gia-checklist/gia-checklist.component';
 // import { ViewGiaChecklistComponent } from './components/view-gia-checklist/view-gia-checklist.component';
 // import { SubmitGiaReviewsComponent } from './components/submit-gia-reviews/submit-gia-reviews.component';
@@ -139,7 +146,13 @@ export function tokenGetter() {
     LoginComponent,
     NoHeaderLayoutComponent,
     AddProjectComponent,
-    NoRightClickDirective,
+    // NoRightClickDirective,
+    // GiaCommentsMatrixComponent,
+    // ProposalFileMatrixComponent,
+    // SubProjectDocumentSectionsComponent,
+    // FillSubProjectDocumentSectionsComponent,
+    // ViewSubProjectDocumentSectionsComponent,
+    // SubProjectDocumentComponent,
     // GiaChecklistComponent,
     // ViewGiaChecklistComponent,
     // SubmitGiaReviewsComponent,
@@ -198,15 +211,15 @@ export function tokenGetter() {
     MatSidenavModule,
     MatListModule,
     MatGridListModule,
-    MatSliderModule,
+    // MatSliderModule,
     BarRatingModule,
     MatDialogModule,
     MatMenuModule,
-    MatRadioModule,
-    MatBadgeModule,
+    // MatRadioModule,
+    // MatBadgeModule,
     MatExpansionModule,
     LayoutModule,
-    ProjectPlanModule,
+    // ProjectPlanModule,
     IntimateFipModule,
     AssigntaskModule,
     ConfirmDialogModule,
@@ -215,8 +228,8 @@ export function tokenGetter() {
 
     // GiaProjectsModule,
 
-    MatDividerModule,
-    MatTreeModule,
+    // MatDividerModule,
+    // MatTreeModule,
     MatCheckboxModule,
 
 
@@ -274,6 +287,8 @@ export function tokenGetter() {
     PendingSignupsStore,
     ExtendedAppraisalSmesStore,
     ExtendedAppraisalFormsStore,
+    SubProjectDocStore,
+    SubProjectDocSectionsStore,
   ],
   bootstrap: [AppComponent],
   exports: [

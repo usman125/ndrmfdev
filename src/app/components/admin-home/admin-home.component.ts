@@ -155,6 +155,18 @@ export class AdminHomeComponent implements OnInit {
               if (element === 'PRELIMINARY_APPRAISAL') {
                 object.name = 'Priliminary Appraisal';
               }
+              if (element === 'GIA') {
+                object.name = 'GIA';
+              }
+              if (element === 'GIA_CHECKLIST') {
+                object.name = 'Checklist to FIP';
+              }
+              if (element === 'ACCREDITATION_QUESTIONNAIRE') {
+                object.name = 'Accreditation Questionnaire';
+              }
+              if (element === 'SUB_PROJECT_DOCUMENT') {
+                object.name = 'Sub Project Document';
+              }
               if (object.name !== null) dummySections.push(object);
               this.sectionsCount = dummySections;
               this.withoutOwner = withoutOwner;
@@ -224,6 +236,18 @@ export class AdminHomeComponent implements OnInit {
               }
               if (element === 'PRELIMINARY_APPRAISAL') {
                 object.name = 'Priliminary Appraisal';
+              }
+              if (element === 'GIA') {
+                object.name = 'GIA';
+              }
+              if (element === 'GIA_CHECKLIST') {
+                object.name = 'Checklist to FIP';
+              }
+              if (element === 'ACCREDITATION_QUESTIONNAIRE') {
+                object.name = 'Accreditation Questionnaire';
+              }
+              if (element === 'SUB_PROJECT_DOCUMENT') {
+                object.name = 'Sub Project Document';
               }
               dummyProcesses.push(object);
               console.log("RESULT:--", result, dummyProcesses);

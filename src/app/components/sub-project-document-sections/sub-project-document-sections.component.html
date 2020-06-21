@@ -1,0 +1,148 @@
+<div class="row">
+  <div class="col-md-8 pr-0">
+    <mat-card class="m-20 p-0" *ngIf="viewType === 'view'">
+      <mat-card-content>
+        <!-- <div class="assigned">
+          <div class="section" *ngFor="let section of assignedSections">
+            <div class="section-state flex-row-between p-3 mat-elevation-z3">
+              <div class="name flex-row-between">
+                <div class="flex-column-start">
+                  <h6>{{section.template.name}}</h6>
+                  <span class="flex-row-between" *ngIf="section?.reviewStatus === null" id="warn-comment">
+                    Not Reviewed
+                  </span>
+                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Review Pending'" id="warn-comment">
+                    Pending Review
+                  </span>
+                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Review Completed'" id="comment">
+                    Reviewed
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="p-4">
+              <div class="section-state flex-row-between p-2 mb-3 mt-3">
+                <div class="state">
+                  <span class="flex-row-between" *ngIf="section?.reviewStatus === null">
+                    <mat-icon class="mr-2" id="warn-comment">warning</mat-icon>
+                    <span id="answer">{{section.sme?.name}}</span>
+                  </span>
+                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Review Pending'">
+                    <mat-icon class="mr-2" id="warn-comment">info</mat-icon>
+                    <span id="answer">{{section.sme?.name}}</span>
+                  </span>
+                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Review Completed'">
+                    <mat-icon class="mr-2" id="comment">check</mat-icon>
+                    <span id="answer">{{section.sme?.name}}</span>
+                  </span>
+                </div>
+              </div>
+              <formio [form]="section.template" [submission]="{data:section.data}" readOnly="true"></formio>
+            </div>
+          </div>
+        </div> -->
+        <div class="unassigned">
+          <div class="section margin-5 appraisal-box" *ngFor="let section of allSections">
+            <div class="section-state flex-row-between p-3 mat-elevation-z3">
+              <div class="name flex-row-between">
+                <div class="flex-column-start">
+                  <h6>{{section.template.name}}</h6>
+                  <span class="flex-row-between" *ngIf="section?.reviewStatus === null" id="warn-comment">
+                    Not Reviewed
+                  </span>
+                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Review Pending'" id="warn-comment">
+                    Pending Review
+                  </span>
+                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Review Completed'" id="comment">
+                    Reviewed
+                  </span>
+                </div>
+              </div>
+              <button mat-button color="primary" [disabled]="section?.reviewStatus === 'Review Pending'"
+                (click)="assignForReview(section)">
+                <mat-icon class="mr-1">alarm</mat-icon>{{'Assign Task' | uppercase}}
+              </button>
+            </div>
+            <div class="p-4">
+              <div class="section-state flex-row-between p-2 mb-3 mt-3">
+                <div class="state">
+                  <span class="flex-row-between" *ngIf="section?.reviewStatus === null">
+                    <mat-icon class="mr-2" id="warn-comment">warning</mat-icon>
+                    <span id="answer">{{section.sme?.name}}</span>
+                  </span>
+                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Review Pending'">
+                    <mat-icon class="mr-2" id="warn-comment">info</mat-icon>
+                    <span id="answer">{{section.sme?.name}}</span>
+                  </span>
+                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Review Completed'">
+                    <mat-icon class="mr-2" id="comment">check</mat-icon>
+                    <span id="answer">{{section.sme?.name}}</span>
+                  </span>
+                </div>
+              </div>
+              <formio [form]="section.template" [submission]="{data:section.data}" readOnly="true"></formio>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-md-4 pl-0">
+    <mat-card class="m-20 ml-0">
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item>
+            <mat-icon mat-list-icon>alarm</mat-icon>
+            <div mat-line>{{'start date'}}</div>
+            <!-- <div mat-line>{{sectionStats?.pendingCount}}</div> -->
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>alarm</mat-icon>
+            <div mat-line>{{'end date'}}</div>
+            <!-- <div mat-line>{{sectionStats?.unassignCount}}</div> -->
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
+            <div mat-line>{{'Pending Reviews'}}</div>
+            <div mat-line>{{sectionStats?.pendingCount || 0}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>folder</mat-icon>
+            <div mat-line>{{'Total Sections'}}</div>
+            <div mat-line>{{allSections.length}}</div>
+          </mat-list-item>
+        </mat-list>
+        <button mat-button color="primary">
+          {{'view comments' | uppercase}}
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<mat-card class="m-20" *ngIf="viewType === 'fill'">
+  <mat-card-content>
+    <div class="unassigned">
+      <div class="section" *ngFor="let section of allSections">
+        <div class="section-state flex-row-between p-3">
+          <div class="name flex-row-between">
+            <mat-icon *ngIf="section?.status === 'Pending'" color="warn" class="mr-2">warning</mat-icon>
+            <mat-icon *ngIf="section?.status === 'Completed'" color="accent" class="mr-2">done</mat-icon>
+            {{section.template.name}}
+          </div>
+          <div class="state">
+            <span id="info-comment" *ngIf="section?.status === 'Pending'">Pending</span>
+            <span id="comment" *ngIf="section?.status === 'Completed'">Completed</span>
+          </div>
+        </div>
+        <div class="p-4">
+          <formio *ngIf="section?.data === null" (submit)="onSubmit($event, section)" [form]="section?.template"
+            [submission]="{data:section.data}">
+          </formio>
+          <formio *ngIf="section?.data !== null" [form]="section?.template" readOnly="true"
+            [submission]="{data:section.data}"></formio>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

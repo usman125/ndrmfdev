@@ -294,6 +294,21 @@ table {
   align-content: center;
 }
 
+.flex-row-between {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+}
+
+.flex-column-start {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
 .mat-toolbar-row span {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -315,7 +330,7 @@ h6 {
 }
 .mat-standard-chip {
   padding: 0px 12px !important;
-  font-size: 11px !important;
+  font-size: 12px !important;
 }
 .mat-card {
   box-shadow: none !important;
@@ -394,7 +409,7 @@ h6 {
   overflow-x: scroll;
 }
 
-.second-toolbar{
+.second-toolbar {
   display: none !important;
 }
 

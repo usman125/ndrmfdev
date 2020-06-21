@@ -18,7 +18,7 @@
         <mat-nav-list class="processes">
           <mat-list-item [ngClass]="{'active': listItem === item}" (click)="fetchTemplates(item)"
             style="cursor:pointer;" class="process" *ngFor="let item of allProcessTypes">
-            {{item}}
+            {{PROCESS_NAME(item)}}
           </mat-list-item>
         </mat-nav-list>
       </mat-card-content>

@@ -68,3 +68,10 @@ export { SubmitGiaReviewsComponent } from './submit-gia-reviews/submit-gia-revie
 
 export { GiaChecklistComponent } from './gia-checklist/gia-checklist.component';
 export { ViewGiaChecklistComponent } from './view-gia-checklist/view-gia-checklist.component';
+export { SubProjectDocumentComponent } from './sub-project-document/sub-project-document.component';
+
+export { SubProjectDocumentSectionsComponent } from './sub-project-document-sections/sub-project-document-sections.component';
+export { FillSubProjectDocumentSectionsComponent } from './fill-sub-project-document-sections/fill-sub-project-document-sections.component';
+export { ViewSubProjectDocumentSectionsComponent } from './view-sub-project-document-sections/view-sub-project-document-sections.component';
+export { GiaCommentsMatrixComponent } from './gia-comments-matrix/gia-comments-matrix.component';
+export { ProposalFileMatrixComponent } from './proposal-file-matrix/proposal-file-matrix.component';
