@@ -1,6 +1,6 @@
 <ng-container>
   <form [formGroup]="addUserForm" (ngSubmit)="addUser(addUserForm.value)">
-    <mat-toolbar style="margin-bottom:15px;padding: 15px 0px;" color="primary">
+    <mat-toolbar style="margin-bottom:0px;padding: 15px 0px;" color="primary">
       <mat-toolbar-row>
         <span>{{'Add User'}}</span>
         <span class="example-spacer"></span>
@@ -57,7 +57,7 @@
             <div class="col-md-6">
               <mat-card style="width: 90%;">
                 <div class="card-title">
-                  <h4>Select Org</h4>
+                  <h5>Select Org</h5>
                 </div>
                 <mat-card-content>
                   <mat-radio-group [formControl]="addUserForm.controls['org']" (change)="orgChanged($event)"
@@ -72,7 +72,7 @@
             <div class="col-md-6">
               <mat-card style="width: 90%;">
                 <div class="card-title">
-                  <h4>Select Role</h4>
+                  <h5>Select Role</h5>
                 </div>
                 <mat-card-content>
                   <mat-radio-group *ngIf="addUserForm.controls['org']" class="example-radio-group"

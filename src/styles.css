@@ -300,6 +300,18 @@ table {
 }
 
 /*Generic Classes*/
+.mat-raised-button{
+  min-width: 58px !important;
+  line-height: 32px !important;
+}
+.mat-radio-outer-circle, .mat-radio-inner-circle{
+  width: 18px !important;
+  height: 18px !important;
+}
+button:focus{outline: none;}
+h5,.h5{
+  font-weight: 400; 
+}
 .h6,
 h6 {
   font-weight: 400;

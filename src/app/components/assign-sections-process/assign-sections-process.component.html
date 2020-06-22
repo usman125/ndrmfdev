@@ -64,7 +64,7 @@
         </mat-panel-title>
         <mat-panel-description>
           &nbsp;
-          <mat-icon>supervised_user_circle</mat-icon>
+          <mat-icon>unfold_more</mat-icon>
         </mat-panel-description>
       </mat-expansion-panel-header>
 
@@ -133,7 +133,7 @@
         <div class="save-btn">
           <button
             *ngIf="process !== 'GIA' && allProcessType.length !== 0 && (allProcessType.processOwner !== null || allProcessType.sections !== null) && !apiLoading"
-            (click)="updateProcessMeta()" mat-button color="primary">SAVE</button>
+            (click)="updateProcessMeta()" mat-button color="accent">SAVE</button>
           <button
             *ngIf="process === 'GIA' && !apiLoading"
             (click)="updateProcessMeta()" mat-button color="primary">SAVE</button>
