@@ -70,7 +70,22 @@ export class SubProjectDocSectionsStore extends Store<SubProjectDocSectionsState
         if (c.id === section.id) {
           return {
             ...c,
-            reviewStatus: 'Pending Review',
+            reviewStatus: 'Pending',
+          }
+        }
+        return c;
+      })
+    });
+  }
+
+  changeSectionReviewStatus(sectionId, status) {
+    this.setState({
+      ...this.state,
+      sections: this.state.sections.map((c) => {
+        if (c.id === sectionId) {
+          return {
+            ...c,
+            reviewStatus: status,
           }
         }
         return c;

@@ -217,7 +217,7 @@
           <div class="example-spacer"></div>
           <button matTooltip="Submitted Details!"
             (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'start' })" class="m-1" mat-button>
-            <mat-icon class="mr-2">table_chart</mat-icon>
+            <mat-icon class="mr-2">view_list</mat-icon>
           </button>
           <button matTooltip="Viem Implementation Plan!"
             (click)="myTopElement3.scrollIntoView({ behavior: 'smooth', block: 'start' })" class="m-1" mat-button>
@@ -225,7 +225,7 @@
           </button>
           <button *ngIf="loggedUser.role !== 'sme'" matTooltip="View Comments Matrix!" (click)="viewCommentsMatrix()"
             class="m-1" mat-button>
-            <mat-icon class="mr-2">view_list</mat-icon>
+            <mat-icon class="mr-2">table_chart</mat-icon>
           </button>
         </mat-toolbar-row>
       </mat-toolbar>
@@ -641,7 +641,7 @@
                 </button>
                 <mat-chip-list>
                   <mat-chip class="ml-3 mt-1" color="accent" selected>
-                    {{sectionStats?.giaPendingCount}}
+                    <span *ngIf="sectionStats?.giaPendingCount > 0">{{sectionStats?.giaPendingCount}}</span>
                     {{selectedProject?.gia?.subStatus}}
                   </mat-chip>
                 </mat-chip-list>
@@ -793,7 +793,7 @@
         <mat-card-actions class="p-3 footer-btns" *ngIf="loggedUser.role !== 'sme'">
 
           <button (click)="viewCommentsMatrix()" class="m-1" mat-button color="basic">
-            <mat-icon class="mr-1">view_module</mat-icon> {{'View Comments Matrix' | uppercase}}
+            <mat-icon class="mr-1">table_chart</mat-icon> {{'View Comments Matrix' | uppercase}}
           </button>
 
           <button (click)="myTopElement2.scrollIntoView({ behavior: 'smooth', block: 'center' })" class="m-1" mat-button
@@ -893,7 +893,7 @@
           </button>
         </mat-toolbar-row>
       </mat-toolbar>
-      <mat-card class="m-20">
+      <mat-card class="m-20 mb-0">
         <mat-card-content>
           <div class="tabs-top-container">
             <div class="top-tabs">
@@ -979,7 +979,7 @@
 
       <!-- PROJECT PLAN AND IMPLEMENTATION -->
       <span id="myTopElement3" #myTopElement3></span>
-      <mat-card class="m-20 p-0">
+      <mat-card class="m-20 mt-0 p-0">
         <mat-card-content>
           <div class="display-flex-row pt-3 mb-3" *ngIf="sectionStats.pendingCount === 0">
             <mat-button-toggle-group [(ngModel)]="costTabsType" #group="matButtonToggleGroup">

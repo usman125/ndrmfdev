@@ -231,7 +231,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
           if (data.selectedProject.implementationPlan === null) {
             this.getCostingHeads();
           } else {
-            this.allCosts = JSON.parse(data.selectedProject.implementationPlan);
+            this.allCosts = typeof (data.selectedProject.implementationPlan) === 'string' ? JSON.parse(data.selectedProject.implementationPlan) : data.selectedProject.implementationPlan;
             this.prepareForm(this.allCosts);
             this.totalProcurementCost();
           }

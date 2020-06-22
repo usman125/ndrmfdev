@@ -46,6 +46,7 @@ export class ViewSubProjectDocumentSectionsComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this._subProjectDocSectionsStore.addAllRequests([]);
     // this.Subscription.unsubscribe();
   }
 

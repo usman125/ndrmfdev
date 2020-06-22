@@ -318,12 +318,20 @@ export class ProjectService {
       data
     );
   }
-  
+
   requestSubProjectDocReview(sectionId) {
     const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/section/${sectionId}/request-review`;
     return this._httpClient.put(
       url,
       null
+    );
+  }
+
+  submitSubProjectDocReview(sectionId, data) {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/section/${sectionId}/review/add`;
+    return this._httpClient.post(
+      url,
+      data
     );
   }
 

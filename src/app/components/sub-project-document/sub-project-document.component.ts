@@ -93,6 +93,9 @@ export class SubProjectDocumentComponent implements OnInit, OnDestroy {
     return `${item.id}`;
   }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {
+    this._subProjectDocStore.addAllRequests([]);
+    this.Subscription.unsubscribe();
+  }
 
 }

@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormioModule } from 'angular-formio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -23,7 +25,9 @@ import { MatListModule } from '@angular/material/list';
     MatIconModule,
     FormioModule,
     MatProgressSpinnerModule,
-    MatListModule
+    MatListModule,
+    MatInputModule,
+    FormsModule
   ],
   exports: [SubProjectDocumentSectionsComponent]
 })

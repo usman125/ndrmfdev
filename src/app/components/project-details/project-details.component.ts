@@ -122,6 +122,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         }
         console.log("PROPOSAL SECTION FROM STORE:---", this.proposalSections);
         let pendingCount = 0;
+        let pendingReviewCount = 0;
         let submitCount = 0;
         var reviewsCount = 0;
         var unassignCount = 0;
@@ -161,7 +162,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
               this.assignedProposalSections.push(c);
             }
             if (c.reviewStatus === 'Pending') {
-              pendingCount = pendingCount + 1;
+              pendingReviewCount = pendingReviewCount + 1;
             }
             if (c.review !== null) {
               reviewsCount = reviewsCount + 1;
@@ -199,6 +200,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this.sectionStats.totalSections = totalSections;
           this.sectionStats.reviewsCount = reviewsCount;
           this.sectionStats.unassignCount = unassignCount;
+          this.sectionStats.pendingReviewCount = pendingReviewCount;
           console.log("PENDING?SUBMITTED:--", pendingCount, submitCount, this.selectedProjectInfo, this.proMonths);
           this.groupType = this.proposalSections[0];
           this.tabChanged(this.groupType);
