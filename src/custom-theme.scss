@@ -96,6 +96,10 @@ a:hover {
 .warn-comment {
   color: map_get($mat-red, 800);
 }
+#warn-comment {
+  color: #f57f17;
+  font-weight: 500;
+}
 
 // $my-dark-theme-background: (
 //   status-bar: green,
@@ -618,7 +622,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 .tabs-top-container .top-tabs .mat-button-toggle-group {
   overflow-x: hidden;
 }
-.fr-toolbar.fr-top{
+.fr-toolbar.fr-top {
   border-radius: 0 !important;
   -webkit-border-radius: 0 !important;
 }

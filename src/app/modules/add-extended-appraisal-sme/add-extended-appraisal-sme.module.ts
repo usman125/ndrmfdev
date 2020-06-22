@@ -9,6 +9,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatListModule } from "@angular/material/list";
 import { MatDividerModule } from "@angular/material/divider";
 import { FormioModule } from "angular-formio";
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { FormioModule } from "angular-formio";
     FormioModule,
     MatDividerModule,
     MatListModule,
+    MatProgressSpinnerModule,
   ],
   exports: [AddExtendedAppraisalSmeComponent]
 })

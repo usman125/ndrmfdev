@@ -1,0 +1,18 @@
+.section-state {
+  background-color: rgba(235, 235, 235, 0.5);
+  /* padding: 20; */
+}
+.mat-list-item {
+  background: rgba(235, 235, 235, 0.5);
+  margin-bottom: 5px;
+}
+.fullbtn {
+  width: 100%;
+}
+.fullbtn button {
+  width: 100%;
+}
+
+button {
+  outline: none;
+}

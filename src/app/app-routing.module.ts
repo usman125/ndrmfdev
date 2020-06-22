@@ -397,7 +397,7 @@ const routes: Routes = [
     path: 'project-details/:projectId',
     loadChildren: () => import('./modules/project-details/project-details.module').then(m => m.ProjectDetailsModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Fip, Role.Gm] }
+    data: { roles: [Role.Fip, Role.Gm, Role.Ceo] }
   },
   {
     path: 'pohome',
@@ -463,19 +463,49 @@ const routes: Routes = [
     path: 'gia-review-projects',
     loadChildren: () => import('./modules/gia-review-projects/gia-review-projects.module').then(m => m.GiaReviewProjectsModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Po, Role.Ceo, Role.Gm, Role.Sme, Role.Po] }
+    data: { roles: [Role.Ceo, Role.Gm, Role.Sme, Role.Po] }
   },
   {
     path: 'submit-gia-reviews/:projectId',
     loadChildren: () => import('./modules/submit-gia-reviews/submit-gia-reviews.module').then(m => m.SubmitGiaReviewsModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Po, Role.Ceo, Role.Gm, Role.Sme, Role.Po, Role.Fip] }
+    data: { roles: [Role.Ceo, Role.Gm, Role.Sme, Role.Po, Role.Fip] }
   },
   {
     path: 'view-gia-checklist/:projectId',
     loadChildren: () => import('./modules/view-gia-checklist/view-gia-checklist.module').then(m => m.ViewGiaChecklistModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Po, Role.Ceo, Role.Gm, Role.Sme, Role.Po, Role.Fip] }
+    data: { roles: [Role.Ceo, Role.Gm, Role.Sme, Role.Po, Role.Fip] }
+  },
+  {
+    path: 'sub-project-document',
+    loadChildren: () => import('./modules/sub-project-document/sub-project-document.module').then(m => m.SubProjectDocumentModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Ceo, Role.Gm, Role.Sme, Role.Po, Role.Fip] }
+  },
+  {
+    path: 'gia-comments-matrix/:projectId',
+    loadChildren: () => import('./modules/gia-comments-matrix/gia-comments-matrix.module').then(m => m.GiaCommentsMatrixModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Ceo, Role.Gm, Role.Po, Role.Fip] }
+  },
+  {
+    path: 'proposal-file-matrix/:projectId',
+    loadChildren: () => import('./modules/proposal-file-matrix/proposal-file-matrix.module').then(m => m.ProposalFileMatrixModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Ceo, Role.Gm, Role.Po, Role.Fip] }
+  },
+  {
+    path: 'fill-sub-project-document/:requestId',
+    loadChildren: () => import('./modules/fill-sub-project-document-sections/fill-sub-project-document-sections.module').then(m => m.FillSubProjectDocumentSectionsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Fip] }
+  },
+  {
+    path: 'view-sub-project-document/:requestId',
+    loadChildren: () => import('./modules/view-sub-project-document-sections/view-sub-project-document-sections.module').then(m => m.ViewSubProjectDocumentSectionsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po, Role.Sme] }
   },
   {
     // path: 'view-govt-agency-request/:requestId',

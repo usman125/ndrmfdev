@@ -8,6 +8,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatListModule } from "@angular/material/list";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { AddExtendedAppraisalSmeModule } from "../add-extended-appraisal-sme/add-extended-appraisal-sme.module";
 
 @NgModule({
@@ -24,6 +25,7 @@ import { AddExtendedAppraisalSmeModule } from "../add-extended-appraisal-sme/add
     MatToolbarModule,
     MatListModule,
     AddExtendedAppraisalSmeModule,
+    MatTooltipModule,
   ]
 })
 export class AddExtendedAppraisalFormModule { }

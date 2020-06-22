@@ -281,5 +281,59 @@ export class ProjectService {
     );
   }
 
+  // SUB PROJECT DOCUMENT
+  commenceSubProjectDoc(proposalId) {
+    const url = `${AppConfig.apiUrl}/implementation/${proposalId}/sub-proj-doc/commence`;
+    return this._httpClient.post(
+      url,
+      null
+    );
+  }
+
+  getSubProjectDoc() {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  getPendingSubProjectDoc() {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/pending`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  singleSubProjectDoc(id) {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/${id}`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  submitSubProjectDocSection(subProjectDocumentId, data) {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/${subProjectDocumentId}/section/submit`;
+    return this._httpClient.post(
+      url,
+      data
+    );
+  }
+
+  requestSubProjectDocReview(sectionId) {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/section/${sectionId}/request-review`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
+  submitSubProjectDocReview(sectionId, data) {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/section/${sectionId}/review/add`;
+    return this._httpClient.post(
+      url,
+      data
+    );
+  }
+
 
 }

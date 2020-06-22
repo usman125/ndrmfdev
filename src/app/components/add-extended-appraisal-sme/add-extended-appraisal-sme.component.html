@@ -1,5 +1,4 @@
 <ng-container>
-
   <mat-card class="m-20 p-4">
     <mat-card-title>
     </mat-card-title>
@@ -8,36 +7,37 @@
         <mat-list-item>
           <mat-icon mat-list-icon>pending_actions</mat-icon>
           <div mat-line>{{'Pending'}}</div>
-          <div mat-line>{{sectionStats?.pendingCount}}</div>
+          <div mat-line *ngIf="!apiLoading">{{sectionStats?.pendingCount}}</div>
+          <mat-progress-spinner color="accent" mat-line *ngIf="!sectionStats" mode="indeterminate" diameter="15">
+          </mat-progress-spinner>
         </mat-list-item>
         <mat-list-item>
           <mat-icon mat-list-icon>check</mat-icon>
           <div mat-line>{{'Submitted'}}</div>
-          <div mat-line>{{sectionStats?.submitCount}}</div>
+          <div mat-line *ngIf="!apiLoading">{{sectionStats?.submitCount}}</div>
+          <mat-progress-spinner color="accent" mat-line *ngIf="!sectionStats" mode="indeterminate" diameter="15">
+          </mat-progress-spinner>
         </mat-list-item>
         <mat-list-item>
           <mat-icon mat-list-icon>folder</mat-icon>
           <div mat-line>{{'Total Sections'}}</div>
-          <div mat-line>{{totalSections}}</div>
+          <div mat-line *ngIf="!apiLoading">{{totalSections}}</div>
+          <mat-progress-spinner color="accent" mat-line *ngIf="!sectionStats" mode="indeterminate" diameter="15">
+          </mat-progress-spinner>
         </mat-list-item>
       </mat-list>
     </mat-card-content>
-    <mat-card-actions>
-      <!-- <button class="m-1" mat-raised-button color="primary">ASSIGN PROPOSAL SECTIONS TO DESK</button> -->
-      <!-- <button class="m-1" *ngIf="selectedProject && selectedProject?.status === 'Extended Appraisal'" mat-raised-button
-        color="primary">ASSIGN
-        EXTENDED APPRAISAL TO DESK</button> -->
-    </mat-card-actions>
   </mat-card>
 </ng-container>
+<mat-toolbar class="mat-elevation-z8" [hidden]="!sectionStats" color="primary">
+  <mat-toolbar-row>
+    <span>{{'Tasks'}}</span>
+    <div class="example-spacer"></div>
+  </mat-toolbar-row>
+</mat-toolbar>
 <ng-container>
-  <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
-    <mat-toolbar-row>
-      <span>{{'Tasks'}}</span>
-      <div class="example-spacer"></div>
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <mat-card class="m-20 p-3">
+  <!-- <div *ngIf="!apiLoading"> -->
+  <mat-card class="m-20 p-3" *ngIf="sectionStats">
     <div class="mb-4" *ngFor="let item of appraisalSections">
       <div class="top-info-bar">
         <span style="display: flex;align-items:center;font-weight: bold;">
@@ -87,8 +87,17 @@
         </div>
       </div>
       <div class="form p-3">
-        <formio *ngIf="!item.assigned" readOnly="true" [form]="item.template" [submission]="{data:item.data}"></formio>
+        <formio *ngIf="!item.assigned" readOnly="true" [form]="item.template" [submission]="{data:item.data}">
+        </formio>
       </div>
     </div>
   </mat-card>
+  <!-- </div> -->
+  <!-- <div *ngIf="!sectionStats">
+    <mat-card class="m-20">
+      <mat-card-content>
+        <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
+      </mat-card-content>
+    </mat-card>
+  </div> -->
 </ng-container>

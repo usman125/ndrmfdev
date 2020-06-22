@@ -1,16 +1,17 @@
 import { Component, OnInit, OnDestroy, Output, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from "rxjs";
-import { ProposalSectionsStore } from "../../stores/proposal-sections/proposal-sections-store";
-import { ProjectsStore } from "../../stores/projects/projects-store";
-import { ProposalFormsStore } from "../../stores/proposal-forms/proposal-forms-store";
+// import { ProposalSectionsStore } from "../../stores/proposal-sections/proposal-sections-store";
+// import { ProjectsStore } from "../../stores/projects/projects-store";
+// import { ProposalFormsStore } from "../../stores/proposal-forms/proposal-forms-store";
 import { FormControl } from "@angular/forms";
 import { PrimaryAppraisalFormsStore } from 'src/app/stores/primary-appraisal-forms/primary-appraisal-forms-store';
 import { ProjectService } from 'src/app/services/project.service';
-import { UsersStore } from 'src/app/stores/users/users-store';
+// import { UsersStore } from 'src/app/stores/users/users-store';
 import { UserService } from 'src/app/services/user.service';
 import { AuthStore } from 'src/app/stores/auth/auth-store';
 import { ConfirmModelService } from 'src/app/services/confirm-model.service';
+import { Location } from "@angular/common";
 
 @Component({
   selector: 'app-gia-projects',
@@ -20,12 +21,16 @@ import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 })
 export class GiaProjectsComponent implements OnInit, OnDestroy {
 
+  @Output() show: any = 'pip';
+  @Output() proMonths: any = null;
+
   public Subscription: Subscription = new Subscription();
 
   allProposalSections: any = [];
   allProposalForms: any = [];
   allUsers: any = [];
   selectedProjectId: any = null;
+  selectedProjectInfo: any = null;
   sectionStats: any = null;
   selectedProject: any = null;
   content: any = null;
@@ -46,11 +51,12 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
 
   constructor(
     private _userService: UserService,
-    private _usersStore: UsersStore,
+    private _location: Location,
     private _projectService: ProjectService,
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
     private _activatedRoute: ActivatedRoute,
     private _authStore: AuthStore,
+    private _router: Router,
     private _confirmModelService: ConfirmModelService,
   ) { }
 
@@ -64,7 +70,6 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
         this.apiLoading = true;
         this.selectedProject = data.selectedProject;
-        console.log("SELECTED PROJECT IN STORE:--", this.selectedProject);
         if (this.selectedProject) {
           if (this.selectedProject.gia.data !== null) {
             if (typeof (this.selectedProject.gia.data) === 'string') {
@@ -72,6 +77,24 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
             } else {
               this.appraisalDoc = this.selectedProject.gia.data;
             }
+            var pipSection = {
+              assigned: null,
+              data: null,
+              id: 'pip',
+              name: 'Project Implementation Plan',
+              passingScore: null,
+              reassignmentStatus: null,
+              review: null,
+              reviewCompletedDate: null,
+              reviewDeadline: null,
+              reviewHistory: null,
+              reviewStatus: null,
+              sme: null,
+              template: this.selectedProject.implementationPlan,
+              templateType: null,
+              totalScore: null,
+            }
+            this.selectedProject.sections.push(pipSection);
           }
           var reviewsCount = 0;
           var assignedUsers = [];
@@ -90,11 +113,32 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
           }
           this.reviewUsers.patchValue(assignedUsers, { onlySelf: true });
           this.sectionStats = {
-            reviewsCount
+            reviewsCount,
+            pendingCount: assignedUsers.length - reviewsCount
           }
+          this.selectedProject.sections.forEach(c => {
+            let result = c.name.match(/glance/g);
+            let result1 = c.name.match(/Beneficiaries/g);
+            if (result !== null) {
+              if (c.data) {
+                this.selectedProjectInfo = typeof (c.data) === 'string' ? JSON.parse(c.data) : c.data;
+                this._authStore.setProjectMonths(c.data.duration);
+              }
+            }
+            if (this.selectedProjectInfo) {
+              if (result1 !== null) {
+                if (c.data) {
+                  this.selectedProjectInfo.pb = typeof (c.data) === 'string' ? JSON.parse(c.data) : c.data;
+                }
+              }
+            }
+          });
           this.apiLoading = false;
-          console.log("REVIEW COUNT + ASSIGNED:--", reviewsCount, assignedUsers);
         }
+        console.log("REVIEW COUNT + ASSIGNED:--\n", reviewsCount,
+          "\n", assignedUsers,
+          "\n", this.selectedProject,
+          "\n", this.selectedProjectInfo);
       })
     );
     this.getAllUsers();
@@ -148,19 +192,24 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
   addSection() {
     var object = {
       content: this.content,
-      forms: []
+      forms: [],
+      pip: false
     }
     if (this.sections.value) {
       for (let i = 0; i < this.sections.value.length; i++) {
-        if (typeof (this.sections.value[i].template) === 'string') {
-          this.sections.value[i].template = JSON.parse(this.sections.value[i].template);
+        if (this.sections.value[i].id === 'pip') {
+
         } else {
-          this.sections.value[i].template = this.sections.value[i].template;
-        }
-        if (typeof (this.sections.value[i].data) === 'string') {
-          this.sections.value[i].data = JSON.parse(this.sections.value[i].data);
-        } else {
-          this.sections.value[i].data = this.sections.value[i].data;
+          if (typeof (this.sections.value[i].template) === 'string') {
+            this.sections.value[i].template = JSON.parse(this.sections.value[i].template);
+          } else {
+            this.sections.value[i].template = this.sections.value[i].template;
+          }
+          if (typeof (this.sections.value[i].data) === 'string') {
+            this.sections.value[i].data = JSON.parse(this.sections.value[i].data);
+          } else {
+            this.sections.value[i].data = this.sections.value[i].data;
+          }
         }
       }
       object.forms = this.sections.value;
@@ -182,8 +231,16 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
     };
 
     let reviewersArray = [];
+    let storeArray = [];
     if (this.reviewUsers.value) {
       for (let i = 0; i < this.reviewUsers.value.length; i++) {
+        var object = {
+          id: null,
+          assignee: this.reviewUsers.value[i],
+          comments: null,
+          assigned: false
+        }
+        storeArray.push(object);
         reviewersArray.push(this.reviewUsers.value[i].id)
       }
     }
@@ -199,8 +256,12 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
     ).subscribe(
       (result: any) => {
         console.log("RESULT AFTER SUBMIT GIA:---", result);
-        this._confirmModelService.open(options);
         this._primaryAppraisalFormsStore.submitGia(this.appraisalDoc);
+        if (reviewersArray.length) {
+          this.reviewUsers.patchValue(reviewersArray, { onlySelf: true });
+          this._primaryAppraisalFormsStore.addGiaReviewers(storeArray);
+        }
+        this._confirmModelService.open(options);
       },
       error => {
         console.log("RESULT AFTER SUBMIT GIA:---", error);
@@ -318,8 +379,17 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
   }
 
 
+  viewGiaCommentsMatrix() {
+    this._router.navigate(['/gia-comments-matrix', this.selectedProjectId]);
+  }
+
   ngOnDestroy() {
+    this._authStore.setProjectMonths(0);
     this.Subscription.unsubscribe();
+  }
+
+  goBack() {
+    this._location.back();
   }
 
 }

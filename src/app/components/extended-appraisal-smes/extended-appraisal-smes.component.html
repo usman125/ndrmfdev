@@ -1,18 +1,27 @@
 <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
   <mat-toolbar-row>
-    <span>Comments Matrix Form</span>
+    <span>Comments Matrix Form
+      <button mat-icon-button color="primary" [useExistingCss]="true" printSectionId="print-section" ngxPrint>
+        <mat-icon class="mr-4">print</mat-icon>
+      </button>
+    </span>
     <div class="example-spacer"></div>
-    <mat-icon class="mr-4">print</mat-icon>
-    <button (click)="goBack()" color="accent" mat-raised-button>
-      <mat-icon>undo</mat-icon> Go to proposal
+    <button (click)="goBack()" color="primary" mat-button>
+      <mat-icon>undo</mat-icon> Go Back
     </button>
   </mat-toolbar-row>
 </mat-toolbar>
-<div class="matrix">
+<div class="matrix" id="print-section">
   <div class="row header-row">
-    <div class="col-md-4 item"><h6> Name</h6></div>
-    <div class="col-md-4 item"><h6> Proposal Sections</h6></div>
-    <div class="col-md-4 item"><h6> Comments</h6></div>
+    <div class="col-md-4 item">
+      <h6> Name</h6>
+    </div>
+    <div class="col-md-4 item">
+      <h6> Proposal Sections</h6>
+    </div>
+    <div class="col-md-4 item">
+      <h6> Comments</h6>
+    </div>
   </div>
   <div class="row data-row" *ngFor="let item of allComments;">
     <div class="col-md-4 item"><span class="mobileheads">Name</span><span>{{item.addedBy || 'N/A'}}</span></div>
