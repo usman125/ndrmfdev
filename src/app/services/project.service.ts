@@ -335,5 +335,13 @@ export class ProjectService {
     );
   }
 
+  commenceQPR(proposalId) {
+    const url = `${AppConfig.apiUrl}/qpr/commence/?proposalId=${proposalId}`;
+    return this._httpClient.post(
+      url,
+      null
+    );
+  }
+
 
 }

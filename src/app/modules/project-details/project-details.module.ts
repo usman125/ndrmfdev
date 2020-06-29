@@ -20,6 +20,7 @@ import { ProjectPlanModule } from "../project-plan/project-plan.module";
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ProjectWorkPlanModule } from '../project-work-plan/project-work-plan.module';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     CommonModule,
     ProjectDetailsRoutingModule,
     ProjectPlanModule,
+    ProjectWorkPlanModule,
     MatProgressSpinnerModule,
     FormioModule,
     MatButtonModule,

@@ -508,6 +508,24 @@ const routes: Routes = [
     data: { roles: [Role.Po, Role.Sme] }
   },
   {
+    path: 'fill-qpr/:requestId',
+    loadChildren: () => import('./modules/fill-qpr/fill-qpr.module').then(m => m.FillQprModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po, Role.Sme, Role.Fip] }
+  },
+  {
+    path: 'view-qpr/:requestId',
+    loadChildren: () => import('./modules/view-qpr/view-qpr.module').then(m => m.ViewQprModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po, Role.Sme, Role.Fip] }
+  },
+  {
+    path: 'qpr',
+    loadChildren: () => import('./modules/qpr/qpr.module').then(m => m.QprModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po, Role.Sme, Role.Fip] }
+  },
+  {
     // path: 'view-govt-agency-request/:requestId',
     path: 'view-govt-agency-request',
     loadChildren: () => import('./modules/view-govt-agency-request/view-govt-agency-request.module').then(m => m.ViewGovtAgencyRequestModule),

@@ -77,25 +77,25 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
             } else {
               this.appraisalDoc = this.selectedProject.gia.data;
             }
-            var pipSection = {
-              assigned: null,
-              data: null,
-              id: 'pip',
-              name: 'Project Implementation Plan',
-              passingScore: null,
-              reassignmentStatus: null,
-              review: null,
-              reviewCompletedDate: null,
-              reviewDeadline: null,
-              reviewHistory: null,
-              reviewStatus: null,
-              sme: null,
-              template: this.selectedProject.implementationPlan,
-              templateType: null,
-              totalScore: null,
-            }
-            this.selectedProject.sections.push(pipSection);
           }
+          var pipSection = {
+            assigned: null,
+            data: null,
+            id: 'pip',
+            name: 'Project Implementation Plan',
+            passingScore: null,
+            reassignmentStatus: null,
+            review: null,
+            reviewCompletedDate: null,
+            reviewDeadline: null,
+            reviewHistory: null,
+            reviewStatus: null,
+            sme: null,
+            template: this.selectedProject.implementationPlan,
+            templateType: null,
+            totalScore: null,
+          }
+          this.selectedProject.sections.push(pipSection);
           var reviewsCount = 0;
           var assignedUsers = [];
           if (this.selectedProject.gia.reviews !== null) {

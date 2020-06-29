@@ -75,3 +75,10 @@ export { FillSubProjectDocumentSectionsComponent } from './fill-sub-project-docu
 export { ViewSubProjectDocumentSectionsComponent } from './view-sub-project-document-sections/view-sub-project-document-sections.component';
 export { GiaCommentsMatrixComponent } from './gia-comments-matrix/gia-comments-matrix.component';
 export { ProposalFileMatrixComponent } from './proposal-file-matrix/proposal-file-matrix.component';
+
+export { QprComponent } from './qpr/qpr.component';
+export { ViewQprComponent } from './view-qpr/view-qpr.component';
+export { FillQprComponent } from './fill-qpr/fill-qpr.component';
+export { QprSectionsComponent } from './qpr-sections/qpr-sections.component';
+
+export { ProjectWorkPlanComponent } from './project-work-plan/project-work-plan.component';

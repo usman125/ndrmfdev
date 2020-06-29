@@ -205,6 +205,12 @@
             <mat-icon class="mr-1">grading</mat-icon>
             {{'view checklist' | uppercase}}
           </a>
+          <button mat-button (click)="commenceQPR()"
+            *ngIf="selectedProject?.status === 'Checklist to FIP' && selectedProject?.giaChecklist?.data !== null"
+            color="warn">
+            <mat-icon class="mr-1">grading</mat-icon>
+            {{'COMMence qpr' | uppercase}}
+          </button>
 
         </mat-card-actions>
       </mat-card>
@@ -978,6 +984,14 @@
       </mat-card>
 
       <!-- PROJECT PLAN AND IMPLEMENTATION -->
+      <span id="myTopElement4" #myTopElement4></span>
+      <mat-card class="m-20 p-0">
+        <mat-card-content>
+          <app-project-work-plan [proMonths]="proMonths"></app-project-work-plan>
+        </mat-card-content>
+      </mat-card>
+
+
       <span id="myTopElement3" #myTopElement3></span>
       <mat-card class="m-20 mt-0 p-0">
         <mat-card-content>
@@ -992,6 +1006,7 @@
           <app-project-plan [proMonths]="proMonths" [show]="show"></app-project-plan>
         </mat-card-content>
       </mat-card>
+      
     </div>
   </div>
 </ng-container>

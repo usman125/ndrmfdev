@@ -52,6 +52,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   @Output() show: any = null;
   @Output() proMonths: any = null;
+  
   @Input() showFillApprasialBtn: boolean = true;
   @Input() viewType: string = 'user';
   // @Output() viewType2: string = 'view';
@@ -1211,6 +1212,27 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         console.log("ERROR AFTER COMMENCING:--", error);
       }
     );
+  }
+
+  commenceQPR() {
+    const options = {
+      title: 'QPR commenced success!!',
+      message: 'OK to exit',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+    };
+    this._projectService.commenceQPR(this.selectedProjectId).subscribe(
+      result => {
+        console.log('QPR COMMENCED SUCCEFFULLY:--', result);
+        this._confirmModelService.open(options);
+      },
+      error => {
+        options.title = error.error.message;
+        this._confirmModelService.open(options);
+        console.log('QPR COMMENCED SUCCEFFULLY:--', error);
+      }
+    )
   }
 
 }

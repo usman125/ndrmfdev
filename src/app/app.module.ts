@@ -63,6 +63,8 @@ import { ExtendedAppraisalSmesStore } from "./stores/extended-appraisal-smes/ext
 import { ExtendedAppraisalFormsStore } from "./stores/extended-appraisal-forms/extended-appraisal-forms-store";
 import { SubProjectDocStore } from "./stores/sub-proj-doc/sub-proj-doc-store";
 import { SubProjectDocSectionsStore } from "./stores/sub-proj-doc-sections/sub-proj-doc-sections-store";
+import { QprSectionsStore } from './stores/qpr-sections/qpr-sections-store';
+import { QprStore } from './stores/qpr/qpr-store';
 
 import { IntimateFipModule } from './modules/fip-intimations/fip-intimations.module';
 import { AssigntaskModule } from './modules/assigntask/assigntask.module';
@@ -102,6 +104,12 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 // import { MatGridListModule } from "@angular/material/grid-list";
 // import { GiaProjectsModule } from "./modules/gia-projects/gia-projects.module";
 import { JwtModule } from "@auth0/angular-jwt";
+
+// import { ProjectWorkPlanComponent } from './components/project-work-plan/project-work-plan.component';
+// import { QprSectionsComponent } from './components/qpr-sections/qpr-sections.component';
+// import { QprComponent } from './components/qpr/qpr.component';
+// import { ViewQprComponent } from './components/view-qpr/view-qpr.component';
+// import { FillQprComponent } from './components/fill-qpr/fill-qpr.component';
 // import { ViewGovtAgencyRequestComponent } from './components/view-govt-agency-request/view-govt-agency-request.component';
 // import { GovtAgencyHomeComponent } from './components/govt-agency-home/govt-agency-home.component';
 // import { GovtAccreditRequestsComponent } from './components/govt-accredit-requests/govt-accredit-requests.component';
@@ -146,6 +154,11 @@ export function tokenGetter() {
     LoginComponent,
     NoHeaderLayoutComponent,
     AddProjectComponent,
+    // ProjectWorkPlanComponent,
+    // QprSectionsComponent,
+    // QprComponent,
+    // ViewQprComponent,
+    // FillQprComponent,
     // NoRightClickDirective,
     // GiaCommentsMatrixComponent,
     // ProposalFileMatrixComponent,
@@ -289,6 +302,8 @@ export function tokenGetter() {
     ExtendedAppraisalFormsStore,
     SubProjectDocStore,
     SubProjectDocSectionsStore,
+    QprSectionsStore,
+    QprStore
   ],
   bootstrap: [AppComponent],
   exports: [

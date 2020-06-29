@@ -1,0 +1,83 @@
+<mat-toolbar color="primary" class="header no-margin">
+  <mat-toolbar-row>
+    <span>
+      Add Proposed work plan
+    </span>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+
+
+<div class="outputs p-4">
+  <mat-form-field>
+    <mat-label>Enter Output</mat-label>
+    <input type="text" matInput [(ngModel)]="output" placeholder="Output Name" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Select Phase</mat-label>
+    <mat-select (ngModelChange)="phaseChanged($event)" [(ngModel)]="phase">
+      <mat-option *ngFor="let phase of workPlanPhases" [value]="phase._id">
+        {{phase.title}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button [disabled]="!output" color="primary" (click)="addMainOutput()">Add Output</button>
+</div>
+
+<div class="p-4">
+  <mat-form-field>
+    <mat-label for="activity">Add Activity</mat-label>
+    <input placeholder="e.g. School" [(ngModel)]="activity" id="activity" type="text" matInput />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Select Main Output</mat-label>
+    <mat-select (ngModelChange)="mainOutputChanged($event)" [(ngModel)]="mainOutputId">
+      <mat-option *ngFor="let item of outPutArray" [value]="item._id">
+        {{item.title}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button [disabled]="activity === null || mainOutputId === null" color="primary" (click)="AddActivity()"
+    mat-raised-button>
+    Add Activity
+  </button>
+</div>
+
+<!-- <div class="activities">
+  <div *ngFor="let cost of outPutArray">
+    <span>{{cost.title}}</span>
+    <div>Activities</div>
+    <span *ngFor="let obj of cost.activities">
+      {{obj.title}}
+    </span>
+  </div>
+</div> -->
+
+<div class="p-4">
+  <table>
+    <thead>
+      <tr>
+        <th>Outcome</th>
+        <th>Activity</th>
+        <!-- <th>Quarters</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cost of outPutArray">
+        <td>{{cost.title}}</td>
+        <td>
+          <span class="activity" *ngFor="let obj of cost.activities">
+            <span>
+              {{obj.title}}
+            </span>
+            <div class="quarters">
+              Timeline
+              <span [ngClass]="{'selected':qua.included === true}" (click)="addToQuarter(cost, qua, obj)"
+                *ngFor="let qua of obj?.quarters; let i=index;">
+                {{i+1}}
+              </span>
+            </div>
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
