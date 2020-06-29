@@ -321,7 +321,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
     .mat-list-base
     .mat-list-item:active
     .mat-list-item-content {
-    color: mat-color($light-primary);
+    color:  #0070b1;
     background-color: rgba(102, 103, 103, 0.04);
   }
   .hero
@@ -331,7 +331,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
     .mat-list-base
     .mat-list-item.active-menu-item
     .mat-list-item-content {
-    color: mat-color($light-primary);
+    color:  #0070b1;
   }
 
   a:hover {
@@ -532,7 +532,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
   .mat-list-base
   .mat-list-item:hover
   .mat-list-item-content {
-  color: mat-color($candy-app-primary);
+  color: #0070b1;
 }
 
 .hero
@@ -542,7 +542,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
   .mat-list-base
   .mat-list-item.active-menu-item
   .mat-list-item-content {
-  color: mat-color($candy-app-primary);
+  color: #0070b1;
   background-color: rgba(0, 0, 0, 0.04);
 }
 
@@ -579,7 +579,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
   align-items: center;
   padding: 0 15px;
   border-radius: inherit;
-  font-size: 14px;
+  font-size: 13px;
   height: 40px !important;
 }
 

@@ -65,6 +65,9 @@
 .top-tabs {
   display: flex;
   padding: 15px;
+  padding-left: 0;
+  max-width: 225px;
+  flex-direction: column;
 }
 
 mat-button-toggle-group {
@@ -92,6 +95,9 @@ mat-button-toggle-group {
 .mat-list-item {
   background: rgba(235, 235, 235, 0.5);
   margin-bottom: 5px;
+  height: 60px !important;
+  width: 49%;
+  font-size: 13px;
 }
 
 .top-info-bar {
@@ -125,10 +131,24 @@ mat-button-toggle-group {
 }
 .section-icons {
   position: absolute;
-  top: 0;
+  top: 18%;
   left: 0;
   height: 10px;
   width: 10px;
   font-size: 16px;
   margin: 5px;
+}
+.mat-list-base{
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.mat-button-toggle-checked{
+  font-weight: 400;
+  background-color: #e0e0e0;
+}
+mat-button-toggle-group .mat-button-toggle-checked .mat-button-toggle-label-content{color: #333;}
+.proj-detail .mat-button-toggle-checked .mat-button-toggle-label-content {
+  color: #333 !important;
 }

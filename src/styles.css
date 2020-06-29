@@ -207,6 +207,7 @@ table {
   /* box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14),
     0px 10px 14px 2px rgba(0, 0, 0, 0.12); */
   box-shadow: none;
+  font-size: 18px;
 }
 .example-container,
 .mat-card {
@@ -315,6 +316,39 @@ table {
 }
 
 /*Generic Classes*/
+.mat-elevation-z3{
+  box-shadow: none !important;
+}
+.mat-list-item{
+  font-size: 13px !important;
+  text-transform: capitalize;
+}
+.mat-chip.mat-standard-chip.mat-chip-selected.mat-warn, .mat-chip.mat-standard-chip.mat-chip-selected.mat-accent{
+  font-size: 11px !important;
+}
+.proj-detail .mat-button-toggle-checked .mat-button-toggle-label-content {
+  color: #333 !important;
+}
+.mat-tree-node, .mat-nested-tree-node{
+  font-size: 13px !important;
+}
+.mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button, .mat-fab, .mat-mini-fab, .mat-card-subtitle, .mat-card-content{
+  font-size: 13px !important;
+}
+.mat-raised-button{
+  min-width: 58px !important;
+  line-height: 32px !important;
+}
+.mat-radio-outer-circle, .mat-radio-inner-circle{
+  width: 18px !important;
+  height: 18px !important;
+}
+button:focus{outline: none;}
+h5,.h5{
+  font-weight: 400; 
+  font-size: 1.06rem;
+  text-decoration: underline;
+}
 .h6,
 h6 {
   font-weight: 400;
@@ -403,10 +437,10 @@ h6 {
 }
 
 .tabs-top-container .proposaldisplay {
-  width: 68%;
-  overflow: hidden;
+  width: 100%;
+  /* overflow: hidden;
   height: auto;
-  overflow-x: scroll;
+  overflow-x: scroll; */
 }
 
 .second-toolbar {

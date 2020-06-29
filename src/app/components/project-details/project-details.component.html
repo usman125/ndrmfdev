@@ -1,5 +1,5 @@
 <ng-container *ngIf="!apiLoading">
-  <div class="row">
+  <div class="row proj-detail">
     <div class="col-md-7">
 
 
@@ -235,7 +235,7 @@
           </button>
         </mat-toolbar-row>
       </mat-toolbar>
-      <mat-card class="m-20 mb-0 p-4"
+      <mat-card class="m-20 mb-0 p-2"
         *ngIf="(loggedUser.role === 'dm pam' || loggedUser.role === 'process owner') && (viewType === 'propapp' || viewType === 'po')">
         <mat-card-content>
           <mat-list>
@@ -264,13 +264,13 @@
       </mat-card>
 
       <!-- ADD REVIEWS ON PROPOSAL SECTIONS-->
-      <mat-card class="m-20 p-4" *ngIf="loggedUser.role === 'sme'">
+      <mat-card class="m-20 p-2" *ngIf="loggedUser.role === 'sme'">
         <mat-card-title>
           <h5>Add Section Review</h5>
         </mat-card-title>
         <mat-card-content>
           <div class="review-box" *ngIf="assignedProposalSections.length">
-            <h6 id="answer" class="mb-4">Proposal Sections</h6>
+            <!-- <h6 id="answer" class="mb-4">Proposal Sections</h6> -->
             <div class="info mt-2" (click)="elementClicked(item);" *ngFor="let item of assignedProposalSections">
               <span class="box-title">
                 <mat-icon class="mr-2" style="color:#F57F17;" *ngIf="item.reviewStatus === 'Pending'">
@@ -360,7 +360,7 @@
 
       <!-- GENERAL REVIEWS ON PROPOSAL SECTIONS -->
       <span id="myTopElement2" #myTopElement2></span>
-      <mat-card class="m-20 p-4" *ngIf="(loggedUser.role === 'gm' || loggedUser.role === 'ceo') || 
+      <mat-card class="m-20 p-2" *ngIf="(loggedUser.role === 'gm' || loggedUser.role === 'ceo') || 
       (loggedUser.role === 'sme' || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner' && 
       viewType === 'propapp' || viewType === 'po' || viewType === 'extapp')">
         <mat-card-title>
@@ -370,7 +370,7 @@
           <div class="review-box" *ngIf="assignedProposalSections.length || (loggedUser.role === 'sme' && assignedProposalSections.length) || 
           loggedUser.role === 'dm pam' || loggedUser.role === 'process owner' || loggedUser.role === 'gm' || 
           loggedUser.role === 'ceo'">
-            <h6 id="answer" class="mb-4">Proposal Sections</h6>
+            <!-- <h6 id="answer" class="mb-4">Proposal Sections</h6> -->
             <div class="info mt-2" (click)="elementClicked(item);" *ngFor="let item of unassignedProposalSections">
               <span class="box-title">
                 <mat-icon class="mr-2" style="color:#F57F17;" *ngIf="item.reviewStatus === 'Pending'">
@@ -466,7 +466,7 @@
 
     <!-- BUTTON ADN INFO -->
     <div class="col-md-5 pl-0 mt-4">
-      <mat-card class="m-20 ml-0" style="padding: 0px;position: sticky;top: -20px;" *ngIf="loggedUser.role !== 'fip'">
+      <mat-card class="m-20 ml-0" style="padding: 0px;position: sticky;top: 60px;" *ngIf="loggedUser.role !== 'fip'">
         <mat-toolbar class="mat-elevation-z8 no-margin" style="padding: 15px 0px;" color="primary">
           <mat-toolbar-row>
             <span>Proposal Summary</span>
@@ -902,7 +902,7 @@
       <mat-card class="m-20 mb-0">
         <mat-card-content>
           <div class="tabs-top-container">
-            <div class="top-tabs">
+            <div class="top-tabs pb-0" style="position: sticky;top: 65px;">
               <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup" vertical="true">
                 <mat-button-toggle (change)="tabChanged(item)" *ngFor="let item of proposalSections; let i = index;"
                   [value]="item">
@@ -911,6 +911,38 @@
                   <span>{{item.name}}</span>
                 </mat-button-toggle>
               </mat-button-toggle-group>
+              <mat-card-actions>
+                <div *ngIf="loggedUser?.role !== 'fip'" class="info" class="m-20"
+                  style="display: flex;flex-direction: column;">
+                  <div class="block">
+                    <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">warning</mat-icon>
+                    <span style="font-size: 10px;"> Unassigned Sections</span>
+                  </div>
+                  <div class="block">
+                    <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">pending_actions</mat-icon>
+                    <span style="font-size: 10px;"> Pending Reviews</span>
+                  </div>
+                  <div class="block">
+                    <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
+                    <span style="font-size: 10px;"> Expired Reviews</span>
+                  </div>
+                  <div class="block">
+                    <mat-icon style="font-size: 16px;height:16px;" color="accent">check</mat-icon>
+                    <span style="font-size: 10px;"> Submitted Reviews</span>
+                  </div>
+                </div>
+                <div *ngIf="loggedUser?.role === 'fip'" class="info" class="m-20"
+                  style="display: flex;flex-direction: column;">
+                  <div class="block">
+                    <mat-icon style="font-size: 14px;height:14px;">warning</mat-icon>
+                    <span style="font-size: 10px;"> Pending</span>
+                  </div>
+                  <div class="block">
+                    <mat-icon style="font-size: 16px;height:16px;">check</mat-icon>
+                    <span style="font-size: 10px;"> Submitted</span>
+                  </div>
+                </div>
+              </mat-card-actions>
             </div>
             <div class="proposaldisplay">
               <div class="top-info-bar" *ngIf="loggedUser?.role !== 'fip'">
@@ -949,38 +981,7 @@
             </div>
           </div>
         </mat-card-content>
-        <mat-card-actions>
-          <div *ngIf="loggedUser?.role !== 'fip'" class="info" class="m-20"
-            style="display: flex;flex-direction: column;">
-            <div class="block">
-              <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">warning</mat-icon>
-              <span style="font-size: 10px;"> Unassigned Sections</span>
-            </div>
-            <div class="block">
-              <mat-icon style="font-size: 14px;height:14px;color:#F57F17;">pending_actions</mat-icon>
-              <span style="font-size: 10px;"> Pending Reviews</span>
-            </div>
-            <div class="block">
-              <mat-icon style="font-size: 14px;height:14px;" color="warn">info</mat-icon>
-              <span style="font-size: 10px;"> Expired Reviews</span>
-            </div>
-            <div class="block">
-              <mat-icon style="font-size: 16px;height:16px;" color="accent">check</mat-icon>
-              <span style="font-size: 10px;"> Submitted Reviews</span>
-            </div>
-          </div>
-          <div *ngIf="loggedUser?.role === 'fip'" class="info" class="m-20"
-            style="display: flex;flex-direction: column;">
-            <div class="block">
-              <mat-icon style="font-size: 14px;height:14px;">warning</mat-icon>
-              <span style="font-size: 10px;"> Pending</span>
-            </div>
-            <div class="block">
-              <mat-icon style="font-size: 16px;height:16px;">check</mat-icon>
-              <span style="font-size: 10px;"> Submitted</span>
-            </div>
-          </div>
-        </mat-card-actions>
+
       </mat-card>
 
       <!-- PROJECT PLAN AND IMPLEMENTATION -->
@@ -993,7 +994,7 @@
 
 
       <span id="myTopElement3" #myTopElement3></span>
-      <mat-card class="m-20 mt-0 p-0">
+      <mat-card class="m-20 mt-0 pt-1">
         <mat-card-content>
           <div class="display-flex-row pt-3 mb-3" *ngIf="sectionStats.pendingCount === 0">
             <mat-button-toggle-group [(ngModel)]="costTabsType" #group="matButtonToggleGroup">
