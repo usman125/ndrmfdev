@@ -1,5 +1,5 @@
 import { Component, OnInit, forwardRef, Inject } from '@angular/core';
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { LoginService } from "../../services/login.service";
 import { ConfirmModelService } from "../../services/confirm-model.service";
 import { AuthStore } from "../../stores/auth/auth-store";
@@ -32,10 +32,10 @@ export class RegisterComponent implements OnInit {
 
   _buildRegisterForm() {
     this.registerForm = this._formBuilder.group({
-      'firstName': [''],
-      'lastName': [''],
-      'email': [''],
-      'password': [''],
+      'firstName': ['', Validators.required],
+      'lastName': ['', Validators.required],
+      'email': ['', Validators.compose([Validators.required, Validators.email])],
+      'password': ['', Validators.required],
     })
   }
 

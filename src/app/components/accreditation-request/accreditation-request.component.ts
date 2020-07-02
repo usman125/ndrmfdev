@@ -375,7 +375,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     //   console.log("ALL REQUESTS:--", this.allRequests);
     this.apiLoading = true;
 
-    this._accreditationRequestService.getUnderReviewQulificationRequests().subscribe(
+    this._accreditationRequestService.getQulificationRequests().subscribe(
       (result: any) => {
         this.apiLoading = false;
         console.log("RESULT AFETR GETTING ALL QUALIFICATION:--", result);

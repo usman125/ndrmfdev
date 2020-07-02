@@ -74,7 +74,10 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
       ...this.state,
       selectedProject: {
         ...this.state.selectedProject,
-        status: 'Marked to GM',
+        preAppraisal: {
+          ...this.state.selectedProject.preAppraisal,
+          status: 'Marked to GM',
+        }
       }
     })
   }
@@ -84,7 +87,10 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
       ...this.state,
       selectedProject: {
         ...this.state.selectedProject,
-        status: 'Marked to CEO',
+        preAppraisal: {
+          ...this.state.selectedProject.preAppraisal,
+          status: 'Marked to CEO',
+        }
       }
     })
   }

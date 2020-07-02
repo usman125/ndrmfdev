@@ -5,11 +5,13 @@ import { Subscription } from "rxjs";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatSort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
+import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 
 @Component({
   selector: 'app-departments',
   templateUrl: './departments.component.html',
-  styleUrls: ['./departments.component.css']
+  styleUrls: ['./departments.component.css'],
+  providers: [ConfirmModelService]
 })
 export class DepartmentsComponent implements OnInit, OnDestroy {
 
@@ -30,6 +32,7 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
 
   constructor(
     private _departmentsStore: DepartmentsStore,
+    private _confirmModelService: ConfirmModelService,
     private _settingsService: SettingsService,
   ) { }
 
@@ -64,17 +67,28 @@ export class DepartmentsComponent implements OnInit, OnDestroy {
     var object = {
       name: this.areaName
     }
+    const options = {
+      title: 'Department added!',
+      message: 'OK to exit',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
+    };
     this.apiLoading = true;
     this._settingsService.addDepartments(object).subscribe(
       result => {
         console.log("RESULT FROM ADDING:--", result);
         this._departmentsStore.addDepartment(this.areaName, null);
+        this._confirmModelService.open(options);
         this.apiLoading = false;
         this.areaName = null;
       },
       error => {
-        this.apiLoading = false;
         console.log("ERROR FROM ADDING:--", error);
+        this.apiLoading = false;
+        options.title = error.error.message;
+        this._confirmModelService.open(options);
       }
     )
   }

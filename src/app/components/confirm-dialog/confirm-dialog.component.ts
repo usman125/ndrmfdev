@@ -30,6 +30,7 @@ export class ConfirmDialogComponent implements OnInit {
 
   checked: boolean = false;
   areas = new FormControl();
+  applyAsJv = new FormControl();
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
@@ -84,7 +85,8 @@ export class ConfirmDialogComponent implements OnInit {
   addThematicAreas() {
     this.close({
       areas: this.areas.value,
-      status: 'ok'
+      status: 'ok',
+      applyAsJv: this.applyAsJv.value
     })
   }
 

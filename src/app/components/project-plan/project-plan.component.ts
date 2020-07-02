@@ -526,7 +526,6 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     this.allCosts.push(subcost);
     this.prepareForm(subcost);
 
-    // this.costChnaged(subcost, null);
   }
 
   fixParentCosts(cost) {
@@ -566,6 +565,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource.data = test2;
     this.treeControl.expandAll();
     this.dummyCosts = test2;
+    this.testingCosts = test2;
     this.allParentTotal();
   }
 
@@ -593,6 +593,28 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   costChnaged(node, item) {
     let result = this.search(node._id, this.allCosts);
     var count = 0;
+    if (this.selectedProject.implementationPlan !== null) {
+      for (let i = 0; i < result.financers.length; i++) {
+        if (result.financers[i].title === item.title) {
+          result.financers[i].financers = item.financers;
+          node.financers[i].financers = item.financers;
+          break;
+        }
+      }
+
+      for (let i = 0; i < this.allCosts.length; i++) {
+        if (this.allCosts[i]._id === node._id) {
+          console.log(this.allCosts[i]);
+          for (let j = 0; j < this.allCosts[i].financers.length; j++) {
+            if (this.allCosts[i].financers[j].title === item.title) {
+              this.allCosts[i].financers[j].financers = item.financers;
+              break;
+            }
+          }
+        }
+      }
+
+    }
     for (let i = 0; i < result.financers.length; i++) {
       for (let j = 0; j < result.financers[i].financers.length; j++) {
         count = count + parseInt(result.financers[i].financers[j].cost);
@@ -625,10 +647,15 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     var parent = this.getParentNode(node);
+    console.log("COST CHANGED:--", node, item, result, parent, count, leafTotal);
     if (parent) {
       parent.totalCost = leafTotal;
+      console.log(parent);
       if (parent.mainCostId) {
         var parent2 = this.getParentNode(parent);
+        // var cost = parent2.totalCost + leafTotal;
+        // parent2.totalCost = cost;
+        console.log(parent2);
         this.calculateParentTotal(parent2);
       }
     }
@@ -641,6 +668,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.allCosts[i]._id === parent._id) {
         var allCount = 0;
         var procurementCount = 0;
+        console.log(this.allCosts[i]);
         if (this.allCosts[i].children) {
 
           for (let j = 0; j < this.allCosts[i].children.length; j++) {

@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit() {
     setTimeout(() => {
       this._authStore.setRouteName('Login');
+      this._authStore.removeLoading();
     });
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
     this.Subscription.add(
@@ -152,6 +153,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
       }, error => {
         console.log("ERROR:--", error);
+        this.errorMsg = "Username/Password Invalid!";
         this._authStore.removeLoading();
       }
     );

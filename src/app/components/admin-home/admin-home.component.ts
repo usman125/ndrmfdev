@@ -167,6 +167,9 @@ export class AdminHomeComponent implements OnInit {
               if (element === 'SUB_PROJECT_DOCUMENT') {
                 object.name = 'Sub Project Document';
               }
+              if (element === 'QPR') {
+                object.name = 'QPR';
+              }
               if (object.name !== null) dummySections.push(object);
               this.sectionsCount = dummySections;
               this.withoutOwner = withoutOwner;
@@ -248,6 +251,9 @@ export class AdminHomeComponent implements OnInit {
               }
               if (element === 'SUB_PROJECT_DOCUMENT') {
                 object.name = 'Sub Project Document';
+              }
+              if (element === 'QPR') {
+                object.name = 'QPR';
               }
               dummyProcesses.push(object);
               console.log("RESULT:--", result, dummyProcesses);

@@ -34,7 +34,7 @@ export class ProjectService {
   }
 
   getGmProjects() {
-    const url = `${AppConfig.apiUrl}/project-proposal/?status=MARKED_TO_GM`;
+    const url = `${AppConfig.apiUrl}/project-proposal/`;
     return this._httpClient.get(
       url,
     );
@@ -48,7 +48,7 @@ export class ProjectService {
   }
 
   getCeoProjects() {
-    const url = `${AppConfig.apiUrl}/project-proposal/?status=MARKED_TO_CEO`;
+    const url = `${AppConfig.apiUrl}/project-proposal/`;
     return this._httpClient.get(
       url,
     );

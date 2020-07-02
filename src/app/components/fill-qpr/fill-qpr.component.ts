@@ -88,7 +88,7 @@ export class FillQprComponent implements OnInit {
 
     for (let i = 0; i < this.implementationPlan.length; i++) {
       let newFinancers = [];
-      for (let j = 0; j <= quarter; j++) {
+      for (let j = quarter - 2; j <= quarter; j++) {
         newFinancers.push(this.implementationPlan[i].financers[j]);
         for (let k = 0; k < this.implementationPlan[i].financers[j].financers.length; k++) {
           if (this.implementationPlan[i].financers[j].financers[k].title === 'ndrmf') {
@@ -101,16 +101,16 @@ export class FillQprComponent implements OnInit {
             this.quarterFipArray.push(this.implementationPlan[i].financers[j].financers[k]);
           }
         }
+        this.ndrmfShare = ndrmfShare;
+        this.fipShare = fipShare;
       }
-      console.log("FILETERED ARRAY:---", newFinancers, this.implementationPlan[i].title);
+      console.log("FILETERED ARRAY:---", newFinancers, this.implementationPlan[i].title, ndrmfShare, fipShare);
     }
-    this.ndrmfShare = ndrmfShare;
-    this.fipShare = fipShare;
     this._qprStore.setDefaults(this.quarter, this.ndrmfShare, this.fipShare);
     console.log(
-      "FILETERED ARRAY:---",
+      "FILETERED ARRAY FIP:---\n",
       this.quarterFipArray,
-      this.quarterNdrmfArray,
+      "\nNDRMF ARRAY:--", this.quarterNdrmfArray,
       this.ndrmfShare,
       this.fipShare
     );

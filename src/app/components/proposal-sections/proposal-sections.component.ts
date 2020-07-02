@@ -5,11 +5,13 @@ import { AuthStore } from "../../stores/auth/auth-store";
 import { Subscription } from "rxjs";
 import { SettingsService } from "../../services/settings.service";
 import { setThematicAreaValue } from "../../stores/proposal-forms/proposal-forms-replay";
+import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 
 @Component({
   selector: 'app-proposal-sections',
   templateUrl: './proposal-sections.component.html',
-  styleUrls: ['./proposal-sections.component.css']
+  styleUrls: ['./proposal-sections.component.css'],
+  providers: [ConfirmModelService]
 })
 export class ProposalSectionsComponent implements OnInit, OnDestroy {
 
@@ -22,6 +24,7 @@ export class ProposalSectionsComponent implements OnInit, OnDestroy {
     private _proposalFormsStore: ProposalFormsStore,
     private _authStore: AuthStore,
     private _settingsService: SettingsService,
+    private _confirmModelService: ConfirmModelService,
     private _router: Router,
   ) {
 
@@ -44,6 +47,14 @@ export class ProposalSectionsComponent implements OnInit, OnDestroy {
   }
 
   goToAdd() {
+    const options = {
+      title: 'Thematic area added!',
+      message: 'OK to exit',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
+    };
     // this._router.navigate(['add-proposal-section']);
     this._authStore.setLoading();
     this._settingsService.addThematicArea({ name: this.areaName, processOwnerId: null }).subscribe(
@@ -52,10 +63,14 @@ export class ProposalSectionsComponent implements OnInit, OnDestroy {
         this._proposalFormsStore.addProposalForm(result.id, result.name, result.enabled, result.processOwner);
         this.areaName = null;
         this._authStore.removeLoading();
+        // options.title = result.message;
+        this._confirmModelService.open(options);
       },
       error => {
         this._authStore.removeLoading();
         console.log("ERROR ADDING:--", error);
+        options.title = error.error.message;
+        this._confirmModelService.open(options);
       }
     );
   }

@@ -70,17 +70,22 @@
     </div>
 
     <div class="controls" *ngIf="data?.selectThematic">
-      <mat-select (selectionChange)="areaChanged($event)" placeholder="Select Areas" [formControl]="areas" multiple>
-        <mat-select-trigger>
-          <span *ngFor="let item of areas.value; let i=index">
-            <span *ngIf="i===0">{{item.name}}</span>
-          </span>
-          <span *ngIf="areas.value?.length > 1" class="example-additional-selection">
-            (+{{areas.value.length - 1}} others)
-          </span>
-        </mat-select-trigger>
-        <mat-option *ngFor="let object of data?.areas;" [value]="object">{{object.name}}</mat-option>
-      </mat-select>
+      <mat-form-field>
+        <mat-select (selectionChange)="areaChanged($event)" placeholder="Select Areas" [formControl]="areas" multiple>
+          <mat-select-trigger>
+            <span *ngFor="let item of areas.value; let i=index">
+              <span *ngIf="i===0">{{item.name}}</span>
+            </span>
+            <span *ngIf="areas.value?.length > 1" class="example-additional-selection">
+              (+{{areas.value.length - 1}} others)
+            </span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let object of data?.areas;" [value]="object">{{object.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <section>
+        <mat-checkbox [formControl]="applyAsJv">Apply as JV!</mat-checkbox>
+      </section>
     </div>
 
   </div>
@@ -99,8 +104,9 @@
     <!-- OFFER LETTER -->
     <button *ngIf="data?.offerLetter" mat-raised-button (click)="cancel()" color="warn"
       class="m-2">{{data.cancelText | uppercase}}</button>
-    <button *ngIf="data?.offerLetter" [disabled]="!data.endDate" mat-raised-button (click)="uploadOfferLetter('ASSIGN', data.endDate)"
-      color="primary" class="m-2">{{data.confirmText | uppercase}}</button>
+    <button *ngIf="data?.offerLetter" [disabled]="!data.endDate" mat-raised-button
+      (click)="uploadOfferLetter('ASSIGN', data.endDate)" color="primary"
+      class="m-2">{{data.confirmText | uppercase}}</button>
 
 
     <button *ngIf="data?.selectThematic" [disabled]="areas.value?.length === 0 || !areas.value" mat-raised-button
