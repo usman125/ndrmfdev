@@ -98,6 +98,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loggedUser: any = null;
   selectedProject: any = null;
+  selectedSubCost: any = null;
 
   // options: Object = {
   //   submitMessage: "",
@@ -231,12 +232,19 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
           if (data.selectedProject.implementationPlan === null) {
             this.getCostingHeads();
           } else {
-            this.allCosts = typeof (data.selectedProject.implementationPlan) === 'string' ? JSON.parse(data.selectedProject.implementationPlan) : data.selectedProject.implementationPlan;
+            this.allCosts = typeof (data.selectedProject.implementationPlan) === 'string' ?
+              JSON.parse(data.selectedProject.implementationPlan) :
+              data.selectedProject.implementationPlan;
+            this.allSubCosts = [];
+            this.allCosts.forEach((c) => {
+              if (c.mainCostId !== null)
+                this.allSubCosts.push(c);
+            });
             this.prepareForm(this.allCosts);
             this.totalProcurementCost();
           }
         }
-        console.log("DATA FROM PIP STORE MANIPULATION:--", data.selectedProject, this.allCosts);
+        console.log("DATA FROM PIP STORE MANIPULATION:--", data.selectedProject, this.allCosts, this.allSubCosts);
       })
     );
   }
@@ -377,12 +385,13 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   mainCostChanged($event) {
-    // for (let i = 0; i < this.allCosts.length; i++) {
-    //   if ($event === this.allCosts[i]._id) {
-    //     console.log("SELECTED COST:---", this.allCosts[i]);
-    //     break;
-    //   }
-    // }
+    for (let i = 0; i < this.allCosts.length; i++) {
+      if ($event === this.allCosts[i]._id) {
+        this.selectedSubCost = this.allCosts[i];
+        console.log("SELECTED COST:---", this.selectedSubCost);
+        break;
+      }
+    }
   }
 
 
@@ -523,6 +532,9 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mainCostId = null;
     subcost.financers = allArray;
     this.allSubCosts.push(subcost);
+    if (this.selectedSubCost.children) {
+      this.selectedSubCost.children.push(subcost);
+    }
     this.allCosts.push(subcost);
     this.prepareForm(subcost);
 
@@ -561,7 +573,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     var test2 = _.filter(this.allCosts, { mainCostId: null })
-    console.log("ALL COSTS FROM PREPARE FORM:--\n:--", test2, this.allCosts);
+    console.log("ALL COSTS FROM PREPARE FORM:--\n:--", test, test2, this.allCosts);
     this.dataSource.data = test2;
     this.treeControl.expandAll();
     this.dummyCosts = test2;
@@ -590,31 +602,31 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  costChnaged(node, item) {
+  costChanged(node, item) {
     let result = this.search(node._id, this.allCosts);
     var count = 0;
-    if (this.selectedProject.implementationPlan !== null) {
-      for (let i = 0; i < result.financers.length; i++) {
-        if (result.financers[i].title === item.title) {
-          result.financers[i].financers = item.financers;
-          node.financers[i].financers = item.financers;
-          break;
-        }
-      }
+    // if (this.selectedProject.implementationPlan !== null) {
+    //   for (let i = 0; i < result.financers.length; i++) {
+    //     if (result.financers[i].title === item.title) {
+    //       result.financers[i].financers = item.financers;
+    //       node.financers[i].financers = item.financers;
+    //       break;
+    //     }
+    //   }
 
-      for (let i = 0; i < this.allCosts.length; i++) {
-        if (this.allCosts[i]._id === node._id) {
-          console.log(this.allCosts[i]);
-          for (let j = 0; j < this.allCosts[i].financers.length; j++) {
-            if (this.allCosts[i].financers[j].title === item.title) {
-              this.allCosts[i].financers[j].financers = item.financers;
-              break;
-            }
-          }
-        }
-      }
+    //   for (let i = 0; i < this.allCosts.length; i++) {
+    //     if (this.allCosts[i]._id === node._id) {
+    //       console.log(this.allCosts[i]);
+    //       for (let j = 0; j < this.allCosts[i].financers.length; j++) {
+    //         if (this.allCosts[i].financers[j].title === item.title) {
+    //           this.allCosts[i].financers[j].financers = item.financers;
+    //           break;
+    //         }
+    //       }
+    //     }
+    //   }
 
-    }
+    // }
     for (let i = 0; i < result.financers.length; i++) {
       for (let j = 0; j < result.financers[i].financers.length; j++) {
         count = count + parseInt(result.financers[i].financers[j].cost);
@@ -647,7 +659,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     var parent = this.getParentNode(node);
-    console.log("COST CHANGED:--", node, item, result, parent, count, leafTotal);
+    // console.log("COST CHANGED:--", node, item, result, parent, count, leafTotal);
     if (parent) {
       parent.totalCost = leafTotal;
       console.log(parent);

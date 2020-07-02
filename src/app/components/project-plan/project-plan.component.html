@@ -141,7 +141,7 @@
                   <div class="inputs">
                     <div *ngFor="let item of month.financers;let i =index;">
                       <mat-form-field>
-                        <input [disabled]="loggedUser.role !== 'fip'" (ngModelChange)="costChnaged(node, month)"
+                        <input [disabled]="loggedUser.role !== 'fip'" (ngModelChange)="costChanged(node, month)"
                           [placeholder]="item.title" [(ngModel)]="item.cost" matInput type="number" />
                       </mat-form-field>
                       <div *ngIf="(mI+1)%4 === 0" class="spacer"></div>

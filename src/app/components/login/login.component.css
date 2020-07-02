@@ -43,11 +43,13 @@ mat-sidenav-conatiner {
 }
 
 .error-msg {
-    padding: 15px;
-    display: block;
-    text-align: center;
+  padding: 15px;
+  display: block;
+  text-align: center;
+  color: #ef45e2;
+  font-weight: 600;
 }
-.mat-card{
+.mat-card {
   background-color: transparent;
   box-shadow: none;
 }
