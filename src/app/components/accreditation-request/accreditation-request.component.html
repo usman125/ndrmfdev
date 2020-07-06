@@ -351,7 +351,7 @@
                   <textarea matInput [(ngModel)]="commentsForFip" placeholder="write your comments..."></textarea>
                 </mat-form-field>
                 <button (click)="intimateFip()"
-                  [disabled]="(sectionStats?.unassignCount !== sectionStats?.reviewsCount !== userReviewRequests.length) || !commentsForFip"
+                  [disabled]="!commentsForFip"
                   color="accent" mat-raised-button>INTIMATE FIP</button>
               </div>
             </div>
@@ -363,11 +363,11 @@
                   {{!hideForms ? 'FILTER MY SECTIONS' : 'SHOW ALL SECTIONS'}}
                 </button>
               </div>
-              <div class="fullbtn">
+              <!-- <div class="fullbtn">
                 <button [disabled]="reviewAdded" color="primary" class="control-btn" mat-flat-button>
                   {{'ASSIGN TO MEMBERS'}}
                 </button>
-              </div>
+              </div> -->
               <!-- <div class="comments-box">
                 <mat-form-field appearance="outline">
                   <mat-label>Comments for others</mat-label>

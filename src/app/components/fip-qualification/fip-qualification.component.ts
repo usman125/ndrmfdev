@@ -365,6 +365,15 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
 
   submitAllSections() {
 
+    const options = {
+      title: 'Success!',
+      message: 'Accreditation Received, we will review your application.',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
+    };
+
     // this.allSmes.forEach(element => {
     let object = {
       data: JSON.stringify(this.allSmes[0].data),
@@ -376,6 +385,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       result => {
         console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
         this.getQualificationRequest(null);
+        this._confirmModelService.open(options);
       },
       error => {
         console.log("ERROR AFTER ADDING QUALIFICATION:--", error);

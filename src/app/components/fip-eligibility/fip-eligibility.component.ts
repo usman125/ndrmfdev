@@ -6,12 +6,13 @@ declare var $: any;
 import { AccreditationRequestService } from "../../services/accreditation-request.service";
 import { SettingsService } from "../../services/settings.service";
 import { Router } from '@angular/router';
+import { ConfirmModelService } from '../../services/confirm-model.service';
 
 @Component({
   selector: 'app-fip-eligibility',
   templateUrl: './fip-eligibility.component.html',
   styleUrls: ['./fip-eligibility.component.css'],
-  providers: []
+  providers: [ConfirmModelService]
 })
 export class FipEligibilityComponent implements OnInit, OnDestroy {
 
@@ -36,6 +37,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
     private _accreditationRequestService: AccreditationRequestService,
     private _authStore: AuthStore,
     private _settingsService: SettingsService,
+    private _confirmModelService: ConfirmModelService,
     private _router: Router,
   ) { }
 
@@ -116,6 +118,15 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
   }
 
   onSubmit($event) {
+    const options = {
+      title: 'Success!',
+      message: 'Eligibility request Received, we will review your application.',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
+    };
+
     this.secondForm = $event.data;
     this.form.exists = true;
     console.log('NEW SUBMITTED:--', $event.data);
@@ -125,6 +136,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
     ).subscribe(
       result => {
         console.log("RESULT AFTER ADDING ELIGIBLITY:--", result);
+        this._confirmModelService.open(options);
         this.getEligibilityRequest();
       },
       error => {

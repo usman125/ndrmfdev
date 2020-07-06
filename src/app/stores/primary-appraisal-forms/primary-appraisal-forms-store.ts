@@ -105,6 +105,16 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     })
   }
 
+  goToPDRMC() {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        status: 'Upload PDRMC',
+      }
+    });
+  }
+
   approveExtApparisalByGm() {
     this.setState({
       ...this.state,

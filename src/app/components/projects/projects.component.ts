@@ -52,6 +52,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
     // this.getAllProjects();
     if (this.loggedUser.role === 'fip') this.getAllProjects();
+    if (this.loggedUser.role === 'govt') this.getAllProjects();
     if (this.loggedUser.role === 'gm') this.getGmProjects();
     if (this.loggedUser.role === 'ceo') this.getCeoProjects();
     if (this.loggedUser.role === 'process owner' && this.viewType !== 'gia') this.getPoProjects();

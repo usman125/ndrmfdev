@@ -52,7 +52,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   @Output() show: any = null;
   @Output() proMonths: any = null;
-  
+
   @Input() showFillApprasialBtn: boolean = true;
   @Input() viewType: string = 'user';
   // @Output() viewType2: string = 'view';
@@ -82,6 +82,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   // @Output() complete = new EventEmitter<string>();
 
   giaDoc: any = [];
+  pc1Files: any = [];
 
 
   constructor(
@@ -188,7 +189,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             reviewHistory: null,
             reviewStatus: null,
             sme: null,
-            template: this.selectedProject.implementationPlan,
+            template: this.selectedProject.implementationPlan ? this.selectedProject.implementationPlan : null,
             templateType: null,
             totalScore: null,
           }
@@ -533,6 +534,22 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       }
       // this.uploadFiles();
       console.log("Uploaded Files GIA DOC UPLOAD:---", this.giaDoc);
+    };
+    fileUpload.click();
+  }
+
+  pc1Upload() {
+    const fileUpload = document.getElementById('uploadPC1') as HTMLInputElement;
+    fileUpload.onchange = () => {
+      for (let index = 0; index < fileUpload.files.length; index++) {
+        const file = fileUpload.files[index];
+        this.pc1Files.push({
+          data: file, state: 'in',
+          inProgress: false, progress: 0, canRetry: false, canCancel: true
+        });
+      }
+      // this.uploadFiles();
+      console.log("Uploaded Files FOR PC! GOVT:---", this.pc1Files);
     };
     fileUpload.click();
   }
@@ -1233,6 +1250,32 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         console.log('QPR COMMENCED SUCCEFFULLY:--', error);
       }
     )
+  }
+
+  goToPDRMC(flag) {
+    // const fd = new FormData();
+    // fd.append(this.param, this.files[0].data);
+    // this._projectService.uploadFiles(
+    //   this.selectedProjectId,
+    //   'UPLOAD_PC1',
+    //   fd
+    // ).subscribe(
+    //   (result: any) => {
+    //     console.log("RESULT AFTER UPLOADING FILE MOMS TAC MEETING:--", result);
+    //     // const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
+    //     // fileUpload.value = '';
+    //     this.pc1Files = [];
+    //     this._primaryAppraisalFormsStore.goToPDRMC();
+    //   },
+    //   error => {
+    //     console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
+    //   }
+    //   );
+    this._primaryAppraisalFormsStore.goToPDRMC();
+  }
+
+  goToDraft() {
+
   }
 
 }

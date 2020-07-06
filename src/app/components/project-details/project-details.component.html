@@ -858,22 +858,54 @@
                 </button>
               </div>
             </ng-container>
-            <ng-container *ngIf="selectedProject?.status === 'Offer Letter'"></ng-container>
+            <ng-container>
+              <span class="mb-3" *ngIf="selectedProject.status === 'Upload PC1'">
+                You need to upload your PC1 files in order to move forward with other project requirements
+              </span>
+              <span class="mb-3" *ngIf="selectedProject?.status === 'Upload PDRMC'">
+                You need to upload your PDRMC files in order to move forward with other project requirements
+              </span>
+              <div *ngIf="selectedProject?.status === 'Upload PC1' || selectedProject?.status === 'Upload PDRMC'">
+                <ul>
+                  <li *ngFor="let file of pc1Files" style="list-style-type: none;">
+                    <span id="file-label">
+                      {{file.data.name}}
+                    </span>
+                  </li>
+                </ul>
+                <input class="display-block" type="file" id="uploadPC1" name="uploadPC1" multiple="multiple"
+                  accept="{{accept}}" style="display: none;" />
+                <button mat-raised-button color="warn" (click)="pc1Upload()">
+                  <mat-icon>file_upload</mat-icon>
+                  {{selectedProject.status === 'Upload PC1' ? 'Upload PC1' : 'Upload PDRMC'}}
+                </button>
+              </div>
+            </ng-container>
           </mat-card-content>
+          <mat-card-actions *ngIf="loggedUser?.orgName === 'govt'">
+            <button color="primary" *ngIf="selectedProject?.status === 'Upload PC1'" [disabled]="pc1Files.length === 0" mat-button
+              (click)="goToPDRMC('yes')">
+              {{'Activate PDRMC' | uppercase}}
+            </button>
+            <button color="primary" *ngIf="selectedProject?.status === 'Upload PDRMC'" [disabled]="pc1Files.length === 0" mat-button
+              (click)="goToDraft()">
+              {{'Activate DRAFT' | uppercase}}
+            </button>
+          </mat-card-actions>
         </mat-card>
       </div>
       <span id="myTopElement" #myTopElement>
       </span>
       <!-- SUBMIITED SECTIONS AND PIP-->
-      <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary"
-        *ngIf="viewType === 'po' || viewType === 'dm' || viewType === 'propapp' || viewType === 'extapp'">
+      <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary" *ngIf="viewType === 'po' || viewType === 'dm' || viewType === 'propapp' || viewType === 'extapp'
+        && selectedProject?.status !== 'Upload PC1' && selectedProject?.status !== 'Upload PDRMC'">
         <mat-toolbar-row>
           <span>Submitted Details</span>
           <div class="example-spacer"></div>
         </mat-toolbar-row>
       </mat-toolbar>
       <mat-toolbar class="mat-elevation-z8 custom-height-toolbar" style="padding: 15px 0px;" color="primary"
-        *ngIf="viewType === 'user'">
+        *ngIf="viewType === 'user' && selectedProject?.status !== 'Upload PC1' && selectedProject?.status !== 'Upload PDRMC'">
         <mat-toolbar-row>
           <div class="section-progress">
             <span>Submit(ted) Details</span>
@@ -905,7 +937,8 @@
           </button>
         </mat-toolbar-row>
       </mat-toolbar>
-      <mat-card class="m-20 mb-0">
+      <mat-card class="m-20 mb-0" *ngIf="selectedProject?.status !== 'Upload PC1'
+       && selectedProject?.status !== 'Upload PDRMC'">
         <mat-card-content>
           <div class="tabs-top-container">
             <div class="top-tabs pb-0" style="position: sticky;top: 65px;">
@@ -991,18 +1024,18 @@
       </mat-card>
 
       <!-- PROJECT PLAN AND IMPLEMENTATION -->
-      <span id="myTopElement4" #myTopElement4></span>
+      <!-- <span id="myTopElement4" #myTopElement4></span>
       <mat-card class="m-20 p-0">
         <mat-card-content>
           <app-project-work-plan [proMonths]="proMonths"></app-project-work-plan>
         </mat-card-content>
-      </mat-card>
+      </mat-card> -->
 
 
       <span id="myTopElement3" #myTopElement3></span>
-      <mat-card class="m-20 mt-0 pt-1">
+      <mat-card class="m-20 mt-0 pt-1" *ngIf="sectionStats.pendingCount === 0">
         <mat-card-content>
-          <div class="display-flex-row pt-3 mb-3" *ngIf="sectionStats.pendingCount === 0">
+          <div class="display-flex-row pt-3 mb-3">
             <mat-button-toggle-group [(ngModel)]="costTabsType" #group="matButtonToggleGroup">
               <mat-button-toggle (change)="costTabChanged(item)" *ngFor="let item of costSections; let i = index;"
                 [value]="item.name">
