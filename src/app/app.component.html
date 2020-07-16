@@ -8,6 +8,12 @@
     [ngClass]="{'app-content': !loggedUser, 'unicorn-light-theme': themeName === 'unicorn-light-theme','unicorn-dark-theme': themeName === 'unicorn-dark-theme' }"
     class="example-container">
     <mat-sidenav #sidenav *ngIf="loggedUser" mode="side" [opened]="sideNavMode" class="example-sidenav">
+      <div class="profile-info">
+        <img src="../assets/dummy.png" alt="Profile Image">
+        <div class="pro-name">
+          <span id="answer">{{userInfo?.firstName}}&nbsp;{{userInfo?.lastName}}</span>
+        </div>
+      </div>
       <div class="hero" *ngIf="loggedUserRole === 'admin'">
         <mat-accordion multi="true">
 

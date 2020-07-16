@@ -186,7 +186,7 @@
         justify-content: flex-end;
         padding: 15px;">
         <!-- <button [disabled]="selectedProject?.implementationPlan !== null || selectedProject?.status === 'GIA'" *ngIf="!apiLoading" [disabled]="allCosts.length === 0" mat-raised-button color="primary" -->
-        <button [disabled]="selectedProject?.status === 'GIA' || allCosts.length === 0" *ngIf="!apiLoading && 
+        <button [disabled]="selectedProject?.status === 'Checklist to FIP' || allCosts.length === 0" *ngIf="!apiLoading && 
         loggedUser?.role === 'fip'" mat-raised-button color="primary" (click)="saveCostingHeads()">SAVE</button>
         <button *ngIf="!apiLoading && 
         loggedUser?.role === 'admin'" mat-raised-button color="primary" (click)="saveCostingHeads()">SAVE</button>

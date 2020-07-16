@@ -100,7 +100,23 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
       ...this.state,
       selectedProject: {
         ...this.state.selectedProject,
-        status: 'Preliminary Appraisal',
+        preAppraisal: {
+          ...this.state.selectedProject.preAppraisal,
+          subStatus: 'Approved'
+        }
+      }
+    })
+  }
+
+  disapprovePreApparisalByGm() {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        preAppraisal: {
+          ...this.state.selectedProject.preAppraisal,
+          subStatus: 'Rejected'
+        }
       }
     })
   }
@@ -120,7 +136,23 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
       ...this.state,
       selectedProject: {
         ...this.state.selectedProject,
-        status: 'Extended Appraisal',
+        extendedAppraisal: {
+          ...this.state.selectedProject.extendedAppraisal,
+          subStatus: 'Approved'
+        }
+      }
+    })
+  }
+
+  disapproveExtApparisalByGm() {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        extendedAppraisal: {
+          ...this.state.selectedProject.extendedAppraisal,
+          subStatus: 'Rejected'
+        }
       }
     })
   }

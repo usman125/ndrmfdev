@@ -209,6 +209,16 @@ export class AuthStore extends Store<AuthState> {
     })
   }
 
+  setUserInfo(user) {
+    this.setState({
+      ...this.state,
+      auth: {
+        ...this.state.auth,
+        userInfo: user
+      }
+    })
+  }
+
   setOrgName(name) {
     this.setState({
       ...this.state,

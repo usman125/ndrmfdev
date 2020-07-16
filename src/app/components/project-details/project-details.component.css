@@ -152,3 +152,6 @@ mat-button-toggle-group .mat-button-toggle-checked .mat-button-toggle-label-cont
 .proj-detail .mat-button-toggle-checked .mat-button-toggle-label-content {
   color: #333 !important;
 }
+.govfip {
+    width: 100% !important;
+}

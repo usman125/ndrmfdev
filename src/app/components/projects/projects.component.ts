@@ -232,14 +232,27 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this._projectService.commenceNewProjects(values).subscribe(
       (result: any) => {
         console.log("RESULT ADDING PROJECT:---", result);
-        this._projectsStore.addProject(
-          result.id,
-          this.loggedUser.firstName + this.loggedUser.lastName,
-          values.name,
-          'Draft',
-          new Date().toISOString(),
-          values.thematicAreaName
-        )
+        if (this.viewType !== 'govt') {
+
+          this._projectsStore.addProject(
+            result.id,
+            this.loggedUser.firstName + this.loggedUser.lastName,
+            values.name,
+            'Draft',
+            new Date().toISOString(),
+            values.thematicAreaName
+          );
+        } else {
+          this._projectsStore.addProject(
+            result.id,
+            this.loggedUser.firstName + this.loggedUser.lastName,
+            values.name,
+            'Upload PC1',
+            new Date().toISOString(),
+            values.thematicAreaName
+          );
+
+        }
       },
       error => {
         console.log("ERROR ADDING PROJECT:---", error);

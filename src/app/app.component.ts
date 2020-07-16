@@ -37,6 +37,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   addMobileClasses: boolean = false;
 
   loading: boolean = false;
+  userInfo: any = null;
 
   constructor(
     private _authStore: AuthStore,
@@ -73,6 +74,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     // console.log("APP COMPONENT");
     this._authStore.setThemeName('material-base-theme');
     if (this.currentUser) {
+      this._authStore.setUserInfo(this.currentUser);
       this._authStore.setLoginState(true);
       this._authStore.setUserRole(this.currentUser.role);
       this._authStore.setEligibleFlag(this.currentUser.eligibileFlag);
@@ -94,6 +96,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           this.themeName = auth.auth.checkedThemeName;
           this.addMobileClasses = auth.auth.applyMobileClasses;
           this.orgName = auth.auth.orgName;
+          this.userInfo = auth.auth.userInfo;
           if (this.themeName === 'unicorn-dark-theme') {
             this._overlayContainer.getContainerElement().classList.remove('unicorn-light-theme');
             this._overlayContainer.getContainerElement().classList.remove('material-base-theme');
@@ -107,6 +110,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
             this._overlayContainer.getContainerElement().classList.remove('unicorn-light-theme');
             this._overlayContainer.getContainerElement().classList.remove('unicorn-dark-theme');
           }
+          // console.log(this.userInfo);
         })
       );
     } else {
@@ -114,6 +118,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       this.subscriptions.add(
         this._authStore.state$.subscribe((auth) => {
           this.loggedUser = auth.auth.loggedUser;
+          // console.log(this.loggedUser)
         })
       );
       this._authStore.setRouteName('Login');

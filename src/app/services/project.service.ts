@@ -193,8 +193,15 @@ export class ProjectService {
   }
 
   approvePreApparisalByGm(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=PRELIMINARY_APPRAISAL`;
-    const status = 'PRELIMINARY_APPRAISAL';
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=APPROVED`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
+  disapprovePreApparisalByGm(id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=REJECTED`;
     return this._httpClient.put(
       url,
       null
@@ -202,8 +209,16 @@ export class ProjectService {
   }
 
   approveExtApparisalByGm(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=EXTENDED_APPRAISAL`;
-    const status = 'PRELIMINARY_APPRAISAL';
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=APPROVED`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
+
+  disapproveExtApparisalByGm(id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=REJECTED`;
     return this._httpClient.put(
       url,
       null

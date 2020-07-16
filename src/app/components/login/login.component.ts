@@ -56,6 +56,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     )
 
     if (this.loggedUser) {
+      this._authStore.setUserInfo(this.loggedUser);
       if (this.loggedUser.role === 'admin') {
         this._router.navigate(['adminhome']);
       }
@@ -117,6 +118,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.user.role = 'fip';
         }
         console.log("USER:---", this.user);
+        this._authStore.setUserInfo(this.user);
         this._authStore.setAuthToken(this.user.authToken);
         this._authStore.setUserRole(this.user.role);
         this._authStore.setThemeName(this.themeName);

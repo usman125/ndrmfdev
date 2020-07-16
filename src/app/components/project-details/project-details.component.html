@@ -221,14 +221,16 @@
         <mat-toolbar-row>
           <span>Proposal Sections</span>
           <div class="example-spacer"></div>
-          <button matTooltip="Submitted Details!"
-            (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'start' })" class="m-1" mat-button>
-            <mat-icon class="mr-2">view_list</mat-icon>
-          </button>
-          <button matTooltip="Viem Implementation Plan!"
-            (click)="myTopElement3.scrollIntoView({ behavior: 'smooth', block: 'start' })" class="m-1" mat-button>
-            <mat-icon class="mr-2">fact_check</mat-icon>
-          </button>
+          <div *ngIf="selectedProject?.govFip === false">
+            <button matTooltip="Submitted Details!"
+              (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'start' })" class="m-1" mat-button>
+              <mat-icon class="mr-2">view_list</mat-icon>
+            </button>
+            <button matTooltip="Viem Implementation Plan!"
+              (click)="myTopElement3.scrollIntoView({ behavior: 'smooth', block: 'start' })" class="m-1" mat-button>
+              <mat-icon class="mr-2">fact_check</mat-icon>
+            </button>
+          </div>
           <button *ngIf="loggedUser.role !== 'sme'" matTooltip="View Comments Matrix!" (click)="viewCommentsMatrix()"
             class="m-1" mat-button>
             <mat-icon class="mr-2">table_chart</mat-icon>
@@ -362,7 +364,7 @@
       <span id="myTopElement2" #myTopElement2></span>
       <mat-card class="m-20 p-2" *ngIf="(loggedUser.role === 'gm' || loggedUser.role === 'ceo') || 
       (loggedUser.role === 'sme' || loggedUser.role === 'dm pam' || loggedUser.role === 'process owner' && 
-      viewType === 'propapp' || viewType === 'po' || viewType === 'extapp')">
+      viewType === 'propapp' || viewType === 'po' || viewType === 'extapp' || viewType === 'dm')">
         <mat-card-title>
           <h5 class="review-box pb-0">Add General Remarks</h5>
         </mat-card-title>
@@ -497,7 +499,7 @@
           </mat-toolbar-row>
         </mat-toolbar>
         <mat-card-content>
-          <div class="project-details p-3">
+          <div class="project-details p-3" *ngIf="selectedProject?.govFip === false">
             <div class="field">
               <div class="title">Name</div>
               <div class="value">{{selectedProjectInfo?.projectName}}</div>
@@ -532,6 +534,24 @@
               </div>
             </div>
           </div>
+          <div class="project-details p-3" *ngIf="selectedProject?.govFip === true">
+            <mat-list>
+              <mat-list-item class="govfip">
+                <mat-icon mat-list-icon>assignment</mat-icon>
+                <div mat-line>{{'PC1 Uploaded'}}</div>
+                <!-- <div mat-line>{{sectionStats?.pendingCount}}</div> -->
+                <!-- <div mat-line><a [routerLink]="/#">Download PC1</a></div> -->
+                <div mat-line><a href="#">View PC1</a></div>
+              </mat-list-item>
+              <mat-list-item class="govfip">
+                <mat-icon mat-list-icon>assignment</mat-icon>
+                <div mat-line>{{'PDRMC Uploaded'}}</div>
+                <!-- <div mat-line>{{sectionStats?.unassignCount}}</div> -->
+                <!-- <div mat-line><a [routerLink]="/">Download PDRMC</a></div> -->
+                <div mat-line><a href="#">View PDRMC</a></div>
+              </mat-list-item>
+            </mat-list>
+          </div>
         </mat-card-content>
 
         <mat-card-actions class="pr-3 pl-3 pt-0 pb-3 footer-btns"
@@ -541,11 +561,13 @@
               <div class="expiry-section mb-2">
                 <button [disabled]="selectedProject?.preAppraisal?.status === 'Pending' ||
                 selectedProject?.extendedAppraisal !== null || 
-                selectedProject?.preAppraisal?.status === 'Marked to GM'  || 
-                selectedProject?.preAppraisal?.status === 'Marked to CEO'" class="mt-1 mb-1" mat-button color="primary"
-                  (click)="confirmApprasial()">
+                selectedProject?.preAppraisal?.isMarkedTo === 'Marked to GM'  || 
+                selectedProject?.preAppraisal?.isMarkedTo === 'Marked to CEO'" class="mt-1 mb-1" mat-button
+                  color="primary" (click)="confirmApprasial()">
                   <mat-icon class="mr-1">description</mat-icon>
-                  {{selectedProject?.preAppraisal && selectedProject?.preAppraisal.status === 'Expired' ? 'EXTEND PRE-APPRAISAL' : 'Prepare Pre-appraisal' | uppercase}}
+                  {{selectedProject?.preAppraisal && 
+                    selectedProject?.preAppraisal.status === 'Expired' ? 'EXTEND PRE-APPRAISAL' : 
+                    'Prepare Pre-appraisal' | uppercase}}
                 </button>
                 <mat-chip-list>
                   <mat-chip class="ml-3 mt-2" color="accent" selected
@@ -570,7 +592,8 @@
               </div>
               <div class="expiry-sections">
                 <button *ngIf="selectedProject?.preAppraisal?.status === 'Completed'|| 
-                selectedProject?.preAppraisal?.status === 'Marked to GM'" mat-button color="primary"
+                selectedProject?.preAppraisal?.status === 'Marked to GM' || 
+                selectedProject?.preAppraisal?.status === 'Marked to CEO'" mat-button color="primary"
                   (click)="viewPreApprasial()">
                   <mat-icon class="mr-1">description</mat-icon> {{'View pre-appraisal' | uppercase}}
                 </button>
@@ -597,11 +620,11 @@
               <div class="expiry-section mb-2">
                 <button class="mt-1 mb-1" *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button
                   color="primary" [disabled]="selectedProject?.extendedAppraisal !== null && 
-                  selectedProject?.extendedAppraisal?.status === 'Pending' || 
-                  selectedProject?.status !== 'Extended Appraisal'" (click)="prepareExtAppraisal()">
+                  selectedProject?.extendedAppraisal?.status === 'Pending'" (click)="prepareExtAppraisal()">
                   <mat-icon class="mr-1">description</mat-icon> {{selectedProject?.extendedAppraisal && 
                     selectedProject?.extendedAppraisal.status === 'Expired' ? 
-                    'EXTEND EXT-APPRAISAL' : selectedProject?.extendedAppraisal && selectedProject?.extendedAppraisal.status === 'Completed' ?
+                    'EXTEND EXT-APPRAISAL' : selectedProject?.extendedAppraisal && 
+                    selectedProject?.extendedAppraisal.status === 'Completed' ?
                     'RE-ASSIGN EXT-APPRAISAL' : 'Prepare ext-appraisal' | uppercase}}
                 </button>
                 <mat-chip-list>
@@ -681,13 +704,16 @@
                   (selectedProject?.extendedAppraisal  !== null)" mat-button color="accent">
                   <mat-icon class="mr-1">sync_alt</mat-icon> {{'change Project stage' | uppercase}}
                 </button>
+                <button (click)="setProjectStages()" mat-button color="accent">
+                  <mat-icon class="mr-1">sync_alt</mat-icon> {{'change Project stage' | uppercase}}
+                </button>
               </div>
             </div>
           </div>
         </mat-card-actions>
 
         <mat-card-actions class="pl-3 pr-3 pb-3 pt-0 footer-btns"
-          *ngIf="(viewType === 'propapp') && loggedUser.role !== 'sme'">
+          *ngIf="viewType === 'propapp' && loggedUser.role !== 'sme'">
           <div class="expiry-sections mb-2">
             <a *ngIf="selectedProject?.preAppraisal?.status === 'Pending'" mat-button color="primary"
               (click)="viewPreApprasial()">
@@ -746,7 +772,8 @@
               </mat-chip>
             </mat-chip-list>
           </div>
-          <button (click)="assginProposalSections()" class="m-1" mat-button color="accent">
+          <button [disabled]="selectedProject?.extendedAppraisal === null" (click)="assginProposalSections()"
+            class="m-1" mat-button color="accent">
             <mat-icon class="mr-1">schedule</mat-icon> {{'ASSIGN SECTIONS TO DESK' | uppercase}}
           </button>
         </mat-card-actions>
@@ -758,7 +785,8 @@
               <mat-icon class="mr-1">description</mat-icon> {{'View pre-appraisal' | uppercase}}
             </button>
             <button mat-button color="accent" [disabled]="selectedProject?.status === 'Preliminary Appraisal' ||
-          selectedProject?.status === 'Marked to CEO'" (click)="approvePreApprasial()">
+          selectedProject?.status === 'Marked to CEO' || selectedProject?.preAppraisal?.isMarkedTo !== 'Marked to GM'
+          || selectedProject?.preAppraisal?.isMarkedTo === null" (click)="approvePreApprasial()">
               <mat-icon class="mr-1">description</mat-icon> {{'Approve pre-appraisal' | uppercase}}
             </button>
           </div>
@@ -768,12 +796,13 @@
               <mat-icon class="mr-1">description</mat-icon> {{'View ext-appraisal' | uppercase}}
             </button>
             <button mat-button color="accent" [disabled]="selectedProject?.status === 'Extended Appraisal' 
-            || selectedProject?.preAppraisal?.status === 'Marked to CEO'" (click)="approveExtApprasial()">
+            || selectedProject?.preAppraisal?.status === 'Marked to CEO' || selectedProject?.preAppraisal?.isMarkedTo !== 'Marked to GM'
+            || selectedProject?.preAppraisal?.isMarkedTo === null" (click)="approveExtApprasial()">
               <mat-icon class="mr-1">description</mat-icon> {{'Approve ext-appraisal' | uppercase}}
             </button>
           </div>
-          <button *ngIf="loggedUser.role === 'gm'" mat-button color="warn"
-            [disabled]="selectedProject?.preAppraisal?.status === 'Marked to CEO'" (click)="markToCeo()">
+          <button *ngIf="loggedUser.role === 'gm'" mat-button color="warn" [disabled]="selectedProject?.preAppraisal?.status === 'Marked to CEO' || selectedProject?.preAppraisal?.isMarkedTo !== 'Marked to GM'
+            || selectedProject?.preAppraisal?.isMarkedTo === null" (click)="markToCeo()">
             <mat-icon class="mr-1">description</mat-icon> {{'Mark To Ceo' | uppercase}}
           </button>
         </mat-card-actions>
@@ -781,13 +810,17 @@
 
         <mat-card-actions class="p-3 footer-btns" *ngIf="loggedUser.role === 'ceo'">
           <div class="expiry-sections mb-2">
-            <button *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button color="primary"
+            <button *ngIf="selectedProject?.preAppraisal !== null" mat-button color="primary"
               (click)="viewPreApprasial()">
               <mat-icon class="mr-1">description</mat-icon> {{'View pre-appraisal' | uppercase}}
             </button>
-            <button mat-button color="accent" [disabled]="selectedProject?.status === 'Extended Appraisal'"
-              (click)="approvePreApprasial()">
+            <button mat-button color="accent" [disabled]="selectedProject?.status === 'Extended Appraisal' 
+            || selectedProject?.preAppraisal?.subStatus !== null" (click)="approvePreApprasial()">
               <mat-icon class="mr-1">description</mat-icon> {{'Approve pre-appraisal' | uppercase}}
+            </button>
+            <button mat-button color="warn" [disabled]="selectedProject?.status === 'Extended Appraisal' 
+            || selectedProject?.preAppraisal?.subStatus !== null" (click)="rejectPreApprasial()">
+              <mat-icon class="mr-1">description</mat-icon> {{'reject pre-appraisal' | uppercase}}
             </button>
           </div>
           <div class="expiry-sections mb-2">
@@ -862,10 +895,10 @@
               <span class="mb-3" *ngIf="selectedProject.status === 'Upload PC1'">
                 You need to upload your PC1 files in order to move forward with other project requirements
               </span>
-              <span class="mb-3" *ngIf="selectedProject?.status === 'Upload PDRMC'">
+              <span class="mb-3" *ngIf="selectedProject?.status === 'Upload PDRMC Mins'">
                 You need to upload your PDRMC files in order to move forward with other project requirements
               </span>
-              <div *ngIf="selectedProject?.status === 'Upload PC1' || selectedProject?.status === 'Upload PDRMC'">
+              <div *ngIf="selectedProject?.status === 'Upload PC1' || selectedProject?.status === 'Upload PDRMC Mins'">
                 <ul>
                   <li *ngFor="let file of pc1Files" style="list-style-type: none;">
                     <span id="file-label">
@@ -877,18 +910,18 @@
                   accept="{{accept}}" style="display: none;" />
                 <button mat-raised-button color="warn" (click)="pc1Upload()">
                   <mat-icon>file_upload</mat-icon>
-                  {{selectedProject.status === 'Upload PC1' ? 'Upload PC1' : 'Upload PDRMC'}}
+                  {{selectedProject.status === 'Upload PC1' ? 'Upload PC1' : 'Upload PDRMC Mins'}}
                 </button>
               </div>
             </ng-container>
           </mat-card-content>
           <mat-card-actions *ngIf="loggedUser?.orgName === 'govt'">
-            <button color="primary" *ngIf="selectedProject?.status === 'Upload PC1'" [disabled]="pc1Files.length === 0" mat-button
-              (click)="goToPDRMC('yes')">
+            <button color="primary" *ngIf="selectedProject?.status === 'Upload PC1'" [disabled]="pc1Files.length === 0"
+              mat-button (click)="goToPDRMC('yes')">
               {{'Activate PDRMC' | uppercase}}
             </button>
-            <button color="primary" *ngIf="selectedProject?.status === 'Upload PDRMC'" [disabled]="pc1Files.length === 0" mat-button
-              (click)="goToDraft()">
+            <button color="primary" *ngIf="selectedProject?.status === 'Upload PDRMC Mins'"
+              [disabled]="pc1Files.length === 0" mat-button (click)="goToDraft()">
               {{'Activate DRAFT' | uppercase}}
             </button>
           </mat-card-actions>
@@ -897,15 +930,15 @@
       <span id="myTopElement" #myTopElement>
       </span>
       <!-- SUBMIITED SECTIONS AND PIP-->
-      <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary" *ngIf="viewType === 'po' || viewType === 'dm' || viewType === 'propapp' || viewType === 'extapp'
-        && selectedProject?.status !== 'Upload PC1' && selectedProject?.status !== 'Upload PDRMC'">
+      <mat-toolbar class="mat-elevation-z8" color="primary" *ngIf="(viewType === 'po' || viewType === 'dm' || 
+      viewType === 'propapp' || viewType === 'extapp') && selectedProject?.govFip === false">
         <mat-toolbar-row>
           <span>Submitted Details</span>
           <div class="example-spacer"></div>
         </mat-toolbar-row>
       </mat-toolbar>
-      <mat-toolbar class="mat-elevation-z8 custom-height-toolbar" style="padding: 15px 0px;" color="primary"
-        *ngIf="viewType === 'user' && selectedProject?.status !== 'Upload PC1' && selectedProject?.status !== 'Upload PDRMC'">
+      <mat-toolbar class="mat-elevation-z8 custom-height-toolbar" style="padding: 15px 0px;" color="primary" *ngIf="viewType === 'user' && 
+        selectedProject?.govFip === false">
         <mat-toolbar-row>
           <div class="section-progress">
             <span>Submit(ted) Details</span>
@@ -937,8 +970,7 @@
           </button>
         </mat-toolbar-row>
       </mat-toolbar>
-      <mat-card class="m-20 mb-0" *ngIf="selectedProject?.status !== 'Upload PC1'
-       && selectedProject?.status !== 'Upload PDRMC'">
+      <mat-card class="m-20 mb-0" *ngIf="selectedProject?.govFip === false">
         <mat-card-content>
           <div class="tabs-top-container">
             <div class="top-tabs pb-0" style="position: sticky;top: 65px;">
@@ -1033,7 +1065,7 @@
 
 
       <span id="myTopElement3" #myTopElement3></span>
-      <mat-card class="m-20 mt-0 pt-1" *ngIf="sectionStats.pendingCount === 0">
+      <mat-card class="m-20 mt-0 pt-1" *ngIf="sectionStats.pendingCount === 0 && selectedProject?.govFip === false">
         <mat-card-content>
           <div class="display-flex-row pt-3 mb-3">
             <mat-button-toggle-group [(ngModel)]="costTabsType" #group="matButtonToggleGroup">

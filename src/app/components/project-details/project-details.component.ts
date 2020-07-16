@@ -189,14 +189,15 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             reviewHistory: null,
             reviewStatus: null,
             sme: null,
-            template: this.selectedProject.implementationPlan ? this.selectedProject.implementationPlan : null,
+            template: this.selectedProject ? this.selectedProject.implementationPlan ? this.selectedProject.implementationPlan : null : null,
             templateType: null,
             totalScore: null,
           }
           this.unassignedProposalSections.push(pipSection);
           this.submitSections = submitCount;
           this.pendingSections = pendingCount;
-          let totalSections = pendingCount + unassignCount;
+          // let totalSections = pendingCount + unassignCount;
+          let totalSections = this.proposalSections.length;
           this.sectionStats.submitCount = submitCount;
           this.sectionStats.pendingCount = pendingCount;
           this.sectionStats.totalSections = totalSections;
@@ -1035,8 +1036,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       assignToGm: true,
     };
 
-    this._confirmModelService.open(options);
 
+    this._confirmModelService.open(options);
     this._confirmModelService.confirmed().subscribe(confirmed => {
       console.log("MARK TO GM STATUS", confirmed);
       if (confirmed) {
@@ -1044,6 +1045,37 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           result => {
             console.log("RESULT FROM APPROVE PRE_APPRAISAL:--", result);
             this._primaryAppraisalFormsStore.approvePreApparisalByGm();
+          },
+          error => {
+            console.log("ERROR FROM APPROVE PRE_APPRAISAL:--", error);
+          }
+        );
+      }
+    });
+
+  }
+
+  rejectPreApprasial() {
+    const options = {
+      title: 'Reject Preliminary Appraisal!',
+      message: 'By Clicking "Yes" project status will be changed',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: true,
+    };
+
+
+    this._confirmModelService.open(options);
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("MARK TO GM STATUS", confirmed);
+      if (confirmed) {
+        this._projectService.disapprovePreApparisalByGm(this.selectedProjectId).subscribe(
+          result => {
+            console.log("RESULT FROM APPROVE PRE_APPRAISAL:--", result);
+            this._primaryAppraisalFormsStore.disapprovePreApparisalByGm();
           },
           error => {
             console.log("ERROR FROM APPROVE PRE_APPRAISAL:--", error);
@@ -1253,28 +1285,45 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   goToPDRMC(flag) {
-    // const fd = new FormData();
-    // fd.append(this.param, this.files[0].data);
-    // this._projectService.uploadFiles(
-    //   this.selectedProjectId,
-    //   'UPLOAD_PC1',
-    //   fd
-    // ).subscribe(
-    //   (result: any) => {
-    //     console.log("RESULT AFTER UPLOADING FILE MOMS TAC MEETING:--", result);
-    //     // const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
-    //     // fileUpload.value = '';
-    //     this.pc1Files = [];
-    //     this._primaryAppraisalFormsStore.goToPDRMC();
-    //   },
-    //   error => {
-    //     console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
-    //   }
-    //   );
-    this._primaryAppraisalFormsStore.goToPDRMC();
+    const fd = new FormData();
+    fd.append(this.param, this.pc1Files[0].data);
+    this._projectService.uploadFiles(
+      this.selectedProjectId,
+      'UPLOAD_PC1',
+      fd
+    ).subscribe(
+      (result: any) => {
+        console.log("RESULT AFTER UPLOADING FILE MOMS TAC MEETING:--", result);
+        // const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
+        // fileUpload.value = '';
+        this.pc1Files = [];
+        this.updateStageMoms('UPLOAD_PDRMC', 'Upload PDRMC Mins');
+        // this._primaryAppraisalFormsStore.goToPDRMC();
+      },
+      error => {
+        console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
+      }
+    );
+    // this._primaryAppraisalFormsStore.goToPDRMC();
   }
 
   goToDraft() {
+    const fd = new FormData();
+    fd.append(this.param, this.pc1Files[0].data);
+    this._projectService.uploadFiles(
+      this.selectedProjectId,
+      'UPLOAD_PC1',
+      fd
+    ).subscribe(
+      (result: any) => {
+        console.log("RESULT UPLOADING PDRMC MINS:--", result);
+        this.pc1Files = [];
+        this.updateStageMoms('DRAFT', 'Draft');
+      },
+      error => {
+        console.log("RESULT UPLOADING PDRMC MINS:--", error);
+      }
+    );
 
   }
 

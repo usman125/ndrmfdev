@@ -148,3 +148,17 @@ mat-sidenav .mat-menu-item {
 .mat-expansion-panel{
   margin: 10px 15% !important;
 }
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.profile-info img {
+    border-radius: 50%;
+    width: 30%;
+    border: 1px solid gray;
+    margin-bottom: 12px;
+}
