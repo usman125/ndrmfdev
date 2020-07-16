@@ -136,6 +136,13 @@ export class UserService {
     );
   }
 
+  syncUsers() {
+    const url = `${AppConfig.apiUrl}/bridge/users/fetch`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
 
 
 }

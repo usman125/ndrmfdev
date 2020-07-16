@@ -2,7 +2,12 @@
   <mat-toolbar-row>
     <span>Users</span>
     <span class="example-spacer"></span>
-    <button matTooltip="Add User!" (click)="goToAdd()" mat-icon-button>
+    <button matTooltip="Sync User!" color="primary" (click)="syncUser()" mat-icon-button>
+      <mat-icon aria-hidden="false" aria-label="Sync User">sync_alt
+      </mat-icon>&nbsp;Sync users
+    </button>
+    <span class="example-spacer"></span>
+    <button matTooltip="Add User!" (click)="goToAdd()" color="primary" mat-icon-button>
       <mat-icon class="example-icon" aria-hidden="false" aria-label="Add User">add
       </mat-icon>
     </button>

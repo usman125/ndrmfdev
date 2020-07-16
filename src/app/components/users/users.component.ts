@@ -8,12 +8,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { UserService } from "../../services/user.service";
+import { ConfirmModelService } from '../../services/confirm-model.service';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
-  providers: [UserService]
+  providers: [ConfirmModelService]
 })
 export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -35,6 +36,7 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
     private _authStore: AuthStore,
     private _router: Router,
     private _userService: UserService,
+    private _confirmModelService: ConfirmModelService,
   ) { }
 
   ngOnInit() {
@@ -61,10 +63,10 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
             email: result[i].email,
             username: result[i].username,
             password: result[i].password || null,
-            role: result[i].roles ? 
-                    result[i].roles[0] ? 
-                      result[i].roles[0].name.toLowerCase() : 'FIP'.toLowerCase() 
-                  : null,
+            role: result[i].roles ?
+              result[i].roles[0] ?
+                result[i].roles[0].name.toLowerCase() : 'FIP'.toLowerCase()
+              : null,
             smeRef: null,
             department: result[i].departmentId || null,
             active: result[i].enabled,
@@ -132,8 +134,8 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
       user.roles,
       user.orgId,
       user.orgName,
-      );
-      this._router.navigate(['/edit-user', user.username]);
+    );
+    this._router.navigate(['/edit-user', user.username]);
   }
 
   applyFilter(event: Event) {
@@ -157,6 +159,39 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
   trackTask(index: number, item): string {
     // console.log("TRACK BY CALLED:---", index, item)
     return `${item.email}`;
+  }
+
+  syncUser() {
+    const options = {
+      title: 'Success!',
+      message: 'Registartion Received, we will review your application.',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
+    };
+
+    this._authStore.setLoading();
+    this._userService.syncUsers().subscribe(
+      (result: any) => {
+        this._authStore.removeLoading();
+        if (result.inserted !== 0) {
+          options.message = `${result.inserted} Users Inserted`
+        }
+        if (result.updated !== 0) {
+          options.message = `${result.updated} Users Updated`
+        }
+        if (result.rejectedUsers !== null) {
+          options.message = `${result.rejectedUsers} Users Rejected`
+        }
+        this._confirmModelService.open(options);
+        console.log("RESULT SYNCING USER:--", result);
+      },
+      error => {
+        this._authStore.removeLoading();
+        console.log("RESULT SYNCING USER:--", error);
+      }
+    )
   }
 
 
