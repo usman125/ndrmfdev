@@ -25,6 +25,7 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
   dataSource;
   loggedUser: any = null;
   loading: boolean;
+  withoutPasswords: boolean = false;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -48,6 +49,21 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loading = data.auth.apiCall;
       })
     );
+    this.getAllUsers();
+    this._subscription.add(
+      this._usersStore.state$.subscribe(data => {
+        this.allUsers = data.users;
+        console.log("ALL USERS ARE:--", this.allUsers);
+        this.dataSource = new MatTableDataSource(data.users);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      })
+    );
+    this.loggedUser = JSON.parse(localStorage.getItem('user'));
+  }
+
+  getAllUsers() {
+    this.withoutPasswords = false;
     this._authStore.setLoading();
     this._userService.getAllUsers().subscribe(
       (result: any) => {
@@ -82,22 +98,57 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this._usersStore.setAllUsers(usersArray);
 
-        this._subscription.add(
-          this._usersStore.state$.subscribe(data => {
-            this.allUsers = data.users;
-            console.log("ALL USERS ARE:--", this.allUsers);
-            this.dataSource = new MatTableDataSource(data.users);
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-          })
-        );
-        this.loggedUser = JSON.parse(localStorage.getItem('user'));
       },
       error => {
+        this.withoutPasswords = false;
         this._authStore.removeLoading();
         console.log("ERROR FROM ALL USERS:--", error);
       }
     );
+  }
+
+  getUsersWithoutCredentials() {
+    this.withoutPasswords = true;
+    this._authStore.setLoading();
+    this._userService.getUsersWithMissingCredentials().subscribe(
+      (result: any) => {
+        this._authStore.removeLoading();
+        console.log("ALL USERS WITHOUT CREDENTAILS:---", result);
+        let mainArray = [];
+        mainArray.push(result);
+        let usersArray = [];
+        for (let i = 0; i < result.length; i++) {
+          var object = {
+            id: result[i].id,
+            firstName: result[i].firstName,
+            lastName: result[i].lastName,
+            email: result[i].email,
+            username: result[i].username,
+            password: result[i].password || null,
+            role: result[i].roles ?
+              result[i].roles[0] ?
+                result[i].roles[0].name.toLowerCase() : 'FIP'.toLowerCase()
+              : null,
+            smeRef: null,
+            department: result[i].departmentId || null,
+            active: result[i].enabled,
+            eligibileFlag: false,
+            qualificationFlag: false,
+            roles: result[i].roles,
+            orgId: result[i].orgId,
+            orgName: result[i].orgName,
+            org: [{ 'id': result[i].orgId, 'name': result[i].orgName }]
+          }
+          usersArray.push(object);
+        }
+        this._usersStore.setAllUsers(usersArray);
+      },
+      error => {
+        this.withoutPasswords = false;
+        this._authStore.removeLoading();
+        console.log("RESULT AFTER GETTING MISSING CREDENTIAL USERS:--", error);
+      },
+    )
   }
 
   ngAfterViewInit() {
@@ -124,7 +175,7 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
       user.orgId,
       user.orgName,
     );
-    this._router.navigate(['/edit-user', user.username]);
+    this._router.navigate(['/edit-user', user.id]);
   }
 
   applyFilter(event: Event) {

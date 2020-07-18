@@ -1,15 +1,15 @@
 <ng-container>
-  <form [formGroup]="editUserForm" (ngSubmit)="editUser(editUserForm.value)">
-    <mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
-      <mat-toolbar-row>
-        <span>{{'Edit User'}}</span>
-        <span class="example-spacer"></span>
-        <button matTooltip="All Users!" (click)="goBack()" mat-icon-button aria-label="All Users">
-          <mat-icon>view_list</mat-icon>
-        </button>
-      </mat-toolbar-row>
-    </mat-toolbar>
-    <div style="position: relative;">
+  <mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>{{'Edit User'}}</span>
+      <span class="example-spacer"></span>
+      <button matTooltip="All Users!" (click)="goBack()" mat-icon-button aria-label="All Users">
+        <mat-icon>view_list</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div style="position: relative;">
+    <form [formGroup]="editUserForm" (ngSubmit)="editUser(editUserForm.value)">
       <mat-card class="m-20">
         <mat-card-content>
 
@@ -94,14 +94,13 @@
                 {{'Update' | uppercase}}
               </button>
               <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="35"></mat-progress-spinner>
-              <button [disabled]="selectedUser?.role === 'fip'" class="m-2" mat-raised-button color="warn"
-                type="submit">
-                {{'Reset' | uppercase}}
-              </button>
             </div>
           </div>
         </mat-card-content>
       </mat-card>
-    </div>
-  </form>
+    </form>
+    <!-- <button [disabled]="selectedUser?.role === 'fip'" class="m-2" mat-raised-button color="warn" type="submit">
+      {{'Reset' | uppercase}}
+    </button> -->
+  </div>
 </ng-container>

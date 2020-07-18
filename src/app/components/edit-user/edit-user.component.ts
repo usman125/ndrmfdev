@@ -58,9 +58,56 @@ export class EditUserComponent implements OnInit {
         this.apiLoading = data.auth.apiCall;
       })
     );
-    this.getRolesAndOrgs();
+
     this._activatedRoute.paramMap.subscribe(params => {
-      this.selectedUserId = params.get("username");
+      this.selectedUserId = params.get("userId");
+      this._userService.getUserById(this.selectedUserId).subscribe(
+        (result: any) => {
+          console.log("RESULT FROM USER INFO:---", result);
+          var object = {
+            id: result.id,
+            firstName: result.firstName,
+            lastName: result.lastName,
+            email: result.email,
+            username: result.username,
+            password: result.password || null,
+            role: result.roles ?
+              result.roles[0] ?
+                result.roles[0].name.toLowerCase() : 'FIP'.toLowerCase()
+              : null,
+            smeRef: null,
+            department: result.departmentId || null,
+            active: result.enabled,
+            eligibileFlag: false,
+            qualificationFlag: false,
+            roles: result.roles,
+            orgId: result.orgId,
+            orgName: result.orgName,
+            org: [{ 'id': result.orgId, 'name': result.orgName }]
+          }
+          setCurrentUser(
+            object.id,
+            object.firstName,
+            object.lastName,
+            object.email,
+            object.role,
+            object.smeRef,
+            object.department,
+            object.username,
+            object.password,
+            object.active,
+            object.eligibileFlag,
+            object.qualificationFlag,
+            object.roles,
+            object.orgId,
+            object.orgName,
+          );
+          this.getRolesAndOrgs();
+        },
+        error => {
+          console.log("RESULT FROM USER INFO:---", error)
+        }
+      );
     });
     currentUserReplay.subscribe((data) => {
       this.selectedUser = data;

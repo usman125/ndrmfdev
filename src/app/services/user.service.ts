@@ -155,6 +155,20 @@ export class UserService {
     );
   }
 
+  getUserById(id) {
+    const url = `${AppConfig.apiUrl}/user/${id}`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  getUsersWithMissingCredentials() {
+    const url = `${AppConfig.apiUrl}/user/missing-credentials`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
   syncUsers() {
     const url = `${AppConfig.apiUrl}/bridge/users/fetch`;
     return this._httpClient.get(
