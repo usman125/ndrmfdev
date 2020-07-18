@@ -34,6 +34,25 @@ export class UserService {
     );
   }
 
+  editUser(values, id) {
+    const url = `${AppConfig.apiUrl}/user/${id}`;
+    return this._httpClient.put(
+      url,
+      {
+        "departmentId": values.department,
+        "designationId": null,
+        "email": values.email,
+        "firstName": values.firstName,
+        "lastName": values.lastName,
+        "orgId": values.org.length ? values.org[0].id : null,
+        "password": values.password,
+        "roleId": values.role.length ? values.role[0].id : null,
+        "username": values.username,
+        "enabled":values.active
+      }
+    );
+  }
+
   getAllUsers() {
     const url = `${AppConfig.apiUrl}/user/`;
     return this._httpClient.get(

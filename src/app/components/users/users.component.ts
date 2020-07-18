@@ -58,6 +58,7 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
         let usersArray = [];
         for (let i = 0; i < result.length; i++) {
           var object = {
+            id: result[i].id,
             firstName: result[i].firstName,
             lastName: result[i].lastName,
             email: result[i].email,
@@ -106,20 +107,8 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
 
   eidtUser(user) {
     console.log("user to edit:--\n", user);
-    // setCurrentUser(
-    //   user.name,
-    //   user.email,
-    //   user.role,
-    //   user.smeRef,
-    //   user.department,
-    //   user.username,
-    //   user.password,
-    //   user.active,
-    //   user.eligibileFlag,
-    //   user.qualificationFlag,
-    // );
-    // this._changeDetectorRef.detectChanges();
     setCurrentUser(
+      user.id,
       user.firstName,
       user.lastName,
       user.email,

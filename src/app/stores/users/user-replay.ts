@@ -1,6 +1,7 @@
 import { Subject, ReplaySubject } from "rxjs";
 
 interface CurrentUserState {
+  id: string,
   firstName: string,
   lastName: string,
   email: string,
@@ -23,6 +24,7 @@ export const currentUserReplay = new ReplaySubject(1);
 routeEnd.pipe().subscribe(val => currentUserReplay.next(val));
 
 export const setCurrentUser = (
+  id: string,
   firstName: string,
   lastName: string,
   email: string,
@@ -39,6 +41,7 @@ export const setCurrentUser = (
   orgName: string,
 ) => {
   routeEnd.next({
+    id: id,
     firstName: firstName,
     lastName: lastName,
     email: email,

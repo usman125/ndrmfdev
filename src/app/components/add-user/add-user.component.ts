@@ -154,6 +154,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
       null,
       null,
       null,
+      null,
       false,
       false,
       false,
