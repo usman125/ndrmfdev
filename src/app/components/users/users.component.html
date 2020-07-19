@@ -21,7 +21,7 @@
       <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
     </mat-form-field>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-4 mt-3">
     <button *ngIf="!withoutPasswords" (click)="getUsersWithoutCredentials()" mat-raised-button color="primary">Filter without credentials</button>
     <button *ngIf="withoutPasswords" (click)="getAllUsers()" mat-raised-button color="primary">Get All Users</button>
   </div>
