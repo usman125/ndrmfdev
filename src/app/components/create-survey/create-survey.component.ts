@@ -42,6 +42,7 @@ export class CreateSurveyComponent implements OnInit {
 
   apiSmeResult: any = [];
   allProcessTypes: any = [];
+  allSubProcessTypes: any = [];
 
   Subscription: Subscription = new Subscription();
 
@@ -63,6 +64,7 @@ export class CreateSurveyComponent implements OnInit {
       smeRef: ['', Validators.required],
       type: ['', Validators.required],
       formIdentity: ['', Validators.required],
+      subProcess: [''],
     })
   }
 
@@ -94,6 +96,10 @@ export class CreateSurveyComponent implements OnInit {
   }
 
   fetchSectons(item) {
+    this.createProfileForm.patchValue({
+      'subProcess': '',
+    }, { onlySelf: true })
+    this.selectedSme = null;
     if (item) {
       if (item !== 'QUALIFICATION' || item === 'GIA_CHECKLIST') {
         this.createProfileForm.patchValue({
@@ -108,12 +114,34 @@ export class CreateSurveyComponent implements OnInit {
           if (result.sections) {
             this.allSmes = result.sections;
           }
+          this.getSubProcessTypes(item);
         },
         error => {
           console.log("ALL PROCESSES ERROR:---", error);
         }
       );
     }
+  }
+
+  getSubProcessTypes(item) {
+    this._settingsService.getSubProcessTypes(item).subscribe(
+      (result: any) => {
+        console.log("RESULT ALL SUB PROCESSES:--", result);
+        this.allSubProcessTypes = result;
+      },
+      error => {
+        console.log("RESULT ALL SUB PROCESSES:--", error);
+      }
+    )
+  }
+
+  subProcessTypeChanged($event) {
+    console.log("SUB PROCESS CHANGED:--", $event);
+    this.createProfileForm.patchValue({
+      'passingScore': 0,
+      'totalScore': 0,
+      'smeRef': 'none',
+    }, { onlySelf: true })
   }
 
   toggleBuilder() {
@@ -138,8 +166,10 @@ export class CreateSurveyComponent implements OnInit {
   }
 
   smeChanged($event) {
-    this.selectedSme = $event;
-    console.log("SME CHANGED:--", this.selectedSme);
+    if ($event !== 'none') {
+      this.selectedSme = $event;
+      console.log("SME CHANGED:--", this.selectedSme);
+    }
   }
 
   openSnackBar() {
@@ -158,26 +188,27 @@ export class CreateSurveyComponent implements OnInit {
     values.page = this.form.page;
     values.numOfPages = this.form.numPages;
     let smeId = this.selectedSme ? this.selectedSme.id : null;
-    this._settingsService.addSectionTemplate(smeId, values).subscribe(
-      result => {
-        console.log("RESULT FROM ADD SURVEY:--", result);
-        this.createProfileForm.reset();
-        this.createProfileForm.patchValue({ type: 'form' }, { onlySelf: true });
-        this.form = {
-          components: [],
-          display: "form",
-          page: 0,
-          refreshOn: "submit",
-          numPages: 2
-        };
-        this.refreshForm.emit({
-          form: this.form
-        });
-      },
-      error => {
-        console.log("ERROR FROM ADD SURVEY:--", error);
-      }
-    );
+    console.log("FORM TO ADD:--", values, smeId);
+    // this._settingsService.addSectionTemplate(smeId, values).subscribe(
+    //   result => {
+    //     console.log("RESULT FROM ADD SURVEY:--", result);
+    //     this.createProfileForm.reset();
+    //     this.createProfileForm.patchValue({ type: 'form' }, { onlySelf: true });
+    //     this.form = {
+    //       components: [],
+    //       display: "form",
+    //       page: 0,
+    //       refreshOn: "submit",
+    //       numPages: 2
+    //     };
+    //     this.refreshForm.emit({
+    //       form: this.form
+    //     });
+    //   },
+    //   error => {
+    //     console.log("ERROR FROM ADD SURVEY:--", error);
+    //   }
+    // );
 
 
   }

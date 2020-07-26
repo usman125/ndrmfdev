@@ -23,17 +23,34 @@
               <input matInput placeholder="Ex. Form 1" formControlName="name"
                 [formControl]="createProfileForm.controls['name']">
             </mat-form-field>
-            <mat-form-field class="col-md-2" *ngIf="createProfileForm.controls['formIdentity'].value === 'qualification'.toUpperCase()">
+            <mat-form-field class="col-md-2">
+              <mat-label>Process Type</mat-label>
+              <mat-select (ngModelChange)="fetchSectons($event)"
+                [formControl]="createProfileForm.controls['formIdentity']">
+                <mat-option *ngFor="let item of allProcessTypes" [value]="item">{{item}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col-md-2">
+              <mat-label>Sub Process Type</mat-label>
+              <!-- <mat-select (ngModelChange)="fetchSectons($event)" [formControl]="createProfileForm.controls['formIdentity']"> -->
+              <mat-select (ngModelChange)="subProcessTypeChanged($event)"
+                [formControl]="createProfileForm.controls['subProcess']">
+                <mat-option *ngFor="let item of allSubProcessTypes" [value]="item">{{item}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col-md-2"
+              *ngIf="createProfileForm.controls['formIdentity'].value === 'qualification'.toUpperCase()">
               <mat-label>Pass Score</mat-label>
               <input matInput type="number" placeholder="100" formControlName="passingScore"
                 [formControl]="createProfileForm.controls['passingScore']">
             </mat-form-field>
-            <mat-form-field class="col-md-2" *ngIf="createProfileForm.controls['formIdentity'].value === 'qualification'.toUpperCase()">
+            <mat-form-field class="col-md-2"
+              *ngIf="createProfileForm.controls['formIdentity'].value === 'qualification'.toUpperCase()">
               <mat-label>Total Score</mat-label>
               <input matInput type="number" placeholder="150" formControlName="totalScore"
                 [formControl]="createProfileForm.controls['totalScore']">
             </mat-form-field>
-            <mat-form-field class="col-md-2">
+            <mat-form-field class="col-md-2" *ngIf="createProfileForm.controls['subProcess'].value === ''">
               <mat-label>Select Section</mat-label>
               <mat-select (ngModelChange)="smeChanged($event)" [formControl]="createProfileForm.controls['smeRef']">
                 <mat-option [hidden]="item.formGenerated" *ngFor="let item of allSmes" [value]="item">{{item.name}}
@@ -45,12 +62,6 @@
               <mat-select (ngModelChange)="typeChanged($event)" [formControl]="createProfileForm.controls['type']">
                 <mat-option value="form">Form</mat-option>
                 <mat-option value="wizard">Wizard</mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field class="col-md-2">
-              <mat-label>Process Type</mat-label>
-              <mat-select (ngModelChange)="fetchSectons($event)" [formControl]="createProfileForm.controls['formIdentity']">
-                <mat-option *ngFor="let item of allProcessTypes" [value]="item">{{item}}</mat-option>
               </mat-select>
             </mat-form-field>
             <button [disabled]="!createProfileForm.valid" class="col-md-1" mat-raised-button color="primary">

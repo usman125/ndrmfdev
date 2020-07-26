@@ -19,6 +19,14 @@ export class SettingsService {
     );
   }
 
+  addProcess(processType, name) {
+    const url = `${AppConfig.apiUrl}/setting/process/${processType}/sub-process-type/add?name=${name}`;
+    return this._httpClient.post(
+      url,
+      null
+    );
+  }
+
   getProcessMeta(type) {
     const url = `${AppConfig.apiUrl}/setting/process/${type}/meta`;
     return this._httpClient.get(
@@ -120,6 +128,13 @@ export class SettingsService {
 
   getAllThematicAreas() {
     const url = `${AppConfig.apiUrl}/setting/thematic-area`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  getSubProcessTypes(processType) {
+    const url = `${AppConfig.apiUrl}/setting/process/${processType}/sub-process-type`;
     return this._httpClient.get(
       url
     );

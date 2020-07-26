@@ -40,6 +40,8 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
           status: 'Pending',
           endDate: data.endDate,
           startDate: data.startDate,
+          subStatus: null,
+          isMarkedTo: null,
         },
         status: 'Preliminary Appraisal'
       }
@@ -76,7 +78,8 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
         ...this.state.selectedProject,
         preAppraisal: {
           ...this.state.selectedProject.preAppraisal,
-          status: 'Marked to GM',
+          isMarkedTo: 'Marked to GM',
+          subStatus: 'Pending'
         }
       }
     })
@@ -89,7 +92,8 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
         ...this.state.selectedProject,
         preAppraisal: {
           ...this.state.selectedProject.preAppraisal,
-          status: 'Marked to CEO',
+          isMarkedTo: 'Marked to CEO',
+          subStatus: 'Pending'
         }
       }
     })

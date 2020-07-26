@@ -24,6 +24,9 @@ export class FoodNode {
   rfEntry: boolean;
   rfEntryData: any;
   glCode: any;
+  lat: any;
+  long: any;
+  info: any;
 }
 
 /** Flat node with expandable and level information */
@@ -40,6 +43,9 @@ export class ExampleFlatNode {
   rfEntry: boolean;
   rfEntryData: any;
   glCode: any;
+  lat: any;
+  long: any;
+  info: any;
 }
 
 

@@ -53,6 +53,8 @@ export class ConfirmModelService {
           disableClose: options.disableClose,
           selectThematic: options.selectThematic,
           areas: options.areas,
+          proposal_sections: options.proposal_sections,
+          proposal_initmation: options.proposal_initmation,
         }
       });
     }

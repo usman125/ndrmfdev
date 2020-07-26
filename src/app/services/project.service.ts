@@ -358,5 +358,13 @@ export class ProjectService {
     );
   }
 
+  reassignProposalToFIP(proposalId, sectionIds) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${proposalId}/reassign`;
+    return this._httpClient.post(
+      url,
+      sectionIds
+    );
+  }
+
 
 }

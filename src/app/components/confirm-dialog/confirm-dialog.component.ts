@@ -19,6 +19,8 @@ export interface ConfirmData {
   disableClose: boolean;
   selectThematic: boolean;
   areas: any;
+  proposal_sections: any;
+  proposal_initmation: any;
 }
 
 @Component({
@@ -30,6 +32,7 @@ export class ConfirmDialogComponent implements OnInit {
 
   checked: boolean = false;
   areas = new FormControl();
+  proposalSections = new FormControl();
   applyAsJv = new FormControl();
 
   constructor(
@@ -82,11 +85,21 @@ export class ConfirmDialogComponent implements OnInit {
     console.log("AREA CHANGED:--", $event);
   }
 
+  proposalSectionChanged($event) {
+    console.log("PROPOSAL SECTION CHANGED:--", $event);
+  }
+
   addThematicAreas() {
     this.close({
       areas: this.areas.value,
       status: 'ok',
       applyAsJv: this.applyAsJv.value
+    })
+  }
+
+  proposalIntimation() {
+    this.close({
+      sections: this.proposalSections.value,
     })
   }
 

@@ -1,0 +1,27 @@
+<ng-container>
+  <mat-toolbar class="toolbar-sticky mb-3" color="primary">
+    <mat-toolbar-row>
+      <span>Add Sub Process</span>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <mat-card class="m-20">
+    <mat-card-content>
+      <mat-form-field>
+        <mat-label>Enter sub process name</mat-label>
+        <input (ngModelChange)="processNameChanged($event)" [ngModel]="processName" type="text" matInput placeholder="e.g. DDR">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Select Process</mat-label>
+        <select matNativeControl (ngModelChange)="processChanged($event)" [(ngModel)]="process">
+          <option value="" selected></option>
+          <option *ngFor="let object of allProcesses" [value]="object">
+            {{object}}
+          </option>
+        </select>
+      </mat-form-field>
+      <button [disabled]="!processName || !process" (click)="addSubProcess()" mat-raised-button color="primary">Add</button>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

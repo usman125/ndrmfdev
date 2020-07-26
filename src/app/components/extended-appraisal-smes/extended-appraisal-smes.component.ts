@@ -6,11 +6,13 @@ import { AccreditationCommentsMatrixStore } from 'src/app/stores/accreditation-c
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ProjectService } from 'src/app/services/project.service';
+import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 
 @Component({
   selector: 'app-extended-appraisal-smes',
   templateUrl: './extended-appraisal-smes.component.html',
-  styleUrls: ['./extended-appraisal-smes.component.css']
+  styleUrls: ['./extended-appraisal-smes.component.css'],
+  providers: [ConfirmModelService]
 })
 export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
 
@@ -24,6 +26,7 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
     private _accreditationCommentsMatrixStore: AccreditationCommentsMatrixStore,
     private _activatedRoute: ActivatedRoute,
     private _projectService: ProjectService,
+    private _confirmModelService: ConfirmModelService,
     private _location: Location,
   ) { }
 
@@ -31,13 +34,14 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
 
     this._activatedRoute.paramMap.subscribe(params => {
       this.selectedProjectId = params.get("projectId");
+      console.log("SELECTED PROJECT ID IS:--", this.selectedProjectId);
       this.getProjectComments();
     });
 
     this.Subscription.add(
       this._accreditationCommentsMatrixStore.state$.subscribe(data => {
-        console.log("COMMENTS MATRIX FROM STORE IN COMPOENNT:--", data.comments);
         this.allComments = data.comments;
+        console.log("COMMENTS MATRIX FROM STORE IN COMPOENNT:--", this.allComments);
       })
     );
   }
@@ -57,7 +61,41 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
     );
   }
 
-  goBack(){
+  fipIntimation() {
+    let proposalSections = [];
+    for (let i = 0; i < this.allComments.length; i++) {
+      // console.log("SINGLE NETRY:--", this.allComments[i]);
+      if (this.allComments[i].sectionsWithIds !== null) {
+        for (let j = 0; j < this.allComments[i].sectionsWithIds.length; j++) {
+          proposalSections.push(this.allComments[i].sectionsWithIds[j]);
+        }
+      }
+    }
+    // console.log("PROPOSAL SECTIONS FOR FIP:--", proposalSections);
+
+    let options = {
+      title: 'Fip Intimation to update sections',
+      message: 'Please select section for FIP to update',
+      cancelText: 'CANCEL',
+      confirmText: 'YES',
+      confirm: false,
+      add: false,
+      proposal_sections: proposalSections,
+      proposal_initmation: true,
+    };
+    this._confirmModelService.open(options);
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      if (confirmed) {
+        let sectionIds = [];
+        confirmed.sections.forEach(c => {
+          sectionIds.push(c.id);
+        })
+        console.log("CONFIRMED DATA IS:---", sectionIds, confirmed);
+      }
+    });
+  }
+
+  goBack() {
     this._location.back();
   }
 

@@ -370,6 +370,12 @@ const routes: Routes = [
     data: { roles: [Role.Admin] }
   },
   {
+    path: 'add-sub-process',
+    loadChildren: () => import('./modules/add-sub-process/add-sub-process.module').then(m => m.AddSubProcessModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
     path: 'departments',
     loadChildren: () => import('./modules/departments/departments.module').then(m => m.DepartmentsModule),
     canActivate: [AuthGuard],

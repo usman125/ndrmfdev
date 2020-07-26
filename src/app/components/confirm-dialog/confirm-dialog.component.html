@@ -55,7 +55,8 @@
         </button>
         <button mat-raised-button (click)="setStatus('GIA')" color="accent" class="m-2">{{'Enable gia' | uppercase}}
         </button>
-        <button mat-raised-button (click)="setStatus('MARKED_TO_GM')" color="accent" class="m-2">{{'marked to gm' | uppercase}}
+        <button mat-raised-button (click)="setStatus('MARKED_TO_GM')" color="accent"
+          class="m-2">{{'marked to gm' | uppercase}}
         </button>
         <button color="warn" mat-raised-button style="margin-right:10px;" (click)="cancel()">{{ data.cancelText }}
         </button>
@@ -90,7 +91,25 @@
       </section>
     </div>
 
+    <div class="controls" *ngIf="data?.proposal_initmation">
+      <mat-form-field>
+        <mat-select (selectionChange)="proposalSectionChanged($event)" placeholder="Select Sections"
+          [formControl]="proposalSections" multiple>
+          <mat-select-trigger>
+            <span *ngFor="let item of proposalSections.value; let i=index">
+              <span *ngIf="i===0">{{item.name}}</span>
+            </span>
+            <span *ngIf="proposalSections.value?.length > 1" class="example-additional-selection">
+              (+{{proposalSections.value.length - 1}} others)
+            </span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let object of data?.proposal_sections;" [value]="object">{{object.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
   </div>
+
   <div mat-dialog-actions>
     <button *ngIf="data?.add" color="primary" mat-raised-button style="margin-right:10px;"
       (click)="cancel()">{{ data.confirmText }}</button>
@@ -115,5 +134,13 @@
       (click)="addThematicAreas()" color="primary" class="m-2">{{data.confirmText | uppercase}}</button>
     <button *ngIf="data?.selectThematic" mat-raised-button (click)="cancel()" color="warn"
       class="m-2">{{data.cancelText | uppercase}}</button>
+
+    <button mat-raised-button *ngIf="data?.proposal_initmation" (click)="cancel()" color="warn">
+      {{data.cancelText | uppercase}}
+    </button>
+    <button mat-raised-button *ngIf="data?.proposal_initmation" color="primary" [disabled]="proposalSections.value?.length === 0
+      || !proposalSections.value" (click)="proposalIntimation()">
+      {{data.confirmText | uppercase}}
+    </button>
   </div>
 </div>
