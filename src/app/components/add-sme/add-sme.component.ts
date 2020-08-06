@@ -14,6 +14,7 @@ export class AddSmeComponent implements OnInit, OnDestroy {
   addSmeForm: FormGroup;
   allUsers: any = [];
   processTypes: string[] = [];
+  subProcessTypes: string[] = [];
   addingFlag: boolean = false;
 
   constructor(
@@ -30,6 +31,7 @@ export class AddSmeComponent implements OnInit, OnDestroy {
       name: [null, Validators.required],
       userRef: [null],
       key: [null],
+      subProcessType: [null],
       formIdentity: [null, Validators.required],
     })
   }
@@ -46,22 +48,63 @@ export class AddSmeComponent implements OnInit, OnDestroy {
     );
   }
 
-  addSme(values) {
-    this.addingFlag = true;
-    this._smeService.addSection(
-      values
-    ).subscribe(
-      result => {
-        this.addingFlag = false;
-        console.log("RSULT AFTER ADDING SME:---", result);
-        this.clearForm();
-      },
-      error => {
-        this.addingFlag = false;
-        console.log("ERROR ADDING SME:---", error);
-      }
-    );
+  getSubProcessTypes($event) {
+    if ($event !== null) {
+      this.addSmeForm.patchValue({ 'subProcessType': null }, { onlySelf: true });
+      console.log("GET SUB PROCESSES FOR:--", $event);
+      this._settingsService.getSubProcessTypes($event).subscribe(
+        (result: any) => {
+          this.subProcessTypes = result;
+          console.log("RESULT FROM SUB PROCESSES:--", this.subProcessTypes);
+        },
+        error => {
+          console.log("RESULT FROM SUB PROCESSES:--", error);
+        }
+      );
+    }
+  }
 
+  subProcessTypeChanged($event) {
+    console.log("SUB PROCESS TYPE CHANGED:--", $event);
+  }
+
+  addSme(values) {
+    if (values.subProcessType === null) {
+      // console.log("ADD SME VALUES:--", values);
+      this.addingFlag = true;
+      this._smeService.addSection(
+        values
+      ).subscribe(
+        result => {
+          this.addingFlag = false;
+          console.log("RSULT AFTER ADDING SME:---", result);
+          this.clearForm();
+        },
+        error => {
+          this.addingFlag = false;
+          console.log("ERROR ADDING SME:---", error);
+        }
+      );
+    } else {
+      if (values.subProcessType !== null) {
+        values.formIdentity = values.subProcessType;
+      }
+      // console.log("ADD SME VALUES:--", values);
+      this.addingFlag = true;
+      this._smeService.addSection(
+        values
+      ).subscribe(
+        result => {
+          this.addingFlag = false;
+          console.log("RSULT AFTER ADDING SME:---", result);
+          this.clearForm();
+        },
+        error => {
+          this.addingFlag = false;
+          console.log("ERROR ADDING SME:---", error);
+        }
+      );
+    }
   }
 
   clearForm() {

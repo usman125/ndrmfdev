@@ -33,7 +33,7 @@
             <mat-form-field class="col-md-2">
               <mat-label>Sub Process Type</mat-label>
               <!-- <mat-select (ngModelChange)="fetchSectons($event)" [formControl]="createProfileForm.controls['formIdentity']"> -->
-              <mat-select (ngModelChange)="subProcessTypeChanged($event)"
+              <mat-select (ngModelChange)="fetchSubSectons($event)"
                 [formControl]="createProfileForm.controls['subProcess']">
                 <mat-option *ngFor="let item of allSubProcessTypes" [value]="item">{{item}}</mat-option>
               </mat-select>
@@ -50,7 +50,8 @@
               <input matInput type="number" placeholder="150" formControlName="totalScore"
                 [formControl]="createProfileForm.controls['totalScore']">
             </mat-form-field>
-            <mat-form-field class="col-md-2" *ngIf="createProfileForm.controls['subProcess'].value === ''">
+            <!-- <mat-form-field class="col-md-2" *ngIf="createProfileForm.controls['subProcess'].value === ''"> -->
+            <mat-form-field class="col-md-2">
               <mat-label>Select Section</mat-label>
               <mat-select (ngModelChange)="smeChanged($event)" [formControl]="createProfileForm.controls['smeRef']">
                 <mat-option [hidden]="item.formGenerated" *ngFor="let item of allSmes" [value]="item">{{item.name}}

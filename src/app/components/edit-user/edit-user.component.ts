@@ -83,7 +83,8 @@ export class EditUserComponent implements OnInit {
             roles: result.roles,
             orgId: result.orgId,
             orgName: result.orgName,
-            org: [{ 'id': result.orgId, 'name': result.orgName }]
+            org: [{ 'id': result.orgId, 'name': result.orgName }],
+            sap: result.sap,
           }
           setCurrentUser(
             object.id,
@@ -101,6 +102,7 @@ export class EditUserComponent implements OnInit {
             object.roles,
             object.orgId,
             object.orgName,
+            object.sap
           );
           this.getRolesAndOrgs();
         },
@@ -126,27 +128,22 @@ export class EditUserComponent implements OnInit {
         active: this.selectedUser.active,
       }, { onlySelf: true })
       // }
-      if (this.selectedUser.role === 'fip') {
+      // if (th)
+      if (this.selectedUser.role === 'fip' && this.selectedUser.sap === true) {
         this.editUserForm.controls['firstName'].disable({ onlySelf: true });
         this.editUserForm.controls['lastName'].disable({ onlySelf: true });
         this.editUserForm.controls['email'].disable({ onlySelf: true });
         this.editUserForm.controls['username'].disable({ onlySelf: true });
-        // this.editUserForm.controls['password'].disable({ onlySelf: true });
-        // this.editUserForm.controls['role'].clearValidators();
-        // this.editUserForm.controls['role'].disable({onlySelf: true});
-        // this.editUserForm.controls['org'].clearValidators();
-        // this.editUserForm.controls['org'].disable({onlySelf: true});
-        //   this.editUserForm.patchValue({
-        //     firstName: this.selectedUser.firstName,
-        //     lastName: this.selectedUser.lastName,
-        //     email: this.selectedUser.email,
-        //     username: this.selectedUser.username,
-        //     password: this.selectedUser.password,
-        //     department: this.selectedUser.department,
-        //     role: this.selectedUser.roles,
-        //     org: this.selectedUser.org,
-        //     active: this.selectedUser.active,
-        //   }, { onlySelf: true })
+      } else {
+        this.editUserForm.controls['firstName'].disable({ onlySelf: true });
+        this.editUserForm.controls['lastName'].disable({ onlySelf: true });
+        this.editUserForm.controls['email'].disable({ onlySelf: true });
+        this.editUserForm.controls['username'].disable({ onlySelf: true });
+        this.editUserForm.controls['password'].disable({ onlySelf: true });
+        this.editUserForm.controls['role'].clearValidators();
+        this.editUserForm.controls['role'].disable({ onlySelf: true });
+        this.editUserForm.controls['org'].clearValidators();
+        this.editUserForm.controls['org'].disable({ onlySelf: true });
       }
     });
   }
@@ -200,7 +197,7 @@ export class EditUserComponent implements OnInit {
       values.lastName = this.selectedUser.lastName;
       values.email = this.selectedUser.email;
       values.username = this.selectedUser.username;
-      values.password = this.selectedUser.password;
+      // values.password = this.editUserForm.password;
       // values.password = this.selectedUser;
     }
     const options = {

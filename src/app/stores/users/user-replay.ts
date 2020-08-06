@@ -17,6 +17,7 @@ interface CurrentUserState {
   orgId: any,
   orgName: string,
   org: any,
+  sap: any,
 }
 
 const routeEnd = new Subject<CurrentUserState>();
@@ -39,6 +40,7 @@ export const setCurrentUser = (
   roles: any,
   orgId: any,
   orgName: string,
+  sap: any,
 ) => {
   routeEnd.next({
     id: id,
@@ -59,6 +61,7 @@ export const setCurrentUser = (
     org: [{
       'id': orgId,
       'name': orgName
-    }]
+    }],
+    sap: sap,
   });
 }

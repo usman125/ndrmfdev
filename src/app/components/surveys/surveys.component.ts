@@ -53,6 +53,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
 
   dataSource: any;
   allProcessTypes: any = null;
+  allSubProcessTypes: any = null;
   selctedRequest: any = null;
   fetchedSection: any = null;
 
@@ -157,6 +158,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
           // this.dataSource = result.sections;
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
+          this.getAllSubProcessTypes(item);
         }
       },
       error => {
@@ -164,6 +166,49 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log("RESULT FROM ALL TEMPLATES:--", error);
       }
     );
+  }
+
+  fetchSubTemplates(item) {
+    console.log("PROCESS TO FECT TEMPLATES:--", item);
+    this.listItem = item;
+    this.loadingSection = true;
+    this.toggle = false;
+    this.editFormFlag = false;
+    this.dataSource = [];
+    this._settingsService.getProcessTemplate(item).subscribe(
+      (result: any) => {
+        this.loadingSection = false;
+        console.log("RESULT FROM ALL TEMPLATES:--", result);
+        // this.allSmes = result.sections;
+        this.fetchSectons(item);
+        if (result.sectons !== null) {
+          this.dataSource = new MatTableDataSource(result.sections);
+          // this.dataSource = result.sections;
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          // this.getAllSubProcessTypes(item);
+        }
+      },
+      error => {
+        this.loadingSection = false;
+        console.log("RESULT FROM ALL TEMPLATES:--", error);
+      }
+    );
+  }
+
+  getAllSubProcessTypes(item) {
+    // this.loadingSubSection = true;
+    this._settingsService.getSubProcessTypes(item).subscribe(
+      (result: any) => {
+        // this.loadingSubSection = false;
+        console.log("Rsult all sub process types:--", result);
+        this.allSubProcessTypes = result;
+      },
+      error => {
+        // this.loadingSubSection = false;
+        console.log("Rsult all sub process types:--", error);
+      }
+    )
   }
 
   trackTask(index: number, item): string {

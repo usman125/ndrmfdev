@@ -105,6 +105,9 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
   loggedUser: any = null;
   selectedProject: any = null;
   selectedSubCost: any = null;
+  lat: any = null;
+  long: any = null;
+  info: any = null;
 
   // options: Object = {
   //   submitMessage: "",
@@ -221,6 +224,9 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       rfEntry: node.rfEntry,
       rfEntryData: node.rfEntryData,
       glCode: node.glCode,
+      lat: node.lat,
+      long: node.long,
+      info: node.info,
       expandable: !!node.children && true,
     };
   }
@@ -278,6 +284,9 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
               rfEntry: false,
               rfEntryData: null,
               glCode: result[i].glCode,
+              lat: result[i].lat,
+              long: result[i].long,
+              info: result[i].info,
             }
             var allArray = [];
             for (let i = 0; i < this.financersMonthsArray.length; i++) {
@@ -487,6 +496,9 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
       showInput: true,
       rfEntry: false,
       rfEntryData: null,
+      lat: this.lat,
+      long: this.long,
+      info: this.info,
     }
 
     for (let i = 0; i < this.allCosts.length; i++) {
@@ -965,6 +977,11 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
     var submitData = _.find(this.allCosts, { _id: node._id });
     // console.log("GET SUBMITTE DATA FROM FORMIO:---", submitData);
     return submitData.rfEntryData;
+  }
+
+  subCostChanged($event) {
+    console.log("SUB COST CHANGED:--", $event);
+    this.subcost = $event;
   }
 }
 

@@ -37,9 +37,10 @@
               <input placeholder="e.g. HR" [(ngModel)]="cost" id="cost" type="text" matInput />
             </mat-form-field>
             <mat-form-field>
-              <mat-label for="cost">GL Code</mat-label>
+              <mat-label for="glCode">GL Code</mat-label>
               <input placeholder="e.g. 123-HR" [(ngModel)]="glCode" id="glCode" type="text" matInput />
             </mat-form-field>
+
             <button [disabled]="cost === null || glCode === null" color="primary" (click)=" AddCost()"
               mat-raised-button>
               Add Cost
@@ -49,12 +50,13 @@
       </mat-grid-list>
 
 
-      <mat-grid-list cols="1" rowHeight="170px" *ngIf="loggedUser.role === 'fip'">
+      <mat-grid-list cols="1" rowHeight="300px" *ngIf="loggedUser.role === 'fip'">
         <mat-grid-tile>
           <div style="display: flex; flex-direction: column;width:100%;padding: 10px;">
             <mat-form-field>
               <mat-label for="subcost">Subcost Title</mat-label>
-              <input placeholder="e.g. School" [(ngModel)]="subcost" id="subcost" type="text" matInput />
+              <input placeholder="e.g. School" (ngModelChange)="subCostChanged($event)" [ngModel]="subcost" id="subcost"
+                type="text" matInput />
             </mat-form-field>
             <mat-form-field>
               <mat-label>Select Main Cost</mat-label>
@@ -63,7 +65,19 @@
                   {{item.title}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <button [disabled]="subcost === null || mainCostId === null" color="primary" (click)="AddSubcost()"
+            <mat-form-field>
+              <mat-label for="lat">Latitude</mat-label>
+              <input placeholder="e.g. 112.45" [(ngModel)]="lat" id="lat" type="text" matInput />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label for="long">Longitude</mat-label>
+              <input placeholder="e.g. 117.21" [(ngModel)]="long" id="long" type="text" matInput />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label for="info">Description</mat-label>
+              <input placeholder="enter description here" [(ngModel)]="info" id="info" type="text" matInput />
+            </mat-form-field>
+            <button [disabled]="!subcost || mainCostId === null" color="primary" (click)="AddSubcost()"
               mat-raised-button>
               Add Subcost
             </button>
@@ -141,8 +155,9 @@
                   <div class="inputs">
                     <div *ngFor="let item of month.financers;let i =index;">
                       <mat-form-field>
-                        <input step="0.01" min="0" max="10" [disabled]="loggedUser.role !== 'fip'" (ngModelChange)="costChanged(node, month)"
-                          [placeholder]="item.title" [(ngModel)]="item.cost" matInput type="number" />
+                        <input step="0.01" min="0" max="10" [disabled]="loggedUser.role !== 'fip'"
+                          (ngModelChange)="costChanged(node, month)" [placeholder]="item.title" [(ngModel)]="item.cost"
+                          matInput type="number" />
                       </mat-form-field>
                       <div *ngIf="(mI+1)%4 === 0" class="spacer"></div>
                     </div>
@@ -201,7 +216,7 @@
     [treeData]="testingCosts"></app-tree>
   </mat-card-content>
 </mat-card> -->
-    <!-- <app-tree 
+<!-- <app-tree 
     (calculateTotal)="calculateTotal($event)" 
     [treeData]="testingCosts"></app-tree> -->
 <!-- DUMMY WORK -->

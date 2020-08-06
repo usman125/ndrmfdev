@@ -58,6 +58,8 @@ export class AddSubProcessComponent implements OnInit {
       (result: any) => {
         console.log("RESULT ADDING SUB PROCESS:--", result);
         this._confirmModelService.open(options);
+        this.process = null;
+        this.processName = null;
       },
       error => {
         options.title = error.error.message;

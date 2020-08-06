@@ -26,7 +26,9 @@ export class SmeComponent implements OnInit, OnDestroy {
   public allSmes: any = [];
   public loadingProcess: boolean = false;
   public loadingSection: boolean = false;
+  public loadingSubSection: boolean = false;
   public allProcessTypes: any = [];
+  public allSubProcessTypes: any = [];
   public Subscription: Subscription = new Subscription();
   public warnMsg: string = "No Process Selected";
   public listItem: any = null;
@@ -106,12 +108,13 @@ export class SmeComponent implements OnInit, OnDestroy {
       (result: any) => {
         this.loadingSection = false;
         console.log("ALL PROCESSES:---", result);
-        if (result.sections){
+        if (result.sections) {
           this.dataSource = new MatTableDataSource(result.sections);
           // this.dataSource = result.sections;
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
-        }else{
+          this.getAllSubProcessTypes(item);
+        } else {
           this.warnMsg = "No Data Found."
         }
       },
@@ -120,6 +123,46 @@ export class SmeComponent implements OnInit, OnDestroy {
         console.log("ALL PROCESSES ERROR:---", error);
       }
     );
+  }
+
+  fetchSubSectons(item) {
+    this.loadingSection = true;
+    console.log("FETCH SUB SECTION FOR:---", item);
+    this.dataSource = [];
+    this.listItem = item;
+    this._settingsService.getProcessMeta(item).subscribe(
+      (result: any) => {
+        this.loadingSection = false;
+        console.log("ALL PROCESSES SUB SECTION:---", result);
+        if (result.sections !== null) {
+          this.dataSource = new MatTableDataSource(result.sections);
+          // this.dataSource = result.sections;
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        } else {
+          this.warnMsg = "No Data Found."
+        }
+      },
+      error => {
+        this.loadingSection = false;
+        console.log("ALL PROCESSES ERROR:---", error);
+      }
+    );
+  }
+
+  getAllSubProcessTypes(item) {
+    this.loadingSubSection = true;
+    this._settingsService.getSubProcessTypes(item).subscribe(
+      (result: any) => {
+        this.loadingSubSection = false;
+        console.log("Rsult all sub process types:--", result);
+        this.allSubProcessTypes = result;
+      },
+      error => {
+        this.loadingSubSection = false;
+        console.log("Rsult all sub process types:--", error);
+      }
+    )
   }
 
   editSme(sme) {

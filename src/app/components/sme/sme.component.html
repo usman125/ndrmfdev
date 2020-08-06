@@ -21,6 +21,25 @@
         </mat-nav-list>
       </mat-card-content>
     </mat-card>
+    <mat-card class="m-20 mr-0 p-0 mat-elevation-z5">
+      <div class="card-header"> Select Sub Process </div>
+      <mat-card-content>
+        <mat-nav-list class="processes" *ngIf="allSubProcessTypes.length !== 0 && !loadingSubSection">
+          <mat-list-item [ngClass]="{'active': listItem === item}" (click)="fetchSubSectons(item)"
+            style="cursor:pointer;" class="process" *ngFor="let item of allSubProcessTypes">
+            {{item}}
+          </mat-list-item>
+        </mat-nav-list>
+        <mat-nav-list class="processes" *ngIf="allSubProcessTypes.length === 0 && !loadingSubSection">
+          <mat-list-item class="process">
+            No Sub Processes
+          </mat-list-item>
+          <mat-list-item class="process" *ngIf="loadingSubSection">
+            <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
+          </mat-list-item>
+        </mat-nav-list>
+      </mat-card-content>
+    </mat-card>
   </div>
   <div class="col-md-8">
     <div class="mr-4 ml-1">

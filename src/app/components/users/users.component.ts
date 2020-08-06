@@ -158,23 +158,24 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
 
   eidtUser(user) {
     console.log("user to edit:--\n", user);
-    setCurrentUser(
-      user.id,
-      user.firstName,
-      user.lastName,
-      user.email,
-      user.role,
-      user.smeRef,
-      user.department,
-      user.username,
-      user.password,
-      user.active,
-      user.eligibileFlag,
-      user.qualificationFlag,
-      user.roles,
-      user.orgId,
-      user.orgName,
-    );
+    // setCurrentUser(
+    //   user.id,
+    //   user.firstName,
+    //   user.lastName,
+    //   user.email,
+    //   user.role,
+    //   user.smeRef,
+    //   user.department,
+    //   user.username,
+    //   user.password,
+    //   user.active,
+    //   user.eligibileFlag,
+    //   user.qualificationFlag,
+    //   user.roles,
+    //   user.orgId,
+    //   user.orgName,
+    //   user.sap
+    // );
     this._router.navigate(['/edit-user', user.id]);
   }
 
@@ -231,7 +232,7 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
         this._authStore.removeLoading();
         console.log("RESULT SYNCING USER:--", error);
       }
-    )
+    );
   }
 
 

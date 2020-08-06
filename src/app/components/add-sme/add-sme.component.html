@@ -31,8 +31,16 @@
         <mat-grid-tile>
           <mat-form-field>
             <mat-label>Process Type</mat-label>
-            <mat-select [formControl]="addSmeForm.controls['formIdentity']">
+            <mat-select (ngModelChange)="getSubProcessTypes($event)" [formControl]="addSmeForm.controls['formIdentity']">
               <mat-option *ngFor="let type of processTypes" [value]="type">{{type}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Sub Process Type</mat-label>
+            <mat-select (ngModelChange)="subProcessTypeChanged($event)" [formControl]="addSmeForm.controls['subProcessType']">
+              <mat-option *ngFor="let type of subProcessTypes" [value]="type">{{type}}</mat-option>
             </mat-select>
           </mat-form-field>
         </mat-grid-tile>

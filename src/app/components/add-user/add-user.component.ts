@@ -161,6 +161,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
       null,
       null,
       null,
+      false,
     );
     this.addUserForm.reset();
     this._router.navigate(['/users']);
