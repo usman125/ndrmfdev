@@ -50,6 +50,13 @@
               <input placeholder="amount" type="number" matInput [(ngModel)]="ndrmfDisbursment">
             </mat-form-field>
           </td>
+          <td></td>
+          <td>
+            <mat-form-field appearance="outline">
+              <input placeholder="amount" type="number" matInput [(ngModel)]="ndrmfActual">
+            </mat-form-field>
+          </td>
+          <td></td>
         </tr>
       </tbody>
     </table>
@@ -88,9 +95,18 @@
         <tr>
           <td>Q-{{qprSectionStats?.quarter}}</td>
           <td>{{qprSectionStats?.fipShare}}</td>
-          <mat-form-field appearance="outline">
-            <input placeholder="amount" type="number" matInput [(ngModel)]="fipContribution">
-          </mat-form-field>
+          <td>
+            <mat-form-field appearance="outline">
+              <input placeholder="amount" type="number" matInput [(ngModel)]="fipContribution">
+            </mat-form-field>
+          </td>
+          <td></td>
+          <td>
+            <mat-form-field appearance="outline">
+              <input placeholder="amount" type="number" matInput [(ngModel)]="fipActual">
+            </mat-form-field>
+          </td>
+          <td></td>
         </tr>
       </tbody>
     </table>

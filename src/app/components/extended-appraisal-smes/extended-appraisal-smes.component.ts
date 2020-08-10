@@ -91,6 +91,14 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
           sectionIds.push(c.id);
         })
         console.log("CONFIRMED DATA IS:---", sectionIds, confirmed);
+        this._projectService.reassignProposalToFIP(this.selectedProjectId, sectionIds).subscribe(
+          (result: any) => {
+            console.log("RESULT AFTER RE-ASSIGN:--", result);
+          },
+          (error: any) => {
+            console.log("RESULT AFTER RE-ASSIGN:--", error);
+          }
+        );
       }
     });
   }

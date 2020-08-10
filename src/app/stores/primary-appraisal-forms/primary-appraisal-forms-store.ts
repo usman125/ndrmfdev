@@ -85,6 +85,20 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     })
   }
 
+  markExtToGm() {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        extendedAppraisal: {
+          ...this.state.selectedProject.extendedAppraisal,
+          isMarkedTo: 'Marked to GM',
+          subStatus: 'Pending'
+        }
+      }
+    })
+  }
+
   markToCeo() {
     this.setState({
       ...this.state,
@@ -92,6 +106,20 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
         ...this.state.selectedProject,
         preAppraisal: {
           ...this.state.selectedProject.preAppraisal,
+          isMarkedTo: 'Marked to CEO',
+          subStatus: 'Pending'
+        }
+      }
+    })
+  }
+
+  markExtToCeo() {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        extendedAppraisal: {
+          ...this.state.selectedProject.extendedAppraisal,
           isMarkedTo: 'Marked to CEO',
           subStatus: 'Pending'
         }

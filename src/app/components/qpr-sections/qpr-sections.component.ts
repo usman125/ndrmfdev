@@ -17,7 +17,9 @@ export class QprSectionsComponent implements OnInit {
   qprSectionStats: any = null;
 
   ndrmfDisbursment: any = null;
+  ndrmfActual: any = null;
   fipContribution: any = null;
+  fipActual: any = null;
 
   @Input() ndrmfShare = 0;
   @Input() fipShare = 0;

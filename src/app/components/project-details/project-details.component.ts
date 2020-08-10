@@ -880,6 +880,37 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   }
 
+  markExtToGm() {
+    const options = {
+      title: 'Mark To GM!',
+      message: 'By Clicking "Yes" project status will be changed',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: true,
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("MARK TO GM STATUS", confirmed);
+      if (confirmed) {
+        this._projectService.markToGm(this.selectedProjectId).subscribe(
+          result => {
+            console.log("RESULT FROM MARK TO GM:--", result);
+            this._primaryAppraisalFormsStore.markExtToGm();
+          },
+          error => {
+            console.log("ERROR FROM MARK TO GM:--", error);
+          }
+        );
+      }
+    });
+
+  }
+
   markToCeo() {
     const options = {
       title: 'Mark To CEO!',
@@ -901,6 +932,37 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           result => {
             console.log("RESULT FROM MARK TO CEO:--", result);
             this._primaryAppraisalFormsStore.markToCeo();
+          },
+          error => {
+            console.log("ERROR FROM MARK TO CEO:--", error);
+          }
+        );
+      }
+    });
+
+  }
+
+  markExtToCeo() {
+    const options = {
+      title: 'Mark To CEO!',
+      message: 'By Clicking "Yes" project status will be changed',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: true,
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("MARK TO GM STATUS", confirmed);
+      if (confirmed) {
+        this._projectService.markToCeo(this.selectedProjectId).subscribe(
+          result => {
+            console.log("RESULT FROM MARK TO CEO:--", result);
+            this._primaryAppraisalFormsStore.markExtToCeo();
           },
           error => {
             console.log("ERROR FROM MARK TO CEO:--", error);
@@ -1107,6 +1169,37 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           result => {
             console.log("RESULT FROM APPROVE EXT_APPRAISAL:--", result);
             this._primaryAppraisalFormsStore.approveExtApparisalByGm();
+          },
+          error => {
+            console.log("ERROR FROM APPROVE EXT_APPRAISAL:--", error);
+          }
+        );
+      }
+    });
+
+  }
+
+  rejectExtApprasial() {
+    const options = {
+      title: 'Reject Extended Appraisal!',
+      message: 'By Clicking "Yes" project status will be changed',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: true,
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("MARK TO GM STATUS", confirmed);
+      if (confirmed) {
+        this._projectService.disapproveExtApparisalByGm(this.selectedProjectId).subscribe(
+          result => {
+            console.log("RESULT FROM APPROVE EXT_APPRAISAL:--", result);
+            this._primaryAppraisalFormsStore.disapproveExtApparisalByGm();
           },
           error => {
             console.log("ERROR FROM APPROVE EXT_APPRAISAL:--", error);
