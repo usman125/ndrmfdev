@@ -36,6 +36,7 @@ export class UserService {
 
   editUser(values, id) {
     const url = `${AppConfig.apiUrl}/user/${id}`;
+    console.log("VALUES IN EDIT USER:--", values);
     return this._httpClient.put(
       url,
       {
@@ -46,9 +47,9 @@ export class UserService {
         "lastName": values.lastName,
         "orgId": values.org.length ? values.org[0].id : null,
         "password": values.password,
-        "roleId": values.role.length ? values.role[0].id : null,
+        "roleId": values.role.id ? values.role.id : null,
         "username": values.username,
-        "enabled":values.active
+        "enabled": values.active
       }
     );
   }

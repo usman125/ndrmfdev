@@ -209,7 +209,7 @@ export class EditUserComponent implements OnInit {
       confirm: false,
     };
     this._authStore.setLoading();
-    console.log("EDIT USER VALUES:---", values);
+    // console.log("EDIT USER VALUES:---", values);
     this._userService.editUser(values, this.selectedUser.id).subscribe(
       (result: any) => {
         this._authStore.removeLoading();
