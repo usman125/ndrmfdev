@@ -520,6 +520,12 @@ const routes: Routes = [
     data: { roles: [Role.Po, Role.Sme, Role.Fip] }
   },
   {
+    path: 'fill-proposal-reports/:requestId',
+    loadChildren: () => import('./modules/fill-proposal-reports/fill-proposal-reports.module').then(m => m.FillProposalReportsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po, Role.Sme] }
+  },
+  {
     path: 'view-qpr/:requestId',
     loadChildren: () => import('./modules/view-qpr/view-qpr.module').then(m => m.ViewQprModule),
     canActivate: [AuthGuard],

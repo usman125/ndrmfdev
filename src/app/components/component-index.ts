@@ -84,3 +84,4 @@ export { QprSectionsComponent } from './qpr-sections/qpr-sections.component';
 export { ProjectWorkPlanComponent } from './project-work-plan/project-work-plan.component';
 
 export { AddSubProcessComponent } from './add-sub-process/add-sub-process.component';
+export { FillProposalReportsComponent } from './fill-proposal-reports/fill-proposal-reports.component';

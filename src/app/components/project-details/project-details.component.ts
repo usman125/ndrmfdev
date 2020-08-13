@@ -1420,4 +1420,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   }
 
+  fillProposalReports() {
+    this._router.navigate(['/fill-proposal-reports', this.selectedProjectId]);
+  }
+
 }

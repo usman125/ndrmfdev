@@ -9,13 +9,14 @@ import { Router } from "@angular/router";
 import { SurveysService } from "../../services/surveys.service";
 import { SettingsService } from "../../services/settings.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 // import { PROCESS_NAME } from "../../constants";
 
 @Component({
   selector: 'app-surveys',
   templateUrl: './surveys.component.html',
   styleUrls: ['./surveys.component.css'],
-  providers: [SurveysService]
+  providers: [SurveysService, ConfirmModelService]
 })
 
 export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -71,6 +72,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     private _router: Router,
     private _surveysService: SurveysService,
     private _settingsService: SettingsService,
+    private _confirmModelService: ConfirmModelService,
     private _formBuilder: FormBuilder,
   ) {
 
@@ -169,6 +171,14 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   fetchSubTemplates(item) {
+    const options = {
+      title: 'Success!',
+      message: 'OK. to cancel',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
+    };
     console.log("PROCESS TO FECT TEMPLATES:--", item);
     this.listItem = item;
     this.loadingSection = true;
@@ -192,6 +202,8 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
       error => {
         this.loadingSection = false;
         console.log("RESULT FROM ALL TEMPLATES:--", error);
+        options.title = error.error.message;
+        this._confirmModelService.open(options);
       }
     );
   }

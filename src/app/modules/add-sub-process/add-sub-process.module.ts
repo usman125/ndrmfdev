@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { MatSelectModule } from '@angular/material/select';
     FormsModule,
     MatIconModule,
     MatToolbarModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTableModule,
+    MatExpansionModule,
   ]
 })
 export class AddSubProcessModule { }

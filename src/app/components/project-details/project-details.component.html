@@ -911,6 +911,14 @@
           </button>
         </mat-card-actions>
 
+        <mat-card-actions class="p-3 footer-btns" *ngIf="loggedUser.role === 'sme'">
+
+          <button (click)="fillProposalReports()" class="m-1" mat-button color="basic">
+            <mat-icon class="mr-1">table_chart</mat-icon> {{'Fill Proposal reports' | uppercase}}
+          </button>
+
+        </mat-card-actions>
+
 
       </mat-card>
 
