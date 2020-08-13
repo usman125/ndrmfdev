@@ -216,6 +216,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         // this.saveData();
         console.log("CONFIRMED FROM MODEL", confirmed);
         this.addProject(confirmed);
+        // this._router.navigate()
         // this._projectsStore.addProject(
         //   null,
         //   this.loggedUser.firstName + this.loggedUser.lastName,
@@ -233,7 +234,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       (result: any) => {
         console.log("RESULT ADDING PROJECT:---", result);
         if (this.viewType !== 'govt') {
-
           this._projectsStore.addProject(
             result.id,
             this.loggedUser.firstName + this.loggedUser.lastName,
@@ -242,6 +242,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
             new Date().toISOString(),
             values.thematicAreaName
           );
+          this._router.navigate(['/project-details', result.id]);
         } else {
           this._projectsStore.addProject(
             result.id,
@@ -251,7 +252,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
             new Date().toISOString(),
             values.thematicAreaName
           );
-
+          this._router.navigate(['/project-details', result.id]);
         }
       },
       error => {
