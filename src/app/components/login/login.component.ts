@@ -78,6 +78,9 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (this.loggedUser.role === 'ceo') {
         this._router.navigate(['ceohome']);
       }
+      if (this.loggedUser.role === 'signup_approver') {
+        this._router.navigate(['approverhome']);
+      }
     }
   }
 
@@ -146,6 +149,8 @@ export class LoginComponent implements OnInit, OnDestroy {
             this._router.navigate(['gmhome']);
           } else if (this.user.role === 'ceo') {
             this._router.navigate(['ceohome']);
+          } else if (this.user.role === 'signup_approver') {
+            this._router.navigate(['approverhome']);
           }
         } else {
           var newUser = JSON.stringify(this.user);

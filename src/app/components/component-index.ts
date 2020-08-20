@@ -85,3 +85,4 @@ export { ProjectWorkPlanComponent } from './project-work-plan/project-work-plan.
 
 export { AddSubProcessComponent } from './add-sub-process/add-sub-process.component';
 export { FillProposalReportsComponent } from './fill-proposal-reports/fill-proposal-reports.component';
+export { ApproverHomeComponent } from './approver-home/approver-home.component';

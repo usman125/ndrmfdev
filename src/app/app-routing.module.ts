@@ -180,7 +180,9 @@ const routes: Routes = [
   {
     path: 'pending-signups',
     // component: SiteLayout,
-    loadChildren: () => import('./modules/pending-signups/pending-signups.module').then(m => m.PendingSignupsModule)
+    loadChildren: () => import('./modules/pending-signups/pending-signups.module').then(m => m.PendingSignupsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Approver] }
   },
   {
     path: 'assign-sections-process',
@@ -536,6 +538,12 @@ const routes: Routes = [
     loadChildren: () => import('./modules/qpr/qpr.module').then(m => m.QprModule),
     canActivate: [AuthGuard],
     data: { roles: [Role.Po, Role.Sme, Role.Fip] }
+  },
+  {
+    path: 'approverhome',
+    loadChildren: () => import('./modules/approver-home/approver-home.module').then(m => m.ApproverHomeModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Approver] }
   },
   {
     // path: 'view-govt-agency-request/:requestId',

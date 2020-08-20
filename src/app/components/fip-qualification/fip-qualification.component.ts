@@ -290,6 +290,22 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
             console.log("CONFIRMED FROM MODEL", confirmed);
             if (confirmed === false) {
               this._router.navigate(['fip-home']);
+            } else {
+              let object = {
+                areas: [],
+                availableAsJv: null,
+              }
+              let areasId = [];
+              for (let i = 0; i < confirmed.areas.length; i++) {
+                areasId.push(confirmed.areas[i].id);
+              }
+              object.areas = areasId;
+              if (confirmed.applyAsJv === null) {
+                object.availableAsJv = false;
+              } else {
+                object.availableAsJv = confirmed.applyAsJv;
+              }
+              console.log("SAVE THEMATIC AREA:--", object);
             }
           });
         },
