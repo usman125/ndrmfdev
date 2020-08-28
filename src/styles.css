@@ -464,3 +464,7 @@ h6 {
   .top-tabs .mat-button-toggle-group{
     overflow-x:hidden;
   } */
+
+.bg-white {
+  background-color: #ffff;
+}

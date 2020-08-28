@@ -104,6 +104,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 // import { MatGridListModule } from "@angular/material/grid-list";
 // import { GiaProjectsModule } from "./modules/gia-projects/gia-projects.module";
 import { JwtModule } from "@auth0/angular-jwt";
+import { PipComponent } from './components/pip/pip.component';
 // import { ApproverHomeComponent } from './components/approver-home/approver-home.component';
 // import { FillProposalReportsComponent } from './components/fill-proposal-reports/fill-proposal-reports.component';
 // import { AddSubProcessComponent } from './components/add-sub-process/add-sub-process.component';
@@ -157,6 +158,7 @@ export function tokenGetter() {
     LoginComponent,
     NoHeaderLayoutComponent,
     AddProjectComponent,
+    PipComponent,
     // ApproverHomeComponent,
     // FillProposalReportsComponent,
     // AddSubProcessComponent,

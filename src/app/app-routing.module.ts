@@ -21,6 +21,7 @@ import {
 import { SiteLayout } from "./components/common/layouts/sitelayout/sitelayout.component";
 import { NoHeaderLayoutComponent } from "./components/common/layouts/no-header-layout/no-header-layout.component";
 import { Role } from './models/Roles';
+import {PipComponent} from "./components/pip/pip.component";
 
 const loggedUser = JSON.parse(localStorage.getItem('user'));
 
@@ -552,6 +553,10 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Po] }
   },
+  {
+    path: 'pip',
+    component: PipComponent
+  }
 ];
 
 @NgModule({
