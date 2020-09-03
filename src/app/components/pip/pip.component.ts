@@ -16,7 +16,7 @@ export class PipComponent implements OnInit {
   startDate = moment();
   activitiesForm: FormGroup;
   selectedQuarters = [];
-  quarters = ['Q1', 'Q2', 'Q3', 'Q4','Q5', 'Q6', 'Q7', 'Q8'];
+  quarters = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8'];
 
   constructor(private fb: FormBuilder) { }
 
@@ -28,19 +28,28 @@ export class PipComponent implements OnInit {
 
   get activities(): FormArray { return this.activitiesForm.get('activities') as FormArray }
 
+  getSubActivities(activityIndex): FormArray {
+    return this.activities.controls[activityIndex].get('subActivities') as FormArray
+  }
+
   addActivity() {
     this.selectedQuarters.push(this.quarters.map(q => false));
     this.activities.push(this.getActivityFormGroup());
   }
 
-  getActivityFormGroup() {
+  addSubActivity(activityIndex) {
+    //this.selectedQuarters.push(this.quarters.map(q => false));
+    this.getSubActivities(activityIndex).push(this.getActivityFormGroup(activityIndex));
+  }
+
+  getActivityFormGroup(parentIndex?) {
     return this.fb.group({
       name: ['', Validators.required],
       subActivities: this.fb.array([])
     })
   }
 
-  quarterSelected(activityIndex, quarterIndex){
+  quarterSelected(activityIndex, quarterIndex) {
     this.selectedQuarters[activityIndex][quarterIndex] = !this.selectedQuarters[activityIndex][quarterIndex];
   }
 }

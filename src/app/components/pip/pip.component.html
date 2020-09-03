@@ -18,7 +18,7 @@
                     <div [formGroupName]="i">
                         <div class="row">
                             <div class="col-auto pr-0 my-auto">
-                                <button class="btn btn-light btn-sm" type="button">+</button>
+                                <button class="btn btn-light btn-sm" type="button" (click)="addSubActivity(i)">+</button>
                             </div>
                             <div class="col-md-6">
                                 <input type="text" class="form-control" placeholder="name">
@@ -34,6 +34,29 @@
                                     </tr>
                                 </table>
                             </div>
+                        </div>
+                        <div class="row" *ngIf="getSubActivities(i) != null && getSubActivities(i).length > 0">
+                            <ng-container>
+                                <div class="row">
+                                    <div class="col-auto pr-0 my-auto">
+                                        <button class="btn btn-light btn-sm" type="button" (click)="addSubActivity(i)">+</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" placeholder="name">
+                                    </div>
+                                    <div class="col-auto pl-0">
+                                        <table>
+                                            <tr>
+                                                <td class="quarter-cell" [class.selected]="selectedQuarters[i][qi]"
+                                                *ngFor="let q of quarters; let qi = index;"
+                                                (click)="quarterSelected(i, qi)">
+                                                    <span class="q-label">{{q}}</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </ng-container>
                         </div>
                     </div>
                 </ng-container>
