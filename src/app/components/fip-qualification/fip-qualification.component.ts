@@ -17,6 +17,7 @@ import { Router } from "@angular/router";
 import { AccreditationRequestService } from "../../services/accreditation-request.service";
 import { SettingsService } from "../../services/settings.service";
 import { ConfirmModelService } from 'src/app/services/confirm-model.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-fip-qualification',
@@ -85,6 +86,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     private _fipIntimationsStore: fipIntimationsStore,
     private _accreditationRequestService: AccreditationRequestService,
     private _settingsService: SettingsService,
+    private _userService: UserService,
     private _confirmModelService: ConfirmModelService,
   ) {
   }
@@ -113,21 +115,21 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
         })
       );
       if (this.qualificationFlag === 'Not Initiated') {
-        this.loadingApi = true;
-        this._settingsService.getAccrediattionCommence().subscribe(
-          (result: any) => {
-            console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
-            this.getCommenceFromApi(result.id);
-            this.openThematicModel();
-          },
-          error => {
-            this.loadingApi = false;
-            console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
-          }
-        );
+        this.openThematicModel();
+        // this.loadingApi = true;
+        // this._settingsService.getAccrediattionCommence().subscribe(
+        //   (result: any) => {
+        //     console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
+        //     this.getCommenceFromApi(result.id);
+        //   },
+        //   error => {
+        //     this.loadingApi = false;
+        //     console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
+        //   }
+        // );
       } else {
         this.getQualificationRequest(null);
-        this.openThematicModel();
+        // this.openThematicModel();
       }
     }
   }
@@ -306,6 +308,53 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
                 object.availableAsJv = confirmed.applyAsJv;
               }
               console.log("SAVE THEMATIC AREA:--", object);
+              this._userService.saveThemticAreas(object).subscribe(
+                result => {
+                  console.log("RESULT SAVING THEMATIC AREAS:--", result);
+                  const options = {
+                    title: 'Thematic areas defined successfully!',
+                    cancelText: 'CANCEL',
+                    confirmText: 'OK',
+                    add: true,
+                    confirm: false,
+                  };
+                  this._confirmModelService.open(options);
+                  this._confirmModelService.confirmed().subscribe(
+                    confirmed => {
+                      console.log("CONFIRMED AFTER SAVING:--", confirmed);
+                      this.loadingApi = true;
+                      this._settingsService.getAccrediattionCommence().subscribe(
+                        (result: any) => {
+                          console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
+                          this.getCommenceFromApi(result.id);
+                        },
+                        error => {
+                          this.loadingApi = false;
+                          console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
+                        }
+                      );
+                    }
+                  );
+                },
+                error => {
+                  console.log("RESULT SAVING THEMATIC AREAS:--", error);
+                  const options = {
+                    title: 'Thematic areas saved successfully!',
+                    cancelText: 'CANCEL',
+                    confirmText: 'OK',
+                    add: true,
+                    confirm: false,
+                  };
+                  options.title = error.error.message;
+                  this._confirmModelService.open(options);
+                  this._confirmModelService.confirmed().subscribe(
+                    confirmed => {
+                      console.log("CONFIRMED AFTER FAILING SAVE:--", confirmed);
+                      this.openThematicModel();
+                    }
+                  );
+                }
+              )
             }
           });
         },
