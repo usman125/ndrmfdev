@@ -177,6 +177,14 @@ export class UserService {
     );
   }
 
+  saveThemticAreas(areas) {
+    const url = `${AppConfig.apiUrl}/user/thematic-area`;
+    return this._httpClient.post(
+      url,
+      areas
+    );
+  }
+
 
 
 }
