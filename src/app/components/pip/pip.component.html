@@ -1,67 +1,30 @@
 <section class="p-4">
     <div class="container bg-white pt-4 pb-4">
         <div class="row pb-2" style="border-bottom: 1px solid rgb(163, 161, 161)">
-            <div class="col-6"><h4>Project Implementation Plan</h4></div>
+            <div class="col-6">
+                <h4>Project Implementation Plan</h4>
+            </div>
             <div class="col-6 text-right">
-                <button type="button" class="btn btn-primary" (click)="addActivity()">+Add Activity</button>
+                <button type="button" class="btn btn-light" (click)="_addGroup()">+ Add Activity</button>
+                <button type="button" class="btn btn-primary ml-3" (click)="_addGroup()">Save</button>
             </div>
         </div>
         <div class="row mt-2 pt-2 mr-0 ml-0 mb-2" style="background-color:rgb(215, 213, 213)">
-            <div class="col-6 text-center"><h5>Activities</h5></div>
+            <div class="col-6 text-center">
+                <h5>Activities</h5>
+            </div>
             <div class="col-6 text-center">
                 <h5>Quarters</h5>
             </div>
         </div>
-        <form [formGroup]="activitiesForm">
-            <div formArrayName="activities">
-                <ng-container *ngFor="let a of activities.controls; let i = index;">
-                    <div [formGroupName]="i">
-                        <div class="row">
-                            <div class="col-auto pr-0 my-auto">
-                                <button class="btn btn-light btn-sm" type="button" (click)="addSubActivity(i)">+</button>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" placeholder="name">
-                            </div>
-                            <div class="col-auto pl-0">
-                                <table>
-                                    <tr>
-                                        <td class="quarter-cell" [class.selected]="selectedQuarters[i][qi]"
-                                        *ngFor="let q of quarters; let qi = index;"
-                                        (click)="quarterSelected(i, qi)">
-                                            <span class="q-label">{{q}}</span>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="row" *ngIf="getSubActivities(i) != null && getSubActivities(i).length > 0">
-                            <ng-container>
-                                <div class="row">
-                                    <div class="col-auto pr-0 my-auto">
-                                        <button class="btn btn-light btn-sm" type="button" (click)="addSubActivity(i)">+</button>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" placeholder="name">
-                                    </div>
-                                    <div class="col-auto pl-0">
-                                        <table>
-                                            <tr>
-                                                <td class="quarter-cell" [class.selected]="selectedQuarters[i][qi]"
-                                                *ngFor="let q of quarters; let qi = index;"
-                                                (click)="quarterSelected(i, qi)">
-                                                    <span class="q-label">{{q}}</span>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
+        <form [formGroup]="_form">
+            <ng-container formArrayName="groups">
+                <ng-container *ngFor="let group of _groupsFormArray?.controls; index as i">
+                    <app-activities-group-control (remove)="_delete(i)" [formControlName]="i"
+                    [isLeaf]="_groupsFormArray.controls[i].value.groups.length == 0">
+                    </app-activities-group-control>
                 </ng-container>
-            </div>
-
+            </ng-container>
         </form>
     </div>
 </section>

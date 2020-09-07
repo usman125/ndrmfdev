@@ -1,0 +1,29 @@
+.sub-activity {
+    padding-left: 30px;
+}
+
+.quarter-cell {
+    padding-left: 12px;
+    padding-right: 12px;
+    height: calc(1.5em + .75rem + 2px);
+    border: 1px solid #ced4da;
+    cursor: pointer;
+}
+
+.quarter-disabled{
+    background-color: #f4f4f4;
+    cursor: unset;
+}
+
+.q-label{
+    font-size: 14;
+    color: #a9abad;
+}
+
+.selected {
+    background-color: #007bff;
+}
+
+.selected .q-label {
+    color: white;
+}

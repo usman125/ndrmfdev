@@ -1,0 +1,33 @@
+<form [formGroup]="_form">
+    <div class="w-100" [class.pl-2]="isSubActivity">
+        <div class="row">
+            <div class="col-auto pr-0 my-auto">
+                <button class="btn btn-light btn-sm" type="button" (click)="_addGroup()">+</button>
+                <button class="btn btn-light btn-sm" type="button" (click)="remove.emit()">-</button>
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" placeholder="Acitivity Name">
+            </div>
+            <div class="col-auto pl-0" formGroupName="quarters">
+                <table>
+                    <tr>
+                        <td class="quarter-cell" [class.quarter-disabled] = "!isLeaf"
+                        *ngFor="let control of _quartersFormGroup.controls | keys" (click)="openActivityDetails()">
+                            <!-- <input type="checkbox" [formControlName]="control"/> -->
+                            <mat-checkbox [formControlName]="control" (change)="quarterSelectionChage($event)"></mat-checkbox>
+                            <!-- <span class="q-label">{{q}}</span> -->
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <ng-container formArrayName="groups">
+            <app-activities-group-control *ngFor="let s of _groupsFormArray?.controls; index as i"
+                (remove)="_deleteGroupFromArray(i)" [formControlName]="i"
+                [isLeaf]="_groupsFormArray.controls[i].value.groups.length == 0"
+                [isSubActivity]="true"
+                >
+            </app-activities-group-control>
+        </ng-container>
+    </div>
+</form>

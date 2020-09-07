@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -105,6 +105,10 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 // import { GiaProjectsModule } from "./modules/gia-projects/gia-projects.module";
 import { JwtModule } from "@auth0/angular-jwt";
 import { PipComponent } from './components/pip/pip.component';
+import { ActivitiesGroupControlComponent } from './components/activities-group-control/activities-group-control.component';
+import { ActivityDetailsComponent } from './components/activity-details/activity-details.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 // import { ApproverHomeComponent } from './components/approver-home/approver-home.component';
 // import { FillProposalReportsComponent } from './components/fill-proposal-reports/fill-proposal-reports.component';
 // import { AddSubProcessComponent } from './components/add-sub-process/add-sub-process.component';
@@ -148,6 +152,12 @@ export function tokenGetter() {
   return user?.authToken;
 }
 
+@Pipe({name: 'keys'})
+export class KeysPipe implements PipeTransform {
+  transform(value) : any {
+    return Object.keys(value)
+  }
+}
 
 @NgModule({
   declarations: [
@@ -159,6 +169,8 @@ export function tokenGetter() {
     NoHeaderLayoutComponent,
     AddProjectComponent,
     PipComponent,
+    ActivitiesGroupControlComponent,
+    ActivityDetailsComponent,
     // ApproverHomeComponent,
     // FillProposalReportsComponent,
     // AddSubProcessComponent,
@@ -213,6 +225,7 @@ export function tokenGetter() {
     // PrepareGiaComponent,
     // AdminPipComponent,
     // ProjectPlanComponent,
+    KeysPipe
   ],
   imports: [
     BrowserModule,
@@ -252,7 +265,8 @@ export function tokenGetter() {
     // MatDividerModule,
     // MatTreeModule,
     MatCheckboxModule,
-
+    MatTabsModule,
+    MatDatepickerModule,
 
     JwtModule.forRoot({
       config: {
@@ -323,6 +337,7 @@ export function tokenGetter() {
   entryComponents: [
     IntimateFip,
     AssignTask,
+    ActivityDetailsComponent
     // ProjectPlanComponent,
   ]
 })

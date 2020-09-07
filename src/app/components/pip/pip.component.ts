@@ -1,55 +1,38 @@
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
-
-export interface Activity {
-  name: string,
-  subActivities: Activity[]
-}
+import { FormGroup, FormBuilder, Validators, FormArray, AbstractControl, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-pip',
   templateUrl: './pip.component.html',
   styleUrls: ['./pip.component.css']
 })
-export class PipComponent implements OnInit {
-  startDate = moment();
-  activitiesForm: FormGroup;
-  selectedQuarters = [];
-  quarters = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8'];
+export class PipComponent {
+  _form: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
-
-  ngOnInit(): void {
-    this.activitiesForm = this.fb.group({
-      activities: this.fb.array([])
-    })
+  constructor(private fb: FormBuilder) {
+    this._createForm();
   }
 
-  get activities(): FormArray { return this.activitiesForm.get('activities') as FormArray }
-
-  getSubActivities(activityIndex): FormArray {
-    return this.activities.controls[activityIndex].get('subActivities') as FormArray
+  _addGroup() {
+    this._groupsFormArray.push(
+      this.fb.control({
+        groups: []
+      })
+    );
   }
 
-  addActivity() {
-    this.selectedQuarters.push(this.quarters.map(q => false));
-    this.activities.push(this.getActivityFormGroup());
+  _delete(index: number) {
+    this._groupsFormArray.removeAt(index);
   }
 
-  addSubActivity(activityIndex) {
-    //this.selectedQuarters.push(this.quarters.map(q => false));
-    this.getSubActivities(activityIndex).push(this.getActivityFormGroup(activityIndex));
+  get _groupsFormArray(): FormArray {
+    return this._form.get("groups") as FormArray;
   }
 
-  getActivityFormGroup(parentIndex?) {
-    return this.fb.group({
-      name: ['', Validators.required],
-      subActivities: this.fb.array([])
-    })
-  }
-
-  quarterSelected(activityIndex, quarterIndex) {
-    this.selectedQuarters[activityIndex][quarterIndex] = !this.selectedQuarters[activityIndex][quarterIndex];
+  private _createForm() {
+    this._form = this.fb.group({
+      groups: this.fb.array([])
+    });
   }
 }
