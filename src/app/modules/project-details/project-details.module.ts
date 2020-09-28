@@ -21,16 +21,22 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProjectWorkPlanModule } from '../project-work-plan/project-work-plan.module';
+import { PipComponent } from 'src/app/components/pip/pip.component';
+import { PipModule } from '../pip/pip.module';
+import { ProjectImpPlanModule } from '../project-imp-plan/project-imp-plan.module';
 
 @NgModule({
   declarations: [
     ProjectDetailsComponent,
+    // PipComponent
   ],
   imports: [
     CommonModule,
     ProjectDetailsRoutingModule,
     ProjectPlanModule,
-    ProjectWorkPlanModule,
+    // ProjectWorkPlanModule,
+    // PipModule,
+    ProjectImpPlanModule,
     MatProgressSpinnerModule,
     FormioModule,
     MatButtonModule,

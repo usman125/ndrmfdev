@@ -1,0 +1,162 @@
+<div class="m-20">
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <button *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'" class="" mat-raised-button
+        color="accent" (click)="addCost()">
+        <mat-icon>add</mat-icon>&nbsp;Add Activity
+      </button>
+      <button *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'" class="ml-2" mat-raised-button
+        color="primary" (click)="saveCostings()">Save</button>
+      <div *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'" class="example-spacer"></div>
+      <small>
+        Project Implementation Plan
+      </small>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-card>
+    <mat-card-content>
+      <div style="display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    margin-bottom: 25px;">
+        <mat-button-toggle-group [(ngModel)]="filterType" #group="matButtonToggleGroup" vertical="false">
+          <mat-button-toggle (change)="filterChanged(item)" *ngFor="let item of filterTypes; let i = index;"
+            [value]="item">
+            <!-- <mat-icon class="mr-2 section-icons" *ngIf="item.data !== null">check</mat-icon> -->
+            <!-- <mat-icon class="mr-2 section-icons" *ngIf="item.data === null">warning</mat-icon> -->
+            <span>{{item}}</span>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" matTreeNodePaddingIndent="5">
+        <!-- This is the tree node template for leaf nodes -->
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+          <!-- use a disabled button to provide padding for tree leaf -->
+          <!-- <button mat-icon-button disabled></button> -->
+          <!-- {{node.name}} -->
+          <div style="display: flex;" *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'">
+
+            <button mat-icon-button color="warn" (click)="removeSubCost(node._id)">
+              <mat-icon>
+                close
+              </mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="addSubCost(node._id)">
+              <mat-icon>
+                add
+              </mat-icon>
+            </button>
+            <div class="form-group">
+              <input class="form-control" (keyup)="inputChanged(node._id, $event)" type="text" matInput
+                [(ngModel)]="node.title">
+            </div>
+          </div>
+          <div *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">
+            {{node.title}}
+          </div>
+          <div *ngFor="let item of allCosts;let i=index;">
+            <div *ngIf="item._id === node._id">
+              <div *ngIf="filterType === 'General'" class="quarters">
+                <div class="item" [ngClass]="{'active': object.value === true}" *ngFor="let object of item.quarters">
+                  <span *ngIf="loggedUser?.role === 'fip'"
+                    (click)="changeQuarterSelection(item, object);">{{object.quarter}}</span>
+                  <span *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">{{object.quarter}}</span>
+                  <!-- <small *ngIf="object.value === true" (click)="openActivityDetails(item, object)"> -->
+                  <!-- </small> -->
+                  <mat-icon [matTooltip]="object.data.startDate === null ? 'Pending Details' : 'Completed'"
+                    [ngStyle]="{'color': object.data.startDate === null ? '#f57f17' : null}"
+                    *ngIf="object.value === true" (click)="openQuarterDetails(object, item)">pageview</mat-icon>
+                  <!-- *ngIf="object.value === true" (click)="openActivityDetails(item, object)">pageview</mat-icon> -->
+                  <!-- <small *ngIf="object.value === true" (click)="openQuarterDetails(object, item);"></small> -->
+                </div>
+              </div>
+              <div *ngIf="filterType === 'Financial'" class="quarters">
+                <div class="finance-item" [ngClass]="{'active': object.value === true}"
+                  *ngFor="let object of item.quarters">
+                  <span *ngIf="object.data" matTooltip="Fip / NDRMF">
+                    {{object.data.fipShare || 0}} / {{object.data.ndrmfShare || 0}}
+                  </span>
+                  <span *ngIf="object.data === null">
+                    {{object.quarter}}
+                  </span>
+                </div>
+              </div>
+              <div *ngIf="filterType === 'Procurement'" class="quarters">
+                <div class="proc-item" [ngClass]="{'active': object.value === true}"
+                  *ngFor="let object of item.quarters">
+                  <div *ngIf="object.data">
+                    <span *ngIf="object.data.isProcurement">
+                      {{"Yes"}}
+                    </span>
+                    <span *ngIf="!object.data.isProcurement">
+                      {{"No"}}
+                    </span>
+                  </div>
+                  <span *ngIf="object.data === null">
+                    {{object.quarter}}
+                  </span>
+                </div>
+              </div>
+              <div *ngIf="filterType === 'M & E'" class="quarters">
+                <div class="mne-item" [ngClass]="{'active': object.value === true}"
+                  *ngFor="let object of item.quarters">
+                  <div class="hasdata" *ngIf="object.data">
+                    <div class="rfdata" *ngIf="object.data.rfSubmitData">
+                      <small><strong>Type: </strong>{{object.data.rfSubmitData.type}}</small>
+                      <small><strong>Targets: </strong>{{object.data.rfSubmitData.targets}}</small>
+                      <small><strong>Indicator: </strong>{{object.data.rfSubmitData.indicator}}</small>
+                      <small><strong>Baseline: </strong>{{object.data.rfSubmitData.baseline}}</small>
+                      <small><strong>Method: </strong>{{object.data.rfSubmitData.dataCollectionMethod}}</small>
+                      <small><strong>Frequency: </strong>{{object.data.rfSubmitData.dataCollectionMethod1}}</small>
+                    </div>
+                    <span *ngIf="!object.data.rfSubmitData">
+                      {{"No"}}
+                    </span>
+                  </div>
+                  <span *ngIf="object.data === null">
+                    {{object.quarter}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tree-node>
+        <!-- This is the tree node template for expandable nodes -->
+        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+          <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+            <mat-icon>
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon>
+          </button>
+          <!-- {{node.name}} -->
+          <div style="display: flex;" *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'">
+
+            <button mat-icon-button color="primary">
+              <mat-icon (click)="addSubCost(node._id)">
+                add
+              </mat-icon>
+            </button>
+            <div class="form-group">
+              <input type="text" (keyup)="inputChanged(node._id, $event)" [(ngModel)]="node.title" class="form-control">
+            </div>
+          </div>
+          <div *ngFor="let item of allCosts;let i=index;">
+            <div *ngIf="item._id === node._id">
+              <div class="quarters">
+                <div class="disable-item item" *ngFor="let object of item.quarters">
+                  <span>{{object.quarter}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">
+            {{node.title}}
+          </div>
+        </mat-tree-node>
+      </mat-tree>
+      <span id="myTopElement5" #myTopElement5></span>
+      <app-cost-details></app-cost-details>
+    </mat-card-content>
+  </mat-card>
+  <!-- <app-activity-details></app-activity-details> -->
+</div>

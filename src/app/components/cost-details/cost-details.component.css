@@ -1,0 +1,10 @@
+.info-header.d-flex {
+  background: #039be5;
+  padding: 15px;
+  margin: 25px 0px;
+  color: #fff;
+}
+
+.info-header.d-flex h6 {
+  font-size: 12px;
+}

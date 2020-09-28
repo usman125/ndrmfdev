@@ -21,7 +21,8 @@ import {
 import { SiteLayout } from "./components/common/layouts/sitelayout/sitelayout.component";
 import { NoHeaderLayoutComponent } from "./components/common/layouts/no-header-layout/no-header-layout.component";
 import { Role } from './models/Roles';
-import {PipComponent} from "./components/pip/pip.component";
+import { PipComponent } from "./components/pip/pip.component";
+import { ProjectWorkPlanComponent } from "./components/component-index";
 
 const loggedUser = JSON.parse(localStorage.getItem('user'));
 
@@ -555,7 +556,15 @@ const routes: Routes = [
   },
   {
     path: 'pip',
-    component: PipComponent
+    loadChildren: () => import('./modules/pip/pip.module').then(m => m.PipModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.Po, Role.Fip, Role.Dm, Role.Ceo] }
+    // component: PipComponent
+  },
+  {
+    path: 'plan',
+    loadChildren: () => import('./modules/project-imp-plan/project-imp-plan.module').then(m => m.ProjectImpPlanModule),
+    // component: ProjectWorkPlanComponent
   }
 ];
 

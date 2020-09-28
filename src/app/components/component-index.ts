@@ -86,3 +86,8 @@ export { ProjectWorkPlanComponent } from './project-work-plan/project-work-plan.
 export { AddSubProcessComponent } from './add-sub-process/add-sub-process.component';
 export { FillProposalReportsComponent } from './fill-proposal-reports/fill-proposal-reports.component';
 export { ApproverHomeComponent } from './approver-home/approver-home.component';
+
+export { PipComponent } from './pip/pip.component'
+export { ActivitiesGroupControlComponent } from './activities-group-control/activities-group-control.component';
+export { ProjectImpPlanComponent } from './project-imp-plan/project-imp-plan.component';
+export { CostDetailsComponent } from './cost-details/cost-details.component';

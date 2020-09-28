@@ -13,6 +13,11 @@
 .quarter-disabled{
     background-color: #f4f4f4;
     cursor: unset;
+    pointer-events: none;
+}
+
+.quarter-disabled small{
+    display: none;
 }
 
 .q-label{

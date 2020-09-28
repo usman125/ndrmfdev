@@ -29,6 +29,7 @@ import { AppConfig } from './services/config';
 import { FormioAppConfig } from 'angular-formio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpClientModule } from "@angular/common/http";
+import { FormioModule } from 'angular-formio';
 import {
   AuthGuard,
   LoginComponent,
@@ -65,6 +66,7 @@ import { SubProjectDocStore } from "./stores/sub-proj-doc/sub-proj-doc-store";
 import { SubProjectDocSectionsStore } from "./stores/sub-proj-doc-sections/sub-proj-doc-sections-store";
 import { QprSectionsStore } from './stores/qpr-sections/qpr-sections-store';
 import { QprStore } from './stores/qpr/qpr-store';
+import { CostDetailsStore } from './stores/cost-details/cost-details-store';
 
 import { IntimateFipModule } from './modules/fip-intimations/fip-intimations.module';
 import { AssigntaskModule } from './modules/assigntask/assigntask.module';
@@ -104,11 +106,13 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 // import { MatGridListModule } from "@angular/material/grid-list";
 // import { GiaProjectsModule } from "./modules/gia-projects/gia-projects.module";
 import { JwtModule } from "@auth0/angular-jwt";
-import { PipComponent } from './components/pip/pip.component';
-import { ActivitiesGroupControlComponent } from './components/activities-group-control/activities-group-control.component';
+// import { PipComponent } from './components/pip/pip.component';
+// import { ActivitiesGroupControlComponent } from './components/activities-group-control/activities-group-control.component';
 import { ActivityDetailsComponent } from './components/activity-details/activity-details.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+// import { CostDetailsComponent } from './components/cost-details/cost-details.component';
+// import { ProjectImpPlanComponent } from './components/project-imp-plan/project-imp-plan.component';
 // import { ApproverHomeComponent } from './components/approver-home/approver-home.component';
 // import { FillProposalReportsComponent } from './components/fill-proposal-reports/fill-proposal-reports.component';
 // import { AddSubProcessComponent } from './components/add-sub-process/add-sub-process.component';
@@ -152,12 +156,12 @@ export function tokenGetter() {
   return user?.authToken;
 }
 
-@Pipe({name: 'keys'})
-export class KeysPipe implements PipeTransform {
-  transform(value) : any {
-    return Object.keys(value)
-  }
-}
+// @Pipe({ name: 'keys' })
+// export class KeysPipe implements PipeTransform {
+//   transform(value): any {
+//     return Object.keys(value)
+//   }
+// }
 
 @NgModule({
   declarations: [
@@ -168,9 +172,11 @@ export class KeysPipe implements PipeTransform {
     LoginComponent,
     NoHeaderLayoutComponent,
     AddProjectComponent,
-    PipComponent,
-    ActivitiesGroupControlComponent,
+    // PipComponent,
+    // ActivitiesGroupControlComponent,
     ActivityDetailsComponent,
+    // CostDetailsComponent,
+    // ProjectImpPlanComponent,
     // ApproverHomeComponent,
     // FillProposalReportsComponent,
     // AddSubProcessComponent,
@@ -225,7 +231,7 @@ export class KeysPipe implements PipeTransform {
     // PrepareGiaComponent,
     // AdminPipComponent,
     // ProjectPlanComponent,
-    KeysPipe
+    // KeysPipe
   ],
   imports: [
     BrowserModule,
@@ -273,7 +279,8 @@ export class KeysPipe implements PipeTransform {
         tokenGetter: tokenGetter,
         whitelistedDomains: ["ndrmfdev-backend.herokuapp.com"]
       }
-    })
+    }),
+    FormioModule,
   ],
   providers: [
 
@@ -325,7 +332,8 @@ export class KeysPipe implements PipeTransform {
     SubProjectDocStore,
     SubProjectDocSectionsStore,
     QprSectionsStore,
-    QprStore
+    QprStore,
+    CostDetailsStore,
   ],
   bootstrap: [AppComponent],
   exports: [
@@ -333,6 +341,7 @@ export class KeysPipe implements PipeTransform {
     // ProjectPlanComponent
     // ProjectPlanModule
     // DataFilterPipe
+    // PipComponent
   ],
   entryComponents: [
     IntimateFip,

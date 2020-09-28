@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { QprService } from '../../services/qpr.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
+import { formValuesReplay } from "../../stores/form-values";
 
 @Component({
   selector: 'app-qpr',
@@ -24,6 +25,9 @@ export class QprComponent implements OnInit {
 
   apiLoading: boolean = false;
 
+  @Output()
+  viewOnly: any = true;
+
   constructor(
     private _qprService: QprService,
     private _router: Router,
@@ -33,6 +37,9 @@ export class QprComponent implements OnInit {
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
     this.getQprRequests();
     // this.getSingleQprRequests();
+    formValuesReplay.subscribe((data: any) => {
+      console.log("FORM VALUES QPR:---", data.form);
+    }).unsubscribe();
   }
 
   getQprRequests() {

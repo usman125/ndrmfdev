@@ -10,7 +10,8 @@ import * as _ from 'lodash';
 })
 export class ProjectWorkPlanComponent implements OnInit {
 
-  @Input() proMonths: any = 0;
+  // @Input() proMonths: any = 20;
+  proMonths: any = 20;
 
   mainOutputId: any = null;
   activity: any = null;
@@ -46,12 +47,13 @@ export class ProjectWorkPlanComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("MONTHS IN WORK PLAN:---", this.proMonths);
-    this.Subscription.add(
-      this._authStore.state$.subscribe(data => {
-        this.proMonths = data.auth.proMonths;
-        this.quarters = Math.ceil(this.proMonths / 3);
-      })
-    );
+    this.quarters = Math.ceil(this.proMonths / 3);
+    // this.Subscription.add(
+    //   this._authStore.state$.subscribe(data => {
+    //     this.proMonths = data.auth.proMonths;
+    //     this.quarters = Math.ceil(this.proMonths / 3);
+    //   })
+    // );
     for (let i = 0; i < this.quarters; i++) {
       var quarter = {
         title: i,

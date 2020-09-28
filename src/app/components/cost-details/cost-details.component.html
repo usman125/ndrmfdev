@@ -1,0 +1,91 @@
+<div class="m-20" *ngIf="selectedQuarter !== null">
+  <div class="info-header d-flex">
+    <h6>Activity: {{costTitle}}</h6>
+    <h6 class="ml-4">Quarter: {{quarter}}</h6>
+  </div>
+  <form [formGroup]="_form" (ngSubmit)="submit()" *ngIf="_form">
+    <mat-tab-group (selectedTabChange)="onTabChanged($event);">
+      <mat-tab label="General" class="p-4">
+        <div class="m-4">
+          <mat-form-field>
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="startDatePicker" formControlName="startDate">
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+            <mat-error *ngIf="_form.get('startDate').hasError('required')">Required</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>End Date</mat-label>
+            <input matInput [matDatepicker]="endDatePicker" formControlName="endDate">
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+            <mat-error *ngIf="_form.get('endDate').hasError('required')">Required</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Description</mat-label>
+            <textarea matInput placeholder="Enter description" formControlName="description"></textarea>
+            <mat-error *ngIf="_form.get('description').hasError('required')">Required</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Latitude</mat-label>
+            <input matInput formControlName="latitude">
+            <mat-error *ngIf="_form.get('latitude').hasError('required')">Required</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Longitude</mat-label>
+            <input matInput formControlName="longitude">
+            <mat-error *ngIf="_form.get('longitude').hasError('required')">Required</mat-error>
+          </mat-form-field>
+          <!-- {{selectedQuarter?.startDate}}
+        {{selectedQuarter?.endDate}}
+        {{selectedQuarter?.latitude}}
+        {{selectedQuarter?.longitude}} -->
+        </div>
+      </mat-tab>
+      <mat-tab label="Financials">
+        <div class="m-4">
+          <!-- {{selectedQuarter?.fipShare}}
+        {{selectedQuarter?.ndrmfShare}} -->
+          <mat-form-field>
+            <mat-label>NDRMF Share</mat-label>
+            <input matInput type="number" placeholder="Amount in PKR" formControlName="ndrmfShare">
+            <mat-error *ngIf="_form.get('ndrmfShare').hasError('required')">Required</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>FIP Share</mat-label>
+            <input matInput type="number" placeholder="Amount in PKR" formControlName="fipShare">
+            <mat-error *ngIf="_form.get('fipShare').hasError('required')">Required</mat-error>
+          </mat-form-field>
+        </div>
+      </mat-tab>
+      <mat-tab label="Procurement">
+        <div class="m-4">
+          <mat-checkbox labelPosition="'before'" formControlName="isProcurement">Is Procurement</mat-checkbox>
+          <mat-form-field appearance="fill">
+            <mat-label>Procurement Heads</mat-label>
+            <mat-select multiple formControlName="procurementHeads" [disabled]="!_form.controls['isProcurement'].value">
+              <mat-option value="1">Head 1</mat-option>
+              <mat-option value="2">Head 2</mat-option>
+              <mat-option value="3">Head 3</mat-option>
+              <mat-option value="4">Head 4</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-tab>
+      <mat-tab label="M&E">
+        <div *ngIf="rfForm === null">
+          <h3>Loading ...</h3>
+        </div>
+        <formio *ngIf="rfForm !== null" [form]="rfForm" (submit)="onSubmit($event)" [submission]="{data:rfSubmitData}">
+        </formio>
+      </mat-tab>
+    </mat-tab-group>
+    <p>{{_form.value | json}}</p>
+    <!-- </mat-dialog-content> -->
+    <!-- <mat-dialog-actions align="end"> -->
+    <!-- <button mat-raised-button cdkFocusInitial>Close</button> -->
+    <button [disabled]="!_form.valid" mat-raised-button color="primary" type="submit">Update</button>
+    <!-- <button [disabled]="!_form.valid" mat-raised-button color="primary" type="submit" cdkFocusInitial>Save</button> -->
+    <!-- </mat-dialog-actions> -->
+  </form>
+</div>

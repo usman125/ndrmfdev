@@ -13,6 +13,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { PipModule } from '../pip/pip.module';
+import { ProjectImpPlanModule } from '../project-imp-plan/project-imp-plan.module';
 
 
 
@@ -23,6 +25,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   imports: [
     CommonModule,
     QprRoutingModule,
+    // PipModule,
+    ProjectImpPlanModule,
     MatCardModule,
     MatInputModule,
     MatToolbarModule,
