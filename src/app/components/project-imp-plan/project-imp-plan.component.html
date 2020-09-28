@@ -15,18 +15,21 @@
   </mat-toolbar>
   <mat-card>
     <mat-card-content>
-      <div style="display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    margin-bottom: 25px;">
+      <div class="toggle-btns">
         <mat-button-toggle-group [(ngModel)]="filterType" #group="matButtonToggleGroup" vertical="false">
           <mat-button-toggle (change)="filterChanged(item)" *ngFor="let item of filterTypes; let i = index;"
             [value]="item">
-            <!-- <mat-icon class="mr-2 section-icons" *ngIf="item.data !== null">check</mat-icon> -->
-            <!-- <mat-icon class="mr-2 section-icons" *ngIf="item.data === null">warning</mat-icon> -->
             <span>{{item}}</span>
           </mat-button-toggle>
         </mat-button-toggle-group>
+      </div>
+      <div class="table-header">
+        <span class="top-title">Activity</span>
+        <div class="top-quarters">
+          <div *ngFor="let obj of quarters">
+            <span>{{obj.quarter}}</span>
+          </div>
+        </div>
       </div>
       <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" matTreeNodePaddingIndent="5">
         <!-- This is the tree node template for leaf nodes -->

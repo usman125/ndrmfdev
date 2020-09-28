@@ -87,6 +87,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   ngOnInit(): void {
+
     this.Subscription.add(
       this._authStore.state$.subscribe(data => {
         this.months = data.auth.proMonths;
@@ -149,6 +150,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         console.log("DATA FROM PIP STORE MANIPULATION:--", data.selectedProject, this.allCosts, this.allSubCosts);
       })
     );
+    this.getQuarters();
   }
 
   getCostingHeads() {
@@ -184,7 +186,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   }
 
   getQuarters() {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < Math.ceil(this.months / 3) + 3; i++) {
       var object = {
         quarter: i + 1,
         value: false,
@@ -192,7 +194,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       }
       this.quarters.push(object);
     }
-    // console.log("ALL QUARTERS:--", this.quarters);
+    console.log("ALL QUARTERS:--", this.quarters);
   }
 
   addCost() {

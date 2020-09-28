@@ -99,6 +99,13 @@ mat-tree-node .form-group {
   margin: 0px 5px;
 }
 
+.toggle-btns {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  margin-bottom: 25px;
+}
+
 /* .quarters .finance.active span {
   background-color: #2e7d32;
   color: #fff;
