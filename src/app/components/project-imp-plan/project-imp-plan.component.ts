@@ -69,7 +69,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     'Financial',
     'Procurement',
     'M & E'
-  ]
+  ];
 
   @Input() show: any = null;
   @Input() proMonths: any = null;
@@ -358,29 +358,49 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   saveCostings() {
     // setFormValue(this.allCosts);
     this.apiLoading = true;
-    var object = {
-      implementationPlan: JSON.stringify(this.allCosts)
-    }
-    this._projectService.submitPip(object, this.selectedProject.id).subscribe(
-      result => {
-        console.log("RESULT ADDING PROJECT IMPLEMENTATION PLAN:--", result);
-        const options = {
-          title: 'Implementation Plan has been Sumitted!',
-          message: 'click "OK" to close',
-          cancelText: 'CANCEL',
-          confirmText: 'OK',
-          add: true,
-          confirm: false,
-        };
-        this.apiLoading = false;
-        this._confirmModelService.open(options);
-        this._primaryAppraisalFormsStore.addPipToProject(this.allCosts);
-      },
-      error => {
-        this.apiLoading = false;
-        console.log("ERROR ADDING PROJECT IMPLEMENTATION PLAN:--", error);
+    if (this.loggedUser.role === 'admin') {
+      for (let i = 0; i < this.allCosts.length; i++) {
+        let object = {
+          "glCode": this.allCosts[i].glCode,
+          "name": this.allCosts[i].title
+        }
+        console.log("KEY TO SAVE:--", object);
+        this._projectService.addCostingHeads(object).subscribe(
+          result => {
+            this.apiLoading = false;
+            console.log("RESULT ADDING COSTING HEADS:--", result);
+          },
+          error => {
+            this.apiLoading = false;
+            console.log("ERROR ADDING COSTING HEADS:--", error);
+          }
+        );
       }
-    );
+    } else {
+      var object = {
+        implementationPlan: JSON.stringify(this.allCosts)
+      }
+      this._projectService.submitPip(object, this.selectedProject.id).subscribe(
+        result => {
+          console.log("RESULT ADDING PROJECT IMPLEMENTATION PLAN:--", result);
+          const options = {
+            title: 'Implementation Plan has been Sumitted!',
+            message: 'click "OK" to close',
+            cancelText: 'CANCEL',
+            confirmText: 'OK',
+            add: true,
+            confirm: false,
+          };
+          this.apiLoading = false;
+          this._confirmModelService.open(options);
+          this._primaryAppraisalFormsStore.addPipToProject(this.allCosts);
+        },
+        error => {
+          this.apiLoading = false;
+          console.log("ERROR ADDING PROJECT IMPLEMENTATION PLAN:--", error);
+        }
+      );
+    }
   }
 
   filterChanged(item) {
