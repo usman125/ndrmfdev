@@ -11,7 +11,7 @@ import * as _ from 'lodash';
 })
 export class TreeComponent implements OnInit {
 
-  @Input() treeData: TreeNode[];
+  @Input() treeData: TreeNode[] = [];
   @Output() calculateTotal = new EventEmitter();
 
   setMargin: boolean = false;

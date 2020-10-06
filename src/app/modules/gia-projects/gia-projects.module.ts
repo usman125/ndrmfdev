@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GiaProjectsRoutingModule } from "./gia-projects-routing.module";
 import { GiaProjectsComponent } from "../../components/component-index";
 // import { ProjectsModule } from "../projects/projects.module";
-import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+// import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
 import { MatToolbarModule } from "@angular/material/toolbar";
