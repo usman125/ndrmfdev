@@ -26,8 +26,8 @@ import { ProjectImpPlanModule } from '../project-imp-plan/project-imp-plan.modul
   ],
   imports: [
     CommonModule,
-    FroalaEditorModule.forRoot(),
-    FroalaViewModule.forRoot(),
+    // FroalaEditorModule.forRoot(),
+    // FroalaViewModule.forRoot(),
     GiaProjectsRoutingModule,
     // ProjectPlanModule,
     ProjectImpPlanModule,
