@@ -210,7 +210,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this.assignSections.patchValue([this.assignedProposalSections[0]], { onlySelf: true });
           if (pendingCount === 0) {
             this.costTabsType = this.costSections[0].name;
-            this.costTabChanged(this.costSections[0]);
+            this.costTabChanged('General');
           }
           this.apiLoading = false;
         }
@@ -237,7 +237,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           }
           if (this.sectionStats) {
             this.sectionStats.giaReviewsCount = giaReviewsCount;
-            this.sectionStats.giaPendingCount = assignedUsers.length - giaReviewsCount;
+            this.sectionStats.giaPendingCount = assignedUsers && assignedUsers.length - giaReviewsCount;
           }
         }
         if (this.selectedProject &&

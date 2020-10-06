@@ -6,14 +6,14 @@
 </mat-toolbar>
 <mat-card class="m-20 p-4">
   <mat-card-content>
-  <pre *ngIf="orgName === 'fip' && (eligibilityFlag === 'Under Review' || eligibilityFlag === 'Not Initiated')">
+    <pre *ngIf="orgName === 'fip' && (eligibilityFlag === 'Under Review' || eligibilityFlag === 'Not Initiated')">
   You must apply for <code><a color="primary" routerLink="/fip-eligibility">Eligibility Accreditation</a></code>
   
   in order to proceed for <code><a color="primary" href="javascript: void(0);">Qualification Accreditation</a></code> 
   
   once your <code id="answer">Accredication Status</code> is set you can to apply for projects.
   </pre>
-  <pre *ngIf="orgName === 'fip' && eligibilityFlag === 'Approved'">
+    <pre *ngIf="orgName === 'fip' && eligibilityFlag === 'Approved'">
   You are eligible for <code><a color="primary" routerLink="/fip-eligibility">Eligibility Accreditation</a></code>
   
   now you can apply for <code><a color="primary" routerLink="/fip-qualification">Qualification Accreditation</a></code> 
@@ -42,7 +42,7 @@
               <h6>Status</h6>
             </div>
             <div class="value">
-              <span>{{'Draft'}}</span>
+              <span id="comment" style="font-size: 15px !important;font-weight: 500;">{{eligibilityFlag}}</span>
               <!-- <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner> -->
             </div>
           </div>
@@ -62,7 +62,7 @@
               <h6>Status</h6>
             </div>
             <div class="value">
-              <span>{{'Draft'}}</span>
+              <span id="comment" style="font-size: 15px !important;font-weight: 500;">{{qualificationFlag}}</span>
               <!-- <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner> -->
             </div>
           </div>

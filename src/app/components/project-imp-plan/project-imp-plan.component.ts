@@ -1,17 +1,16 @@
-import { Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, EventEmitter } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import * as _ from 'lodash';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivityDetailsComponent } from '../activity-details/activity-details.component';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { setFormValue, formValuesReplay } from "../../stores/form-values";
 import { AuthStore } from '../../stores/auth/auth-store';
 import { CostDetailsStore } from '../../stores/cost-details/cost-details-store';
 import { PrimaryAppraisalFormsStore } from '../../stores/primary-appraisal-forms/primary-appraisal-forms-store';
 import { ProjectService } from '../../services/project.service';
 import { ConfirmModelService } from '../../services/confirm-model.service';
-
 /**
  * Food data with nested structure.
  * Each node has a name and an optional list of children.
@@ -71,8 +70,16 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     'M & E'
   ];
 
-  @Input() show: any = null;
+  viewType: any = "update";
+
+  @Input() show: any;
+  @Input() detailBtn: any;
   @Input() proMonths: any = null;
+  // @Input() giaFilter: any = null;
+  @Input()
+  giaProcFilter: Observable<any>;
+
+  quarterSelection: any = null;
 
   constructor(
     public dialog: MatDialog,
@@ -87,7 +94,24 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   ngOnInit(): void {
+    console.log("SHOW FOR PIP:----", this.show);
+    if (this.show) {
+      this.filterType = this.show;
+    }
+    // this.Subscription.add(
+    //   this.giaProcFilter.subscribe(({data}) => {
+    //     console.log("GIA FILTER IN COMPONENT:--", data);
+    //   })
+    // );
 
+    this.loggedUser = JSON.parse(localStorage.getItem('user'));
+    this.viewType = 'progress';
+    // if (this.loggedUser.role !== 'fip') {
+    //   this.viewType = 'progress';
+    // }
+    // if (this.loggedUser.role === 'fip') {
+    //   this.viewType = 'update';
+    // }
     this.Subscription.add(
       this._authStore.state$.subscribe(data => {
         this.months = data.auth.proMonths;
@@ -96,36 +120,16 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._costDetailsStore.state$.subscribe(data => {
         if (data.cost && this.selectedQuarter !== null) {
-          this.selectedQuarter.data = data.cost.costData;
+          if (data.cost.update) {
+            console.log("****UPDATE DATA*****\n", data);
+            this.selectedQuarter.data = data.cost.costData;
+          } else {
+            console.log("****UPDATE PROGRESS*****\n", data);
+            this.selectedQuarter.progress = data.cost.progress;
+          }
         }
       })
     );
-    // formValuesReplay.subscribe((data: any) => {
-    //   console.log("REPLAY CALLED:--", data);
-    //   if (data.form && data.form.length) {
-    //     this.allCosts = data.form;
-    //     this.allSubCosts = [];
-    //     this.allCosts.forEach((c) => {
-    //       c.quarters = [];
-    //       for (let i = 0; i < Math.ceil(this.months / 3) + 3; i++) {
-    //         var object = {
-    //           quarter: i + 1,
-    //           value: false,
-    //           data: null
-    //         }
-    //         c.quarters.push(object);
-    //       }
-    //       if (c.mainCostId !== null) {
-    //         this.allSubCosts.push(c);
-    //       }
-    //     });
-    //     this.prepareForm();
-    //   } else {
-    //     this.allCosts = [];
-    //   }
-    // }).unsubscribe();
-
-    this.loggedUser = JSON.parse(localStorage.getItem('user'));
     this.Subscription.add(
       this._primaryAppraisalFormsStore.state$.subscribe((data) => {
         this.selectedProject = data.selectedProject;
@@ -306,19 +310,32 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   changeQuarterSelection(item, object) {
     console.log("QUARTER CHANGED:--", item, object);
     // this.selectedQuarter = object;
-    object.value = !object.value;
-    object.data = {
-      available: null,
-      startDate: null,
-      endDate: null,
-      description: null,
-      latitude: null,
-      longitude: null,
-      ndrmfShare: null,
-      fipShare: null,
-      isProcurement: false,
-      procurementHeads: [],
-      rfSubmitData: null,
+    const options = {
+      title: 'This quarter is over!',
+      message: 'click "OK" to close',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
+    };
+
+    if (this.quarterSelection > object.quarter) {
+      this._confirmModelService.open(options);
+    } else {
+      object.value = !object.value;
+      object.data = {
+        available: null,
+        startDate: null,
+        endDate: null,
+        description: null,
+        latitude: null,
+        longitude: null,
+        ndrmfShare: null,
+        fipShare: null,
+        isProcurement: false,
+        procurementHeads: [],
+        rfSubmitData: null,
+      }
     }
   }
 
@@ -412,12 +429,40 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   openQuarterDetails(object, item) {
     console.log("OPEN QUARTER DETAILS:--", object, item);
     this.selectedQuarter = object;
-    this._costDetailsStore.setDefaults(item.title, object.quarter, object.data);
+    // this.set
+    this._costDetailsStore.setDefaults(item.title, object.quarter, object.data, null, true);
     document.querySelector('#myTopElement5').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
+  openProgressDetails(object, item) {
+    console.log("OPEN QUARTER DETAILS:--", object, item);
+    // this.selectedQuarter = object;
+    if (!object.progress) {
+      object.progress = {
+        generalProgress: null,
+        generalProgressStatus: null,
+        financialProgress: null,
+        financialProgressStatus: null,
+        financialProgressAmount: null,
+        procProgress: null,
+        procProgressStatus: null,
+        mneProgress: null,
+        mneProgressStatus: null,
+      }
+    }
+    this.selectedQuarter = object;
+    this._costDetailsStore.setDefaults(item.title, object.quarter, object.data, object.progress, false);
+    document.querySelector('#myTopElement5').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  quarterSelectionChange($event) {
+    console.log("QUARTER SELCTION CHANGED:---", parseInt($event.target.value));
+    this._authStore.setCurrentQuarter(parseInt($event.target.value));
+    // this._costDetailsStore.setDefaults(null, null, null, null, true);
+  }
+
   ngOnDestroy() {
-    this._costDetailsStore.setDefaults(null, null, null);
+    this._costDetailsStore.setDefaults(null, null, null, null, true);
     this.Subscription.unsubscribe();
   }
 

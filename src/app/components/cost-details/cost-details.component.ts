@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { AuthStore } from 'src/app/stores/auth/auth-store';
 import { SettingsService } from '../../services/settings.service';
 import { CostDetailsStore } from "../../stores/cost-details/cost-details-store";
 
@@ -19,13 +20,35 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
 
   quarter: any = null;
   costTitle: any = null;
+  selectedIndex: any = 0;
+
+  updateFlag: boolean;
+
+  progressForm: FormGroup;
+
+  // progressData: any = {
+  //   generalProgress: null,
+  //   generalProgressStatus: null,
+  //   financialProgress: null,
+  //   financialProgressStatus: null,
+  //   financialProgressAmount: null,
+  //   procProgress: null,
+  //   procProgressStatus: null,
+  //   mneProgress: null,
+  //   mneProgressStatus: null,
+  // };
+  progressData: any = null;
+  loggedUser: any = null;
+  currentQuarter: any = null;
 
   constructor(
     private fb: FormBuilder,
     private _settingsService: SettingsService,
     private _costDetailsStore: CostDetailsStore,
+    private _authStore: AuthStore,
   ) {
     this._buildForm();
+    this._buildProgressForm();
   }
 
   _buildForm() {
@@ -43,16 +66,36 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
+  _buildProgressForm() {
+    this.progressForm = this.fb.group({
+      generalProgress: [null, Validators.required],
+      generalProgressStatus: [null, Validators.required],
+      financialProgress: [null, Validators.required],
+      financialProgressStatus: [null, Validators.required],
+      financialProgressAmount: [null, Validators.required],
+      procProgress: [null, Validators.required],
+      procProgressStatus: [null, Validators.required],
+      mneProgress: [null, Validators.required],
+      mneProgressStatus: [null, Validators.required],
+    });
+  }
+
   ngOnInit(): void {
+    this.loggedUser = JSON.parse(localStorage.getItem('user'));
+    this.Subscription.add(
+
+    );
     this.Subscription.add(
       this._costDetailsStore.state$.subscribe(result => {
         console.log("DATA IN COST DETAILS:--", result.cost, this.selectedQuarter);
+        setTimeout(() => { this.selectedIndex = 0; }, 0);
         this.rfSubmitData = null;
         this.selectedQuarter = result.cost.costData;
         this.quarter = result.cost.quarter;
         this.costTitle = result.cost.title;
-        if (this.selectedQuarter !== null) {
-          // console.log("DATA FROM MODAL:---", this.data.available);
+        this.updateFlag = result.cost.update;
+        this.progressData = result.cost.progress;
+        if (this.selectedQuarter !== null && this.updateFlag) {
           this._form.patchValue({
             startDate: this.selectedQuarter.startDate,
             endDate: this.selectedQuarter.endDate,
@@ -70,9 +113,62 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
               JSON.parse(this.selectedQuarter.rfSubmitData) :
               this.selectedQuarter.rfSubmitData;
           }
-          // if (this.selectedQuarter.startDate === null)
+          this._authStore.state$.subscribe(data => {
+            console.log("CURRENT QUARTER:--", data.auth.currentQuarter);
+            this.currentQuarter = data.auth.currentQuarter;
+            if ((this.quarter < this.currentQuarter) && this.currentQuarter) {
+              this._form.disable({ onlySelf: true });
+            } else {
+              this._form.enable({ onlySelf: true });
+            }
+          })
         }
-        // this.getRfMeta();
+        if (!this.updateFlag) {
+          this.progressForm.patchValue({
+            generalProgress: this.progressData.generalProgress,
+            generalProgressStatus: this.progressData.generalProgressStatus,
+            financialProgress: this.progressData.financialProgress,
+            financialProgressStatus: this.progressData.financialProgressStatus,
+            financialProgressAmount: this.progressData.financialProgressAmount,
+            procProgress: this.progressData.procProgress,
+            procProgressStatus: this.progressData.procProgressStatus,
+            mneProgress: this.progressData.mneProgress,
+            mneProgressStatus: this.progressData.mneProgressStatus,
+          }, { onlySelf: true });
+          this._authStore.state$.subscribe(data => {
+            console.log("CURRENT QUARTER:--", data.auth.currentQuarter);
+            this.currentQuarter = data.auth.currentQuarter;
+            if ((this.quarter > this.currentQuarter) && this.currentQuarter) {
+              this.progressForm.disable({ onlySelf: true });
+            } else {
+              this.progressForm.enable({ onlySelf: true });
+              if (!this.selectedQuarter.isProcurement) {
+                this.progressForm.controls['procProgress'].clearValidators();
+                this.progressForm.controls['procProgress'].disable({ onlySelf: true });
+                this.progressForm.controls['procProgressStatus'].clearValidators();
+                this.progressForm.controls['procProgressStatus'].disable({ onlySelf: true });
+              }
+              if (this.selectedQuarter.isProcurement) {
+                this.progressForm.controls['procProgress'].setValidators([Validators.required]);
+                this.progressForm.controls['procProgressStatus'].setValidators([Validators.required]);
+                this.progressForm.controls['procProgress'].enable({ onlySelf: true });
+                this.progressForm.controls['procProgressStatus'].enable({ onlySelf: true });
+              }
+              if (this.selectedQuarter.rfSubmitData === null) {
+                this.progressForm.controls['mneProgress'].clearValidators();
+                this.progressForm.controls['mneProgress'].disable({ onlySelf: true });
+                this.progressForm.controls['mneProgressStatus'].clearValidators();
+                this.progressForm.controls['mneProgressStatus'].disable({ onlySelf: true });
+              }
+              if (this.selectedQuarter.rfSubmitData !== null) {
+                this.progressForm.controls['mneProgress'].setValidators([Validators.required]);
+                this.progressForm.controls['mneProgressStatus'].setValidators([Validators.required]);
+                this.progressForm.controls['mneProgress'].enable({ onlySelf: true });
+                this.progressForm.controls['mneProgressStatus'].enable({ onlySelf: true });
+              }
+            }
+          })
+        }
       })
     );
   }
@@ -109,8 +205,25 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
 
 
   submit() {
-    this._costDetailsStore.setDefaults(this.costTitle, this.quarter, this._form.value);
+    this._costDetailsStore.setDefaults(
+      this.costTitle,
+      this.quarter,
+      this._form.value,
+      this.progressData,
+      true
+    );
     // this.rfSubmitData = null;
+  }
+
+  submitProgress() {
+    console.log("PROGRESS SUBMITTED:---", this.progressForm.value);
+    this._costDetailsStore.setDefaults(
+      this.costTitle,
+      this.quarter,
+      this.selectedQuarter,
+      this.progressForm.value,
+      false
+    );
   }
 
 

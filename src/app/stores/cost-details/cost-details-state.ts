@@ -1,7 +1,9 @@
 const QPR = {
   title: null,
   quarter: null,
-  costData: null
+  costData: null,
+  progress: null,
+  update: true
 }
 
 export class CostDetailsState {
@@ -9,5 +11,7 @@ export class CostDetailsState {
     title: string,
     quarter: number,
     costData: any
+    progress: any,
+    update: boolean
   } = QPR;
 }

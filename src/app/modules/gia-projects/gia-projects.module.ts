@@ -18,6 +18,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxPrintModule } from 'ngx-print';
 import { ProjectPlanModule } from '../project-plan/project-plan.module';
+import { ProjectImpPlanModule } from '../project-imp-plan/project-imp-plan.module';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ProjectPlanModule } from '../project-plan/project-plan.module';
     FroalaEditorModule.forRoot(),
     FroalaViewModule.forRoot(),
     GiaProjectsRoutingModule,
-    ProjectPlanModule,
+    // ProjectPlanModule,
+    ProjectImpPlanModule,
     // ProjectDetailsModule,
     // ProjectsModule,
     MatCardModule,

@@ -219,6 +219,16 @@ export class AuthStore extends Store<AuthState> {
     })
   }
 
+  setCurrentQuarter(value) {
+    this.setState({
+      ...this.state,
+      auth: {
+        ...this.state.auth,
+        currentQuarter: value
+      }
+    })
+  }
+
   setOrgName(name) {
     this.setState({
       ...this.state,

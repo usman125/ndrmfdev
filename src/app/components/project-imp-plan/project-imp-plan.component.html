@@ -15,7 +15,17 @@
   </mat-toolbar>
   <mat-card>
     <mat-card-content>
-      <div class="toggle-btns">
+      <mat-form-field appearance="outline">
+        <mat-label>Select Quarter</mat-label>
+        <select matNativeControl (change)="quarterSelectionChange($event)" [(ngModel)]="quarterSelection"
+          name="quarter">
+          <option value="-1" selected>-1</option>
+          <option *ngFor="let item of quarters" [value]="item.quarter">
+            {{item.quarter}}
+          </option>
+        </select>
+      </mat-form-field>
+      <div class="toggle-btns" *ngIf="loggedUser?.role !== 'fip' && detailBtn !== 'gia-projects'">
         <mat-button-toggle-group [(ngModel)]="filterType" #group="matButtonToggleGroup" vertical="false">
           <mat-button-toggle (change)="filterChanged(item)" *ngFor="let item of filterTypes; let i = index;"
             [value]="item">
@@ -23,17 +33,17 @@
           </mat-button-toggle>
         </mat-button-toggle-group>
       </div>
-      <div class="table-header">
+      <!-- <div class="table-header">
         <span class="top-title">Activity</span>
         <div class="top-quarters">
           <div *ngFor="let obj of quarters">
             <span>{{obj.quarter}}</span>
           </div>
         </div>
-      </div>
+      </div> -->
       <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" matTreeNodePaddingIndent="5">
         <!-- This is the tree node template for leaf nodes -->
-        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        <mat-tree-node [ngClass]="{'notUser': loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'}" *matTreeNodeDef="let node" matTreeNodePadding>
           <!-- use a disabled button to provide padding for tree leaf -->
           <!-- <button mat-icon-button disabled></button> -->
           <!-- {{node.name}} -->
@@ -54,21 +64,27 @@
                 [(ngModel)]="node.title">
             </div>
           </div>
-          <div *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">
+          <div class="node-title" *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">
             {{node.title}}
           </div>
           <div *ngFor="let item of allCosts;let i=index;">
             <div *ngIf="item._id === node._id">
               <div *ngIf="filterType === 'General'" class="quarters">
                 <div class="item" [ngClass]="{'active': object.value === true}" *ngFor="let object of item.quarters">
-                  <span *ngIf="loggedUser?.role === 'fip'"
+                  <span *ngIf="loggedUser?.role === 'fip' && viewType !== 'progress'"
                     (click)="changeQuarterSelection(item, object);">{{object.quarter}}</span>
                   <span *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">{{object.quarter}}</span>
+                  <span *ngIf="loggedUser?.role === 'fip' && viewType === 'progress'">{{object.quarter}}</span>
                   <!-- <small *ngIf="object.value === true" (click)="openActivityDetails(item, object)"> -->
                   <!-- </small> -->
-                  <mat-icon [matTooltip]="object.data.startDate === null ? 'Pending Details' : 'Completed'"
-                    [ngStyle]="{'color': object.data.startDate === null ? '#f57f17' : null}"
-                    *ngIf="object.value === true" (click)="openQuarterDetails(object, item)">pageview</mat-icon>
+                  <mat-icon [matTooltip]="object?.data?.startDate === null ? 'Pending Details' : 'Completed'"
+                    [ngStyle]="{'color': object?.data?.startDate === null ? '#EEFF41' : null}"
+                    *ngIf="object.value === true && viewType !== 'progress' && detailBtn !== 'gia-projects'"
+                    (click)="openQuarterDetails(object, item)">pageview</mat-icon>
+                  <mat-icon [matTooltip]="object?.data?.startDate === null ? 'Pending Details' : 'Completed'"
+                    [ngStyle]="{'color': object?.data?.startDate === null ? '#EEFF41' : null}"
+                    *ngIf="object.value === true && viewType === 'progress' && detailBtn !== 'gia-projects'"
+                    (click)="openProgressDetails(object, item)">create</mat-icon>
                   <!-- *ngIf="object.value === true" (click)="openActivityDetails(item, object)">pageview</mat-icon> -->
                   <!-- <small *ngIf="object.value === true" (click)="openQuarterDetails(object, item);"></small> -->
                 </div>
@@ -143,6 +159,9 @@
               <input type="text" (keyup)="inputChanged(node._id, $event)" [(ngModel)]="node.title" class="form-control">
             </div>
           </div>
+          <div class="node-title" *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">
+            {{node.title}}
+          </div>
           <div *ngFor="let item of allCosts;let i=index;">
             <div *ngIf="item._id === node._id">
               <div class="quarters">
@@ -151,9 +170,6 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">
-            {{node.title}}
           </div>
         </mat-tree-node>
       </mat-tree>

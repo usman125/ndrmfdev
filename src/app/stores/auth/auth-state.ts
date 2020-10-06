@@ -16,6 +16,7 @@ const AUTH = {
   accredited: null,
   orgName: null,
   userInfo: null,
+  currentQuarter: null,
 }
 
 export class AuthState {
@@ -36,6 +37,7 @@ export class AuthState {
     canInitiate: any,
     accredited: any,
     orgName: any,
-    userInfo: any
+    userInfo: any,
+    currentQuarter: any,
   } = AUTH;
 }

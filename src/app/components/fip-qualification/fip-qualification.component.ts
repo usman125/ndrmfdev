@@ -92,6 +92,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.loggedUser = JSON.parse(localStorage.getItem('user'));
     this.Subscription.add(
       this._authStore.state$.subscribe(data => {
         this.qualificationFlag = data.auth.qualifiationFlag;
@@ -104,7 +105,6 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     if (this.orgName === 'govt') {
       this._router.navigate(['fip-home']);
     } else {
-      this.loggedUser = JSON.parse(localStorage.getItem('user'));
       setTimeout(() => {
         this._authStore.setRouteName('FIP-QUALIFICATION');
       });

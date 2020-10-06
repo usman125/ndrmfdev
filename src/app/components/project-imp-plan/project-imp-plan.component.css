@@ -14,7 +14,6 @@ mat-tree-node .form-group {
 }
 
 .form-group input {
-
   border-radius: 0;
   border: 1px solid #ddd;
   border-top-color: transparent;
@@ -22,6 +21,7 @@ mat-tree-node .form-group {
   font-size: 0.7rem;
   font-weight: 400;
   padding: 0.375rem 0.75rem;
+  min-width: 200px;
 }
 .mat-tree-node:nth-child(1) .form-group {
   border-top: 1px solid #ddd;
@@ -29,7 +29,7 @@ mat-tree-node .form-group {
 .form-control:focus {
   color: green;
   background-color: transparent;
-  border-color:inherit;
+  border-color: inherit;
   outline: 0;
   box-shadow: none;
 }
@@ -45,10 +45,10 @@ mat-tree-node .form-group {
 
 .quarters .item mat-icon {
   position: absolute;
-  font-size: 18px;
+  font-size: 15px;
   color: #fff;
-  right: -1px;
-  top: -11px;
+  right: -3.5px;
+  top: -6.5px;
   height: 17px;
   width: 24px;
   cursor: pointer;
@@ -71,18 +71,19 @@ mat-tree-node .form-group {
   padding: 0.4rem 25px;
   margin: 0px 5px;
   background-color: #fff;
-  border:1px solid #eee;
+  border: 1px solid #eee;
   cursor: pointer;
+  /* display: block; */
 }
 
 .quarters .disable-item span {
   background-color: #f4f4f4;
-  border:1px solid #eee;
+  border: 1px solid #eee;
 }
 
 .mne-item span {
   background-color: #fff;
-  border:1px solid #e2e2e2;;
+  border: 1px solid #e2e2e2;
   cursor: pointer;
   padding: 0.4rem 25px;
   margin: 0px 5px;
@@ -94,8 +95,9 @@ mat-tree-node .form-group {
 .quarters .proc-item.active span {
   background-color: #2e7d32;
   color: #fff;
-  border:1px solid #e2e2e2;;
+  border: 1px solid #e2e2e2;
   font-weight: 400;
+  /* display: block; */
 }
 
 .rfdata {
@@ -127,18 +129,20 @@ mat-tree-node .form-group {
   display: flex;
   flex-direction: column;
 } */
-.mat-tree-node{
-  padding:0 !important;
+.mat-tree-node {
+  padding: 0 !important;
   min-height: auto;
 }
 .mat-tree {
   max-height: 400px;
   overflow: auto;
+  padding-top: 5px;
 }
 .mat-tree-node:nth-child(1) .form-group {
   border-top: 1px solid #ddd;
 }
-.mat-icon-button {
+/* .mat-tree-node */
+.mat-tree-node .mat-icon-button {
   padding: 0;
   min-width: 0;
   width: 27px;
@@ -147,6 +151,16 @@ mat-tree-node .form-group {
   line-height: 27px;
   border-radius: 50%;
 }
-.material-icons{
+.mat-tree-node .material-icons {
   font-size: 13px;
+}
+
+.node-title {
+  min-width: 200px;
+  border: 1px solid #e2e2e2;
+  padding: 4px 10px;
+}
+
+.notUser {
+  padding-left: 27px !important;
 }

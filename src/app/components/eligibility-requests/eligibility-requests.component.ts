@@ -10,13 +10,14 @@ import { SurveysService } from "../../services/surveys.service";
 import { UserService } from "../../services/user.service";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
+import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 // import {  } from "@angular/material/sort";
 
 @Component({
   selector: 'app-eligibility-requests',
   templateUrl: './eligibility-requests.component.html',
   styleUrls: ['./eligibility-requests.component.css'],
-  providers: [SurveysService, AccreditationRequestService]
+  providers: [ConfirmModelService]
 })
 export class EligibilityRequestsComponent implements OnInit, OnDestroy {
 
@@ -47,11 +48,11 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
 
   constructor(
     private _authStore: AuthStore,
-    private _surveysStore: SurveysStore,
+    // private _surveysStore: SurveysStore,
     private _usersStore: UsersStore,
-    private _accreditationRequestStore: AccreditationRequestStore,
+    private _confirmModelService: ConfirmModelService,
     private _accreditationRequestService: AccreditationRequestService,
-    private _surveysService: SurveysService,
+    // private _surveysService: SurveysService,
     private _userService: UserService,
   ) { }
 
@@ -266,6 +267,14 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
 
   markEligibleFlag() {
     console.log("MARK ELIGIBLE CALLED:--", this.selectedRequest);
+    const options = {
+      title: 'Approved!',
+      message: 'Fip is now eligible for submitting the Qualification request',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
+    };
     this.loadingApi = true;
     this._userService.updateEligibleStatus(this.selectedRequest.id).subscribe(
       result => {
@@ -276,6 +285,7 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
         // this.toggleBtn = this._usersStore.findEligibleUser(this.selectedRequest.user);
         this.toggleBtn = true;
         this.loadingApi = false;
+        this._confirmModelService.open(options);
       },
       error => {
         this.loadingApi = false;

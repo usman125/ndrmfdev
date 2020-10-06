@@ -61,7 +61,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
     this.apiLoading = true;
     this._settingsService.getProcessTemplate('ELIGIBILITY').subscribe(
       (result: any) => {
-        console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
+        // console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
         this.allSections = result.sections.map((c) => {
           return {
             ...c,
@@ -84,11 +84,11 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
   getEligibilityRequest() {
     this._accreditationRequestService.getEligibilityRequest().subscribe(
       (result: any) => {
-        console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", result);
+        // console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", result);
         if (result[0]) {
           this._accreditationRequestService.getSingleEligibilityRequest(result[0].id).subscribe(
             (result: any) => {
-              console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", result);
+              // console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", result);
               if (result) {
                 this.form.exists = true;
                 this.secondForm = JSON.parse(result.data);
@@ -129,14 +129,18 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
 
     this.secondForm = $event.data;
     this.form.exists = true;
-    console.log('NEW SUBMITTED:--', $event.data);
+    // console.log('NEW SUBMITTED:--', $event.data);
     this._accreditationRequestService.addEligibilityRequest(
       JSON.stringify($event.data),
       JSON.stringify(this.form)
     ).subscribe(
       result => {
-        console.log("RESULT AFTER ADDING ELIGIBLITY:--", result);
         this._confirmModelService.open(options);
+        let user = JSON.parse(localStorage.getItem('user'));
+        user.eligibileFlag = 'Under Review';
+        localStorage.setItem('user', JSON.stringify(user));
+        // console.log("RESULT AFTER ADDING ELIGIBLITY:--", result, JSON.parse(localStorage.getItem('user')));
+        this._authStore.setEligibleFlag('Under Review');
         this.getEligibilityRequest();
       },
       error => {

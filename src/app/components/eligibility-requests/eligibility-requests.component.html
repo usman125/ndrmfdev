@@ -78,7 +78,7 @@
             <span>{{selectedRequestItems?.template?.name}}</span>
             <span class="example-spacer"></span>
             <div style="display: flex;justify-content: center;flex-direction: column;align-items: center;">
-              <small id="comment" style="font-weight: bold;">{{selectedRequestItems?.status}}</small>
+              <small id="comment" style="font-weight: bold;">{{selectedRequest?.status}}</small>
               <small>{{selectedRequestItems?.submittedAt | date:'shortDate'}}</small>
             </div>
           </mat-toolbar-row>
@@ -99,7 +99,7 @@
           <div class="fullbtn">
             <button *ngIf="!loadingApi" [disabled]="toggleBtn" (click)="markEligibleFlag()"
               [color]="!toggleBtn ? 'primary' : 'warn'" class="control-btn" mat-flat-button>
-              {{!toggleBtn ? "Mark Eligible" : "Mark Un-eligible"}}
+              {{!toggleBtn ? "Mark Eligible" : "Eligible for qualification"}}
             </button>
             <mat-progress-spinner *ngIf="loadingApi" mode="indeterminate" diameter="30"></mat-progress-spinner>
           </div>

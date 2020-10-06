@@ -24,11 +24,11 @@ mat-button-toggle-group {
 }
 
 .main-block {
-  width: 65%;
+  width: 75%;
 }
 
 .intimation-block {
-  width: 35%;
+  width: 25%;
   /* position: fixed; */
   /* right: 0px; */
 }
@@ -104,3 +104,10 @@ mat-progress-bar{
     color: #fff;
     font-weight: bold;
 }
+
+mat-button-toggle-group {
+  margin: 0 auto;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+

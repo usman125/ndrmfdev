@@ -86,12 +86,25 @@
                   <div [froalaView]="item.content"></div>
                 </div>
                 <div *ngIf="item.forms.length">
-                  <div class="form margin-5 appraisal-box" *ngFor="let form of item.forms">
-                    <div *ngIf="form.id !== 'pip'">
-                      <formio [form]="form.template" [submission]="{data: form.data}" readOnly="true"></formio>
-                    </div>
+                  <div class="form margin-5 appraisal-box p-0" *ngFor="let form of item.forms">
+                    <formio *ngIf="form.id !== 'pip' && form.id !== 'pip-proc' 
+                    && form.id !== 'pip-finance' && form.id !== 'pip-mne'" [form]="form.template"
+                      [submission]="{data: form.data}" readOnly="true"></formio>
                     <div *ngIf="form.id === 'pip'">
-                      <app-project-plan [proMonths]="proMonths" [show]="show"></app-project-plan>
+                      <app-project-imp-plan [detailBtn]="detailBtn" [proMonths]="proMonths" [show]="giaGeneralFilter">
+                      </app-project-imp-plan>
+                    </div>
+                    <div *ngIf="form.id === 'pip-proc'">
+                      <app-project-imp-plan [detailBtn]="detailBtn" [proMonths]="proMonths" [show]="giaProcFilter">
+                      </app-project-imp-plan>
+                    </div>
+                    <div *ngIf="form.id === 'pip-finance'">
+                      <app-project-imp-plan [detailBtn]="detailBtn" [proMonths]="proMonths" [show]="giaFinanceFilter">
+                      </app-project-imp-plan>
+                    </div>
+                    <div *ngIf="form.id === 'pip-mne'">
+                      <app-project-imp-plan [detailBtn]="detailBtn" [proMonths]="proMonths" [show]="giaMneFilter">
+                      </app-project-imp-plan>
                     </div>
                   </div>
                 </div>
@@ -128,7 +141,8 @@
             </mat-select>
           </mat-form-field>
           <mat-chip-list *ngIf="selectedProject?.gia.subStatus !== null" class="mt-2 mb-2">
-            <mat-chip color="accent" selected>{{sectionStats?.pendingCount}} {{selectedProject?.gia.subStatus}}</mat-chip>
+            <mat-chip color="accent" selected>{{sectionStats?.pendingCount}} {{selectedProject?.gia.subStatus}}
+            </mat-chip>
           </mat-chip-list>
         </mat-card-content>
         <mat-card-actions>

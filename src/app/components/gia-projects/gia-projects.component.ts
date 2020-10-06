@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy, Output, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, Input, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 // import { ProposalSectionsStore } from "../../stores/proposal-sections/proposal-sections-store";
 // import { ProjectsStore } from "../../stores/projects/projects-store";
 // import { ProposalFormsStore } from "../../stores/proposal-forms/proposal-forms-store";
@@ -21,8 +21,13 @@ import { Location } from "@angular/common";
 })
 export class GiaProjectsComponent implements OnInit, OnDestroy {
 
-  @Output() show: any = 'pip';
-  @Output() proMonths: any = null;
+  detailBtn: any = 'gia-projects';
+  proMonths: any = null;
+
+  giaProcFilter: any = 'Procurement';
+  giaGeneralFilter: any = 'General';
+  giaMneFilter: any = 'M & E';
+  giaFinanceFilter: any = 'Financial';
 
   public Subscription: Subscription = new Subscription();
 
@@ -48,6 +53,8 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
 
 
   @Input() viewType: string = 'add-gia';
+
+  giaFilter: Subject<any> = new Subject<any>();
 
   constructor(
     private _userService: UserService,
@@ -95,7 +102,61 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
             templateType: null,
             totalScore: null,
           }
+          var pipProcSection = {
+            assigned: null,
+            data: null,
+            id: 'pip-proc',
+            name: 'Project Procurement Plan',
+            passingScore: null,
+            reassignmentStatus: null,
+            review: null,
+            reviewCompletedDate: null,
+            reviewDeadline: null,
+            reviewHistory: null,
+            reviewStatus: null,
+            sme: null,
+            template: this.selectedProject.implementationPlan,
+            templateType: null,
+            totalScore: null,
+          }
+          var pipFinanceSection = {
+            assigned: null,
+            data: null,
+            id: 'pip-finance',
+            name: 'Project Financial Plan',
+            passingScore: null,
+            reassignmentStatus: null,
+            review: null,
+            reviewCompletedDate: null,
+            reviewDeadline: null,
+            reviewHistory: null,
+            reviewStatus: null,
+            sme: null,
+            template: this.selectedProject.implementationPlan,
+            templateType: null,
+            totalScore: null,
+          }
+          var pipMneSection = {
+            assigned: null,
+            data: null,
+            id: 'pip-mne',
+            name: 'Project M & E Plan',
+            passingScore: null,
+            reassignmentStatus: null,
+            review: null,
+            reviewCompletedDate: null,
+            reviewDeadline: null,
+            reviewHistory: null,
+            reviewStatus: null,
+            sme: null,
+            template: this.selectedProject.implementationPlan,
+            templateType: null,
+            totalScore: null,
+          }
           this.selectedProject.sections.push(pipSection);
+          this.selectedProject.sections.push(pipProcSection);
+          this.selectedProject.sections.push(pipFinanceSection);
+          this.selectedProject.sections.push(pipMneSection);
           var reviewsCount = 0;
           var assignedUsers = [];
           if (this.selectedProject.gia.reviews !== null) {
@@ -218,6 +279,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
     console.log("APPRESIAL DOC:--", this.appraisalDoc);
     this.content = null;
     this.sections.reset();
+    // this.giaFilter.next();
   }
 
   submitGia() {
@@ -382,6 +444,12 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
   viewGiaCommentsMatrix() {
     this._router.navigate(['/gia-comments-matrix', this.selectedProjectId]);
   }
+
+  loadProcPlan(key, title) {
+    console.log("LOAD PROC PLAN:---", key, title);
+    // this.giaFilter.next({ filter: key });
+  }
+
 
   ngOnDestroy() {
     this._authStore.setProjectMonths(0);
