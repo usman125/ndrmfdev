@@ -62,7 +62,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
     spellcheck: true,
     height: '8rem',
     minHeight: '5rem',
-    placeholder: 'Enter text here...',
+    placeholder: 'Enter your text here...',
     translate: 'no',
     defaultParagraphSeparator: 'p',
     defaultFontName: 'Arial',
