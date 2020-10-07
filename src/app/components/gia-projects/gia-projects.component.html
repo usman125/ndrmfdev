@@ -2,7 +2,10 @@
   <mat-toolbar-row>
     <span>{{viewType === 'add-gia' ? 'Prepare Project GIA' : 'Review Project GIA'}}</span>
     <div class="example-spacer"></div>
-    <small>{{selectedProject?.submittedAt | date:'shortDate'}}</small>
+    <div style="display: flex;flex-direction: column;">
+      <!-- <small>{{selectedProject?.submittedAt | date:'shortDate'}}</small> -->
+      <small>{{selectedProject?.initiatedBy.name}}</small>
+    </div>
     <!-- <small>{{selectedProject?.initiatedBy.name}}</small> -->
     <div class="example-spacer"></div>
     <button mat-button color="primary" (click)="goBack()">
@@ -11,6 +14,9 @@
   </mat-toolbar-row>
 </mat-toolbar>
 <!-- <div *ngIf="viewType === 'add-gia'" class="m-20 mb-0" [(froalaModel)]="content" [froalaEditor]></div> -->
+<div class="m-20 mb-0" style="background-color: #fff;">
+  <angular-editor [config]="config" [placeholder]="'Enter text here...'" [(ngModel)]="content"></angular-editor>
+</div>
 <mat-card class="proposal-section" *ngIf="viewType === 'add-gia'">
   <mat-card-content>
     <mat-form-field *ngIf="allProposalSections">
@@ -83,7 +89,7 @@
                   </button>
                 </div>
                 <div class="content">
-                  <!-- <div [froalaView]="item.content"></div> -->
+                  <div [innerHtml]="item.content"></div>
                 </div>
                 <div *ngIf="item.forms.length">
                   <div class="form margin-5 appraisal-box p-0" *ngFor="let form of item.forms">

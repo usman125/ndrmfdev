@@ -19,6 +19,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxPrintModule } from 'ngx-print';
 import { ProjectPlanModule } from '../project-plan/project-plan.module';
 import { ProjectImpPlanModule } from '../project-imp-plan/project-imp-plan.module';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { ProjectImpPlanModule } from '../project-imp-plan/project-imp-plan.modul
     MatChipsModule,
     MatProgressSpinnerModule,
     NgxPrintModule,
+    AngularEditorModule,
   ],
   exports: [GiaProjectsComponent]
 })

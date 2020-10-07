@@ -56,6 +56,38 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
 
   giaFilter: Subject<any> = new Subject<any>();
 
+
+  config: any = {
+    editable: true,
+    spellcheck: true,
+    height: '8rem',
+    minHeight: '5rem',
+    placeholder: 'Enter text here...',
+    translate: 'no',
+    defaultParagraphSeparator: 'p',
+    defaultFontName: 'Arial',
+    sanitize: false,
+    toolbarHiddenButtons: [
+      ['bold']
+    ],
+    customClasses: [
+      {
+        name: "quote",
+        class: "quote",
+      },
+      {
+        name: 'redText',
+        class: 'redText'
+      },
+      {
+        name: "titleText",
+        class: "titleText",
+        tag: "h1",
+      },
+    ]
+  };
+
+
   constructor(
     private _userService: UserService,
     private _location: Location,

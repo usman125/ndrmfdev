@@ -19,6 +19,7 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
   Subscription: Subscription = new Subscription();
   allComments: any = [];
   selectedProjectId: any = null;
+  selectedProject: any = null;
 
   constructor(
     // private _extendedAppraisalSmesStore: ExtendedAppraisalSmesStore,
@@ -49,7 +50,7 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
   getProjectComments() {
     this._projectService.getSingleProject(this.selectedProjectId).subscribe(
       (result: any) => {
-        // this.selectedProject = result;
+        this.selectedProject = result;
         // this.selectedProject.id = this.selectedProjectId;
         result.id = this.selectedProjectId;
         console.log("PROJECT DETAILS FROM DATABASE:--", result);

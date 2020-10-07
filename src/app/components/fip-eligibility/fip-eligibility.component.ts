@@ -31,6 +31,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
   public apiLoading: boolean = false;
   public canInitiate: boolean = false;
   public eligibileFlag: any = null;
+  public orgName: any = null;
 
   @ViewChild('group') group;
 
@@ -50,9 +51,10 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
       this._authStore.state$.subscribe(data => {
         this.canInitiate = data.auth.canInitiate;
         this.eligibileFlag = data.auth.eligibaleFlag;
+        this.orgName = data.auth.orgName;
       })
     );
-    if (this.canInitiate === false) {
+    if (this.canInitiate === false && this.orgName !== 'fip') {
       this._router.navigate(['fip-home']);
     } else {
       this.getProcessTemplate();

@@ -1141,18 +1141,20 @@
   </div>
   <span id="myTopElement3" #myTopElement3></span>
   <!-- <mat-card class="m-20 mt-0 pt-1" *ngIf="sectionStats.pendingCount === 0 && selectedProject?.govFip === false"> -->
-    <!-- <mat-card-content> -->
-      <!-- <div class="display-flex-row pt-3 mb-3"> -->
-      <!-- <mat-button-toggle-group [(ngModel)]="costTabsType" #group="matButtonToggleGroup">
+  <!-- <mat-card-content> -->
+  <!-- <div class="display-flex-row pt-3 mb-3"> -->
+  <!-- <mat-button-toggle-group [(ngModel)]="costTabsType" #group="matButtonToggleGroup">
           <mat-button-toggle (change)="costTabChanged(item)" *ngFor="let item of costSections; let i = index;"
             [value]="item.name">
             <span>{{item.name}}</span>
           </mat-button-toggle>
         </mat-button-toggle-group> -->
-      <!-- </div> -->
-      <!-- <app-project-plan [proMonths]="proMonths" [show]="show"></app-project-plan> -->
-      <app-project-imp-plan [proMonths]="proMonths" [show]="show"></app-project-imp-plan>
-    <!-- </mat-card-content> -->
+  <!-- </div> -->
+  <!-- <app-project-plan [proMonths]="proMonths" [show]="show"></app-project-plan> -->
+  <div *ngIf="sectionStats.pendingCount === 0 && selectedProject?.govFip === false">
+    <app-project-imp-plan [proMonths]="proMonths" [show]="show"></app-project-imp-plan>
+  </div>
+  <!-- </mat-card-content> -->
   <!-- </mat-card> -->
   <!-- <app-pip></app-pip> -->
 </ng-container>
