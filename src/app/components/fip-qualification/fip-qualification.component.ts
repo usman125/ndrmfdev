@@ -66,6 +66,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   allSectionsCount: number = 0;
 
   qualificationFlag: any = null;
+  eligibleFlag: any = null;
   userQualificationRequest: any = null;
   userQualificationRequestId: any = null;
   justSubmittedId: any = null;
@@ -96,6 +97,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._authStore.state$.subscribe(data => {
         this.qualificationFlag = data.auth.qualifiationFlag;
+        this.eligibleFlag = data.auth.eligibaleFlag;
         this.accredited = data.auth.accredited;
         this.canInitiate = data.auth.canInitiate;
         this.orgName = data.auth.orgName;
@@ -224,7 +226,9 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
               this.submitSectionsCount = count2;
               this.allSectionsCount = this.allSmes.length;
               this.fipComments = this.allSections.reassignmentTask;
-              if (this.allSections.reassignmentTask) setCommentValue(null, null, [this.allSections.reassignmentTask.comments]);
+              if (this.allSections.reassignmentTask) {
+                setCommentValue(null, null, [this.allSections.reassignmentTask.comments]);
+              }
               this._fipIntimationsStore.addIntimations(allInitimations);
               this.loadingApi = false;
               console.log("RESULT FROM ALL API REQUESTS:--", result, '\n', this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);
@@ -449,6 +453,10 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     this._accreditationRequestService.updateQulificationRequest(object, this.userQualificationRequest[0].id).subscribe(
       result => {
         console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
+        this._authStore.setQualificationFlag('Under Review');
+        let user = JSON.parse(localStorage.getItem('user'));
+        user.qualificationFlag = "Under Review";
+        localStorage.setItem('user', JSON.stringify(user));
         this.getQualificationRequest(null);
         this._confirmModelService.open(options);
       },

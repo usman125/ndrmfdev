@@ -34,6 +34,10 @@
               "./node_modules/bootstrap/dist/js/bootstrap.min.js",
               "./node_modules/formiojs/dist/formio.min.js",
               "./node_modules/formiojs/dist/formio.utils.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "formiojs"
             ]
           },
           "configurations": {

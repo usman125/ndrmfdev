@@ -1,7 +1,15 @@
 <mat-toolbar class="mat-elevation-z8" color="primary" style="margin-bottom: 20px;">
   <mat-toolbar-row>
-    <span>Fill Eligibility Section</span>
+    <span>Eligibility Management</span>
     <span class="example-spacer"></span>
+    <!-- <div style="display: flex;justify-content: center;flex-direction: column;align-items: flex-start;">
+      <small id="comment" style="font-weight: bold;">{{eligibileFlag}}</small>
+    </div> -->
+    <mat-chip-list>
+      <mat-chip class="ml-3 mt-1" color="primary" selected>
+        {{eligibileFlag}}
+      </mat-chip>
+    </mat-chip-list>
   </mat-toolbar-row>
 </mat-toolbar>
 <mat-card class="m-20">

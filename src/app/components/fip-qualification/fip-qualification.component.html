@@ -24,9 +24,15 @@
         class="mat-cation">
         Submitted:
         <span id="comment">
-          {{(submitSectionsCount/allSectionsCount)*100}}%
+          {{submitSectionsCount}} of {{allSectionsCount}} - {{(submitSectionsCount/allSectionsCount)*100}}%
         </span>
       </span>
+    </div>
+    <span class="example-spacer"></span>
+    <div *ngIf="qualificationFlag !== null && 
+    (submitSectionsCount === allSectionsCount) && 
+    qualificationFlag === 'Draft' && !loadingApi">
+      <small id="warn-comment">Submit Your application for qualification</small>
     </div>
     <span class="example-spacer"></span>
     <button matTooltip="Application Submitted!" disabled
@@ -94,8 +100,10 @@
                 <!-- <div *ngIf="secondForm">{{secondForm | json}}</div> -->
                 <!-- <div *ngIf="!form?.exists" id="formio"></div> -->
               </div>
-              <div id="answer" class="p-2" *ngIf="!groupType">
-                No Section Selected
+              <div class="p-2" *ngIf="!groupType && qualificationFlag !== 'Not Initiated'">
+                <span style="display: block; margin-bottom: 5px;">Select a section form left menu</span>
+                <span id="answer" style="display: block;background-color: rgb(239 240 240);padding: 10px;"> No Section
+                  Selected</span>
               </div>
 
             </div>

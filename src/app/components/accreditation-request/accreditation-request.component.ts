@@ -1,26 +1,26 @@
 import { Component, OnInit, OnDestroy, Inject, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AccreditationRequestStore } from "../../stores/accreditation-requests/accreditation-requests-store";
+// import { AccreditationRequestStore } from "../../stores/accreditation-requests/accreditation-requests-store";
 import { Subscription, from } from "rxjs";
 import { distinctUntilChanged, filter, count } from "rxjs/operators";
 import { AuthStore } from "../../stores/auth/auth-store";
-import { SmeStore } from "../../stores/sme/sme-store";
-import { SurveysStore } from "../../stores/surveys/surveys-store";
+// import { SmeStore } from "../../stores/sme/sme-store";
+// import { SurveysStore } from "../../stores/surveys/surveys-store";
 import * as _ from 'lodash';
 import FormioUtils from 'formiojs/utils';
 import { SingleAccreditationRequestStore } from 'src/app/stores/single-accreditation-requests/single-accreditation-requests-store';
-import { AccreditationReviewStore } from 'src/app/stores/accreditation-reviews/accreditation-reviews-store';
+// import { AccreditationReviewStore } from 'src/app/stores/accreditation-reviews/accreditation-reviews-store';
 import { SectionSelectorStore } from "../../stores/section-selector/section-selector-store";
-import { fipIntimationsStore } from "../../stores/fip-intimations/fip-intimations-store";
+// import { fipIntimationsStore } from "../../stores/fip-intimations/fip-intimations-store";
 import { setValue } from "../../stores/fip-intimations/intimate-fip";
-import { SurveysService } from "../../services/surveys.service";
+// import { SurveysService } from "../../services/surveys.service";
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AccreditationRequestService } from "../../services/accreditation-request.service";
-import { SmeService } from "../../services/sme.service";
+// import { SmeService } from "../../services/sme.service";
 import { AccreditationReviewsService } from "../../services/accreditation-reviews.service";
 import { ConfirmModelService } from "../../services/confirm-model.service";
 declare var $: any;
@@ -48,7 +48,7 @@ interface FoodNode {
   selector: 'app-accreditation-request',
   templateUrl: './accreditation-request.component.html',
   styleUrls: ['./accreditation-request.component.css'],
-  providers: [SurveysService, AccreditationReviewsService, ConfirmModelService]
+  providers: [ConfirmModelService]
 })
 
 export class AccreditationRequestComponent implements OnInit, OnDestroy {
@@ -155,18 +155,18 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private _accreditationRequestStore: AccreditationRequestStore,
+    // private _accreditationRequestStore: AccreditationRequestStore,
     private _singleAccreditationRequestStore: SingleAccreditationRequestStore,
-    private _accreditationReviewStore: AccreditationReviewStore,
+    // private _accreditationReviewStore: AccreditationReviewStore,
     private _accreditationReviewsService: AccreditationReviewsService,
     private _sectionSelectorStore: SectionSelectorStore,
-    private _fipIntimationsStore: fipIntimationsStore,
+    // private _fipIntimationsStore: fipIntimationsStore,
     private _authStore: AuthStore,
-    private _smeStore: SmeStore,
-    private _surveysStore: SurveysStore,
-    private _surveysService: SurveysService,
+    // private _smeStore: SmeStore,
+    // private _surveysStore: SurveysStore,
+    // private _surveysService: SurveysService,
     private _accreditationRequestService: AccreditationRequestService,
-    private _smeService: SmeService,
+    // private _smeService: SmeService,
     public dialog: MatDialog,
     public _confirmModelService: ConfirmModelService,
   ) {
@@ -1329,6 +1329,17 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         result => {
           console.log("RESULT FROM REASSIGN:--", result);
           this._singleAccreditationRequestStore.updateReassignFipSection(sectionIds);
+          const options = {
+            title: 'Success!',
+            message: 'Intimation has been send.',
+            cancelText: 'CANCEL',
+            confirmText: 'OK',
+            add: true,
+            confirm: false,
+          };
+
+          this._confirmModelService.open(options);
+          this.commentsForFip = null;
         },
         error => {
           console.log("RESULT FROM REASSIGN:--", error);

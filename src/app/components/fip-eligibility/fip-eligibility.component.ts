@@ -30,6 +30,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
   public readOnly: boolean = false;
   public apiLoading: boolean = false;
   public canInitiate: boolean = false;
+  public eligibileFlag: any = null;
 
   @ViewChild('group') group;
 
@@ -48,6 +49,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._authStore.state$.subscribe(data => {
         this.canInitiate = data.auth.canInitiate;
+        this.eligibileFlag = data.auth.eligibaleFlag;
       })
     );
     if (this.canInitiate === false) {
@@ -120,7 +122,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
   onSubmit($event) {
     const options = {
       title: 'Success!',
-      message: 'Eligibility request Received, we will review your application.',
+      message: 'Eligibility request received, we will review your application.',
       cancelText: 'CANCEL',
       confirmText: 'OK',
       add: true,

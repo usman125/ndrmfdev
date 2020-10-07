@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FipEligibilityComponent } from "../../components/component-index";
 import { FipEligibilityRoutingModule } from "./fip-eligibility-routing.module";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatChipsModule } from '@angular/material/chips';
 
 
 @NgModule({
@@ -20,10 +21,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatCardModule,
     FormioModule,
     FipEligibilityRoutingModule,
-    FormsModule, 
+    FormsModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatToolbarModule,
+    MatChipsModule
   ]
 })
 export class FipEligibilityModule { }
