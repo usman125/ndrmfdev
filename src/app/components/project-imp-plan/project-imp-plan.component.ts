@@ -105,13 +105,13 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     // );
 
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
-    this.viewType = 'progress';
-    // if (this.loggedUser.role !== 'fip') {
-    //   this.viewType = 'progress';
-    // }
-    // if (this.loggedUser.role === 'fip') {
-    //   this.viewType = 'update';
-    // }
+    // this.viewType = 'progress';
+    if (this.loggedUser.role !== 'fip') {
+      this.viewType = 'progress';
+    }
+    if (this.loggedUser.role === 'fip') {
+      this.viewType = 'update';
+    }
     this.Subscription.add(
       this._authStore.state$.subscribe(data => {
         this.months = data.auth.proMonths;
