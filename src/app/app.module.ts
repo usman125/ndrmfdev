@@ -150,7 +150,19 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 // import { DepartmentsComponent } from './components/departments/departments.component';
 // import { ProjectsComponent, DataFilterPipe } from "../../components/component-index";
 // import { NgxPrintModule } from 'ngx-print';
+// function a() {
+//   var block : (() -> Void)?
+//   block = {
+//     log(")
+//   }
+//   setTimeout(() => {
+//     let i = 0;
+//     console.log(i + 1);
+//     block?()
+//   }, 10);
+// }
 
+// a()
 export function tokenGetter() {
   let user = JSON.parse(localStorage.getItem('user'));
   return user?.authToken;
