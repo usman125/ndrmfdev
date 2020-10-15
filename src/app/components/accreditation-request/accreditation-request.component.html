@@ -175,6 +175,10 @@
             <span *ngIf="item.review.rating !== null && item.reviewStatus === 'Pending'"><mat-icon>assignment_turned_in</mat-icon></span>
             <span *ngIf="item.review.rating === null && item.reviewStatus === null"><mat-icon>assignment_late</mat-icon></span>
             <span *ngIf="item.review.rating === null && item.reviewStatus === 'Pending'"><mat-icon>assignment_late</mat-icon></span> -->
+            <button *ngIf="item.assigned && selectedSection.sectionId === item.id" mat-raised-button color="primary"
+              (click)="toggleEntryForm(item)">
+              {{item.toggleForm ? 'Show Reviews' : 'Show Form'}}
+            </button>
           </div>
 
 
@@ -188,13 +192,21 @@
             [submission]="{data: item.submitData}"></formio> -->
 
           <!-- <button *ngIf="item.allReviews.length" mat-raised-button>View Previous</button> -->
-          <div *ngIf="currentUser?.role === 'sme' && item.assigned === true"
+          <formio *ngIf="item.formReviewObjects && item.toggleForm" [form]="item.template" readOnly="true"
+            [submission]="{data: item.data}"></formio>
+          <div *ngIf="currentUser?.role === 'sme' && item.assigned === true && !item.toggleForm"
             [hidden]="item.assigned && selectedSection.sectionId !== item.id">
             <div class="form-comments" *ngFor="let obj of item.formReviewObjects">
               <div class="details">
                 <span>{{obj.title}}</span>
                 <span *ngIf="item.value === true">{{"true"}}</span>
-                <span id="answer">{{obj.value}}</span>
+                <span *ngIf="obj.type !== 'file'" id="answer">{{obj.value}}</span>
+                <span *ngIf="obj.type === 'file'" id="answer">
+                  <span *ngIf="obj?.value?.length">Uploaded</span>
+                  <span *ngIf="!obj?.value?.length">Not Uploaded</span>
+                  <!-- <a *ngIf="obj?.value?.length" [href]="obj.downloadLink" [download]="obj.value[0].name">Yes</a>
+                  <a *ngIf="obj?.value?.length" [href]="obj.downloadLink" [download]="obj.value[0].name">No</a> -->
+                </span>
                 <span>
                   <mat-form-field>
                     <mat-label>Comments</mat-label>
@@ -350,9 +362,8 @@
                   <mat-label>Comments for fip</mat-label>
                   <textarea matInput [(ngModel)]="commentsForFip" placeholder="write your comments..."></textarea>
                 </mat-form-field>
-                <button (click)="intimateFip()"
-                  [disabled]="!commentsForFip"
-                  color="accent" mat-raised-button>INTIMATE FIP</button>
+                <button (click)="intimateFip()" [disabled]="!commentsForFip" color="accent" mat-raised-button>INTIMATE
+                  FIP</button>
               </div>
             </div>
           </div>

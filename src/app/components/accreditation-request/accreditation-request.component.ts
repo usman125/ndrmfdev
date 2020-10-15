@@ -23,6 +23,7 @@ import { AccreditationRequestService } from "../../services/accreditation-reques
 // import { SmeService } from "../../services/sme.service";
 import { AccreditationReviewsService } from "../../services/accreditation-reviews.service";
 import { ConfirmModelService } from "../../services/confirm-model.service";
+import { DomSanitizer } from '@angular/platform-browser';
 declare var $: any;
 
 export interface DialogData {
@@ -169,6 +170,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     // private _smeService: SmeService,
     public dialog: MatDialog,
     public _confirmModelService: ConfirmModelService,
+    public _domSanitizer: DomSanitizer,
   ) {
 
 
@@ -840,22 +842,34 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
                 rating: 0,
                 status: 'un-satisfy',
                 comments: '',
+                type: '',
               }
               if (formElements[i].label === '&nbsp;') {
                 var titleObject = _.find(contentElements, { 'key': formElements[i].key })
                 if (titleObject) {
                   jsonObject.title = titleObject.html;
                   jsonObject.key = formElements[i].key;
+                  jsonObject.type = formElements[i].type;
                   jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
                 } else {
                   jsonObject.title = 'Question-' + i;
                   jsonObject.key = formElements[i].key;
+                  jsonObject.type = formElements[i].type;
                   jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
                 }
               } else {
                 jsonObject.title = formElements[i].label;
                 jsonObject.key = formElements[i].key;
+                jsonObject.type = formElements[i].type;
                 jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
+              }
+              if (jsonObject.type === 'file') {
+                if (jsonObject.value && jsonObject.value.length) {
+                  const blob = new Blob([jsonObject.value[0]['url']], { type: 'application/octet-stream' });
+                  jsonObject['downloadLink'] = this._domSanitizer.bypassSecurityTrustResourceUrl(
+                    window.URL.createObjectURL(blob)
+                  );
+                }
               }
               this.formReviewObjects.push(jsonObject);
             }
@@ -895,7 +909,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
                 controlWiseComments: null
               },
             formReviewObjects: this.formReviewObjects,
-            comments: c.review ? c.review.comments : null
+            comments: c.review ? c.review.comments : null,
+            toggleForm: false,
           }
         })
         this.totalFormScore = count;
@@ -1478,6 +1493,26 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     console.log("REVIEW TO SUMBIT:--", this.formReviewObjects);
   }
 
+  checkTypeString(value) {
+    if (typeof (value) === 'string') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  checkTypeObject(value) {
+    if (typeof (value) === 'object') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  toggleEntryForm(item) {
+    console.log("TOGGLE ENTRY FORM:---", item);
+    item.toggleForm = !item.toggleForm;
+  }
+
 }
 
 
@@ -1559,6 +1594,8 @@ export class IntimateFip implements OnDestroy {
   ngOnDestroy() {
     this.Subscription.unsubscribe();
   }
+
+
 
 
 }
