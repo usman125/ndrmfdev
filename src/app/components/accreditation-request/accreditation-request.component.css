@@ -241,6 +241,10 @@ button {
 
 .right-layout {
   position: sticky;
+  top: -215px;
+}
+.right-layout.for-sme {
+  /* position: sticky; */
   top: 80px;
 }
 

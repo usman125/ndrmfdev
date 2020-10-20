@@ -65,7 +65,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
     this.apiLoading = true;
     this._settingsService.getProcessTemplate('ELIGIBILITY').subscribe(
       (result: any) => {
-        // console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
+        console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
         this.allSections = result.sections.map((c) => {
           return {
             ...c,
@@ -88,11 +88,11 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
   getEligibilityRequest() {
     this._accreditationRequestService.getEligibilityRequest().subscribe(
       (result: any) => {
-        // console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", result);
+        console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", result);
         if (result[0]) {
           this._accreditationRequestService.getSingleEligibilityRequest(result[0].id).subscribe(
             (result: any) => {
-              // console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", result);
+              console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", result);
               if (result) {
                 this.form.exists = true;
                 this.secondForm = JSON.parse(result.data);

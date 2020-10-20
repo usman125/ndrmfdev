@@ -199,6 +199,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     this.loadingApi = true;
     this._accreditationRequestService.getQulificationRequests().subscribe(
       (result: any) => {
+        console.log("GET QUALIFICATION REQUESTS:--", result);
         this.userQualificationRequest = result;
         if (result) {
           this._accreditationRequestService.getSingleQualificationRequest(result[0].id).subscribe(
@@ -231,7 +232,12 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
               }
               this._fipIntimationsStore.addIntimations(allInitimations);
               this.loadingApi = false;
-              console.log("RESULT FROM ALL API REQUESTS:--", result, '\n', this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);
+              console.log(
+                "RESULT FROM ALL API REQUESTS:--\n", result,
+                '\nPENDING SECTION COUNT:--', this.pendingSectionsCount,
+                '\nALL SECTIONS COUNT:--', this.allSectionsCount,
+                '\nSUBMIT SECTIONS COUNT:--', this.submitSectionsCount
+              );
             },
             error => {
               this.loadingApi = false;

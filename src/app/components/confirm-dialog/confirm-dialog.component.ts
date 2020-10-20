@@ -21,6 +21,8 @@ export interface ConfirmData {
   areas: any;
   proposal_sections: any;
   proposal_initmation: any;
+  markUnEligible: any;
+  markUnEligibleReason: any;
 }
 
 @Component({
@@ -69,7 +71,7 @@ export class ConfirmDialogComponent implements OnInit {
   }
 
   setStatus(status) {
-    this.close({ status });
+    this.close({ status, endDate: this.data.endDate, comments: this.data.markUnEligibleReason });
 
   }
 
@@ -100,6 +102,12 @@ export class ConfirmDialogComponent implements OnInit {
   proposalIntimation() {
     this.close({
       sections: this.proposalSections.value,
+    })
+  }
+
+  closeMarkUnEligible() {
+    this.close({
+      commnets: this.data.markUnEligibleReason
     })
   }
 

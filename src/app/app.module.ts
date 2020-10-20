@@ -111,6 +111,9 @@ import { JwtModule } from "@auth0/angular-jwt";
 import { ActivityDetailsComponent } from './components/activity-details/activity-details.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+// import { EligibilityRequestViewComponent } from './components/eligibility-request-view/eligibility-request-view.component';
+// import { AllEligibilityRequestsComponent } from './components/all-eligibility-requests/all-eligibility-requests.component';
+// import { AllQualificationRequestsComponent } from './components/all-qualification-requests/all-qualification-requests.component';
 // import { CostDetailsComponent } from './components/cost-details/cost-details.component';
 // import { ProjectImpPlanComponent } from './components/project-imp-plan/project-imp-plan.component';
 // import { ApproverHomeComponent } from './components/approver-home/approver-home.component';
@@ -187,6 +190,9 @@ export function tokenGetter() {
     // PipComponent,
     // ActivitiesGroupControlComponent,
     ActivityDetailsComponent,
+    // EligibilityRequestViewComponent,
+    // AllEligibilityRequestsComponent,
+    // AllQualificationRequestsComponent,
     // CostDetailsComponent,
     // ProjectImpPlanComponent,
     // ApproverHomeComponent,

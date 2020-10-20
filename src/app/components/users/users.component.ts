@@ -97,7 +97,6 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
           usersArray.push(object);
         }
         this._usersStore.setAllUsers(usersArray);
-
       },
       error => {
         this.withoutPasswords = false;
