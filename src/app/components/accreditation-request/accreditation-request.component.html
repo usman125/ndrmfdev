@@ -103,6 +103,11 @@ class="margin-5 example-container mat-elevation-z4">
     <span class="example-spacer"></span>
     <span *ngIf="currentUser?.role === 'process owner'">{{selectedRequest?.submittedAt | date:'fullDate'}}</span>
     <span class="example-spacer"></span>
+
+    <!-- <button mat-icon-button>
+      <mat-icon class="example-icon" *ngIf="allReviewsFlag">view_quilt
+      </mat-icon>
+    </button> -->
     <button (click)="goBack()" mat-icon-button>
       <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
       </mat-icon>
@@ -348,6 +353,14 @@ class="margin-5 example-container mat-elevation-z4">
                 <button [disabled]="allTasksAssingedFlag" color="accent" (click)="openDialog('all-tasks')"
                   class="control-btn" mat-flat-button>ASSIGN ALL
                   TASKS</button>
+              </div>
+              <div class="fullbtn">
+                <button color="primary" (click)="viewEligibility()" class="control-btn" mat-flat-button>VIEW
+                  ELIGIBILITY</button>
+              </div>
+              <div class="fullbtn">
+                <button color="primary" (click)="exportReport()" class="control-btn" mat-flat-button>EXPORT
+                  REPORT</button>
               </div>
               <div class="fullbtn">
                 <button color="primary" (click)="viewCommentsMatrix(userReviewRequests)" class="control-btn"

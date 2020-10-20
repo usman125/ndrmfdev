@@ -945,6 +945,14 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
     console.log("MARK REQUEST TO GM:--", this.selectedRequest);
   }
 
+  viewEligibility() {
+    console.log("VIEW ELIGIBILITY");
+  }
+
+  exportReport() {
+    console.log("EXPORT REPORT BUTTON CLICKED");
+  }
+
 }
 
 

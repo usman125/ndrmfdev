@@ -93,7 +93,7 @@ export class ConfirmDialogComponent implements OnInit {
 
   addThematicAreas() {
     this.close({
-      areas: this.areas.value,
+      areas: this.areas.value || [],
       status: 'ok',
       applyAsJv: this.applyAsJv.value
     })

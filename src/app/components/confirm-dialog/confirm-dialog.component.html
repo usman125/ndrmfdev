@@ -82,7 +82,7 @@
     </div>
 
     <div class="controls" *ngIf="data?.selectThematic">
-      <mat-form-field>
+      <!-- <mat-form-field>
         <mat-select (selectionChange)="areaChanged($event)" placeholder="Select Areas" [formControl]="areas" multiple>
           <mat-select-trigger>
             <span *ngFor="let item of areas.value; let i=index">
@@ -94,7 +94,7 @@
           </mat-select-trigger>
           <mat-option *ngFor="let object of data?.areas;" [value]="object">{{object.name}}</mat-option>
         </mat-select>
-      </mat-form-field>
+      </mat-form-field> -->
       <section>
         <mat-checkbox [formControl]="applyAsJv">Available as JV!</mat-checkbox>
       </section>
@@ -145,7 +145,7 @@
       class="m-2">{{data.confirmText | uppercase}}</button>
 
 
-    <button *ngIf="data?.selectThematic" [disabled]="areas.value?.length === 0 || !areas.value" mat-raised-button
+    <button *ngIf="data?.selectThematic" [disabled]="!applyAsJv.value" mat-raised-button
       (click)="addThematicAreas()" color="primary" class="m-2">{{data.confirmText | uppercase}}</button>
     <button *ngIf="data?.selectThematic" mat-raised-button (click)="cancel()" color="warn"
       class="m-2">{{data.cancelText | uppercase}}</button>

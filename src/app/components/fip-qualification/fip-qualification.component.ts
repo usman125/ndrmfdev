@@ -308,6 +308,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
                 availableAsJv: null,
               }
               let areasId = [];
+              // if(confirmed)
               for (let i = 0; i < confirmed.areas.length; i++) {
                 areasId.push(confirmed.areas[i].id);
               }
