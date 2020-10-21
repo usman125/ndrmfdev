@@ -111,6 +111,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
   hideForms: boolean = false;
   commentsHistoryFlag: boolean = false;
   mitigationsFlag: boolean = false;
+  viewReport: boolean = false;
   commentsHistory: any = [];
   reAssignedTasks: any = [];
   selectedHistoryItem: any = null;
@@ -951,6 +952,12 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
 
   exportReport() {
     console.log("EXPORT REPORT BUTTON CLICKED");
+    this.viewReport = true;
+  }
+
+  hideExportReport() {
+    console.log("EXPORT REPORT BUTTON CLICKED");
+    this.viewReport = false;
   }
 
 }

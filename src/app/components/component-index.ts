@@ -94,3 +94,4 @@ export { CostDetailsComponent } from './cost-details/cost-details.component';
 export { AllEligibilityRequestsComponent } from './all-eligibility-requests/all-eligibility-requests.component';
 export { AllQualificationRequestsComponent } from './all-qualification-requests/all-qualification-requests.component';
 export { EligibilityRequestViewComponent } from './eligibility-request-view/eligibility-request-view.component';
+export { QualificationReportComponent } from './qualification-report/qualification-report.component';

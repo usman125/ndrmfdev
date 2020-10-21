@@ -94,8 +94,8 @@ class="margin-5 example-container mat-elevation-z4">
 </div> -->
 
 
-<mat-toolbar *ngIf="toggle && !commentsFlag && !mitigationsFlag" style="margin-top:0px;padding: 10px 0px;"
-  color="primary">
+<mat-toolbar *ngIf="toggle && !commentsFlag && !mitigationsFlag && !viewReport"
+  style="margin-top:0px;padding: 10px 0px;" color="primary">
   <mat-toolbar-row>
     <span
       *ngIf="currentUser?.role === 'process owner'">{{selectedRequest?.initiatorFullName ? selectedRequest?.initiatorFullName : selectedRequest?.initiatedBy.name}}</span>
@@ -124,7 +124,7 @@ class="margin-5 example-container mat-elevation-z4">
 </div>
 
 <div [ngClass]="{'mobile-class': addMobileClasses}" class="view-block" *ngIf="toggle && !commentsFlag && !apiLoading
- && !mitigationsFlag">
+ && !mitigationsFlag  && !viewReport">
   <div class="margin-5 form-items">
 
     <div *ngFor="let item of userReviewRequests">
@@ -359,7 +359,7 @@ class="margin-5 example-container mat-elevation-z4">
                   ELIGIBILITY</button>
               </div>
               <div class="fullbtn">
-                <button color="primary" (click)="exportReport()" class="control-btn" mat-flat-button>EXPORT
+                <button color="warn" (click)="exportReport()" class="control-btn" mat-flat-button>EXPORT
                   REPORT</button>
               </div>
               <div class="fullbtn">
@@ -424,7 +424,7 @@ class="margin-5 example-container mat-elevation-z4">
 </div>
 
 <!-- COMMENTS FROM FIP -->
-<div *ngIf="commentsFlag && !apiLoading && !mitigationsFlag">
+<div *ngIf="commentsFlag && !apiLoading && !mitigationsFlag && !viewReport">
   <mat-toolbar style="margin-bottom: 25px;" color="primary">
     <mat-toolbar-row>
       <span>{{"Comments Matrix"}}</span>
@@ -540,7 +540,7 @@ class="margin-5 example-container mat-elevation-z4">
   </mat-card>
 </div>
 
-<div *ngIf="mitigationsFlag && !apiLoading">
+<div *ngIf="mitigationsFlag && !apiLoading && !viewReport">
   <mat-toolbar style="margin-bottom: 25px;" color="primary">
     <mat-toolbar-row>
       <span>{{"Comments Matrix"}}</span>
@@ -610,5 +610,88 @@ class="margin-5 example-container mat-elevation-z4">
         </div>
       </div>
     </div>
+  </mat-card>
+</div>
+
+<div *ngIf="viewReport">
+  <mat-toolbar style="margin-bottom: 25px;" color="primary">
+    <mat-toolbar-row>
+      <span>{{"Detailed Accreditation Evaluation"}}</span>
+      <span class="example-spacer"></span>
+      <span>{{selectedRequest?.initiatedBy.name}}</span>
+      <span class="example-spacer"></span>
+      <button (click)="hideExportReport()" mat-icon-button>
+        <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
+        </mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-card style="padding: 15px;margin: 20px;">
+    <mat-card-content>
+      <div class="team" style="padding: 15px;margin: 0px 0px;">
+        <div class="header row">
+          <div class="col-md-6 item">Areas</div>
+          <div class="col-md-6 item">Names</div>
+        </div>
+        <div *ngFor="let item of userReviewRequests">
+          <div class="box row">
+            <div class="col-md-6 name">{{item.name}}</div>
+            <div class="col-md-6 sme">{{item.sme.name}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row accred" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-12 title">{{'Component wise score'}}</div>
+      </div>
+      <div class="scores row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 d-flex flex-column box" *ngFor="let item of userReviewRequests">
+          <span class="name">{{item.name}}</span>
+          <span class="sme">{{item.review.rating}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'Overall Score'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{userAllScore}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'System Status'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{userSystemStatus}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'Current Status'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{selectedRequest?.status}}</span>
+        </div>
+      </div>
+
+      <div class="row accred" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-12 title">
+          {{'Area wise factors requiring risk mitigation (if any)'}}
+        </div>
+      </div>
+
+      <div class="row d-flex flex-align-center miti" *ngFor="let item of userReviewRequests"
+        style="padding: 0px;margin: 0px 0px 10px;">
+        <div class="col-md-4" style="background-color: #E7E6E6;padding: 5px;">
+          <span>{{item.name}}</span>
+        </div>
+        <div class="col-md-8">
+          <div class="controls-wise" *ngFor="let obj of item.review.controlWiseComments">
+            <span *ngIf="obj.status === 'un-satisfy'">-{{obj.title}}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
   </mat-card>
 </div>

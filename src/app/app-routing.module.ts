@@ -457,6 +457,11 @@ const routes: Routes = [
     path: 'plan',
     loadChildren: () => import('./modules/project-imp-plan/project-imp-plan.module').then(m => m.ProjectImpPlanModule),
     // component: ProjectWorkPlanComponent
+  },
+  {
+    path: 'plan-report',
+    loadChildren: () => import('./modules/qualification-report/qualification-report.module').then(m => m.QualificationReportModule),
+    // component: ProjectWorkPlanComponent
   }
 ];
 

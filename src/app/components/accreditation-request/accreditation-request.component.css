@@ -284,7 +284,66 @@ button {
   color: #f44336;
 }
 
-.section-info{
+.section-info {
   display: flex;
   justify-content: space-between;
+}
+
+.header .item,
+.box .name,
+.box .sme {
+  padding: 10px;
+}
+
+.header {
+  margin-bottom: 5px;
+}
+
+.header .item {
+  padding: 15px !important;
+  background: #a8d08d;
+}
+
+.box .name {
+  background: #00aef0;
+  color: #fff;
+  margin-bottom: 5px;
+}
+.box span {
+  display: block;
+  width: 100%;
+}
+
+.overall span {
+  display: block;
+  width: 100%;
+}
+
+.box .sme {
+  background: #f4f4f4;
+  margin-bottom: 5px;
+}
+
+.scores .box.col-md-4,
+.overall {
+  padding: 2px;
+}
+
+.accred .title {
+  background: #ffd965;
+  padding: 15px;
+  margin: 8px 0px;
+}
+
+.overall .head {
+  background: #ffd965;
+  padding: 10px;
+}
+.overall .value {
+  background: #f4f4f4;
+  padding: 10px;
+}
+
+.controls-wise {
+    margin-bottom: 5px;
 }

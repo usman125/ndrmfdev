@@ -111,6 +111,7 @@ import { JwtModule } from "@auth0/angular-jwt";
 import { ActivityDetailsComponent } from './components/activity-details/activity-details.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+// import { QualificationReportComponent } from './components/qualification-report/qualification-report.component';
 // import { EligibilityRequestViewComponent } from './components/eligibility-request-view/eligibility-request-view.component';
 // import { AllEligibilityRequestsComponent } from './components/all-eligibility-requests/all-eligibility-requests.component';
 // import { AllQualificationRequestsComponent } from './components/all-qualification-requests/all-qualification-requests.component';
@@ -190,6 +191,7 @@ export function tokenGetter() {
     // PipComponent,
     // ActivitiesGroupControlComponent,
     ActivityDetailsComponent,
+    // QualificationReportComponent,
     // EligibilityRequestViewComponent,
     // AllEligibilityRequestsComponent,
     // AllQualificationRequestsComponent,

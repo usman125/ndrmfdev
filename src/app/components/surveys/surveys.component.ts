@@ -16,7 +16,7 @@ import { ConfirmModelService } from 'src/app/services/confirm-model.service';
   selector: 'app-surveys',
   templateUrl: './surveys.component.html',
   styleUrls: ['./surveys.component.css'],
-  providers: [SurveysService, ConfirmModelService]
+  providers: [ConfirmModelService]
 })
 
 export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -265,6 +265,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   patchForm(sme) {
+    this.selectedSme = sme;
     this.createProfileForm.patchValue({
       name: this.secondForm.name,
       passingScore: this.secondForm.passingScore || 0,
@@ -333,6 +334,17 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
 
   hideEditForm() {
     this.editFormFlag = false;
+    this.fetchTemplates(this.listItem);
+  }
+
+  onChange(event) {
+    // if (this.jsonElement) {
+    //   this.jsonElement.nativeElement.innerHTML = '';
+    //   this.jsonElement.nativeElement.appendChild(document.createTextNode(JSON.stringify(event.form, null, 4)));
+    // }
+    this.refreshForm.emit({
+      form: event.form
+    });
   }
 
 
@@ -346,38 +358,39 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('Type changed:--', $event);
     this.formType = $event;
     if ($event === 'wizard') {
-      this.form.display = 'wizard';
-      this.form.page = 0;
-      this.form.numPages = 1;
+      this.secondForm.display = 'wizard';
+      this.secondForm.page = 0;
+      this.secondForm.numPages = 1;
     } else {
-      this.form.display = 'form';
-      this.form.page = 0;
-      this.form.numPages = 0;
+      this.secondForm.display = 'form';
+      this.secondForm.page = 0;
+      this.secondForm.numPages = 0;
     }
     this.refreshForm.emit({
-      form: this.form
+      form: this.secondForm
     })
   }
 
   saveForm(values) {
-    values.components = this.form.components
-    values.page = this.form.page;
-    values.numOfPages = this.form.numPages;
+    values.components = this.secondForm.components
+    values.page = this.secondForm.page;
+    values.numOfPages = this.secondForm.numPages;
+    console.log("UPADTED FORM VALUES:--", values, this.secondForm);
+    const options = {
+      title: 'Success!',
+      message: 'Form has been updated',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
+    };
     this._settingsService.addSectionTemplate(this.selectedSme.id, values).subscribe(
       result => {
-        console.log("RESULT FROM ADD SURVEY:--", result);
-        this.createProfileForm.reset();
-        this.createProfileForm.patchValue({ type: 'form' }, { onlySelf: true });
-        this.form = {
-          components: [],
-          display: "form",
-          page: 0,
-          refreshOn: "submit",
-          numPages: 2
-        };
+        console.log("RESULT FROM UPDATE SURVEY FORM:--", result);
         this.refreshForm.emit({
-          form: this.form
+          form: this.secondForm
         });
+        this._confirmModelService.open(options);
       },
       error => {
         console.log("ERROR FROM ADD SURVEY:--", error);
