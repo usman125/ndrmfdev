@@ -366,5 +366,19 @@ export class ProjectService {
     );
   }
 
+  getProposalAttachments(id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}/allAttachments`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  downloadAttachments(fileName, filePath) {
+    const url = `${AppConfig.apiUrl}/project-proposal/attachment/download/?fileName=${fileName}&filePath=${filePath}`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
 
 }

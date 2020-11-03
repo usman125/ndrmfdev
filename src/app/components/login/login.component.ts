@@ -117,6 +117,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         }
 
+        if (this.user.roles.indexOf('APPROVER') > -1) {
+          this.user.role = 'signup_approver';
+        }
+
         if (this.user.roles.indexOf('FIP') > -1) {
           this.user.role = 'fip';
         }

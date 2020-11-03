@@ -25,7 +25,7 @@ export class SmeService {
       {
         "name": values.name,
         "enabled": true
-      },
+      }
     );
   }
 

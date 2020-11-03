@@ -535,22 +535,21 @@
             </div>
           </div>
           <div class="project-details p-3" *ngIf="selectedProject?.govFip === true">
-            <mat-list>
+            <app-project-proposal-files></app-project-proposal-files>
+            <!-- <mat-list>
               <mat-list-item class="govfip">
                 <mat-icon mat-list-icon>assignment</mat-icon>
-                <div mat-line>{{'PC1 Uploaded'}}</div>
-                <!-- <div mat-line>{{sectionStats?.pendingCount}}</div> -->
-                <!-- <div mat-line><a [routerLink]="/#">Download PC1</a></div> -->
-                <div mat-line><a href="#">View PC1</a></div>
+                <div mat-line>{{'PC1 Uploads'}}</div>
               </mat-list-item>
+              <div *ngFor="let object of selectedProject?.files;" mat-line>
+                <span *ngIf="object.status === 'Upload PC1'">{{object.name}}</span>
+              </div>
               <mat-list-item class="govfip">
                 <mat-icon mat-list-icon>assignment</mat-icon>
-                <div mat-line>{{'PDRMC Uploaded'}}</div>
-                <!-- <div mat-line>{{sectionStats?.unassignCount}}</div> -->
-                <!-- <div mat-line><a [routerLink]="/">Download PDRMC</a></div> -->
+                <div mat-line>{{'PDRMC Uploads'}}</div>
                 <div mat-line><a href="#">View PDRMC</a></div>
               </mat-list-item>
-            </mat-list>
+            </mat-list> -->
           </div>
         </mat-card-content>
 

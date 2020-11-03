@@ -139,7 +139,7 @@ class="margin-5 example-container mat-elevation-z4">
               <span id="date" class="request-status" *ngIf="item.review.rating === null">Pending:
                 {{item.endDate | date:'shortDate'}}</span>
               <span id="stars" *ngIf="item.review.rating !== null">
-                <bar-rating [(rate)]="item?.review.rating" [max]="max"></bar-rating>
+                <bar-rating [theme]="'fontawesome-o'" [(rate)]="item?.review.rating" [max]="max"></bar-rating>
               </span>
             </div>
           </div>
@@ -181,13 +181,14 @@ class="margin-5 example-container mat-elevation-z4">
             </span>
             <span class="mb-3" style="display: block;font-weight: bold;" *ngIf="item.review.rating !== null">
               SCORED WEITAGE:
-              <span id="comment">{{(item.review.rating/5) * 100}}%</span>
+              <span id="comment">{{item.review.rating}}</span>
             </span>
             <button *ngIf="item.assigned && selectedSection === item.id || currentUser?.role !== 'sme'"
               mat-raised-button color="primary" (click)="toggleEntryForm(item)">
               {{item.toggleForm ? 'Show Reviews' : 'Show Form'}}
             </button>
           </div>
+
           <formio *ngIf="currentUser?.role !== 'sme' && item.review.rating === null" [form]="item.template"
             readOnly="true" [submission]="{data: item.data}"></formio>
           <formio *ngIf="currentUser?.role !== 'sme' && item.review.rating !== null && item.toggleForm"
@@ -198,6 +199,7 @@ class="margin-5 example-container mat-elevation-z4">
             [form]="item.template" readOnly="true" [submission]="{data: item.data}"></formio>
           <formio *ngIf="item.formReviewObjects && item.toggleForm" [form]="item.template" readOnly="true"
             [submission]="{data: item.data}"></formio>
+
           <div *ngIf="currentUser?.role === 'sme' && item.assigned === true && !item.toggleForm"
             [hidden]="item.assigned && selectedSection !== item.id">
             <span *ngIf="item.assigned && selectedSection === item.id" id="myTopElement2" #myTopElement2></span>
@@ -219,7 +221,7 @@ class="margin-5 example-container mat-elevation-z4">
                 </span>
               </div>
               <div class="controls">
-                <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
+                <bar-rating [theme]="'fontawesome-o'" [(rate)]="obj.rating" [max]="max"></bar-rating>
                 <mat-button-toggle-group [disabled]="reviewAdded" [(ngModel)]="obj.status"
                   #group="matButtonToggleGroup">
                   <mat-button-toggle color="primary" (change)="onValChange($event)" value="satisfy"
@@ -253,7 +255,11 @@ class="margin-5 example-container mat-elevation-z4">
               <div class="details">
                 <span>{{obj.title}}</span>
                 <span *ngIf="obj.value === true">{{"true"}}</span>
-                <span id="answer">{{obj.value}}</span>
+                <span *ngIf="obj.type !== 'file'" id="answer">{{obj.value}}</span>
+                <span *ngIf="obj.type === 'file'" id="answer">
+                  <span *ngIf="obj?.value?.length">Uploaded</span>
+                  <span *ngIf="!obj?.value?.length">Not Uploaded</span>
+                </span>
                 <span>
                   <mat-form-field>
                     <mat-label>Comments</mat-label>
@@ -263,7 +269,7 @@ class="margin-5 example-container mat-elevation-z4">
                 </span>
               </div>
               <div class="controls admin-controls">
-                <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
+                <bar-rating [theme]="'fontawesome-o'" [(rate)]="obj.rating" [max]="max"></bar-rating>
                 <mat-button-toggle-group disabled [(ngModel)]="obj.status" #group="matButtonToggleGroup">
                   <mat-button-toggle *ngIf="obj.status === 'satisfy'" color="primary" (change)="onValChange($event)"
                     value="satisfy" aria-label="Text align left">
@@ -320,6 +326,11 @@ class="margin-5 example-container mat-elevation-z4">
               <div mat-line>{{'Pending FIP Tasks'}}</div>
               <div mat-line>{{reAssignedTasks.length}}</div>
             </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>alarm_on</mat-icon>
+              <div mat-line>{{'Expiry Date'}}</div>
+              <div mat-line>{{selectedRequest?.expiryDate | date:'fullDate'}}</div>
+            </mat-list-item>
           </mat-list>
         </mat-card-content>
       </mat-card>
@@ -342,6 +353,7 @@ class="margin-5 example-container mat-elevation-z4">
               <div mat-line>{{selectedSectionData?.name}}</div>
               <div style="cursor: pointer;" mat-line id="answer" (click)="goToReviews()">view task</div>
             </mat-list-item>
+
           </mat-list>
         </mat-card-content>
       </mat-card>
@@ -371,10 +383,14 @@ class="margin-5 example-container mat-elevation-z4">
                   *ngIf="allReviewsFlag && currentUser?.role !== 'sme'" color="warn" mat-raised-button>VIEW MITIGATION
                   PLAN</button>
               </div>
-              <div class="fullbtn">
-                <button (click)="markToGm()" *ngIf="allReviewsFlag && currentUser?.role !== 'sme'" color="warn"
-                  mat-raised-button>MARK TO GM</button>
-              </div>
+              <!-- <div class="fullbtn">
+                <button [disabled]="selectedRequest?.subStatus === 'Pending' && 
+                selectedRequest?.markedTo === 'Marked To GM' || 
+                selectedRequest?.markedTo === 'Marked To CEO'" (click)="markToGm()"
+                  *ngIf="allReviewsFlag && currentUser?.role !== 'sme'" color="warn" mat-raised-button>MARK TO
+                  GM</button>
+                <mat-progress-spinner [diameter]="15"></mat-progress-spinner>
+              </div> -->
               <div class="fullbtn">
                 <button (click)="setRequestStatus()" *ngIf="allReviewsFlag && currentUser?.role !== 'sme'" color="warn"
                   mat-button>SET
@@ -385,7 +401,8 @@ class="margin-5 example-container mat-elevation-z4">
                   <mat-label>Comments for fip</mat-label>
                   <textarea matInput [(ngModel)]="commentsForFip" placeholder="write your comments..."></textarea>
                 </mat-form-field>
-                <button (click)="intimateFip()" [disabled]="!commentsForFip" color="accent" mat-raised-button>INTIMATE
+                <button (click)="intimateFip()" [disabled]="!commentsForFip || sectionStats?.unassignCount !== 0"
+                  color="accent" mat-raised-button>INTIMATE
                   FIP</button>
               </div>
             </div>
@@ -413,8 +430,8 @@ class="margin-5 example-container mat-elevation-z4">
             </div>
             <div class="right-block">
               <span class="head">Current Score</span>
-              <span class="comments">{{userAllScore || 0}} / {{'5'}}</span>
-              <span *ngIf="userAllScore" id="answer" class="comments">{{(userAllScore/5 * 100)}}%</span>
+              <span class="comments">{{userAllScore || 0 | number:'1.0-4'}}</span>
+              <!-- <span *ngIf="userAllScore" id="answer" class="comments">{{(userAllScore/5 * 100)}}%</span> -->
             </div>
           </div>
         </mat-card-actions>
@@ -453,7 +470,7 @@ class="margin-5 example-container mat-elevation-z4">
           <span id="title">{{item.name}}</span>
           <div class="review-info">
             <span id="stars" *ngIf="item.review.rating !== null">
-              <bar-rating [(rate)]="item.review.rating" [max]="max"></bar-rating>
+              <bar-rating [theme]="'fontawesome-o'" [(rate)]="item.review.rating" [max]="max"></bar-rating>
             </span>
             <div class="m-2" *ngIf="item.reviewHistory !== null">
               <button color="accent" mat-button (click)="showCommentsHistoty(item)">View History</button>
@@ -476,7 +493,7 @@ class="margin-5 example-container mat-elevation-z4">
                 </div>
               </div>
               <div class="controls admin-controls">
-                <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
+                <bar-rating [theme]="'fontawesome-o'" [(rate)]="obj.rating" [max]="max"></bar-rating>
                 <mat-icon style="font-size: 20px;color: green;margin-top: 8px;" *ngIf="obj.status === 'satisfy'">
                   thumb_up
                 </mat-icon>
@@ -521,7 +538,7 @@ class="margin-5 example-container mat-elevation-z4">
                 </div>
               </div>
               <div class="controls admin-controls">
-                <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
+                <bar-rating [theme]="'fontawesome-o'" [(rate)]="obj.rating" [max]="max"></bar-rating>
                 <mat-icon style="font-size: 20px;color: green;margin-top: 8px;" *ngIf="obj.status === 'satisfy'">
                   thumb_up
                 </mat-icon>
@@ -543,7 +560,7 @@ class="margin-5 example-container mat-elevation-z4">
 <div *ngIf="mitigationsFlag && !apiLoading && !viewReport">
   <mat-toolbar style="margin-bottom: 25px;" color="primary">
     <mat-toolbar-row>
-      <span>{{"Comments Matrix"}}</span>
+      <span>{{"Risk Mitigations"}}</span>
       <span class="example-spacer"></span>
       <span>{{selectedRequest?.initiatedBy.name}}</span>
       <span class="example-spacer"></span>
@@ -570,7 +587,7 @@ class="margin-5 example-container mat-elevation-z4">
             <span id="title">{{item.name}}</span>
             <div class="review-info">
               <span id="stars" *ngIf="item.review.rating !== null">
-                <bar-rating [(rate)]="item.review.rating" [max]="max"></bar-rating>
+                <bar-rating [theme]="'fontawesome-o'" [(rate)]="item.review.rating" [max]="max"></bar-rating>
               </span>
               <!-- <div class="m-2" *ngIf="item.reviewHistory !== null">
               <button color="accent" mat-button (click)="showCommentsHistoty(item)">View History</button>
@@ -593,7 +610,7 @@ class="margin-5 example-container mat-elevation-z4">
                   </div>
                 </div>
                 <div class="controls admin-controls">
-                  <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
+                  <bar-rating [theme]="'fontawesome-o'" [(rate)]="obj.rating" [max]="max"></bar-rating>
                   <mat-icon style="font-size: 20px;color: green;margin-top: 8px;" *ngIf="obj.status === 'satisfy'">
                     thumb_up
                   </mat-icon>
@@ -628,6 +645,44 @@ class="margin-5 example-container mat-elevation-z4">
   </mat-toolbar>
   <mat-card style="padding: 15px;margin: 20px;">
     <mat-card-content>
+
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'Name of the entity'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{selectedRequest?.initiatedBy.name}}</span>
+        </div>
+      </div>
+
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'Submitted at'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{selectedRequest?.submittedAt | date:'shortDate'}}</span>
+        </div>
+      </div>
+
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-6" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Applicant"s Eligibility'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">{{selectedRequest?.eligibility.status}}</span>
+          </div>
+        </div>
+        <div class="col-md-6" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Eligibility submitted at'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">{{selectedRequest?.eligibility.submittedAt | date:'shortDate'}}</span>
+          </div>
+        </div>
+      </div>
+
       <div class="team" style="padding: 15px;margin: 0px 0px;">
         <div class="header row">
           <div class="col-md-6 item">Areas</div>
@@ -670,6 +725,7 @@ class="margin-5 example-container mat-elevation-z4">
         <div class="col-md-4 overall">
           <span class="head">{{'Current Status'}}</span>
         </div>
+
         <div class="col-md-8 overall">
           <span class="value">{{selectedRequest?.status}}</span>
         </div>

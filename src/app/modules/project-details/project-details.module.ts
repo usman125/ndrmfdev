@@ -21,9 +21,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProjectWorkPlanModule } from '../project-work-plan/project-work-plan.module';
-import { PipComponent } from 'src/app/components/pip/pip.component';
+import { PipComponent } from '../../components/pip/pip.component';
 import { PipModule } from '../pip/pip.module';
 import { ProjectImpPlanModule } from '../project-imp-plan/project-imp-plan.module';
+import { ProjectProposalFilesModule } from '../project-proposal-files/project-proposal-files.module';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { ProjectImpPlanModule } from '../project-imp-plan/project-imp-plan.modul
     // ProjectWorkPlanModule,
     // PipModule,
     ProjectImpPlanModule,
+    ProjectProposalFilesModule,
     MatProgressSpinnerModule,
     FormioModule,
     MatButtonModule,

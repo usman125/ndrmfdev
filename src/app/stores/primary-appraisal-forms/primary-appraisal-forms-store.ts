@@ -346,6 +346,16 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     })
   }
 
+  addSelectedProjectFiles(files) {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        files: files
+      }
+    })
+  }
+
   addPipToProject(allCosts) {
     this.setState({
       ...this.state,

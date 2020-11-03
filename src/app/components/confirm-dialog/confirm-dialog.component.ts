@@ -107,7 +107,7 @@ export class ConfirmDialogComponent implements OnInit {
 
   closeMarkUnEligible() {
     this.close({
-      commnets: this.data.markUnEligibleReason
+      comments: this.data.markUnEligibleReason
     })
   }
 

@@ -338,10 +338,12 @@ button {
 .overall .head {
   background: #ffd965;
   padding: 10px;
+  display: block;
 }
 .overall .value {
   background: #f4f4f4;
   padding: 10px;
+  display: block;
 }
 
 .controls-wise {

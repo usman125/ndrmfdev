@@ -43,8 +43,8 @@
       Submitted
     </button>
     <!-- <button (click)="submitAllSections()" matTooltip="Submit Application!" -->
-    <button (click)="submitAllSections()" matTooltip="Submit Application!"
-      *ngIf="allSectionsCount === submitSectionsCount && allSections.status === 'Draft' && !loadingApi" mat-button>
+    <button (click)="submitAllSections()" matTooltip="Submit Application!" *ngIf="allSectionsCount === submitSectionsCount && 
+      allSections?.status === 'Draft' && !loadingApi" mat-button>
       <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">
         send
       </mat-icon>

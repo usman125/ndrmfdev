@@ -90,6 +90,17 @@ export class UserService {
     );
   }
 
+  rejectEligibility(id, comment) {
+    console.log("REJECT ELIGIBILITY:---", comment);
+    const url = `${AppConfig.apiUrl}/accreditation/eligibility/${id}/reject`;
+    return this._httpClient.post(
+      url,
+      {
+        comment: comment  
+      }
+    );
+  }
+
   updateActiveStatus(username) {
     const url = `${AppConfig.apiUrl}/user/updateActiveStatus`;
     return this._httpClient.put(

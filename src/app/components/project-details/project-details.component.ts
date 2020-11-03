@@ -14,6 +14,8 @@ import { ProjectService } from "../../services/project.service";
 import { AuthStore } from "../../stores/auth/auth-store";
 import { ExtendedAppraisalSmesStore } from 'src/app/stores/extended-appraisal-smes/extended-appraisal-smes-store';
 import { AccreditationCommentsMatrixStore } from 'src/app/stores/accreditation-comments-matrix/accreditation-comments-matrix-store';
+// import { AccreditationRequestService } from 'src/app/services/accreditation-request.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-project-details',
@@ -98,6 +100,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
     private _extendedAppraisalSmesStore: ExtendedAppraisalSmesStore,
     private _accreditationCommentsMatrixStore: AccreditationCommentsMatrixStore,
+    // private _accreditationRequestService: AccreditationRequestService,
 
   ) {
 
@@ -222,22 +225,27 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         if (this.selectedProject && this.selectedProject.commentsMatrix) {
           this._accreditationCommentsMatrixStore.addCommentsArray(this.selectedProject.commentsMatrix);
         }
-        if (this.selectedProject && this.selectedProject.gia.status !== "Not Initiated") {
-          if (this.selectedProject.gia.reviews !== null) {
-            var giaReviewsCount = 0;
-            var assignedUsers = [];
-            for (let i = 0; i < this.selectedProject.gia.reviews.length; i++) {
-              var key = this.selectedProject.gia.reviews[i];
-              if (key.comments !== null) {
-                giaReviewsCount = giaReviewsCount + 1;
-              } else {
-                assignedUsers.push(key.assignee);
+        if (this.selectedProject) {
+          if (this.selectedProject.gia !== null) {
+            if (this.selectedProject.gia.status !== "Not Initiated") {
+
+              if (this.selectedProject.gia.reviews !== null) {
+                var giaReviewsCount = 0;
+                var assignedUsers = [];
+                for (let i = 0; i < this.selectedProject.gia.reviews.length; i++) {
+                  var key = this.selectedProject.gia.reviews[i];
+                  if (key.comments !== null) {
+                    giaReviewsCount = giaReviewsCount + 1;
+                  } else {
+                    assignedUsers.push(key.assignee);
+                  }
+                }
+              }
+              if (this.sectionStats) {
+                this.sectionStats.giaReviewsCount = giaReviewsCount;
+                this.sectionStats.giaPendingCount = assignedUsers && assignedUsers.length - giaReviewsCount;
               }
             }
-          }
-          if (this.sectionStats) {
-            this.sectionStats.giaReviewsCount = giaReviewsCount;
-            this.sectionStats.giaPendingCount = assignedUsers && assignedUsers.length - giaReviewsCount;
           }
         }
         if (this.selectedProject &&
@@ -293,7 +301,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           }
           // this._extendedAppraisalSmesStore.addAppraisal(this.selectedProject.extendedAppraisal);
         }
-        // console.log("PROJECT DETAILS FROM DATABASE:--", this.selectedProject);
+        console.log("PROJECT DETAILS FROM DATABASE:--", this.selectedProject);
         let proposalSections = result.sections.map(c => {
           return {
             ...c,
@@ -304,6 +312,43 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         })
         if (this.selectedProject !== null) {
           this._proposalSectionsStore.addAllSections(proposalSections);
+          this._projectService.getProposalAttachments(this.selectedProjectId).subscribe(
+            (result: any) => {
+              //javascript create JSON object from two dimensional Array
+              //vacate keys from main array
+              var keys = ['name', 'path', 'status'];
+              var newArr = result;
+              var formatted = [],
+                data = newArr,
+                cols = keys,
+                l = cols.length;
+              for (var i = 0; i < data.length; i++) {
+                var d = data[i],
+                  o = {};
+                for (var j = 0; j < l; j++)
+                  o[cols[j]] = d[j];
+                formatted.push(o);
+              }
+              // let array = _.groupBy(formatted, 'stage');
+              // let array = _.reduce(formatted, function (result, value, key) {
+              // let array = _.map(formatted, 'status');
+              // var array = _.chain(formatted)
+              //   .groupBy('status')
+              //   .map((val, status) => {
+              //     return {
+              //       files: val,
+              //       _id: status,
+              //     }
+              //   })
+              //   .value();
+              console.log("FILES FOR THIS PROJECT:--", result, formatted);
+              // this.selectedProject.files = formatted;
+              this._primaryAppraisalFormsStore.addSelectedProjectFiles(formatted);
+            },
+            error => {
+              console.log("FILES FOR THIS PROJECT:--", error);
+            }
+          );
         } else {
           this.apiLoading = false;
         }
@@ -1405,7 +1450,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     fd.append(this.param, this.pc1Files[0].data);
     this._projectService.uploadFiles(
       this.selectedProjectId,
-      'UPLOAD_PC1',
+      'UPLOAD_PDRMC',
       fd
     ).subscribe(
       (result: any) => {

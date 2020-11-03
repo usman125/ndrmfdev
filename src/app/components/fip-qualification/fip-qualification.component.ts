@@ -101,7 +101,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
         this.accredited = data.auth.accredited;
         this.canInitiate = data.auth.canInitiate;
         this.orgName = data.auth.orgName;
-        console.log("QUALIFICATION FLAG:--", data.auth, this.qualificationFlag);
+        console.log("QUALIFICATION FLAG:--", data.auth, this.qualificationFlag, this.eligibleFlag);
       })
     );
     if (this.orgName === 'govt') {
@@ -116,7 +116,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
           console.log("ALL INTIMATIONS FROM USER:--", this.allInitimations);
         })
       );
-      if (this.qualificationFlag === 'Not Initiated') {
+      if (this.qualificationFlag === 'Not Initiated' && this.eligibleFlag === 'Approved') {
         this.openThematicModel();
         // this.loadingApi = true;
         // this._settingsService.getAccrediattionCommence().subscribe(
@@ -139,7 +139,9 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
     // console.log("FIP QUALIFICATION STARTED:---", this.loggedUser)
     if (this.orgName === 'fip') {
-      if (this.loggedUser.eligibileFlag === 'Not Initiated' || this.loggedUser.eligibileFlag === 'Under Review') {
+      if (this.loggedUser.eligibileFlag === 'Not Initiated' ||
+        this.loggedUser.eligibileFlag === 'Under Review' ||
+        this.loggedUser.eligibileFlag === 'Rejected') {
         this._router.navigate(['fip-home']);
       }
     }
@@ -148,18 +150,22 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   getCommenceFromApi(commenceId) {
     this.userQualificationRequestId = commenceId;
     let user = JSON.parse(localStorage.getItem('user'));
-    console.log("USER TO SET QUALIFICATION FLAG:--", user);
     user.qualificationFlag = 'Draft';
     localStorage.setItem('user', JSON.stringify(user));
     this._authStore.setQualificationFlag(user.qualificationFlag);
     this._accreditationRequestService.getSingleQualificationRequest(commenceId).subscribe(
       (result: any) => {
+        console.log("USER TO SET QUALIFICATION FLAG:--", user, result);
         // this.loadingApi = false;
-        this.allSections = result.sections;
+        // this.allSections = result.sections;
+        this.allSections = result.qualItem.sections;
+        // result = result.
+        let dummyResult = result.qualItem;
+        dummyResult.eligibility = result.eligItem[0];
         let allInitimations = [];
         var count1 = 0;
         var count2 = 0;
-        this.allSmes = result.sections.map((c) => {
+        this.allSmes = dummyResult.sections.map((c) => {
           if (c.data === null) {
             count1 = count1 + 1;
           } else {
@@ -201,14 +207,20 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       (result: any) => {
         console.log("GET QUALIFICATION REQUESTS:--", result);
         this.userQualificationRequest = result;
-        if (result) {
+        if (result && result.length) {
           this._accreditationRequestService.getSingleQualificationRequest(result[0].id).subscribe(
             (result: any) => {
-              this.allSections = result;
+              // this.allSections = result.qualItem.sections;
+              // result = result.
+              let dummyResult = result.qualItem;
+              dummyResult.eligibility = result.eligItem[0];
+              this.allSections = dummyResult;
+              console.log("GET QUALIFICATION REQUESTS WITH ID:--", result, dummyResult);
               let allInitimations = [];
               var count1 = 0;
               var count2 = 0;
-              this.allSmes = result.sections.map((c) => {
+              // this.allSmes = result.sections.map((c) => {
+              this.allSmes = dummyResult.sections.map((c) => {
                 if (c.data === null) {
                   count1 = count1 + 1;
                 } else {

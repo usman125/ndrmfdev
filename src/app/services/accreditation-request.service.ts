@@ -68,11 +68,17 @@ export class AccreditationRequestService {
   }
 
   updateAccreditationRequest(id, status) {
-    const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}?status=${status}`;
+    // const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}?status=${status.status}`;
+    // console.log("VALUES FOR SME IN SERVICE:---", status);
+    // return this._httpClient.put(
+    //   url,
+    //   null
+    // );
+    const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}`;
     console.log("VALUES FOR SME IN SERVICE:---", status);
     return this._httpClient.put(
       url,
-      null
+      status
     );
   }
 
@@ -152,6 +158,22 @@ export class AccreditationRequestService {
     );
   }
 
+  markToGm(values, id) {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}/?status=MARK_TO_GM`;
+    return this._httpClient.put(
+      url,
+      values
+    );
+  }
+
+  markToCeo(values, id) {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}/?status=MARK_TO_CEO`;
+    return this._httpClient.put(
+      url,
+      values
+    );
+  }
+
   assignTaskToSme(values, sectionId) {
     const url = `${AppConfig.apiUrl}/accreditation/qualification/section/${sectionId}/task/add`;
     return this._httpClient.post(
@@ -180,6 +202,8 @@ export class AccreditationRequestService {
       url
     );
   }
+
+ 
 
   submitPendingAccreditation(id, data) {
     const url = `${AppConfig.apiUrl}/accreditation/questionairre/${id}/submit`;

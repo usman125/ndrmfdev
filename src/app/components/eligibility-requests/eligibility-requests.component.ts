@@ -202,6 +202,28 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
 
     this._confirmModelService.confirmed().subscribe(result => {
       console.log("RESULT", result);
+      if (result) {
+        this._userService.rejectEligibility(this.selectedRequestId, result.comments).subscribe(
+          result => {
+            console.log("RESULR FROM MARKING ELIGIBLE:--", result);
+            this.selectedRequest.status = "Rejected";
+            this._authStore.setEligibleFlag('Rejected');
+            // this.toggleBtn = true;
+            this.loadingApi = false;
+            const options = {
+              title: 'Status Changed Successfully!',
+              message: '',
+              cancelText: 'CANCEL',
+              confirmText: 'OK',
+              add: true,
+            };
+            this._confirmModelService.open(options);
+          },
+          error => {
+            this.loadingApi = false;
+            console.log("ERROR FROM MARKING ELIGIBLE:--", error);
+          })
+      }
     })
 
   }

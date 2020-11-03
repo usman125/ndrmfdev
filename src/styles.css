@@ -4,6 +4,7 @@
 /* @import '@angular/material/prebuilt-themes/indigo-pink.css'; */
 /* @import '~ngx-bar-rating/themes/br-fontawesome-theme'; */
 @import "~ngx-bar-rating/themes/br-default-theme.css";
+@import '~ngx-bar-rating/themes/br-fontawesome-o-theme';
 html,
 body {
   height: 100%;

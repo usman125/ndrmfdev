@@ -129,23 +129,31 @@ export class EditUserComponent implements OnInit {
       }, { onlySelf: true })
       // }
       // if (th)
-      if (this.selectedUser.role === 'fip') {
+      if ((this.selectedUser.role === 'fip' ||
+        this.selectedUser.role === 'fip data entry' ||
+        this.selectedUser.role === 'fip signatory' ||
+        this.selectedUser.role === 'fip endorsement') &&
+        this.selectedUser.orgName !== 'govt'
+      ) {
         this.editUserForm.controls['firstName'].disable({ onlySelf: true });
         this.editUserForm.controls['lastName'].disable({ onlySelf: true });
         this.editUserForm.controls['email'].disable({ onlySelf: true });
         this.editUserForm.controls['username'].disable({ onlySelf: true });
+        this.editUserForm.controls['password'].disable({ onlySelf: true });
+        this.editUserForm.controls['org'].disable({ onlySelf: true });
+        this.editUserForm.controls['role'].disable({ onlySelf: true });
       }
-      // else {
-      //   this.editUserForm.controls['firstName'].disable({ onlySelf: true });
-      //   this.editUserForm.controls['lastName'].disable({ onlySelf: true });
-      //   this.editUserForm.controls['email'].disable({ onlySelf: true });
-      //   this.editUserForm.controls['username'].disable({ onlySelf: true });
-      //   this.editUserForm.controls['password'].disable({ onlySelf: true });
-      //   this.editUserForm.controls['role'].clearValidators();
-      //   this.editUserForm.controls['role'].disable({ onlySelf: true });
-      //   this.editUserForm.controls['org'].clearValidators();
-      //   this.editUserForm.controls['org'].disable({ onlySelf: true });
-      // }
+      else if (this.selectedUser.orgName === 'govt') {
+        this.editUserForm.controls['firstName'].disable({ onlySelf: true });
+        this.editUserForm.controls['lastName'].disable({ onlySelf: true });
+        this.editUserForm.controls['email'].disable({ onlySelf: true });
+        this.editUserForm.controls['username'].disable({ onlySelf: true });
+        this.editUserForm.controls['role'].disable({ onlySelf: true });
+        this.editUserForm.controls['org'].disable({ onlySelf: true });
+        // this.editUserForm.controls['password'].disable({ onlySelf: true });
+        // this.editUserForm.controls['role'].clearValidators();
+        // this.editUserForm.controls['org'].clearValidators();
+      }
     });
   }
 

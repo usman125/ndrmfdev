@@ -363,13 +363,16 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
       // this._accreditationRequestService.getSingleQualificationRequest(this.selectedRequest.id).subscribe(
       this._accreditationRequestService.getSingleQualificationRequest(requestId).subscribe(
         (result: any) => {
-          this.selectedRequest = result;
+          // this.selectedRequest = result;
+          this.selectedRequest = result.qualItem;
+          this.selectedRequest.eligibility = result.eligItem[0];
           console.log("REQUEST TO CHECK:--", this.selectedRequest);
           let count = 0;
           // let passCount = 0;
           let tasksFlag = false;
           // this.reAssignedTasks = [];
-          this.userReviewRequests = result.sections.map((c) => {
+          // this.userReviewRequests = result.sections.map((c) => {
+          this.userReviewRequests = this.selectedRequest.sections.map((c) => {
             count = count + parseInt(c.totalScore);
             // passCount = passCount + parseInt(c.passingScore);
             // if (c.reassignmentStatus === 'Pending') {
@@ -415,11 +418,14 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
 
     this._accreditationRequestService.getSingleQualificationRequest(id).subscribe(
       (result: any) => {
-        this.selectedRequest = result;
-        console.log("RESULT QUALIFICATION SME:--", result);
+        // this.selectedRequest = result;
+        this.selectedRequest = result.qualItem;
+        this.selectedRequest.eligibility = result.eligItem[0];
+        console.log("RESULT QUALIFICATION SME:--", this.selectedRequest);
         let count = 0;
         let smeComponent: any = null;
-        this.userReviewRequests = result.sections.map((c) => {
+        // this.userReviewRequests = result.sections.map((c) => {
+        this.userReviewRequests = this.selectedRequest.sections.map((c) => {
           if (c.id === sectionId) {
             this.selectedSectionData = c;
           }
@@ -564,9 +570,9 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
       count1 = count1 + parseInt(key) * rating[key];
       count2 = count2 + rating[key];
     })
-    if (Math.ceil(count1 / count2) >= 0 && Math.ceil(count1 / count2) <= 2) {
+    if ((count1 / count2) >= 0 && (count1 / count2) <= 2) {
       requestStatus = "Failed";
-    } else if (Math.ceil(count1 / count2) > 2 && Math.ceil(count1 / count2) <= 3) {
+    } else if ((count1 / count2) > 2 && (count1 / count2) <= 3) {
       requestStatus = "Deffered";
     } else {
       requestStatus = "Accredited";
@@ -574,21 +580,21 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
     var apiValues = {
       "comments": item.review.comments,
       "controlWiseComments": JSON.stringify(item.formReviewObjects),
-      "rating": Math.ceil(count1 / count2),
+      "rating": (count1 / count2),
       "status": requestStatus
     }
-    // console.log(
-    //   "REVIEW TO ADD FOR ITEM:--\n", item,
-    //   "\nACTUAL REVIEW:--\n", item.formReviewObjects,
-    //   "\nTOAL RATING :--\n", rating,
-    //   "\nCOUNT 1 :--\n", count1,
-    //   "\nCOUNT 2 :--\n", count2,
-    //   "\nRATING RAW:--\n", count1 / count2,
-    //   "\nRATING :--\n", Math.ceil(count1 / count2),
-    //   "\nGENERAL COMMENTS :--\n", item.review.comments,
-    //   "\nEQUEST STATUS :--\n", requestStatus,
-    //   "\nAPI VALUES :--\n", apiValues,
-    // );
+    console.log(
+      "REVIEW TO ADD FOR ITEM:--\n", item,
+      "\nACTUAL REVIEW:--\n", item.formReviewObjects,
+      "\nTOAL RATING :--\n", rating,
+      "\nCOUNT 1 :--\n", count1,
+      "\nCOUNT 2 :--\n", count2,
+      "\nRATING RAW:--\n", count1 / count2,
+      "\nRATING :--\n", Math.ceil(count1 / count2),
+      "\nGENERAL COMMENTS :--\n", item.review.comments,
+      "\nEQUEST STATUS :--\n", requestStatus,
+      "\nAPI VALUES :--\n", apiValues,
+    );
     this._accreditationReviewsService.addReview(item.id, apiValues).subscribe(
       result => {
         // console.log("RESULT FROM ADDING REVIEW:--", result);
@@ -597,7 +603,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
           {
             "comments": item.review.comments,
             "controlWiseComments": item.formReviewObjects,
-            "rating": Math.ceil(count1 / count2),
+            "rating": (count1 / count2),
             "status": requestStatus
           }
         );
@@ -644,16 +650,30 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
       4: 0,
       5: 0,
     };
-    var pendingCount = 0;
-    var reviewsCount = 0;
-    // var unassignCount = 0;
     for (let j = 0; j <= 5; j++) {
       var count = 0;
       for (let i = 0; i < item.length; i++) {
         if (item[i].review.rating !== null) {
-          if (item[i].review.rating === j.toString()) {
-            count = count + 1;
+          var number = ~~item[i].review.rating;
+          var float = parseFloat((item[i].review.rating % 1).toFixed(3)) * (10);
+          float = ~~float;
+          console.log(
+            "REVMIEW RATE:---\n", item[i].review.rating,
+            "\nFLOAT DIGIT:---\n", parseFloat((item[i].review.rating % 1).toFixed(3)) * (10),
+            "\nACTUAL DIGIT:---\n", number, typeof (number),
+            "\nFLOAT DIGIT:---\n", float, typeof (float),
+          );
+          // if (float > 5) {
+
+          //   if ((number + 1) === j) {
+          //     count = count + 1;
+          //   }
+          // } else if (float >= 0 && (float < 5)) {
+          if (number === j) {
+            // count = count + 1;
+            count = count + parseFloat(item[i].review.rating);
           }
+          // }
         }
         rating[j] = count;
         // console.log("ITEM IN CHECK SCORE:--", item[i].review.rating)
@@ -700,31 +720,33 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
 
     var count1 = 0;
     var count2 = 0;
+    this.userAllScore = 0;
     var requestStatus = null;
     Object.keys(rating).forEach((key) => {
-      count1 = count1 + parseInt(key) * rating[key];
-      count2 = count2 + rating[key];
+      console.log("DATA TYPE OF INDEX:--", parseFloat(rating[key]));
+      count1 = count1 + parseInt(key) * parseFloat(rating[key]);
+      count2 = count2 + parseFloat(rating[key]);
     })
 
-    if (Math.ceil(count1 / count2) >= 0 && Math.ceil(count1 / count2) <= 2) {
+    if ((count1 / count2) >= 0 && (count1 / count2) <= 2) {
       requestStatus = "Failed";
       this.userSystemStatus = requestStatus;
-      this.userAllScore = Math.ceil(count1 / count2);
-    } else if (Math.ceil(count1 / count2) > 2 && Math.ceil(count1 / count2) <= 3) {
+      this.userAllScore = (count1 / count2);
+    } else if ((count1 / count2) > 2 && (count1 / count2) <= 3) {
       requestStatus = "Deffered";
       this.userSystemStatus = requestStatus;
-      this.userAllScore = Math.ceil(count1 / count2);
-    } else if (Math.ceil(count1 / count2) > 3 && Math.ceil(count1 / count2) <= 5) {
+      this.userAllScore = (count1 / count2);
+    } else if ((count1 / count2) > 3 && (count1 / count2) <= 5) {
       requestStatus = "Accredited";
       this.userSystemStatus = requestStatus;
-      this.userAllScore = Math.ceil(count1 / count2);
+      this.userAllScore = (count1 / count2);
     }
-    // console.log(
-    //   "ALL Request SCORES:--\n", rating,
-    //   "SYSTEM STATUS:--\n", requestStatus,
-    //   "USER SCORES:--\n", this.userAllScore,
+    console.log(
+      "ALL Request SCORES:--\n", rating,
+      "SYSTEM STATUS:--\n", requestStatus,
+      "USER SCORES:--\n", count1/count2, this.userAllScore, count1, count2,
 
-    // );
+    );
 
   }
 
@@ -746,9 +768,12 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
 
     this._confirmModelService.confirmed().subscribe(confirmed => {
       if (confirmed) {
+        this.selectedRequest.comment = confirmed.comments;
+        this.selectedRequest.expiryDate = confirmed.endDate;
+        this.selectedRequest.status = confirmed.status;
         console.log("CONFIRMED FROM MODEL", confirmed, this.selectedRequest);
         this.apiLoading = true;
-        this._accreditationRequestService.updateAccreditationRequest(this.selectedRequestId, confirmed.status).subscribe(
+        this._accreditationRequestService.updateAccreditationRequest(this.selectedRequestId, this.selectedRequest).subscribe(
           result => {
             this.apiLoading = false;
             // console.log("RESULT AFTER UPDATING STATUS:---", result);
@@ -944,6 +969,19 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
 
   markToGm() {
     console.log("MARK REQUEST TO GM:--", this.selectedRequest);
+    // this.selectedRequest.status = 'Approved';
+    // this.selectedRequest.subStatus = 'Pending';
+    // this.selectedRequest.markedTo = 'MARKED_TO_GM';
+    this._accreditationRequestService.markToGm(this.selectedRequest, this.selectedRequestId).subscribe(
+      result => {
+        console.log("RESULT DEOM QUERY:--", result);
+        this.selectedRequest.subStatus = 'Pending';
+        this.selectedRequest.markedTo = 'Marked To GM';
+      },
+      error => {
+        console.log("RESULT FROM QUERY:--", error);
+      }
+    )
   }
 
   viewEligibility() {

@@ -44,7 +44,6 @@ export class SubProjectDocumentComponent implements OnInit, OnDestroy {
 
   getAllRequests() {
     if (this.loggedUser.role === 'fip') {
-
       this._projectService.getPendingSubProjectDoc().subscribe(
         (result: any) => {
           console.log("PENGING SUB PROJ SOC SME:--", result);

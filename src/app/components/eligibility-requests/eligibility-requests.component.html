@@ -86,6 +86,8 @@
         <div style="padding: 15px;">
           <formio *ngIf="!loadingApi" [form]="selectedRequestItems.template" readOnly="true"
             [submission]="{data: secondForm}"></formio>
+          <!-- <formio *ngIf="!loadingApi && selectedRequest?.status === 'Rejected'" [form]="selectedRequestItems.template"
+            [submission]="{data: secondForm}"></formio> -->
           <!-- {{selectedRequestItems.data | json}} -->
           <mat-progress-spinner *ngIf="loadingApi" mode="indeterminate" diameter="30"></mat-progress-spinner>
         </div>
@@ -97,12 +99,12 @@
       <mat-card-content>
         <div class="top-controls">
           <div class="fullbtn">
-            <button *ngIf="!toggleBtn && !loadingApi" (click)="markEligibleFlag()" color="primary"
-              class="control-btn" mat-raised-button>
+            <button *ngIf="!loadingApi" (click)="markEligibleFlag()" color="primary" class="control-btn"
+              mat-raised-button [disabled]="selectedRequest?.status === 'Approved'">
               {{"Mark Eligible"}}
             </button>
-            <button *ngIf="toggleBtn && !loadingApi" (click)="markUnEligible()" color="warn" class="control-btn"
-              mat-raised-button>
+            <button [disabled]="selectedRequest?.status === 'Rejected'" *ngIf="!loadingApi" (click)="markUnEligible()"
+              color="warn" class="control-btn" mat-raised-button>
               {{"Mark Un-Eligible"}}
             </button>
             <mat-progress-spinner *ngIf="loadingApi" mode="indeterminate" diameter="30"></mat-progress-spinner>

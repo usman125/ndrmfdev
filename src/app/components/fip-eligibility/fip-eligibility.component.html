@@ -12,27 +12,51 @@
     </mat-chip-list>
   </mat-toolbar-row>
 </mat-toolbar>
-<mat-card class="m-20">
-  <div class="toggle-btns" *ngIf="!apiLoading">
-    <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
-      <mat-button-toggle *ngFor="let item of allSections" MatButtonToggleAppearance="standard" color="primary"
-        (change)="onValChange()" [value]="item">
-        {{item.sectionName}}
-      </mat-button-toggle>
-    </mat-button-toggle-group>
+<div class="row">
+  <div class="col-md-9" style="padding-right: 0px;">
+
+
+    <mat-card class="m-20">
+      <div class="toggle-btns" *ngIf="!apiLoading">
+        <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
+          <mat-button-toggle *ngFor="let item of allSections" MatButtonToggleAppearance="standard" color="primary"
+            (change)="onValChange()" [value]="item">
+            {{item.sectionName}}
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <mat-card-content>
+        <!-- <div *ngFor="let item of allSections"> -->
+        <!-- <h5 style="padding: 10px;"> {{item.sectionName}}</h5> -->
+        <div *ngIf="!apiLoading" style="margin: 20px 10px;" [ngClass]="{'update-btn': secondForm}">
+          <formio readOnly="true" *ngIf="form?.exists && selectedRequest?.status !== 'Rejected'" [form]="form"
+            [submission]="{data:secondForm}"></formio>
+          <!-- <formio *ngIf="form?.exists && selectedRequest?.status === 'rejected'" [form]="form"
+        [submission]="{data:secondForm}"></formio> -->
+          <formio [form]="form" *ngIf="!form?.exists || (form?.exists && selectedRequest?.status === 'Rejected')"
+            [submission]="{data:secondForm}" [refresh]="refreshForm" (submit)="onSubmit($event)"></formio>
+          <!-- <div *ngIf="secondForm">{{secondForm | json}}</div> -->
+        </div>
+        <div *ngIf="apiLoading">
+          <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
+        </div>
+        <!-- </div> -->
+      </mat-card-content>
+    </mat-card>
   </div>
-  <mat-card-content>
-    <!-- <div *ngFor="let item of allSections"> -->
-    <!-- <h5 style="padding: 10px;"> {{item.sectionName}}</h5> -->
-    <div *ngIf="!apiLoading" style="margin: 20px 10px;" [ngClass]="{'update-btn': secondForm}">
-      <formio readOnly="true" *ngIf="form?.exists" [form]="form" [submission]="{data:secondForm}"></formio>
-      <formio [form]="form" *ngIf="!form?.exists" [submission]="{data:secondForm}" [refresh]="refreshForm"
-        (submit)="onSubmit($event)"></formio>
-      <!-- <div *ngIf="secondForm">{{secondForm | json}}</div> -->
-    </div>
-    <div *ngIf="apiLoading">
-      <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
-    </div>
-    <!-- </div> -->
-  </mat-card-content>
-</mat-card>
+  <div class="col-md-3" style="padding-left: 0px;">
+    <mat-card style="margin: 20px 20px 20px 0px">
+      <div mat-card-title>Comments</div>
+      <mat-card-content>
+        <!-- <div *ngIf="currentComment.length !== 0" @pageAnimations class="comments">
+          <div class="heroes" *ngFor="let item of currentComment?.comments">
+            <span class="hero-title">{{item}}</span>
+          </div>
+        </div> -->
+        <div class="heroes">
+          <div id="answer">{{selectedRequest?.comment}}</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

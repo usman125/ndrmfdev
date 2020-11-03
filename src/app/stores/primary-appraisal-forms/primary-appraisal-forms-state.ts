@@ -343,6 +343,7 @@ export class PrimaryAppraisalFormsState {
     gia: any,
     implementationPlan: any,
     giaChecklist: any,
+    files: any,
   } = null;
 }
 

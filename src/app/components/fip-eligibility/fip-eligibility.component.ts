@@ -32,6 +32,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
   public canInitiate: boolean = false;
   public eligibileFlag: any = null;
   public orgName: any = null;
+  public selectedRequest: any = null;
 
   @ViewChild('group') group;
 
@@ -90,9 +91,11 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
       (result: any) => {
         console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", result);
         if (result[0]) {
-          this._accreditationRequestService.getSingleEligibilityRequest(result[0].id).subscribe(
+          this._accreditationRequestService.getSingleEligibilityRequest(result[result.length-1].id).subscribe(
             (result: any) => {
               console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", result);
+              this.selectedRequest = result;
+              this._authStore.setEligibleFlag(result.status);
               if (result) {
                 this.form.exists = true;
                 this.secondForm = JSON.parse(result.data);

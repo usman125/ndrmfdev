@@ -11,3 +11,11 @@ mat-button-toggle-group {
   flex-wrap: nowrap;
   overflow-x: auto;
 }
+
+.heroes {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0px;
+  background: rgba(102,103,103,0.1);
+  padding: 10px;
+}

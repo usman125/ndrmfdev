@@ -95,3 +95,4 @@ export { AllEligibilityRequestsComponent } from './all-eligibility-requests/all-
 export { AllQualificationRequestsComponent } from './all-qualification-requests/all-qualification-requests.component';
 export { EligibilityRequestViewComponent } from './eligibility-request-view/eligibility-request-view.component';
 export { QualificationReportComponent } from './qualification-report/qualification-report.component';
+export { ProjectProposalFilesComponent } from './project-proposal-files/project-proposal-files.component';
