@@ -94,6 +94,7 @@ export class AddProjectDialogComponent implements OnInit {
     // console.log(values);
     values.thematicAreaName = values.thematicArea.name;
     values.thematicAreaId = values.thematicArea.id;
+    values.jvUserID = null;
     this.close(values);
   }
 

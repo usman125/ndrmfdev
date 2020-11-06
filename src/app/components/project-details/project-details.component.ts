@@ -145,14 +145,15 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             ) {
               submitCount = submitCount + 1;
             }
-            let result = c.name.match(/glance/g);
+            let result = c.name.toLowerCase().match(/glance/g);
             let result1 = c.name.match(/Beneficiaries/g);
             if (result !== null) {
               if (c.data) {
+                console.log("****SELCTED PROJECT MONTHS*****\n", c.data);
                 this.selectedProjectInfo = c.data;
                 this._authStore.setProjectMonths(c.data.duration);
               }
-            }
+            } 
             if (this.selectedProjectInfo) {
 
               if (result1 !== null) {
@@ -207,6 +208,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this.sectionStats.reviewsCount = reviewsCount;
           this.sectionStats.unassignCount = unassignCount;
           this.sectionStats.pendingReviewCount = pendingReviewCount;
+          // this._authStore.setProjectMonths(result.duration);
           console.log("PENDING?SUBMITTED:--", pendingCount, submitCount, this.selectedProjectInfo, this.proMonths);
           this.groupType = this.proposalSections[0];
           this.tabChanged(this.groupType);
@@ -746,7 +748,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   addAssignedSectionReview() {
-    console.log("ADDING REVIEW:--", this.assignSections.value, this.sectionComments);
+    console.log("ADDING REVIEW:--", this.selectedProject, this.assignSections.value, this.sectionComments);
     if (this.files.length) {
       let stage = null;
       if (this.selectedProject.status === 'Preliminary Appraisal') stage = 'PRELIMINARY_APPRAISAL'
@@ -806,12 +808,13 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   addUnAssignedSectionReview() {
-    console.log("ADDING REVIEW:--", this.unAssignSections.value, this.sectionUnassignComments);
+    console.log("ADDING REVIEW:--", this.selectedProject, this.unAssignSections.value, this.sectionUnassignComments);
     var sectionIds: any = [];
     if (this.unAssignSections.value) {
       for (let i = 0; i < this.unAssignSections.value.length; i++) {
         let key = this.unAssignSections.value[i];
-        sectionIds.push(key.id)
+        if (key.id !== 'pip')
+          sectionIds.push(key.id)
       }
     }
     var object = {
@@ -828,6 +831,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       if (this.selectedProject.status === 'Offer Letter') stage = 'OFFER_LETTER'
       if (this.selectedProject.status === 'GIA') stage = 'GIA'
       if (this.selectedProject.status === 'Checklist to FIP') stage = 'GIA_CHECKLIST'
+      if (this.selectedProject.status === 'Draft') stage = 'DRAFT'
+      if (this.selectedProject.status === 'Under Review') stage = 'UNDER_REVIEW'
       const fd = new FormData();
       fd.append(this.param, this.files[0].data);
       this._projectService.uploadFiles(

@@ -374,9 +374,15 @@ export class ProjectService {
   }
 
   downloadAttachments(fileName, filePath) {
+    let header = new HttpHeaders()
+    header.append("Content-Type", "multipart/form-data;");
+    header.append("responseType", "blob");
     const url = `${AppConfig.apiUrl}/project-proposal/attachment/download/?fileName=${fileName}&filePath=${filePath}`;
     return this._httpClient.get(
-      url
+      url,
+      {
+        headers: header,
+      }
     );
   }
 

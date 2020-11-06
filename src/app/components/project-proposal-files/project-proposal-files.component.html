@@ -1,11 +1,16 @@
+<div class="d-flex align-items-center">
+  <mat-icon>inbox</mat-icon>
+  <span class="ml-2" style="font-weight: bold;">{{'Project Documents' | uppercase}}</span>
+</div>
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" matTreeNodePaddingIndent="5">
   <!-- This is the tree node template for leaf nodes -->
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
     <!-- use a disabled button to provide padding for tree leaf -->
     <!-- <button mat-icon-button disabled></button> -->
     <!-- {{node.name}} -->
-    <div class="node-title">
+    <div class="node-title child-node">
       {{node.name}}
+      <mat-icon (click)="downloadFile(node)" class="download-btn">cloud_download</mat-icon>
     </div>
   </mat-tree-node>
   <!-- This is the tree node template for expandable nodes -->
@@ -16,7 +21,7 @@
       </mat-icon>
     </button>
     <!-- {{node.name}} -->
-    <div class="node-title">
+    <div class="node-title parent-node">
       {{getNodeName(node.name)}}
     </div>
   </mat-tree-node>

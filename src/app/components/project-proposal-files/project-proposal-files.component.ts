@@ -5,6 +5,7 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import { PrimaryAppraisalFormsStore } from '../../stores/primary-appraisal-forms/primary-appraisal-forms-store';
 import { AuthStore } from '../../stores/auth/auth-store';
 import * as _ from 'lodash';
+import { ProjectService } from 'src/app/services/project.service';
 
 /**
  * Food data with nested structure.
@@ -52,6 +53,7 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
 
   constructor(
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
+    private _projectService: ProjectService,
     private _authStore: AuthStore,
   ) { }
 
@@ -75,13 +77,44 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
     )
   }
 
-  getNodeName(name){
-    switch(name){
+  getNodeName(name) {
+    switch (name) {
       case 'Upload PC1':
         return 'PC1 Uploads';
-      case 'Upload PDRMC':
-        return 'PDRMC Uploads';
+      case 'Upload PDRMC Mins':
+        return 'PDRMC Mins Uploads';
+      case 'Draft':
+        return 'Draft Uploads';
+      case 'Under Review':
+        return 'Under Review Uploads';
+      case 'Primary Appraisal':
+        return 'Primary Appraisal Uploads';
+      case 'Extended Appraisal':
+        return 'Extended Appraisal Uploads';
     }
+  }
+
+  downloadFile(file) {
+    console.log("FILE TO DOWNLOAD:---", file);
+    this._projectService.downloadAttachments(file.name, file.path).subscribe(
+      (result: any) => {
+        var reader = new FileReader();
+        reader.readAsDataURL(result);
+        reader.onloadend = () => {
+          
+          // just putting the data url to img element
+          // document.querySelector('#image').src = reader.result;
+        }
+        
+        // let blob = new Blob([result.text], { type: 'application/octet-stream' });
+        // let url = window.URL.createObjectURL(blob);
+        // let pwa = window.open(url);
+        // console.log("REUSLT FROM DOWNLOADING:---", reader, blob, url);
+      },
+      error => {
+        console.log("REUSLT FROM DOWNLOADING:---", error);
+      }
+    )
   }
 
   ngOnDestroy(): void {

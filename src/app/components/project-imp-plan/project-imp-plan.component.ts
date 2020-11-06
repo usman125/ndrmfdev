@@ -115,6 +115,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._authStore.state$.subscribe(data => {
         this.months = data.auth.proMonths;
+        console.log("****MONTHS IN PROJECT IMPLEMENTATION PLAN*****\n", data);
+        this.getQuarters();
       })
     );
     this.Subscription.add(
@@ -133,6 +135,11 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._primaryAppraisalFormsStore.state$.subscribe((data) => {
         this.selectedProject = data.selectedProject;
+        if (this.selectedProject) {
+          if (this.loggedUser.role === 'fip' && this.selectedProject.status === 'Gia Checklist') {
+            this.viewType = 'progress';
+          }
+        }
         if (this.loggedUser.role === 'admin') {
           this.getCostingHeads();
         }
@@ -154,7 +161,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         console.log("DATA FROM PIP STORE MANIPULATION:--", data.selectedProject, this.allCosts, this.allSubCosts);
       })
     );
-    this.getQuarters();
+
   }
 
   getCostingHeads() {
@@ -378,23 +385,23 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     // setFormValue(this.allCosts);
     this.apiLoading = true;
     if (this.loggedUser.role === 'admin') {
-      for (let i = 0; i < this.allCosts.length; i++) {
-        let object = {
-          "glCode": this.allCosts[i].glCode,
-          "name": this.allCosts[i].title
+      // for (let i = 0; i < this.allCosts.length; i++) {
+      //   let object = {
+      //     "glCode": this.allCosts[i].glCode,
+      //     "name": this.allCosts[i].title
+      //   }
+      //   console.log("KEY TO SAVE:--", object);
+      this._projectService.addCostingHeads(this.allCosts).subscribe(
+        result => {
+          this.apiLoading = false;
+          console.log("RESULT ADDING COSTING HEADS:--", result);
+        },
+        error => {
+          this.apiLoading = false;
+          console.log("ERROR ADDING COSTING HEADS:--", error);
         }
-        console.log("KEY TO SAVE:--", object);
-        this._projectService.addCostingHeads(object).subscribe(
-          result => {
-            this.apiLoading = false;
-            console.log("RESULT ADDING COSTING HEADS:--", result);
-          },
-          error => {
-            this.apiLoading = false;
-            console.log("ERROR ADDING COSTING HEADS:--", error);
-          }
-        );
-      }
+      );
+      // }
     } else {
       var object = {
         implementationPlan: JSON.stringify(this.allCosts)
