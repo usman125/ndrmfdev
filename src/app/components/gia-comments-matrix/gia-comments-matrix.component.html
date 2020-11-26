@@ -1,0 +1,36 @@
+<mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>GIA Comments Matrix Form
+      <button color="primary" mat-icon-button [useExistingCss]="true" printSectionId="print-section" ngxPrint>
+        <mat-icon>print</mat-icon>
+      </button>
+    </span>
+    <div class="example-spacer"></div>
+    <button (click)="goBack()" color="primary" mat-button>
+      <mat-icon>undo</mat-icon> Go Back
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="matrix" id="print-section">
+  <div class="row header-row">
+    <div class="col-md-4 item">
+      <h6> Name</h6>
+    </div>
+    <!-- <div class="col-md-4 item">
+      <h6> Proposal Sections</h6>
+    </div> -->
+    <div class="col-md-4 item">
+      <h6> Comments</h6>
+    </div>
+  </div>
+  <div class="row data-row" *ngFor="let item of allComments;">
+    <div class="col-md-4 item"><span class="mobileheads">Name</span><span>{{item?.assignee?.name || 'N/A'}}</span></div>
+    <!-- <div class="col-md-4 item">
+      <span class="mobileheads">Section(s)</span>
+      <mat-chip-list>
+        <mat-chip *ngFor="let section of item.sections;">{{section}}</mat-chip>
+      </mat-chip-list>
+    </div> -->
+    <div class="col-md-4 item"><span class="mobileheads">Comments</span><span>{{item?.comments || 'N/A'}}</span></div>
+  </div>
+</div>

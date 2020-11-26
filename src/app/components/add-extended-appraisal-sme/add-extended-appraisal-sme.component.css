@@ -1,0 +1,17 @@
+.mat-list-item {
+  background: rgba(235, 235, 235, 0.5);
+  margin-bottom: 5px;
+}
+
+.no-submit .formio-component-submit {
+  display: none;
+}
+
+
+.top-info-bar {
+    display: flex;
+    justify-content: space-between;
+    background: rgba(235, 235, 235, 0.5);
+    padding: 25px 15px;
+    margin-bottom: 2rem;
+}

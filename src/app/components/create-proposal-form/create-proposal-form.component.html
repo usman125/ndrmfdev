@@ -1,0 +1,67 @@
+<mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <small>Create Proposal Form</small>
+    <span class="example-spacer"></span>
+    <button matTooltip="All Forms!" (click)="goBack()" mat-icon-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Go Back!">view_list
+      </mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-card style="padding:5px;margin-top: 5px;">
+  <mat-card-content>
+    <button mat-raised-button style="margin: 10px 10px;" color="primary" (click)="toggleBuilder()">Toggle
+      Builder</button>
+    <div *ngIf="!toggle" style="margin: 20px 10px;">
+      <div style="margin-bottom: 20px;" class="row">
+        <div class="col-md-12">
+          <form [formGroup]="createProfileForm" (ngSubmit)="saveForm(createProfileForm.value)">
+
+            <mat-form-field class="col-md-3">
+              <mat-label>Name</mat-label>
+              <input matInput placeholder="Ex. Form 1" formControlName="name"
+                [formControl]="createProfileForm.controls['name']">
+            </mat-form-field>
+            <mat-form-field class="col-md-3">
+              <mat-label>Select Sme</mat-label>
+              <mat-select (ngModelChange)="smeChanged($event)" [formControl]="createProfileForm.controls['smeRef']">
+                <mat-option *ngFor="let item of allProposalSections" [value]="item.key">{{item.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col-md-3">
+              <mat-label>Type</mat-label>
+              <mat-select (ngModelChange)="typeChanged($event)" [formControl]="createProfileForm.controls['type']">
+                <mat-option value="form">Form</mat-option>
+                <mat-option value="wizard">Wizard</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button [disabled]="!createProfileForm.valid" class="col-md-3" mat-raised-button color="primary">
+              Save
+            </button>
+          </form>
+        </div>
+      </div>
+      <form-builder *ngIf="formType === 'form'" [form]="form" (change)="onChange($event)"></form-builder>
+      <form-builder *ngIf="formType === 'wizard'" [form]="form" (change)="onChange($event)"></form-builder>
+      <div class="well jsonviewer">
+        <pre id="json"><code class="language-json" #json></code></pre>
+      </div>
+      <button [disabled]="!createProfileForm.valid" style="margin: 10px 0px;" mat-raised-button color="primary"
+        (click)="saveForm(createProfileForm.value)">Save</button>
+    </div>
+  </mat-card-content>
+</mat-card>
+<mat-card style="padding: 5px 0px 0px;" *ngIf="toggle">
+  <mat-card-content>
+    <div style="margin: 20px 10px;">
+      <formio [form]="form" [refresh]="refreshForm" (submit)="onSubmit($event)"></formio>
+      <div>{{secondForm | json}}</div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!-- <h4>All Surveys</h4>
+      <div *ngFor="let item of allForms">
+        <span>{{item.name}}</span>
+      </div> -->

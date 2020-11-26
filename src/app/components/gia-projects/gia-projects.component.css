@@ -1,0 +1,42 @@
+.appraisal-box {
+  background-color: #f8f8f8;
+  padding: 20px;
+  position: relative;
+  margin-bottom: 15px;
+  overflow: hidden;
+    overflow-x: scroll;
+}
+
+.remove-btn {
+  display: flex;
+  justify-content: flex-end;
+  /* align-items: flex-end; */
+  /* padding: 10px; */
+}
+
+
+.card-header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-info{
+  display: flex;
+  flex-direction: column;
+}
+.project-info .info-box{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* justify-content: space-between; */
+}
+.mat-list-item {
+  background: rgba(235, 235, 235, 0.5);
+  margin-bottom: 2px;
+}
+
+.proposal-section{
+  margin: 0 1.3rem 1.5rem !important
+}

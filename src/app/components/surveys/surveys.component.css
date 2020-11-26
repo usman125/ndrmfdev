@@ -1,0 +1,25 @@
+.example-container {
+  /* height: 400px; */
+  overflow: auto;
+  /* margin: 4px; */
+  margin: 20px;
+  padding: 0px;
+}
+
+table {
+  width: 100%;
+}
+
+.example-icon {
+  /* padding: 0 4px; */
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+/* 
+.mat-card{
+  padding: 0px;
+  margin: 5px;
+} */

@@ -1,0 +1,114 @@
+<mat-card class="m-20">
+  <mat-card-content>
+    <div class="qpr-sections">
+      <div *ngFor="let item of qprSections; let i=index;">
+        <formio [form]="item.template" (submit)="onSubmit($event)"></formio>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="m-20">
+  <mat-card-content>
+    <table>
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th colpan="3">
+        <tr>Allocations</tr>
+        <tr>Projected</tr>
+        <tr>C1</tr>
+        </th>
+        <th colpan="3">
+          <tr>Disbursment</tr>
+          <tr>Actual</tr>
+          <tr>C2</tr>
+        </th>
+        <th colpan="3">
+          <tr>Achieved</tr>
+          <tr>%</tr>
+          <tr>C3=C2/C1*100</tr>
+        </th>
+        <th colpan="3">
+          <tr>Expenditure</tr>
+          <tr>Actual</tr>
+          <tr>C4</tr>
+        </th>
+        <th colpan="3">
+          <tr>Achieved</tr>
+          <tr>%</tr>
+          <tr>C5=C4/C2*100</tr>
+        </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Q-{{qprSectionStats?.quarter}}</td>
+          <td>{{qprSectionStats?.ndrmfShare}}</td>
+          <td>
+            <mat-form-field appearance="outline">
+              <input placeholder="amount" type="number" matInput [(ngModel)]="ndrmfDisbursment">
+            </mat-form-field>
+          </td>
+          <td></td>
+          <td>
+            <mat-form-field appearance="outline">
+              <input placeholder="amount" type="number" matInput [(ngModel)]="ndrmfActual">
+            </mat-form-field>
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <table>
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th colpan="3">
+        <tr>Allocations</tr>
+        <tr>Projected</tr>
+        <tr>C1</tr>
+        </th>
+        <th colpan="3">
+          <tr>Contributions</tr>
+          <tr>Actual</tr>
+          <tr>C2</tr>
+        </th>
+        <th colpan="3">
+          <tr>Achieved</tr>
+          <tr>%</tr>
+          <tr>C3=C2/C1*100</tr>
+        </th>
+        <th colpan="3">
+          <tr>Expenditure</tr>
+          <tr>Actual</tr>
+          <tr>C4</tr>
+        </th>
+        <th colpan="3">
+          <tr>Achieved</tr>
+          <tr>%</tr>
+          <tr>C5=C4/C2*100</tr>
+        </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Q-{{qprSectionStats?.quarter}}</td>
+          <td>{{qprSectionStats?.fipShare}}</td>
+          <td>
+            <mat-form-field appearance="outline">
+              <input placeholder="amount" type="number" matInput [(ngModel)]="fipContribution">
+            </mat-form-field>
+          </td>
+          <td></td>
+          <td>
+            <mat-form-field appearance="outline">
+              <input placeholder="amount" type="number" matInput [(ngModel)]="fipActual">
+            </mat-form-field>
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card>

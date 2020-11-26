@@ -1,0 +1,34 @@
+<ng-container>
+  <mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>Projects</span>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div class="m-20 custom-card">
+    <mat-grid-list cols="7" rowHeight="96px">
+      <!-- <mat-grid-tile colspan="6" rowspan="1" *ngIf="showAddBtn">
+        <div class="searchField">
+          <mat-form-field>
+            <mat-label>Filter Project</mat-label>
+            <input [(ngModel)]="filterQuery" matInput type="text" />
+          </mat-form-field>
+        </div>
+      </mat-grid-tile> -->
+      <mat-grid-tile class="own-tiles" rowspan="2" colspan="1"
+        *ngFor="let item of allProjects">
+        <div class="inner-content mat-elevation-z8" (click)="submitGiaReviews(item)">
+          <div class="content">
+            <h6>{{item?.name}}</h6>
+            <span id="comment">{{item?.initiatorFullName}}</span>
+            <span>{{item?.thematicAreaName}}</span>
+          </div>
+          <div class="bottom-content">
+            <span class="mb-1" id="answer"> - {{item.status}}</span>
+            <span class="mb-1" id="comment">{{item.subStatus}}</span>
+          </div>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</ng-container>

@@ -1,0 +1,32 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AddSmeComponent } from "../../components/component-index";
+import { AddSmeRoutingModule } from "./add-sme-routing.module";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
+// import { MatListModule } from "@angular/material/list";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatGridListModule } from "@angular/material/grid-list";
+import { MatToolbarModule } from "@angular/material/toolbar";
+
+@NgModule({
+  declarations: [
+    AddSmeComponent
+  ],
+  imports: [
+    CommonModule,
+    FormsModule, ReactiveFormsModule,
+    AddSmeRoutingModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatCardModule,
+    MatGridListModule,
+    MatProgressSpinnerModule,
+    MatToolbarModule,
+  ]
+})
+export class AddSmeModule { }

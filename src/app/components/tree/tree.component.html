@@ -1,0 +1,41 @@
+<ul *ngIf="treeData">
+  <li *ngFor="let node of treeData">
+      <span *ngIf="node.children != 0"><b></b></span>
+      <span (click)="toggleChild(node)" > 
+        {{ node.title }} 
+        
+        <div *ngIf="node.showInput" class="main-container">
+          <div class="quarters">
+            <div *ngFor="let month of node.financers; let i =index;">
+              <div *ngIf="getDivider(i)">
+                Year
+              </div>
+            </div>
+          </div>
+          <div class="financers">
+            <div *ngFor="let month of node.financers;let mI = index;">
+              <div class="months">
+                <div *ngFor="let item of month.financers;let i =index;">
+                  <div *ngIf="getMonth(i);">M {{mI + 1}}</div>
+                  <!-- <div class="example-spacer"></div> -->
+                </div>
+              </div>
+              <div class="inputs">
+                <div *ngFor="let item of month.financers;let i =index;">
+                  <mat-form-field>
+                    <input (ngModelChange)="costChnaged(node, month)" [placeholder]="item.title" [(ngModel)]="item.cost"
+                      matInput type="number" />
+                  </mat-form-field>
+                  <div *ngIf="(mI+1)%4 === 0" class="spacer"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span id="answer">Total: {{node.totalCost}}</span>
+
+      </span>
+      <app-tree *ngIf="node.showChildren" [treeData]="node.children"></app-tree>
+  </li>  
+</ul>
+

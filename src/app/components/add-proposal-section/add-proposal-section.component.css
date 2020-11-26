@@ -1,0 +1,15 @@
+.example-container {
+  overflow: auto;
+  margin: 15px;
+  position: relative;
+}
+
+.min-fab-addbtn{
+  position: absolute;
+  right: 50px;
+  bottom: 8%;
+}
+
+.example-spacer{
+  flex: 1 1 auto;
+}

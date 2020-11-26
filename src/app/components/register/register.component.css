@@ -1,0 +1,48 @@
+.col {
+  padding: 0px;
+}
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eaedf4;
+}
+.login-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.login-actions .register-link {
+  font-size: 11px;
+  /* color: #9AC939; */
+  color: #073F88;
+  /* text-decoration: underline; */
+  margin: 10px 0;
+}
+.login-actions .reset-pass {
+  margin-bottom: 0;
+  margin-top: 10px;
+  font-size: 10px;
+}
+.cursor{
+  cursor: pointer;
+}
+
+.heading-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.heading-title .title {
+  font-size: 15px;
+  font-weight:400
+}
+.subheading{
+  color: gray;
+  font-size:10px;
+  font-style:italic;
+  margin-top: 2px;
+}

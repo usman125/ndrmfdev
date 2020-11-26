@@ -1,0 +1,92 @@
+<mat-toolbar style="margin-bottom:15px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>All Complaints</span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div class="col-md-8">
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
+    </mat-form-field>
+  </div>
+
+  <div style="padding: 1rem;">
+    <mat-card class="example-container mat-elevation-z8" style="padding: 0px;">
+      <mat-card-content >
+        <table [hidden]="loading" mat-table  [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="againstPerson">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef> Against Person </th>
+            <td mat-cell *matCellDef="let element"> {{element.complaintAgainstPersonOrDepartment}} </td>
+          </ng-container>
+          <ng-container matColumnDef="contactNumber">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef> Contact Number </th>
+            <td mat-cell *matCellDef="let element"> {{element.contactNo}} </td>
+          </ng-container>
+          <ng-container matColumnDef="priority">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef> Priority </th>
+            <td mat-cell *matCellDef="let element"> {{element.priority}} </td>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+          </ng-container>
+          <ng-container matColumnDef="sequence">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef>Seq.No </th>
+            <td mat-cell *matCellDef="let element"> {{element.seqNo}} </td>
+          </ng-container>
+          <ng-container matColumnDef="date">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef> Date </th>
+            <td mat-cell *matCellDef="let element"> {{element.complaintDateTime | date: "dd/MM/yyyy HH:mm"}} </td>
+          </ng-container>
+
+        <ng-container matColumnDef="assign">
+          <th mat-header-cell *matHeaderCellDef> Assign </th>
+          <td mat-cell *matCellDef="let element">
+            <button matTooltip="Assign" matTooltipPosition="right" (click)="assignComplain(element)"  mat-icon-button>
+              <mat-icon>arrow_right_alt</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="UpdateSatus">
+          <th mat-header-cell *matHeaderCellDef> Update Status </th>
+          <td mat-cell *matCellDef="let element">
+            <button matTooltip="Update Status" matTooltipPosition="right" (click)="updateComplaintStatus(element)"  mat-icon-button>
+              <mat-icon>update</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="emailToConcernPerson">
+          <th mat-header-cell *matHeaderCellDef>Email Complainant</th>
+          <td mat-cell *matCellDef="let element">
+            <button matTooltip="Email to concern person" matTooltipPosition="right" (click)="emailToConcernPerson(element)" mat-icon-button>
+              <mat-icon>email</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef> Email </th>
+            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.complainantName}} </td>
+          </ng-container>
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> Acknowledge </th>
+            <td mat-cell *matCellDef="let element">
+              <button matTooltip="Edit!" matTooltipPosition="right"  (click)="eidtUser(element)"  mat-icon-button>
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <div [hidden]="!loading" class="spinner p-3" style="margin-top: 25px 0px;">
+          <mat-progress-spinner diameter="35" mode="indeterminate"></mat-progress-spinner>
+        </div>
+        <mat-paginator [hidden]="loading" #paginator [pageSizeOptions]="[10, 15, 20, 50]" showFirstLastButtons>
+        </mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </div>

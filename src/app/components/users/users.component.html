@@ -1,0 +1,101 @@
+<mat-toolbar style="margin-bottom:15px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>Users</span>
+    <span class="example-spacer"></span>
+    <button matTooltip="Sync User!" color="primary" (click)="syncUser()" mat-icon-button>
+      <mat-icon aria-hidden="false" aria-label="Sync User">sync_alt
+      </mat-icon>&nbsp;Sync users
+    </button>
+    <span class="example-spacer"></span>
+    <button matTooltip="Add User!" (click)="goToAdd()" color="primary" mat-icon-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Add User">add
+      </mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="mr-4 ml-4 row">
+  <div class="col-md-8">
+
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
+    </mat-form-field>
+  </div>
+  <div class="col-md-4 mt-3">
+    <button *ngIf="!withoutPasswords" (click)="getUsersWithoutCredentials()" mat-raised-button color="primary">Filter without credentials</button>
+    <button *ngIf="withoutPasswords" (click)="getAllUsers()" mat-raised-button color="primary">Get All Users</button>
+  </div>
+</div>
+<mat-card class="example-container mat-elevation-z8" style="padding: 0px;">
+  <mat-card-content>
+    <table [hidden]="loading" mat-table [trackBy]="trackTask" [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="role">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef> Role </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-chip-list>
+            <mat-chip *ngIf="element.role === 'fip'" color="accent" selected>FIP</mat-chip>
+            <mat-chip *ngIf="element.role === 'ndrmf'" color="accent" selected>NDRMF</mat-chip>
+            <mat-chip *ngIf="element.role === 'sme'" color="accent" selected>SME</mat-chip>
+            <mat-chip *ngIf="element.role === 'admin'" color="accent" selected>ADMIN</mat-chip>
+            <mat-chip *ngIf="element.role === 'process owner'" color="accent" selected>PO</mat-chip>
+          </mat-chip-list>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let element">
+          <!-- <button *ngIf="element.role !== 'fip'" matTooltip="Edit!" matTooltipPosition="right"
+            (click)="eidtUser(element)" mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button> -->
+          <button matTooltip="Edit!" matTooltipPosition="right" (click)="eidtUser(element)" mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="smeRef">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef> Sme Ref. </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.smeRef}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="active">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef> Active </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-chip-list>
+            <mat-chip *ngIf="element.active" color="primary" selected>Active</mat-chip>
+            <mat-chip *ngIf="!element.active" color="warn" selected>In-active</mat-chip>
+          </mat-chip-list>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="department">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef> Department </th>
+        <td mat-cell *matCellDef="let element"> {{element.department}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div [hidden]="!loading" class="spinner p-3" style="margin-top: 25px 0px;">
+      <mat-progress-spinner diameter="35" mode="indeterminate"></mat-progress-spinner>
+    </div>
+    <mat-paginator [hidden]="loading" #paginator [pageSizeOptions]="[10, 15, 20, 50]" showFirstLastButtons>
+    </mat-paginator>
+
+  </mat-card-content>
+</mat-card>

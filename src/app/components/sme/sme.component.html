@@ -1,0 +1,97 @@
+<mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>Sections</span>
+    <span class="example-spacer"></span>
+    <button (click)="goToAdd()" mat-icon-button>
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div class="row mt-3">
+  <div class="col-md-4">
+    <mat-card class="m-20 mr-0 p-0 mat-elevation-z5">
+      <div class="card-header"> Select Process </div>
+      <mat-card-content>
+        <mat-nav-list class="processes">
+          <mat-list-item [ngClass]="{'active': listItem === item}" (click)="fetchSectons(item)" style="cursor:pointer;"
+            class="process" *ngFor="let item of allProcessTypes">
+            {{PROCESS_NAME(item)}}
+          </mat-list-item>
+        </mat-nav-list>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="m-20 mr-0 p-0 mat-elevation-z5">
+      <div class="card-header"> Select Sub Process </div>
+      <mat-card-content>
+        <mat-nav-list class="processes" *ngIf="allSubProcessTypes.length !== 0 && !loadingSubSection">
+          <mat-list-item [ngClass]="{'active': listItem === item}" (click)="fetchSubSectons(item)"
+            style="cursor:pointer;" class="process" *ngFor="let item of allSubProcessTypes">
+            {{item}}
+          </mat-list-item>
+        </mat-nav-list>
+        <mat-nav-list class="processes" *ngIf="allSubProcessTypes.length === 0 && !loadingSubSection">
+          <mat-list-item class="process">
+            No Sub Processes
+          </mat-list-item>
+          <mat-list-item class="process" *ngIf="loadingSubSection">
+            <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
+          </mat-list-item>
+        </mat-nav-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-md-8">
+    <div class="mr-4 ml-1">
+      <mat-form-field>
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
+      </mat-form-field>
+    </div>
+    <mat-card class="m-20 ml-0 example-container mat-elevation-z5" style="padding: 0px;">
+      <mat-card-content>
+        <table [hidden]="loadingSection === false && dataSource?.length" mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef> Email </th>
+            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef> Type </th>
+            <td mat-cell *matCellDef="let element"> {{element.formIdentity}} </td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let element">
+              <button matTooltip="edit!" (click)="editSme(element)" matTooltipPosition="left" mat-icon-button
+                aria-label="Edit">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="userRef">
+            <th mat-header-cell *matHeaderCellDef> User </th>
+            <td mat-cell *matCellDef="let element"> {{element.sme?.name}} </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <div [hidden]="!loadingSection" class="m-3" style="display: flex;flex-direction:column;align-items: center;">
+          <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
+        </div>
+        <div id="answer" class="m-20 mt-3" [hidden]="loadingSection === true || dataSource?.length !== 0">{{warnMsg}}
+        </div>
+        <mat-paginator #paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons>
+        </mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<!-- <div class="min-fab-addbtn">
+  <button (click)="goToAdd()" mat-mini-fab aria-label="Add SME">
+    <mat-icon>add</mat-icon>
+  </button>
+</div> -->

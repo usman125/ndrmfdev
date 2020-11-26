@@ -1,0 +1,26 @@
+.example-container {
+  /* height: 400px; */
+  overflow: auto;
+  margin: 15px;
+  position: relative;
+}
+
+table {
+  width: 100%;
+}
+
+.min-fab-addbtn{
+  position: absolute;
+  right: 50px;
+  bottom: 8%;
+}
+
+.example-spacer{
+  flex: 1 1 auto;
+}
+
+.row-flex{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}

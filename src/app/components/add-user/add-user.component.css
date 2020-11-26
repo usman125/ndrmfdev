@@ -1,0 +1,22 @@
+.min-fab-addbtn{
+  position: absolute;
+  right: 50px;
+  bottom: 18%;
+}
+
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+.example-section {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  /* height: 60px; */
+}

@@ -1,0 +1,28 @@
+h5{
+    text-decoration: none;
+}
+
+.form-control{
+    border-radius: 0;
+}
+
+.quarter-cell {
+    padding-left: 12px;
+    padding-right: 12px;
+    height: calc(1.5em + .75rem + 2px);
+    border: 1px solid #ced4da;
+    cursor: pointer;
+}
+
+.q-label{
+    font-size: 14;
+    color: #a9abad;
+}
+
+.selected {
+    background-color: #007bff;
+}
+
+.selected .q-label {
+    color: white;
+}

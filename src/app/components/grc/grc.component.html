@@ -1,0 +1,39 @@
+<mat-toolbar style="margin-bottom:15px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>GRC</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div style="position: relative;" *ngFor="let complain of complains">
+  <mat-card class="m-20" >
+    <mat-card-content >
+      <p>Complaint Name: &nbsp; {{complain.complainantName}}  </p>
+      <p>Address: &nbsp; {{complain.address}} </p>
+      <p>Email: &nbsp; {{complain.email}}</p>
+      <p>CNIC: &nbsp; {{complain.cnic}}</p>
+      <p>Against Person: &nbsp; {{complain.complaintAgainstPersonOrDepartment}}</p>
+      <p>Category: &nbsp; {{complain.complaintCategory}}</p>
+      <p>Location: &nbsp; {{complain.complaintLocation}}</p>
+      <p>Sub-Location: &nbsp; {{complain.complaintSubLocation}}</p>
+      <p>Internal Status &nbsp; {{complain.internalStatus}}</p>
+      <p>Sequence Number: &nbsp; {{complain.seqNo}}</p>
+      <p>Status: &nbsp; {{complain.status}}</p>
+      <p>Consultant Name: &nbsp; {{complain.consultantName}}</p>
+      <p>Factor Causing Problem: &nbsp; {{complain.shortDescFectorCausingProblem}}</p>
+      <p>Short Description: &nbsp; {{complain.shortDescription}}</p>
+      <div >
+        <h6><strong>Assignee</strong> </h6>
+        <p *ngFor = "let asiignee of complain.assignees">{{asiignee.assignedPersonName}}</p>
+      </div>
+      <div >
+        <h6><strong>Reviews</strong></h6>
+        <p *ngFor = "let review of complain.reviews"> {{review.comments}}</p>
+      </div>
+    <div style="position: relative;">
+      <button style="align-content: flex-end; margin-left: 4rem;" (click)="openDialog(complain.id)" mat-flat-button color="primary" >Add review</button>
+    </div>
+  </mat-card-content>
+
+  </mat-card>
+
+</div>
+

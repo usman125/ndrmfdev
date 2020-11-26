@@ -1,0 +1,73 @@
+<ng-container>
+
+  <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <!-- <span>{{preAppViewType === 'fill' ? 'Submit Primary Appresial' : 'View Primary Appraisal'}}</span> -->
+      <span>{{selectedProject?.preAppraisal?.data === null ? 'Submit Primary Appresial' : 'View Primary Appraisal'}}</span>
+      <div class="example-spacer"></div>
+      <button class="mr-2" (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })"
+        mat-button color="accent">
+        <mat-icon class="mr-1">table_chart</mat-icon> Proposal Details
+      </button>
+      <button mat-button color="primary" (click)="goBack()">
+        <mat-icon class="mr-2">undo</mat-icon>Go Back
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <!-- <mat-card class="m-20 p-4" *ngIf="preAppViewType === 'fill'">
+    <mat-card-title>
+    </mat-card-title>
+    <mat-card-content>
+    </mat-card-content>
+    <mat-card-actions>
+      <button class="m-1" mat-raised-button color="primary">ASSIGN PROPOSAL REQUESTS TO DESK</button>
+      <button class="m-1" *ngIf="selectedProject && selectedProject?.status === 'Extended Appraisal'" mat-raised-button
+        color="primary">ASSIGN
+        EXTENDED APPRAISAL TO DESK</button>
+    </mat-card-actions>
+  </mat-card> -->
+
+  <mat-card class="m-20 p-4">
+    <ng-container *ngIf="!apiLoading">
+      <mat-card-title>
+        <button disabled (click)="completeTask()" mat-raised-button color="accent"
+          *ngIf="selectedProject?.preAppraisal.data === null">PENDING TASK -
+          {{pendingAppraisalDays ? pendingAppraisalDays+' DAYS REMAINING' : '0' | uppercase}}</button>
+        <button mat-raised-button color="warn" disabled
+          *ngIf="selectedProject?.preAppraisal.status === 'Completed'">TASK
+          SUBMITTED - {{selectedProject?.preAppraisal.completedDate | date:'fullDate' | uppercase}}</button>
+        <mat-chip-list class="mt-2 display-block" *ngIf="selectedProject?.status === 'Marked to GM'">
+          <mat-chip color="warn" selected>{{'marked to gm' | uppercase}}</mat-chip>
+        </mat-chip-list>
+        <mat-chip-list class="mt-2 display-block"
+          *ngIf="loggedUser?.role === 'gm' && selectedProject?.status === 'Preliminary Appraisal'">
+          <mat-chip color="accent" selected>{{'approved by gm' | uppercase}}</mat-chip>
+        </mat-chip-list>
+      </mat-card-title>
+      <mat-card-content>
+        <formio *ngIf="(loggedUser?.role === 'dm pam' || loggedUser?.role === 'process owner') && 
+        selectedProject !== null && selectedProject?.preAppraisal.status === 'Pending'"
+          [form]="selectedProject.preAppraisal.template" [submission]="{data:selectedProject.preAppraisal.data}"
+          (submit)="onSubmit($event)"></formio>
+        <formio
+          *ngIf="(selectedProject !== null && selectedProject?.preAppraisal.status === 'Completed')
+        || selectedProject?.preAppraisal.status === 'Marked to GM' || selectedProject?.preAppraisal.status === 'Marked to CEO'"
+          [form]="selectedProject.preAppraisal.template" readOnly="true"
+          [submission]="{data:selectedProject.preAppraisal.data}"></formio>
+      </mat-card-content>
+      <mat-card-actions class="m-1">
+        <button (click)="completeTask()" disabled mat-raised-button color="accent"
+          *ngIf="selectedProject?.preAppraisal?.data === null">PENDING
+          TASK - {{pendingAppraisalDays ? pendingAppraisalDays+' DAYS REMAINING' : '0' | uppercase}}</button>
+        <button mat-raised-button color="warn" disabled
+          *ngIf="selectedProject?.preAppraisal.status === 'Completed'">TASK
+          SUBMITTED - {{selectedProject?.preAppraisal.completedDate | date:'fullDate' | uppercase}}</button>
+      </mat-card-actions>
+    </ng-container>
+    <ng-container *ngIf="apiLoading">
+      <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
+    </ng-container>
+  </mat-card>
+  <span #myTopElement></span>
+  <app-project-details [viewType]="viewType" [showFillApprasialBtn]="showFillApprasialBtn"></app-project-details>
+</ng-container>

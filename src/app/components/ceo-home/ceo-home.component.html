@@ -1,0 +1,39 @@
+<div class="trackpad">
+<div class="box-heading">
+  <span>Projects</span>
+</div>
+<div class="row m-20">
+  <div class="col-md-3" (click)="goToRoute('ceoproposals')">
+    <mat-card>
+      <mat-card-content>
+        <div class="box">
+          <div class="heading">
+            <h6>Primary Appraisal Requests</h6>
+          </div>
+          <div class="value">
+            <span *ngIf="!apiLoading">0</span>
+            <!-- <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+            <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-md-3" (click)="goToRoute('ceoproposals')">
+    <mat-card>
+      <mat-card-content>
+        <div class="box">
+          <div class="heading">
+            <h6>Extended Appraisal Requests</h6>
+          </div>
+          <div class="value">
+            <span *ngIf="!apiLoading">0</span>
+            <!-- <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+            <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+</div>

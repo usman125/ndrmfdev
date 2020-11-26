@@ -1,0 +1,25 @@
+<mat-toolbar style="margin-bottom:15px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>Email to Complainant</span>
+    <span class="example-spacer"></span>
+    <button matTooltip="All Complains!" (click)="goBack()" mat-icon-button aria-label="All Complains">
+      <mat-icon>view_list</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div style="padding: 1rem;">
+  <div>
+    <mat-form-field class="col col-md-12">
+    <textarea matInput placeholder="Subject" [(ngModel)]="subject"></textarea>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field class="col col-md-12">
+    <textarea matInput placeholder="Request Body" [(ngModel)]="body"></textarea>
+    </mat-form-field>
+  </div>
+  <div>
+    <button  mat-flat-button color="primary" (click)="EamiltoComplainant()">Email</button>
+  </div>
+</div>
+

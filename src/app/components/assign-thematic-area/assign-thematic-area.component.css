@@ -1,0 +1,9 @@
+.po, .smes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.po .po-name, .smes .sme-name {
+    width: 250px;
+}

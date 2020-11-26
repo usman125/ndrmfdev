@@ -1,0 +1,38 @@
+<mat-toolbar class="mat-elevation-z8" color="primary" style="margin-bottom: 20px;">
+  <mat-toolbar-row>
+    <span>Eligibility Management</span>
+    <span class="example-spacer"></span>
+    <!-- <div style="display: flex;justify-content: center;flex-direction: column;align-items: flex-start;">
+      <small id="comment" style="font-weight: bold;">{{eligibileFlag}}</small>
+    </div> -->
+    <mat-chip-list>
+      <mat-chip class="ml-3 mt-1" color="primary" selected>
+        {{eligibileFlag}}
+      </mat-chip>
+    </mat-chip-list>
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-card class="m-20">
+  <div class="toggle-btns" *ngIf="!apiLoading">
+    <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
+      <mat-button-toggle *ngFor="let item of allSections" MatButtonToggleAppearance="standard" color="primary"
+        (change)="onValChange()" [value]="item">
+        {{item.sectionName}}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  <mat-card-content>
+    <!-- <div *ngFor="let item of allSections"> -->
+    <!-- <h5 style="padding: 10px;"> {{item.sectionName}}</h5> -->
+    <div *ngIf="!apiLoading" style="margin: 20px 10px;" [ngClass]="{'update-btn': secondForm}">
+      <formio readOnly="true" *ngIf="form?.exists" [form]="form" [submission]="{data:secondForm}"></formio>
+      <formio [form]="form" *ngIf="!form?.exists" [submission]="{data:secondForm}" [refresh]="refreshForm"
+        (submit)="onSubmit($event)"></formio>
+      <!-- <div *ngIf="secondForm">{{secondForm | json}}</div> -->
+    </div>
+    <div *ngIf="apiLoading">
+      <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
+    </div>
+    <!-- </div> -->
+  </mat-card-content>
+</mat-card>

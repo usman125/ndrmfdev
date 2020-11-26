@@ -1,0 +1,161 @@
+<mat-toolbar style="margin-top:0px;padding: 25px 0px;" color="primary">
+  <mat-toolbar-row>
+    <div class="quali-details">
+      <span class="subheading-1">Qualification Sections</span>
+      <!-- <mat-progress-bar *ngIf="pendingSectionsCount !== allSectionsCount && submitSectionsCount !== allSectionsCount"
+        mode="determinate" color="accent" [value]="(submitSectionsCount/allSectionsCount)*100"></mat-progress-bar>
+      <mat-progress-bar *ngIf="pendingSectionsCount === allSectionsCount && submitSectionsCount !== allSectionsCount"
+        mode="determinate" color="accent" [value]="(submitSectionsCount/allSectionsCount)*100"></mat-progress-bar> -->
+      <!-- <mat-progress-bar *ngIf="submitSectionsCount === allSectionsCount" mode="determinate" color="accent"
+        [value]="(submitSectionsCount/allSectionsCount)*100"></mat-progress-bar> -->
+      <mat-progress-bar mode="determinate" color="accent" [value]="(submitSectionsCount/allSectionsCount)*100">
+      </mat-progress-bar>
+      <span
+        *ngIf="(submitSectionsCount/allSectionsCount) && pendingSectionsCount !== allSectionsCount && submitSectionsCount !== allSectionsCount"
+        class="mat-cation">Submitted:
+        <span id="comment">{{(submitSectionsCount/allSectionsCount)*100}}%</span>
+      </span>
+      <span
+        *ngIf="(submitSectionsCount/allSectionsCount) && pendingSectionsCount === allSectionsCount && submitSectionsCount !== allSectionsCount"
+        class="mat-cation">Submitted:
+        <span id="comment">{{(submitSectionsCount/allSectionsCount)*100}}%</span>
+      </span>
+      <span *ngIf="(submitSectionsCount/allSectionsCount) && submitSectionsCount === allSectionsCount"
+        class="mat-cation">
+        Submitted:
+        <span id="comment">
+          {{submitSectionsCount}} of {{allSectionsCount}} - {{(submitSectionsCount/allSectionsCount)*100}}%
+        </span>
+      </span>
+    </div>
+    <span class="example-spacer"></span>
+    <div *ngIf="qualificationFlag !== null && 
+    (submitSectionsCount === allSectionsCount) && 
+    qualificationFlag === 'Draft' && !loadingApi">
+      <small id="warn-comment">Submit Your application for qualification</small>
+    </div>
+    <span class="example-spacer"></span>
+    <button matTooltip="Application Submitted!" disabled
+      *ngIf="allSections.status === 'Under Review' && submitSectionsCount === allSectionsCount" mat-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">
+        cancel_schedule_send
+      </mat-icon>
+      Submitted
+    </button>
+    <!-- <button (click)="submitAllSections()" matTooltip="Submit Application!" -->
+    <button (click)="submitAllSections()" matTooltip="Submit Application!"
+      *ngIf="allSectionsCount === submitSectionsCount && allSections.status === 'Draft' && !loadingApi" mat-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">
+        send
+      </mat-icon>
+      Submit
+    </button>
+    <!-- <button matTooltip="Locked!" disabled
+      *ngIf="allSections.status === 'Under Review' && submitSectionsCount === allSectionsCount"
+      mat-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">
+        cancel_schedule_send
+      </mat-icon>
+      Locked
+    </button> -->
+    <button matTooltip="Close!" (click)="goBack()" mat-icon-button>
+      <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">
+        close
+      </mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<!-- <div class="container-block" *ngIf="accredited === true && this.canInitiate === false"> -->
+<div class="container-block">
+  <div class="main-block" id="get-main-block">
+    <mat-card>
+      <mat-card-content>
+        <div *ngIf="loadingApi">
+          <mat-progress-bar mode="indeterminate" diameter="35"></mat-progress-bar>
+        </div>
+        <div *ngIf="!loadingApi">
+          <div class="row">
+            <div class="col-md-4">
+
+              <div class="toggle-btns quali-sections">
+                <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup" vertical="true">
+                  <mat-button-toggle [ngClass]="{'submitted_now': justSubmittedId === item?.id}"
+                    *ngFor="let item of allSmes" (change)="setDefaults()" [value]="item" aria-label="Text align left">
+                    <mat-icon style="font-size: 15px;padding: 5px;margin-right:5px;" *ngIf="item.data !== null">
+                      done_outline</mat-icon>
+                    <mat-icon style="font-size: 15px;padding: 5px;margin-right:5px;" *ngIf="item.data === null">feedback
+                    </mat-icon>
+                    {{item.name}}
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div *ngIf="groupType" [ngClass]="{'update-btn': secondForm}">
+                <formio disableAlerts="true" readOnly="true"
+                  *ngIf="form?.exists && (groupType?.reassignmentStatus === 'Completed' || groupType?.reassignmentStatus === null)"
+                  [form]="form" [submission]="{data:secondForm}"></formio>
+                <formio *ngIf="!form?.exists || groupType?.reassignmentStatus == 'Pending'"
+                  [submission]="{data:secondForm}" [form]="form" (submit)="onSubmit($event)"></formio>
+                <!-- <div *ngIf="secondForm">{{secondForm | json}}</div> -->
+                <!-- <div *ngIf="!form?.exists" id="formio"></div> -->
+              </div>
+              <div class="p-2" *ngIf="!groupType && qualificationFlag !== 'Not Initiated'">
+                <span style="display: block; margin-bottom: 5px;">Select a section form left menu</span>
+                <span id="answer" style="display: block;background-color: rgb(239 240 240);padding: 10px;"> No Section
+                  Selected</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="info" style="display: flex;flex-direction: column;">
+          <div class="block">
+            <mat-icon style="font-size: 14px;color:#4caf50">done_outline</mat-icon>
+            <span style="font-size: 10px;"> Submitted Sections</span>
+          </div>
+          <div class="block">
+            <mat-icon style="font-size: 14px;color:#4caf50">feedback</mat-icon>
+            <span style="font-size: 10px;"> Pending Sections</span>
+          </div>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <div class="intimation-block" id="get-intimation-block">
+
+    <mat-card>
+      <mat-card-content>
+        <div mat-card-title style="margin-bottom: 15px;">Section Updates</div>
+        <div @pageAnimations class="badge-btns" mat-menu>
+          <div (click)="setInitmationSection(item)" [ngClass]="{'active': groupType?.id === item?.id}" mat-menu-item
+            class="btn-row" *ngFor="let item of allInitimations.intimations">
+            <div class="title_info">
+              <span class="title">{{item.name | uppercase}}</span>
+              <!-- <small *ngIf="item.intimation_status === 'pending'" class="date"><span id="answer">Pending:</span>
+                {{item.endDate | date:'shortDate'}}</small> -->
+              <!-- <small class="date"><span id="answer">Updated:</span>
+                {{item.submittedAt | date:'shortDate'}}</small> -->
+            </div>
+            <div class="badge">
+              <mat-icon>edit
+              </mat-icon>
+              <!-- <mat-icon matTooltip="Commnets!" [matBadge]="2" matBadgeColor="accent">comment
+              </mat-icon> -->
+            </div>
+          </div>
+          <div @pageAnimations style="background-color: rgba(102, 103, 103, 0.1);">
+            <div class="btn-row" [hidden]="allInitimations.intimations.length != 0">
+              <div mat-menu-item style="padding: 5px 0px;">
+                <span id="answer">No Data Found</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <accreditation-comments-matrix [fipComments]="fipComments"></accreditation-comments-matrix>
+  </div>
+</div>

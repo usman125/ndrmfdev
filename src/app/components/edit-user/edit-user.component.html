@@ -1,0 +1,106 @@
+<ng-container>
+  <mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>{{'Edit User'}}</span>
+      <span class="example-spacer"></span>
+      <button matTooltip="All Users!" (click)="goBack()" mat-icon-button aria-label="All Users">
+        <mat-icon>view_list</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div style="position: relative;">
+    <form [formGroup]="editUserForm" (ngSubmit)="editUser(editUserForm.value)">
+      <mat-card class="m-20">
+        <mat-card-content>
+
+          <mat-form-field>
+            <mat-label>First Name</mat-label>
+            <input matInput type="text" placeholder="e.g. Legal" formControlName="firstName"
+              [formControl]="editUserForm.controls['firstName']" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Last Name</mat-label>
+            <input matInput type="text" placeholder="e.g. Legal" formControlName="lastName"
+              [formControl]="editUserForm.controls['lastName']" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput type="text" placeholder="e.g. abc124" formControlName="email"
+              [formControl]="editUserForm.controls['email']" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input matInput type="text" placeholder="e.g. abc124" formControlName="username"
+              [formControl]="editUserForm.controls['username']" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput type="password" placeholder="password" formControlName="password"
+              [formControl]="editUserForm.controls['password']" />
+          </mat-form-field>
+
+          <div class="row">
+
+            <div class="col-md-6">
+              <mat-card style="width: 90%;">
+                <mat-card-header>
+                  <mat-card-title>Select Org</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <mat-radio-group *ngIf="!apiLoading" [formControl]="editUserForm.controls['org']"
+                    (change)="orgChanged($event)" class="example-radio-group">
+                    <mat-radio-button
+                      [checked]="selectedUser.org[0].id === item.id && selectedUser.org[0].name === item.name"
+                      class="example-radio-button" *ngFor="let item of allUserTypes" [value]="item">
+                      {{item.name}}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                  <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="25"></mat-progress-spinner>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div class="col-md-6">
+              <mat-card style="width: 90%;">
+                <mat-card-header>
+                  <mat-card-title>Select Role</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <mat-radio-group *ngIf="editUserForm.controls['org'] && !apiLoading" class="example-radio-group"
+                    (change)="roleChanged($event)" [formControl]="editUserForm.controls['role']">
+                    <mat-radio-button
+                      [checked]="selectedUser?.roles[0]?.id === type?.id && selectedUser?.roles[0]?.name === type?.name"
+                      class="example-radio-button" [value]="type" *ngFor="let type of allRoles">
+                      {{type.name}}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                  <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="25"></mat-progress-spinner>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div class="col-md-12 p-4">
+              <mat-slide-toggle color="primary" [formControl]="editUserForm.controls['active']">Active
+              </mat-slide-toggle>
+            </div>
+
+            <div class="col-md-12">
+              <button *ngIf="!apiLoading" class="m-2" type="submit" [disabled]="!editUserForm.valid" mat-raised-button
+                color="accent" type="submit">
+                {{'Update' | uppercase}}
+              </button>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="35"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+    <!-- <button [disabled]="selectedUser?.role === 'fip'" class="m-2" mat-raised-button color="warn" type="submit">
+      {{'Reset' | uppercase}}
+    </button> -->
+  </div>
+</ng-container>

@@ -1,0 +1,63 @@
+<ng-container>
+  <mat-toolbar style="margin-top:0px;padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>{{'Edit Complain'}}</span>
+      <span class="example-spacer"></span>
+      <button matTooltip="All Complains!" (click)="goBack()" mat-icon-button aria-label="All Complains">
+        <mat-icon>view_list</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div style="position: relative;">
+
+  <mat-card class="m-20" >
+    <mat-card-content >
+    <p>Complaint Name: &nbsp; {{complainToedit.complainantName}}</p>
+    <p>Address: &nbsp; {{complainToedit.address}} </p>
+    <p>Email: &nbsp; {{complainToedit.email}}</p>
+    <p>CNIC: &nbsp; {{complainToedit.cnic}}</p>
+    <p>Against Person: &nbsp; {{complainToedit.complaintAgainstPersonOrDepartment}}</p>
+    <p>Category: &nbsp; {{complainToedit.complaintCategory}}</p>
+    <p>Internal Status &nbsp; {{complainToedit.internalStatus}}</p>
+    <p>Consultant Name: &nbsp; {{complainToedit.consultantName}}</p>
+    <div >
+      <h6><strong>Assignee</strong> </h6>
+      <p *ngFor = "let asiignee of complainToedit.assignees">{{asiignee.assignedPersonName}} &nbsp; <strong >Date:</strong> &nbsp; {{asiignee.assignedTimestamp | date: "dd/MM/yyyy"}} &nbsp; <strong >Email:</strong> &nbsp; {{asiignee.email}} &nbsp; <strong >Organization:</strong> &nbsp; {{asiignee.org}}</p>
+    </div>
+    <div >
+      <h6><strong>Reviews</strong></h6>
+      <p *ngFor = "let review of complainToedit.reviews"> {{review.comments}} &nbsp; <strong>Review By:</strong> &nbsp; {{review.userName}} &nbsp; <strong>Date:</strong> &nbsp; {{review.reviewDateTime | date: "dd/MM/yyyy"}} &nbsp; <strong>Organization:</strong> &nbsp; {{review.org}} </p>
+    </div>
+    <div>
+      <mat-form-field>
+      <input  matInput placeholder="Seq.No" type="number" [(ngModel)]="sequenceNumber">
+    </mat-form-field>
+    </div>
+    <mat-form-field>
+      <mat-label>Priority</mat-label>
+      <mat-select [(ngModel)] ="priority">
+        <mat-option value="High">High</mat-option>
+        <mat-option value="Medium">Medium</mat-option>
+        <mat-option value="Low">Low</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Complaint Status</mat-label>
+      <mat-select [(ngModel)] ="status">
+        <mat-option value="Pending">Pending</mat-option>
+        <mat-option value="Initiated">Initiated</mat-option>
+        <mat-option value="Closed">Closed</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-card-content>
+
+  <div style="position: relative;">
+    <button  mat-flat-button color="primary" (click)="SubmitEditComplain()">Acknowledge</button>
+  </div>
+  </mat-card>
+
+</div>
+  </ng-container>
+
+
+

@@ -1,0 +1,70 @@
+ul {
+    list-style-type: none !important;
+}
+
+
+/* .example-tree-invisible {
+  display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+} */
+
+.financers mat-form-field {
+  width: 60px;
+  padding: 5px;
+}
+/* 
+.mat-tree-node {
+  padding: 0px !important;
+}
+
+.mat-tree-node .node-title {
+  min-width: 90px;
+} */
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.quarters {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  /* padding-right: 30%; */
+  margin-bottom: 10px;
+}
+
+.financers {
+  display: flex;
+}
+
+.quarters .ng-star-inserted {
+  margin-right: 34px;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.spacer {
+  display: inline;
+  margin-right: 25px;
+}
+
+/* span#comment {
+    padding-right: 28px;
+} */
+
+.header{
+  display: flex;
+  /* justify-content: space-between; */
+  font-size: 15px;
+  margin-bottom: 15px;
+  padding: 0px 20px;
+}

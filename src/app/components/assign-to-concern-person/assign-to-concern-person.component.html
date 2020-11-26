@@ -1,0 +1,25 @@
+<mat-toolbar style="margin-bottom:15px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>Assign</span>
+    <span class="example-spacer"></span>
+    <button matTooltip="All Complains!" (click)="goBack()" mat-icon-button aria-label="All Complains">
+      <mat-icon>view_list</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div style="padding: 1rem;">
+<mat-card>
+ <mat-card-content *ngFor="let user of allUsers">
+
+    <label>
+      <input type="checkbox" (click)= "getUserId(user.id)"   />
+      {{user.firstName }}&nbsp;{{user.lastName}}&nbsp;
+    </label>
+
+  </mat-card-content>
+  <div style="position: relative; padding: 1rem;">
+    <button  mat-flat-button color="primary" (click)="ConfirmAssignToConcernedPerson()">Assign</button>
+  </div>
+</mat-card>
+
+</div>

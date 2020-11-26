@@ -1,0 +1,26 @@
+<!-- <mat-form-field>
+  <mat-label>Toppings</mat-label>
+  <mat-select (change)="toppingChnaged()" [formControl]="toppings" multiple>
+    <mat-select-trigger>
+      {{toppings.name ? toppings.name[0] : ''}}
+      <span *ngIf="toppings.value?.length > 1" class="example-additional-selection">
+        (+{{toppings.value.length - 1}} {{toppings.value?.length === 2 ? 'other' : 'others'}})
+      </span>
+    </mat-select-trigger>
+    <mat-option *ngFor="let topping of allSmes" [value]="topping.key">{{topping.name}}</mat-option>
+  </mat-select>
+</mat-form-field> -->
+
+<mat-form-field>
+  <mat-select (selectionChange)="multiSelectStore($event)" placeholder="Select Sections" [formControl]="toppings" multiple>
+    <mat-select-trigger>
+      <span *ngFor="let item of toppings.value; let i=index">
+        <span *ngIf="i===0">{{item.name}}</span>
+      </span>
+      <span *ngIf="toppings.value?.length > 1" class="example-additional-selection">
+        (+{{toppings.value.length - 1}} others)
+      </span>
+    </mat-select-trigger>
+    <mat-option *ngFor="let topping of allSmes" [value]="topping">{{topping.name}}</mat-option>
+  </mat-select>
+</mat-form-field>

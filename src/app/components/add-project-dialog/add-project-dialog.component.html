@@ -1,0 +1,37 @@
+<div class="dialog">
+  <div mat-dialog-content>
+
+    <form [formGroup]="addProjectForm">
+
+      <mat-form-field>
+        <mat-label for="#">Peoject Name</mat-label>
+        <input matInput type="text" formControlName="name" [formControl]="addProjectForm.controls['name']"
+          placeholder="eg. New Project">
+      </mat-form-field>
+
+      <mat-radio-group class="example-section" formControlName="type" [formControl]="addProjectForm.controls['type']">
+        <mat-radio-button value="single">Single</mat-radio-button>
+        <mat-radio-button value="jv">JV</mat-radio-button>
+      </mat-radio-group>
+
+      <mat-form-field *ngIf="!apiLoading">
+        <mat-label>Select Thematic Area</mat-label>
+        <mat-select [formControl]="addProjectForm.controls['thematicArea']" (ngModelChange)="thematicChanged($event)">
+          <!-- (ngModelChange)="thematicChanged($event)"> -->
+          <mat-option *ngFor="let area of allThematicAreas;" [value]="area">
+            {{area.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+    </form>
+
+
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-raised-button color="warn" style="margin-right:10px;" (click)="cancel()">{{ data.cancelText }}</button>
+    <button mat-raised-button color="primary" [disabled]="!addProjectForm.valid" (click)="confirm(addProjectForm.value)">{{ data.confirmText }}</button>
+  </div>
+</div>

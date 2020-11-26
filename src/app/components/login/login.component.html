@@ -1,0 +1,43 @@
+<div class="login-container loginfields">
+  <mat-card class="col-md-6 col-10 col-sm-6 col-lg-4 mat-elevation-z8">
+    <mat-card-content>
+      <p class="col-md-12" style="display: flex;">
+        <!-- <img style="margin:0 auto;" style="width: 50%; min-width: 60%; margin: 0 auto;" mat-card-image
+        src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png" alt="NDRMF"> -->
+      </p>
+      <span class="error-msg" *ngIf="errorMsg">{{errorMsg}}</span>
+      <form [formGroup]="loginForm" (ngSubmit)="setLoggedUser(loginForm.value)">
+        <mat-form-field class="col col-md-12">
+          <label>Username</label>
+          <input matInput type="text" formControlName="username" [formControl]="loginForm.controls['username']" />
+        </mat-form-field>
+        <mat-form-field class="col col-md-12">
+          <label>Password</label>
+          <input matInput type="password" formControlName="password" [formControl]="loginForm.controls['password']" />
+        </mat-form-field>
+        <button *ngIf="!loading" mat-raised-button class="col col-md-12" color="primary" type="submit">
+          Login
+        </button>
+        <div class="spinner">
+          <mat-progress-spinner *ngIf="loading" diameter="30" mode="indeterminate"></mat-progress-spinner>
+        </div>
+      </form>
+    </mat-card-content>
+    <mat-card-actions>
+      <div class="login-custom-btn">
+        <button  mat-raised-button >Forgot Password?</button>
+        <button  mat-raised-button (click)="registerUser()">
+          Register
+        </button>
+        <button  mat-raised-button  (click)="GrievanceRegistration()">
+           Register Complaint
+        </button>
+      </div>
+      <div style="padding: 0.5rem;">
+        <button  mat-raised-button  (click)="updateComplaint()">
+          Update Complaint
+       </button>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</div>

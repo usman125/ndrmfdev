@@ -1,0 +1,100 @@
+<ng-container>
+  <form [formGroup]="addUserForm" (ngSubmit)="addUser(addUserForm.value)">
+    <mat-toolbar style="margin-bottom:0px;padding: 15px 0px;" color="primary">
+      <mat-toolbar-row>
+        <span>{{'Add User'}}</span>
+        <span class="example-spacer"></span>
+        <button matTooltip="All Users!" (click)="goBack()" mat-icon-button aria-label="All Users">
+          <mat-icon>view_list</mat-icon>
+        </button>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div style="position: relative;">
+      <mat-card class="m-20">
+        <mat-card-content>
+
+          <mat-form-field>
+            <mat-label>First Name</mat-label>
+            <input matInput type="text" placeholder="e.g. Legal" formControlName="firstName"
+              [formControl]="addUserForm.controls['firstName']" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Last Name</mat-label>
+            <input matInput type="text" placeholder="e.g. Legal" formControlName="lastName"
+              [formControl]="addUserForm.controls['lastName']" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput type="text" placeholder="e.g. abc124" formControlName="email"
+              [formControl]="addUserForm.controls['email']" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input matInput type="text" placeholder="e.g. abc124" formControlName="username"
+              [formControl]="addUserForm.controls['username']" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput type="text" placeholder="Password" formControlName="password"
+              [formControl]="addUserForm.controls['password']" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Select Department</mat-label>
+            <select matNativeControl [formControl]="addUserForm.controls['department']" formControlName="department">
+              <option value="" selected></option>
+              <option *ngFor="let department of allDepartments" [value]="department.id">
+                {{department.name}}
+              </option>
+            </select>
+          </mat-form-field>
+
+          <div class="row">
+            <div class="col-md-6">
+              <mat-card style="width: 90%;">
+                <div class="card-title">
+                  <h5>Select Org</h5>
+                </div>
+                <mat-card-content>
+                  <mat-radio-group [formControl]="addUserForm.controls['org']" (change)="orgChanged($event)"
+                    class="example-radio-group">
+                    <mat-radio-button class="example-radio-button" *ngFor="let item of allUserTypes" [value]="item">
+                      {{item.name}}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <div class="col-md-6">
+              <mat-card style="width: 90%;">
+                <div class="card-title">
+                  <h5>Select Role</h5>
+                </div>
+                <mat-card-content>
+                  <mat-radio-group *ngIf="addUserForm.controls['org']" class="example-radio-group"
+                    (change)="roleChanged($event)" [formControl]="addUserForm.controls['role']">
+                    <mat-radio-button class="example-radio-button" [value]="type" *ngFor="let type of allRoles">
+                      {{type.name}}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+
+          <button [disabled]="!addUserForm.valid" mat-raised-button color="primary" type="submit">
+            {{'Add' | uppercase}}
+          </button>
+
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+
+
+  </form>
+</ng-container>
