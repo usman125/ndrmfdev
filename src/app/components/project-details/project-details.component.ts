@@ -153,7 +153,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
                 this.selectedProjectInfo = c.data;
                 this._authStore.setProjectMonths(c.data.duration);
               }
-            } 
+            }
             if (this.selectedProjectInfo) {
 
               if (result1 !== null) {
@@ -1037,20 +1037,33 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     };
 
     this._confirmModelService.open(options);
-
     this._confirmModelService.confirmed().subscribe(confirmed => {
       console.log("MARK TO GM STATUS", confirmed);
-      // if (confirmed) {
-      //   this._projectService.markToGm(this.selectedProjectId).subscribe(
-      //     result => {
-      //       console.log("RESULT FROM MARK TO GM:--", result);
-      //       this._primaryAppraisalFormsStore.markToGm();
-      //     },
-      //     error => {
-      //       console.log("ERROR FROM MARK TO GM:--", error);
-      //     }
-      //   );
-      // }
+      if (confirmed) {
+        this._projectService.updateProposalOfferLetterStatus(this.selectedProjectId).subscribe(
+          (result: any) => {
+            console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", result);
+            this.files = [];
+          },
+          error => {
+            console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", error);
+          }
+        );
+        // const fd = new FormData();
+        // fd.append(this.param, this.files[0].data);
+        // this._projectService.uploadFiles(
+        //   this.selectedProjectId,
+        //   'OFFER_LETTER',
+        //   fd
+        // ).subscribe(
+        //   (result: any) => {
+        //     console.log("RESULT AFTER UPLOADING FILE FOR OFFER LETTER:--", result);
+        //   },
+        //   error => {
+        //     console.log("ERROR AFTER OFFER LETTER FILE UPLOAD:--", error);
+        //   }
+        // );
+      }
     });
 
   }

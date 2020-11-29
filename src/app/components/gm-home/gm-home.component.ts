@@ -38,6 +38,7 @@ export class GmHomeComponent implements OnInit {
           preCount,
           extCount,
           gmCount,
+          totalCount: result.length
         }
         this.apiLoading = false;
       },

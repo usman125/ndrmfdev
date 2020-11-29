@@ -14,7 +14,7 @@
   </mat-toolbar-row>
 </mat-toolbar>
 <!-- <div *ngIf="viewType === 'add-gia'" class="m-20 mb-0" [(froalaModel)]="content" [froalaEditor]></div> -->
-<div class="m-20 mb-0" style="background-color: #fff;">
+<div *ngIf="viewType === 'add-gia'" class="m-20 mb-0" style="background-color: #fff;">
   <angular-editor [config]="config" [placeholder]="'Enter text here...'" [(ngModel)]="content"></angular-editor>
 </div>
 <mat-card class="proposal-section" *ngIf="viewType === 'add-gia'">
@@ -191,6 +191,7 @@
           <h5> General Remarks </h5>
         </mat-card-title>
         <mat-card-content>
+          <p>Add review for the proposal GIA assigned by process owner.</p>
           <mat-form-field class="mb-2" appearance="outline">
             <mat-label>Add genaral remarks</mat-label>
             <textarea (ngModelChange)="addReview($event)" matInput [ngModel]="generalRemarks" cols="30" rows="5"

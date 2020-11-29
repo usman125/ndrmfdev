@@ -82,6 +82,10 @@ mat-button-toggle-group {
 .review-box .info .box-title {
   display: flex;
   align-items: center;
+  width: 50%;
+}
+.review-box .info small#comment, .review-box .info small.info-comment {
+  width: 50%;
 }
 .review-box .info {
   display: flex;
@@ -138,20 +142,22 @@ mat-button-toggle-group {
   font-size: 16px;
   margin: 5px;
 }
-.mat-list-base{
+.mat-list-base {
   display: flex;
   justify-content: space-around;
   flex-direction: row;
   flex-wrap: wrap;
 }
-.mat-button-toggle-checked{
+.mat-button-toggle-checked {
   font-weight: 400;
   background-color: #e0e0e0;
 }
-mat-button-toggle-group .mat-button-toggle-checked .mat-button-toggle-label-content{color: #333;}
+mat-button-toggle-group .mat-button-toggle-checked .mat-button-toggle-label-content {
+  color: #333;
+}
 .proj-detail .mat-button-toggle-checked .mat-button-toggle-label-content {
   color: #333 !important;
 }
 .govfip {
-    width: 100% !important;
+  width: 100% !important;
 }

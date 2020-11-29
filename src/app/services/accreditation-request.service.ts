@@ -114,6 +114,13 @@ export class AccreditationRequestService {
     );
   }
 
+  getEligiRejectedRequests() {
+    const url = `${AppConfig.apiUrl}/accreditation/eligibility?status=REJECTED`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
   getSingleEligibilityRequest(id) {
     const url = `${AppConfig.apiUrl}/accreditation/eligibility/${id}`;
     return this._httpClient.get(
@@ -137,6 +144,13 @@ export class AccreditationRequestService {
 
   getApprovedQulificationRequests() {
     const url = `${AppConfig.apiUrl}/accreditation/qualification?status=APPROVED`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  getRejectedQulificationRequests() {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification?status=REJECTED`;
     return this._httpClient.get(
       url
     );
@@ -203,7 +217,7 @@ export class AccreditationRequestService {
     );
   }
 
- 
+
 
   submitPendingAccreditation(id, data) {
     const url = `${AppConfig.apiUrl}/accreditation/questionairre/${id}/submit`;

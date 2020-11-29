@@ -8,6 +8,8 @@ import { MatButtonModule } from "@angular/material/button";
 // import { MatGridListModule } from "@angular/material/grid-list";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { ChartsModule } from 'ng2-charts';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     MatButtonModule,
     // MatGridListModule,
     MatToolbarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ChartsModule,
+    MatButtonToggleModule
   ]
 })
 export class PoHomeModule { }

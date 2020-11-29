@@ -91,6 +91,14 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
         return 'Primary Appraisal Uploads';
       case 'Extended Appraisal':
         return 'Extended Appraisal Uploads';
+      case 'TAC Meeting':
+        return 'TAC Meeting';
+      case 'RMC Meeting':
+        return 'RMC Meeting';
+      case 'BOD Meeting':
+        return 'BOD Meeting';
+      default:
+        return 'Others';
     }
   }
 

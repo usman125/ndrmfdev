@@ -184,7 +184,7 @@ export class ProjectService {
   }
 
   setProjectStage(id, stage) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=${stage}`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=${stage}&subStatus=PENDING`;
     const status = 'MARKED_TO_GM';
     return this._httpClient.put(
       url,
@@ -383,6 +383,14 @@ export class ProjectService {
       {
         headers: header,
       }
+    );
+  }
+
+  updateProposalOfferLetterStatus(id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/offerLetterStatus/${id}?status=PENDING`;
+    return this._httpClient.put(
+      url,
+      null
     );
   }
 
