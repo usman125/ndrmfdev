@@ -22,6 +22,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { CostDetailsModule } from '../cost-details/cost-details.module';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatListModule } from '@angular/material/list';
 
 
 
@@ -48,7 +50,10 @@ import { CostDetailsModule } from '../cost-details/cost-details.module';
     FormioModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatMenuModule,
+    MatCheckboxModule,
+    MatListModule
   ],
   exports: [ProjectImpPlanComponent]
 })

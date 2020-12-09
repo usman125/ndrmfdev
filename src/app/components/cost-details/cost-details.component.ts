@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AuthStore } from 'src/app/stores/auth/auth-store';
@@ -25,6 +25,9 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   updateFlag: boolean;
 
   progressForm: FormGroup;
+  clubbed: any = null;
+  clubData: any = null;
+  clubbedId: any = null;
 
   // progressData: any = {
   //   generalProgress: null,
@@ -40,6 +43,8 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   progressData: any = null;
   loggedUser: any = null;
   currentQuarter: any = null;
+
+  @Output() costUpdated: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private fb: FormBuilder,
@@ -63,6 +68,10 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
       isProcurement: [false],
       procurementHeads: [null],
       rfSubmitData: [null],
+      tehsil: [null],
+      district: [null],
+      uc: [null],
+      city: [null],
     });
   }
 
@@ -95,6 +104,8 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
         this.costTitle = result.cost.title;
         this.updateFlag = result.cost.update;
         this.progressData = result.cost.progress;
+        this.clubbed = result.cost.clubbed;
+        this.clubData = result.cost.clubData;
         if (this.selectedQuarter !== null && this.updateFlag) {
           this._form.patchValue({
             startDate: this.selectedQuarter.startDate,
@@ -102,12 +113,18 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             description: this.selectedQuarter.description,
             latitude: this.selectedQuarter.latitude,
             longitude: this.selectedQuarter.longitude,
-            ndrmfShare: this.selectedQuarter.ndrmfShare,
-            fipShare: this.selectedQuarter.fipShare,
-            isProcurement: this.selectedQuarter.isProcurement,
-            procurementHeads: this.selectedQuarter.procurementHeads,
+            ndrmfShare: !result.cost.clubbed ? this.selectedQuarter.ndrmfShare : result.cost.clubData.ndrmfShare,
+            fipShare: !result.cost.clubbed ? this.selectedQuarter.fipShare : result.cost.clubData.fipShare,
+            isProcurement: !result.cost.clubbed ? this.selectedQuarter.isProcurement : result.cost.clubData.isProcurement,
+            procurementHeads: !result.cost.clubbed ? this.selectedQuarter.procurementHeads : result.cost.clubData.procurementHeads,
             rfSubmitData: this.selectedQuarter.rfSubmitData,
+            tehsil: this.selectedQuarter.tehsil,
+            district: this.selectedQuarter.district,
+            uc: this.selectedQuarter.uc,
+            city: this.selectedQuarter.city,
           }, { onlySelf: true });
+
+
           if (this.selectedQuarter.rfSubmitData) {
             this.rfSubmitData = typeof (this.selectedQuarter.rfSubmitData) === 'string' ?
               JSON.parse(this.selectedQuarter.rfSubmitData) :
@@ -122,8 +139,33 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
               this._form.enable({ onlySelf: true });
             }
           })
+          result.cost.clubbed ? this._form.controls['ndrmfShare'].disable({ onlySelf: true }) : this._form.controls['ndrmfShare'].enable({ onlySelf: true });
+          result.cost.clubbed ? this._form.controls['ndrmfShare'].clearValidators() : this._form.controls['ndrmfShare'].setValidators([Validators.required]);
+          result.cost.clubbed ? this._form.controls['fipShare'].disable({ onlySelf: true }) : this._form.controls['fipShare'].enable({ onlySelf: true });
+          result.cost.clubbed ? this._form.controls['fipShare'].clearValidators() : this._form.controls['fipShare'].setValidators([Validators.required]);
+          result.cost.clubbed ? this._form.controls['isProcurement'].disable({ onlySelf: true }) : this._form.controls['isProcurement'].enable({ onlySelf: true });
+          // result.cost.clubbed ? this._form.controls['isProcurement'].clearValidators() : null;
+          result.cost.clubbed ? this._form.controls['procurementHeads'].disable({ onlySelf: true }) : this._form.controls['procurementHeads'].enable({ onlySelf: true });
+          // result.cost.clubbed ? this._form.controls['procurementHeads'].clearValidators() : null;
         }
         if (!this.updateFlag) {
+          if (this.clubbed) {
+            this.selectedQuarter.isProcurement = this.clubData.isProcurement;
+            this.selectedQuarter.procurementHeads = this.clubData.procurementHeads;
+            this._form.patchValue({
+              isProcurement: this.clubData.isProcurement,
+              procurementHeads: this.clubData.procurementHeads
+            }, { onlySelf: true });
+            this._form.controls['isProcurement'].disable({ onlySelf: true });
+            this._form.controls['procurementHeads'].disable({ onlySelf: true });
+          } else {
+            this._form.patchValue({
+              isProcurement: this.selectedQuarter.isProcurement,
+              procurementHeads: this.selectedQuarter.procurementHeads
+            }, { onlySelf: true });
+            this._form.controls['isProcurement'].disable({ onlySelf: true });
+            this._form.controls['procurementHeads'].disable({ onlySelf: true });
+          }
           this.progressForm.patchValue({
             generalProgress: this.progressData.generalProgress,
             generalProgressStatus: this.progressData.generalProgressStatus,
@@ -210,8 +252,12 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
       this.quarter,
       this._form.value,
       this.progressData,
-      true
+      true,
+      false,
+      null,
+      null,
     );
+    this.costUpdated.emit({ 'costUpdated': true });
     // this.rfSubmitData = null;
   }
 
@@ -222,10 +268,21 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
       this.quarter,
       this.selectedQuarter,
       this.progressForm.value,
-      false
+      false,
+      false,
+      null,
+      null,
     );
   }
 
+
+  compareProcObjects(o1: any, o2: any): boolean {
+    // console.log("COMPARE SME:--", o1, o2)
+    if (o2) {
+      return o1.name === o2.name && o1.id === o2.id;
+    }
+    return false;
+  }
 
   ngOnDestroy() {
     this.Subscription.unsubscribe();

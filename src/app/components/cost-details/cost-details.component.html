@@ -1,7 +1,14 @@
 <div class="m-20" *ngIf="selectedQuarter !== null">
-  <div class="info-header d-flex">
-    <h6>Activity: {{costTitle}}</h6>
-    <h6 class="ml-4">Quarter: {{quarter}}</h6>
+  <div class="info-header d-flex align-items-center">
+    <mat-chip-list aria-label="Quarter Info">
+      <mat-chip color="primary" selected>Activity: {{costTitle}}</mat-chip>
+      <mat-chip color="primary" selected>Quarter: {{quarter}}</mat-chip>
+    </mat-chip-list>
+    <div class="example-spacer"></div>
+    <mat-chip-list aria-label="Club Info" *ngIf="clubbed">
+      <mat-chip color="warn" selected>Clubbed Entry</mat-chip>
+      <mat-chip color="accent" selected>{{clubData.title}}</mat-chip>
+    </mat-chip-list>
   </div>
   <form [formGroup]="_form" (ngSubmit)="submit()" *ngIf="_form && updateFlag">
     <mat-tab-group [(selectedIndex)]="selectedIndex" (selectedTabChange)="onTabChanged($event);">
@@ -59,6 +66,83 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-3 mt-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Tehsil</mat-label>
+                <mat-select multiple formControlName="tehsil">
+                  <mat-option value="DeraGhaziKhanDivision">Dera Ghazi Khan Division</mat-option>
+                  <mat-option value="FaisalabadDivision">Faisalabad Division</mat-option>
+                  <mat-option value="GujranwalaDivision">Gujranwala Division</mat-option>
+                  <mat-option value="LahoreDivision">Lahore Division</mat-option>
+                  <mat-option value="MultanDivision">Multan Division</mat-option>
+                  <mat-option value="RawalpindiDivision">Rawalpindi Division</mat-option>
+                  <mat-option value="SahiwalDivision">Sahiwal Division</mat-option>
+                  <mat-option value="SargodhaDivision">Sargodha Division</mat-option>
+                  <mat-option value="KhushabDistrict">Khushab District</mat-option>
+                  <mat-option value="SargodhaDistrict">Sargodha District</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3 mt-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Dsitrict</mat-label>
+                <mat-select multiple formControlName="district">
+                  <mat-option value="DeraGhaziKhanDistrict">Dera Ghazi Khan District</mat-option>
+                  <mat-option value="LayyahDistrict">Layyah District</mat-option>
+                  <mat-option value="MuzaffargarhDistrict">Muzaffargarh District</mat-option>
+                  <mat-option value="RajanpurDistrict">Rajanpur District</mat-option>
+                  <mat-option value="ChiniotDistrict">Chiniot District</mat-option>
+                  <mat-option value="FaisalabadDistrict">Faisalabad District</mat-option>
+                  <mat-option value="JhangDistrict">Jhang District</mat-option>
+                  <mat-option value="TobaTekSinghDistrict">Toba Tek Singh District</mat-option>
+                  <mat-option value="GujranwalaDistrict">Gujranwala District</mat-option>
+                  <mat-option value="GujratDistrict">Gujrat District</mat-option>
+                  <mat-option value="MandiBahauddinDistrict">Mandi Bahauddin District</mat-option>
+                  <mat-option value="NarowalDistrict">Narowal District</mat-option>
+                  <mat-option value="SialkotDistrict">Sialkot District</mat-option>
+                  <mat-option value="KasurDistrict">Kasur District</mat-option>
+                  <mat-option value="LahoreDistrict">Lahore District</mat-option>
+                  <mat-option value="NankanaSahibDistrict">Nankana Sahib District</mat-option>
+                  <mat-option value="SheikhupuraDistrict">Sheikhupura District</mat-option>
+                  <mat-option value="KhanewalDistrict">Khanewal District</mat-option>
+                  <mat-option value="LodhranDistrict">Lodhran District</mat-option>
+                  <mat-option value="MultanDistrict">Multan District</mat-option>
+                  <mat-option value="AttockDistrict">Attock District</mat-option>
+                  <mat-option value="ChakwalDistrict">Chakwal District</mat-option>
+                  <mat-option value="JhelumDistrict">Jhelum District</mat-option>
+                  <mat-option value="RawalpindiDistrict">Rawalpindi District</mat-option>
+                  <mat-option value="OkaraDistrict">Okara District</mat-option>
+                  <mat-option value="PakpattanDistrict">Pakpattan District</mat-option>
+                  <mat-option value="SahiwalDistrict">Sahiwal District</mat-option>
+                  <mat-option value="BhakkarDistrict">Bhakkar District</mat-option>
+                  <mat-option value="KhushabDistrict">Khushab District</mat-option>
+                  <mat-option value="MianwaliDistrict">Mianwali District</mat-option>
+                  <mat-option value="SargodhaDistrict">Sargodha District</mat-option>
+                  <mat-option value="BahawalnagarDistrict">Bahawalnagar District</mat-option>
+                  <mat-option value="BahawalpurDistrict">Bahawalpur District</mat-option>
+                  <mat-option value="RahimYarKhanDistrict">Rahim Yar Khan District</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3 mt-3">
+              <mat-form-field appearance="outline">
+                <mat-label>UC</mat-label>
+                <mat-select multiple formControlName="uc">
+                  <mat-option value="1">Head 1</mat-option>
+                  <mat-option value="2">Head 2</mat-option>
+                  <mat-option value="3">Head 3</mat-option>
+                  <mat-option value="4">Head 4</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3 mt-3">
+              <mat-form-field appearance="outline">
+                <mat-label>City</mat-label>
+                <input matInput formControlName="uc">
+              </mat-form-field>
+            </div>
+          </div>
         </div>
       </mat-tab>
       <mat-tab label="Financials">
@@ -80,7 +164,7 @@
           <mat-checkbox labelPosition="'before'" formControlName="isProcurement">Is Procurement</mat-checkbox>
           <mat-form-field appearance="fill">
             <mat-label>Procurement Heads</mat-label>
-            <mat-select multiple formControlName="procurementHeads" [disabled]="!_form.controls['isProcurement'].value">
+            <mat-select multiple formControlName="procurementHeads">
               <mat-option value="1">Head 1</mat-option>
               <mat-option value="2">Head 2</mat-option>
               <mat-option value="3">Head 3</mat-option>
@@ -122,7 +206,6 @@
                   <mat-option value="1">Completed</mat-option>
                   <mat-option value="2">Pending</mat-option>
                   <mat-option value="3">Blocked</mat-option>
-                  <mat-option value="4">Head 4</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -216,7 +299,6 @@
                   <mat-option value="1">Completed</mat-option>
                   <mat-option value="2">Pending</mat-option>
                   <mat-option value="3">Blocked</mat-option>
-                  <mat-option value="4">Head 4</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -225,7 +307,7 @@
             <div class="general-info">
               <span id="title">Fip Share</span>
               <span id="value" *ngIf="selectedQuarter.fipShare">
-                {{selectedQuarter.fipShare}}
+                {{!clubbed ? selectedQuarter.fipShare : clubData.fipShare}}
               </span>
               <span id="value" *ngIf="!selectedQuarter.fipShare">
                 &nbsp;
@@ -234,23 +316,13 @@
             <div class="general-info ml-3">
               <span id="title">Ndrmf Share</span>
               <span id="value" *ngIf="selectedQuarter.ndrmfShare">
-                {{selectedQuarter.ndrmfShare}}
+                {{!clubbed ? selectedQuarter.ndrmfShare : clubData.ndrmfShare}}
               </span>
               <span id="value" *ngIf="!selectedQuarter.ndrmfShare">
                 &nbsp;
               </span>
             </div>
           </div>
-          <!-- <mat-form-field>
-            <mat-label>NDRMF Share</mat-label>
-            <input matInput type="number" placeholder="Amount in PKR" formControlName="ndrmfShare">
-            <mat-error *ngIf="_form.get('ndrmfShare').hasError('required')">Required</mat-error>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>FIP Share</mat-label>
-            <input matInput type="number" placeholder="Amount in PKR" formControlName="fipShare">
-            <mat-error *ngIf="_form.get('fipShare').hasError('required')">Required</mat-error>
-          </mat-form-field> -->
         </div>
       </mat-tab>
       <mat-tab label="Procurement">
@@ -269,12 +341,26 @@
                   <mat-option value="1">Completed</mat-option>
                   <mat-option value="2">Pending</mat-option>
                   <mat-option value="3">Blocked</mat-option>
-                  <mat-option value="4">Head 4</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
           </div>
         </div>
+        <form [formGroup]="_form">
+          <div class="m-3">
+            <mat-checkbox labelPosition="'before'" disabled formControlName="isProcurement">Is Procurement
+            </mat-checkbox>
+            <mat-form-field appearance="fill">
+              <mat-label>Procurement Heads</mat-label>
+              <mat-select multiple formControlName="procurementHeads">
+                <mat-option value="1">Head 1</mat-option>
+                <mat-option value="2">Head 2</mat-option>
+                <mat-option value="3">Head 3</mat-option>
+                <mat-option value="4">Head 4</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </form>
       </mat-tab>
       <mat-tab label="M&E">
         <div class="m-3">
@@ -295,7 +381,6 @@
                   <mat-option value="1">Completed</mat-option>
                   <mat-option value="2">Pending</mat-option>
                   <mat-option value="3">Blocked</mat-option>
-                  <mat-option value="4">Head 4</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>

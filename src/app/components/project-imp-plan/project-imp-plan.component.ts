@@ -11,18 +11,23 @@ import { CostDetailsStore } from '../../stores/cost-details/cost-details-store';
 import { PrimaryAppraisalFormsStore } from '../../stores/primary-appraisal-forms/primary-appraisal-forms-store';
 import { ProjectService } from '../../services/project.service';
 import { ConfirmModelService } from '../../services/confirm-model.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 /**
  * Food data with nested structure.
  * Each node has a name and an optional list of children.
  */
 interface FoodNode {
   title: string;
+  clubbed: boolean;
+  clubId: string;
   _id: string,
   children?: FoodNode[];
 }
 /** Flat node with expandable and level information */
 interface ExampleFlatNode {
   expandable: boolean;
+  clubbed: boolean;
+  clubId: string;
   title: string;
   level: number;
   _id: string;
@@ -41,6 +46,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       expandable: !!node.children && node.children.length > 0,
       title: node.title,
       level: level,
+      clubbed: node.clubbed,
+      clubId: node.clubId,
       _id: node._id
     };
   }
@@ -60,6 +67,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   loggedUser: any = null;
   selectedProject: any = null;
   selectedQuarter: any = null;
+  selectedActivity: any = null;
   apiLoading: boolean = false;
 
   filterType: any = 'General';
@@ -81,6 +89,9 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
 
   quarterSelection: any = null;
 
+  clubs: any = [];
+  clubForm: FormGroup;
+
   constructor(
     public dialog: MatDialog,
     public _authStore: AuthStore,
@@ -88,7 +99,19 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     public _projectService: ProjectService,
     public _confirmModelService: ConfirmModelService,
     public _costDetailsStore: CostDetailsStore,
+    public _fb: FormBuilder,
   ) {
+    this._createVlubForm();
+  }
+
+  _createVlubForm() {
+    this.clubForm = this._fb.group({
+      title: [null],
+      fipShare: [null],
+      ndrmfShare: [null],
+      isProcurement: [false],
+      procurementHeads: [null],
+    });
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
@@ -114,9 +137,12 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     }
     this.Subscription.add(
       this._authStore.state$.subscribe(data => {
+        this.quarters = [];
         this.months = data.auth.proMonths;
         console.log("****MONTHS IN PROJECT IMPLEMENTATION PLAN*****\n", data);
-        this.getQuarters();
+        setTimeout(() => {
+          this.getQuarters();
+        });
       })
     );
     this.Subscription.add(
@@ -125,6 +151,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
           if (data.cost.update) {
             console.log("****UPDATE DATA*****\n", data);
             this.selectedQuarter.data = data.cost.costData;
+            // this.calculateActivityTotal();
           } else {
             console.log("****UPDATE PROGRESS*****\n", data);
             this.selectedQuarter.progress = data.cost.progress;
@@ -136,7 +163,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       this._primaryAppraisalFormsStore.state$.subscribe((data) => {
         this.selectedProject = data.selectedProject;
         if (this.selectedProject) {
-          if (this.loggedUser.role === 'fip' && this.selectedProject.status === 'Gia Checklist') {
+          if (this.loggedUser.role === 'fip' && this.selectedProject.status === 'Checklist to FIP') {
             this.viewType = 'progress';
           }
         }
@@ -152,9 +179,12 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
               data.selectedProject.implementationPlan;
             this.allSubCosts = [];
             this.allCosts.forEach((c) => {
+              this.selectedActivity = c;
+              this.calculateActivityTotal(null);
               if (c.mainCostId !== null)
                 this.allSubCosts.push(c);
             });
+            this.selectedActivity = null;
             this.prepareForm();
           }
         }
@@ -176,6 +206,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
             quarters: [],
             _id: result[i].id,
             mainCostId: null,
+            clubbed: false,
+            clubId: null
           }
           for (let i = 0; i < Math.ceil(this.months / 3) + 3; i++) {
             var object = {
@@ -197,6 +229,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   }
 
   getQuarters() {
+
     for (let i = 0; i < Math.ceil(this.months / 3) + 3; i++) {
       var object = {
         quarter: i + 1,
@@ -214,6 +247,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       quarters: [],
       _id: 'cost' + new Date().toISOString(),
       mainCostId: null,
+      clubbed: false,
+      clubId: null
     }
     for (let i = 0; i < Math.ceil(this.months / 3) + 3; i++) {
       var object = {
@@ -237,6 +272,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       quarters: [],
       _id: 'subcost' + new Date().toISOString(),
       mainCostId: mainCostId,
+      clubbed: false,
+      clubId: null
     }
 
     for (let i = 0; i < Math.ceil(this.months / 3) + 3; i++) {
@@ -342,6 +379,10 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         isProcurement: false,
         procurementHeads: [],
         rfSubmitData: null,
+        tehsil: null,
+        district: null,
+        uc: null,
+        city: null
       }
     }
   }
@@ -361,7 +402,11 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         fipShare: object.data.fipShare,
         isProcurement: object.data.isProcurement,
         procurementHeads: object.data.procurementHeads,
-        rfSubmitData: object.data.rfSubmitData,
+        tehsil: object.data.tehsil,
+        district: object.data.district,
+        uc: object.data.uc,
+        city: object.data.city,
+
       }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -376,7 +421,10 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         object.data.fipShare = result.fipShare;
         object.data.isProcurement = result.isProcurement;
         object.data.procurementHeads = result.procurementHeads;
-        object.data.rfSubmitData = JSON.parse(result.rfSubmitData);
+        object.data.tehsil = result.tehsil;
+        object.data.district = result.district;
+        object.data.uc = result.uc;
+        object.data.city = result.city;
       }
     });
   }
@@ -436,8 +484,18 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   openQuarterDetails(object, item) {
     console.log("OPEN QUARTER DETAILS:--", object, item);
     this.selectedQuarter = object;
+    this.selectedActivity = item;
     // this.set
-    this._costDetailsStore.setDefaults(item.title, object.quarter, object.data, null, true);
+    this._costDetailsStore.setDefaults(
+      item.title,
+      object.quarter,
+      object.data,
+      null,
+      true,
+      item.clubbed || false,
+      item.clubId || null,
+      this.getClubData(item.clubId) || null,
+    );
     document.querySelector('#myTopElement5').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
@@ -458,19 +516,118 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       }
     }
     this.selectedQuarter = object;
-    this._costDetailsStore.setDefaults(item.title, object.quarter, object.data, object.progress, false);
+    this._costDetailsStore.setDefaults(
+      item.title,
+      object.quarter,
+      object.data,
+      object.progress,
+      false,
+      item.clubbed || false,
+      item.clubId || null,
+      this.getClubData(item.clubId) || null,
+    );
     document.querySelector('#myTopElement5').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  calculateActivityTotal($event) {
+    var activityCount = 0;
+    for (let i = 0; i < this.selectedActivity.quarters.length; i++) {
+      var key = this.selectedActivity.quarters[i];
+      if (key.data) {
+        console.log("SHARES:---", key.data.fipShare, key.data.ndrmfShare);
+        activityCount = activityCount + key.data.ndrmfShare + key.data.fipShare
+      }
+    }
+    this.selectedActivity.totalCost = activityCount;
+    console.log("CALCULATE TOTAL FOR ACTIVITY:---", this.selectedActivity, $event, activityCount);
+  }
+
+  getClubData(id) {
+    for (let i = 0; i < this.clubs.length; i++) {
+      if (this.clubs[i]._id === id) {
+        return this.clubs[i];
+        break;
+      }
+
+    }
   }
 
   quarterSelectionChange($event) {
     console.log("QUARTER SELCTION CHANGED:---", parseInt($event.target.value));
-    this._authStore.setCurrentQuarter(parseInt($event.target.value));
+    setTimeout(() => {
+      this._authStore.setCurrentQuarter(parseInt($event.target.value));
+    });
     // this._costDetailsStore.setDefaults(null, null, null, null, true);
   }
 
   ngOnDestroy() {
-    this._costDetailsStore.setDefaults(null, null, null, null, true);
+    this._costDetailsStore.setDefaults(
+      null,
+      null,
+      null,
+      null,
+      true,
+      false,
+      null,
+      null
+    );
     this.Subscription.unsubscribe();
+  }
+
+  addNewClub(values) {
+    var object = {
+      title: values.title,
+      ndrmfShare: values.ndrmfShare,
+      fipShare: values.fipShare,
+      isProcurement: values.isProcurement,
+      procurementHeads: values.procurementHeads,
+      _id: new Date().toISOString(),
+    }
+    this.clubs.push(object);
+    console.log("ALL CLUBS:--", this.clubs);
+    this.clubForm.reset();
+  }
+
+  clubEntry(cost, clubItem) {
+    cost.clubbed = true;
+    cost.clubId = clubItem._id;
+    for (let i = 0; i < this.allCosts.length; i++) {
+      let key = this.allCosts[i];
+      if (key._id === cost._id) {
+        key.clubbed = true;
+        key.clubId = clubItem._id;
+        key.quarters = key.quarters.map(element => {
+          if (element.value) {
+            return {
+              ...element,
+              data: {
+                ...element.data,
+                fipShare: clubItem.fipShare,
+                ndrmfShare: clubItem.ndrmfShare,
+              }
+            }
+          }
+          return element;
+        });
+        this.selectedActivity = key;
+        this.calculateActivityTotal(null);
+        break;
+      }
+    }
+    console.log("CLUB ENTRY:---", cost, clubItem);
+  }
+
+  unClubEntry(cost, clubItem) {
+    cost.clubbed = false;
+    cost.clubId = null;
+    for (let i = 0; i < this.allCosts.length; i++) {
+      let key = this.allCosts[i];
+      if (key._id === cost._id) {
+        key.clubbed = false;
+        key.clubId = null;
+        break;
+      }
+    }
   }
 
 }

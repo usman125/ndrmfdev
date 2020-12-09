@@ -8,7 +8,16 @@ export class CostDetailsStore extends Store<CostDetailsState> {
     super(new CostDetailsState());
   }
 
-  setDefaults(title, quarter, costData, progress, update): void {
+  setDefaults(
+    title,
+    quarter,
+    costData,
+    progress,
+    update,
+    clubbed,
+    clubId,
+    clubData,
+  ): void {
     this.setState({
       ...this.state,
       cost: {
@@ -17,7 +26,10 @@ export class CostDetailsStore extends Store<CostDetailsState> {
         title: title,
         quarter: quarter,
         update: update,
-        progress: progress
+        clubbed: clubbed,
+        clubId: clubId,
+        progress: progress,
+        clubData: clubData,
       }
     });
   }

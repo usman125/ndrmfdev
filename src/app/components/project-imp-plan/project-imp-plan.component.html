@@ -5,8 +5,55 @@
         color="accent" (click)="addCost()">
         <mat-icon>add</mat-icon>&nbsp;Add Activity
       </button>
+      <button class="ml-2" mat-raised-button [matMenuTriggerFor]="menu" *ngIf="loggedUser?.role === 'fip'">
+        <mat-icon>add</mat-icon> Add Clubs
+      </button>
       <button *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'" class="ml-2" mat-raised-button
         color="primary" (click)="saveCostings()">Save</button>
+      <div *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'" class="example-spacer"></div>
+      <mat-menu #menu="matMenu" class="p-2">
+        <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+          <form [formGroup]="clubForm" (ngSubmit)="addNewClub(clubForm.value)">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Title</mat-label>
+              <input type="text" formControlName="title" [formControl]="clubForm.controls['title']" matInput
+                placeholder="Title">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>NDRMF Share</mat-label>
+              <input type="number" formControlName="ndrmfShare" [formControl]="clubForm.controls['ndrmfShare']" matInput
+                placeholder="NDRMF Share">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>FIP Share</mat-label>
+              <input type="number" formControlName="fipShare" [formControl]="clubForm.controls['fipShare']" matInput
+                placeholder="FIP Share">
+            </mat-form-field>
+
+            <div class="row">
+              <div class="col-md-12">
+                <mat-checkbox labelPosition="'before'" formControlName="isProcurement">Is Procurement</mat-checkbox>
+                <mat-form-field appearance="outline" *ngIf="clubForm.controls['isProcurement'].value">
+                  <mat-label>Procurement Heads</mat-label>
+                  <mat-select multiple formControlName="procurementHeads">
+                    <mat-option value="1">Head 1</mat-option>
+                    <mat-option value="2">Head 2</mat-option>
+                    <mat-option value="3">Head 3</mat-option>
+                    <mat-option value="4">Head 4</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-12">
+                <button mat-raised-button color="primary" type="submit">Add Club</button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </mat-menu>
       <div *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'" class="example-spacer"></div>
       <small>
         Project Implementation Plan
@@ -15,7 +62,7 @@
   </mat-toolbar>
   <mat-card>
     <mat-card-content>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" *ngIf="quarters.length">
         <mat-label>Select Quarter</mat-label>
         <select matNativeControl (change)="quarterSelectionChange($event)" [(ngModel)]="quarterSelection"
           name="quarter">
@@ -41,140 +88,185 @@
           </div>
         </div>
       </div> -->
-      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" matTreeNodePaddingIndent="5">
-        <!-- This is the tree node template for leaf nodes -->
-        <mat-tree-node [ngClass]="{'notUser': loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'}" *matTreeNodeDef="let node" matTreeNodePadding>
-          <!-- use a disabled button to provide padding for tree leaf -->
-          <!-- <button mat-icon-button disabled></button> -->
-          <!-- {{node.name}} -->
-          <div style="display: flex;" *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'">
 
-            <button mat-icon-button color="warn" (click)="removeSubCost(node._id)">
-              <mat-icon>
-                close
-              </mat-icon>
-            </button>
-            <button mat-icon-button color="primary" (click)="addSubCost(node._id)">
-              <mat-icon>
-                add
-              </mat-icon>
-            </button>
-            <div class="form-group">
-              <input class="form-control" (keyup)="inputChanged(node._id, $event)" type="text" matInput
-                [(ngModel)]="node.title">
+      <div class="all-tree">
+        <div class="top-head">
+          <div class="title">Activities</div>
+          <div class="top-quarters">
+            <div class="item" *ngFor="let object of quarters">
+              <span>{{object.quarter}}</span>
             </div>
           </div>
-          <div class="node-title" *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">
-            {{node.title}}
-          </div>
-          <div *ngFor="let item of allCosts;let i=index;">
-            <div *ngIf="item._id === node._id">
-              <div *ngIf="filterType === 'General'" class="quarters">
-                <div class="item" [ngClass]="{'active': object.value === true}" *ngFor="let object of item.quarters">
-                  <span *ngIf="loggedUser?.role === 'fip' && viewType !== 'progress'"
-                    (click)="changeQuarterSelection(item, object);">{{object.quarter}}</span>
-                  <span *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">{{object.quarter}}</span>
-                  <span *ngIf="loggedUser?.role === 'fip' && viewType === 'progress'">{{object.quarter}}</span>
-                  <!-- <small *ngIf="object.value === true" (click)="openActivityDetails(item, object)"> -->
-                  <!-- </small> -->
-                  <mat-icon [matTooltip]="object?.data?.startDate === null ? 'Pending Details' : 'Completed'"
-                    [ngStyle]="{'color': object?.data?.startDate === null ? '#EEFF41' : null}"
-                    *ngIf="object.value === true && viewType !== 'progress' && detailBtn !== 'gia-projects'"
-                    (click)="openQuarterDetails(object, item)">pageview</mat-icon>
-                  <mat-icon [matTooltip]="object?.data?.startDate === null ? 'Pending Details' : 'Completed'"
-                    [ngStyle]="{'color': object?.data?.startDate === null ? '#EEFF41' : null}"
-                    *ngIf="object.value === true && viewType === 'progress' && detailBtn !== 'gia-projects'"
-                    (click)="openProgressDetails(object, item)">create</mat-icon>
-                  <!-- *ngIf="object.value === true" (click)="openActivityDetails(item, object)">pageview</mat-icon> -->
-                  <!-- <small *ngIf="object.value === true" (click)="openQuarterDetails(object, item);"></small> -->
-                </div>
+        </div>
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" matTreeNodePaddingIndent="5">
+          <!-- This is the tree node template for leaf nodes -->
+          <mat-tree-node [ngClass]="{'notUser': loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'}"
+            *matTreeNodeDef="let node" matTreeNodePadding>
+            <!-- use a disabled button to provide padding for tree leaf -->
+            <!-- <button mat-icon-button disabled></button> -->
+            <!-- {{node.name}} -->
+            <div style="display: flex;" *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'">
+
+              <button mat-icon-button color="warn" (click)="removeSubCost(node._id)">
+                <mat-icon>
+                  close
+                </mat-icon>
+              </button>
+              <button mat-icon-button color="primary" (click)="addSubCost(node._id)">
+                <mat-icon>
+                  add
+                </mat-icon>
+              </button>
+              <div class="form-group">
+                <input class="form-control" (keyup)="inputChanged(node._id, $event)" type="text" matInput
+                  [(ngModel)]="node.title">
               </div>
-              <div *ngIf="filterType === 'Financial'" class="quarters">
-                <div class="finance-item" [ngClass]="{'active': object.value === true}"
-                  *ngFor="let object of item.quarters">
-                  <span *ngIf="object.data" matTooltip="Fip / NDRMF">
-                    {{object.data.fipShare || 0}} / {{object.data.ndrmfShare || 0}}
-                  </span>
-                  <span *ngIf="object.data === null">
-                    {{object.quarter}}
-                  </span>
+            </div>
+            <div class="node-title" *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">
+              {{node.title}}
+            </div>
+            <button [color]="!node.clubbed ? 'warn' : 'accent'" mat-icon-button [matMenuTriggerFor]="menu2">
+              <mat-icon>{{!node.clubbed ? 'share' : 'push_pin'}}</mat-icon>
+            </button>
+            <mat-menu #menu2="matMenu" class="p-2">
+              <p>All Clubs</p>
+              <button [disabled]="!node.clubbed" mat-menu-item (click)="unClubEntry(node, 'unclub')">
+                <div class="d-flex justify-content-between">
+                  <span>{{'Un-Club It!'}}</span>
                 </div>
+              </button>
+              <div *ngFor="let item of clubs;">
+
+                <button mat-menu-item (click)="clubEntry(node, item)">
+                  <div class="d-flex justify-content-between">
+                    <span>{{item.title}}</span>
+                    <span>{{item.fipShare + item.ndrmfShare}}</span>
+                  </div>
+                </button>
               </div>
-              <div *ngIf="filterType === 'Procurement'" class="quarters">
-                <div class="proc-item" [ngClass]="{'active': object.value === true}"
-                  *ngFor="let object of item.quarters">
-                  <div *ngIf="object.data">
-                    <span *ngIf="object.data.isProcurement">
-                      {{"Yes"}}
+
+            </mat-menu>
+            <div *ngFor="let item of allCosts;let i=index;">
+              <div *ngIf="item._id === node._id">
+                <div *ngIf="filterType === 'General'" class="quarters">
+                  <div class="item" [ngClass]="{'active': object.value === true}" *ngFor="let object of item.quarters">
+                    <span [matTooltip]="loggedUser?.role === 'fip' && 
+                    viewType !== 'progress' && object.value === true ? 'Un-Check Quarter' : 
+                    loggedUser?.role !== 'fip' && object.value === true ? 'Quarter Checked' : 'Quarter Not Selected'"
+                      *ngIf="loggedUser?.role === 'fip' && viewType !== 'progress'"
+                      (click)="changeQuarterSelection(item, object);">&nbsp;</span>
+                    <span *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">&nbsp;</span>
+                    <span *ngIf="loggedUser?.role === 'fip' && viewType === 'progress'">&nbsp;</span>
+                    <!-- <small *ngIf="object.value === true" (click)="openActivityDetails(item, object)"> -->
+                    <!-- </small> -->
+                    <mat-icon
+                      [matTooltip]="object?.data?.startDate === null || !object?.data?.ndrmfShare || !object?.data?.fipShare  ? 'Pending Details' : 'Completed'"
+                      [ngStyle]="{'color': object?.data?.startDate === null || !object?.data?.ndrmfShare || !object?.data?.fipShare  ? '#EEFF41' : null}"
+                      *ngIf="object.value === true && viewType !== 'progress' && detailBtn !== 'gia-projects'"
+                      (click)="openQuarterDetails(object, item)">pageview</mat-icon>
+                    <mat-icon
+                      [matTooltip]="object?.data?.startDate === null || !object?.data?.ndrmfShare || !object?.data?.fipShare  ? 'Pending Details' : 'Completed'"
+                      [ngStyle]="{'color': object?.data?.startDate === null || !object?.data?.ndrmfShare || !object?.data?.fipShare  ? '#EEFF41' : null}"
+                      *ngIf="object.value === true && viewType === 'progress' && detailBtn !== 'gia-projects'"
+                      (click)="openProgressDetails(object, item)">create</mat-icon>
+                    <!-- *ngIf="object.value === true" (click)="openActivityDetails(item, object)">pageview</mat-icon> -->
+                    <!-- <small *ngIf="object.value === true" (click)="openQuarterDetails(object, item);"></small> -->
+                  </div>
+                  <span>Total: <span style="font-weight: bold;" id="comment">{{item.totalCost || 0}}</span></span>
+                </div>
+                <div *ngIf="filterType === 'Financial'" class="quarters">
+                  <div class="finance-item" [ngClass]="{'active': object.value === true}"
+                    *ngFor="let object of item.quarters">
+                    <span *ngIf="object.data" matTooltip="Fip / NDRMF">
+                      {{object.data.fipShare || 0}} / {{object.data.ndrmfShare || 0}}
                     </span>
-                    <span *ngIf="!object.data.isProcurement">
-                      {{"No"}}
+                    <span *ngIf="object.data === null">
+                      {{object.quarter}}
                     </span>
                   </div>
-                  <span *ngIf="object.data === null">
-                    {{object.quarter}}
-                  </span>
                 </div>
-              </div>
-              <div *ngIf="filterType === 'M & E'" class="quarters">
-                <div class="mne-item" [ngClass]="{'active': object.value === true}"
-                  *ngFor="let object of item.quarters">
-                  <div class="hasdata" *ngIf="object.data">
-                    <div class="rfdata" *ngIf="object.data.rfSubmitData">
-                      <small><strong>Type: </strong>{{object.data.rfSubmitData.type}}</small>
-                      <small><strong>Targets: </strong>{{object.data.rfSubmitData.targets}}</small>
-                      <small><strong>Indicator: </strong>{{object.data.rfSubmitData.indicator}}</small>
-                      <small><strong>Baseline: </strong>{{object.data.rfSubmitData.baseline}}</small>
-                      <small><strong>Method: </strong>{{object.data.rfSubmitData.dataCollectionMethod}}</small>
-                      <small><strong>Frequency: </strong>{{object.data.rfSubmitData.dataCollectionMethod1}}</small>
+                <div *ngIf="filterType === 'Procurement'" class="quarters">
+                  <div class="proc-item" [ngClass]="{'active': object.value === true}"
+                    *ngFor="let object of item.quarters">
+                    <div *ngIf="object.data">
+                      <span *ngIf="object.data.isProcurement">
+                        {{"Yes"}}
+                      </span>
+                      <span *ngIf="!object.data.isProcurement">
+                        {{"No"}}
+                      </span>
                     </div>
-                    <span *ngIf="!object.data.rfSubmitData">
-                      {{"No"}}
+                    <span *ngIf="object.data === null">
+                      {{object.quarter}}
                     </span>
                   </div>
-                  <span *ngIf="object.data === null">
-                    {{object.quarter}}
-                  </span>
+                </div>
+                <div *ngIf="filterType === 'M & E'" class="quarters">
+                  <div class="mne-item" [ngClass]="{'active': object.value === true}"
+                    *ngFor="let object of item.quarters">
+                    <div class="hasdata" *ngIf="object.data">
+                      <div class="rfdata" *ngIf="object.data.rfSubmitData">
+                        <small><strong>Type: </strong>{{object.data.rfSubmitData.type}}</small>
+                        <small><strong>Targets: </strong>{{object.data.rfSubmitData.targets}}</small>
+                        <small><strong>Indicator: </strong>{{object.data.rfSubmitData.indicator}}</small>
+                        <small><strong>Baseline: </strong>{{object.data.rfSubmitData.baseline}}</small>
+                        <small><strong>Method: </strong>{{object.data.rfSubmitData.dataCollectionMethod}}</small>
+                        <small><strong>Frequency: </strong>{{object.data.rfSubmitData.dataCollectionMethod1}}</small>
+                      </div>
+                      <span *ngIf="!object.data.rfSubmitData">
+                        {{"No"}}
+                      </span>
+                    </div>
+                    <span *ngIf="object.data === null">
+                      {{object.quarter}}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </mat-tree-node>
-        <!-- This is the tree node template for expandable nodes -->
-        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-          <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
-            <mat-icon>
-              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-            </mat-icon>
-          </button>
-          <!-- {{node.name}} -->
-          <div style="display: flex;" *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'">
 
-            <button mat-icon-button color="primary">
-              <mat-icon (click)="addSubCost(node._id)">
-                add
+          </mat-tree-node>
+          <!-- This is the tree node template for expandable nodes -->
+          <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+              <mat-icon>
+                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
               </mat-icon>
             </button>
-            <div class="form-group">
-              <input type="text" (keyup)="inputChanged(node._id, $event)" [(ngModel)]="node.title" class="form-control">
+            <!-- {{node.name}} -->
+            <div style="display: flex;" *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'">
+
+              <button mat-icon-button color="primary">
+                <mat-icon (click)="addSubCost(node._id)">
+                  add
+                </mat-icon>
+              </button>
+              <div class="form-group">
+                <input type="text" (keyup)="inputChanged(node._id, $event)" [(ngModel)]="node.title"
+                  class="form-control">
+              </div>
             </div>
-          </div>
-          <div class="node-title" *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">
-            {{node.title}}
-          </div>
-          <div *ngFor="let item of allCosts;let i=index;">
-            <div *ngIf="item._id === node._id">
-              <div class="quarters">
-                <div class="disable-item item" *ngFor="let object of item.quarters">
-                  <span>{{object.quarter}}</span>
+            <div class="node-title" *ngIf="loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'">
+              {{node.title}}
+            </div>
+            <button disabled color="warn" mat-icon-button>
+              <mat-icon>share</mat-icon>
+            </button>
+            <div *ngFor="let item of allCosts;let i=index;">
+              <div *ngIf="item._id === node._id">
+                <div class="quarters">
+                  <div class="disable-item item" *ngFor="let object of item.quarters">
+                    <span>&nbsp;</span>
+                    <!-- <span>{{object.quarter}}</span> -->
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </mat-tree-node>
-      </mat-tree>
+          </mat-tree-node>
+        </mat-tree>
+      </div>
       <span id="myTopElement5" #myTopElement5></span>
-      <app-cost-details></app-cost-details>
+      <app-cost-details (costUpdated)="calculateActivityTotal($event)"></app-cost-details>
     </mat-card-content>
   </mat-card>
   <!-- <app-activity-details></app-activity-details> -->

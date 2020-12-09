@@ -3,7 +3,10 @@ const QPR = {
   quarter: null,
   costData: null,
   progress: null,
-  update: true
+  update: true,
+  clubbed: false,
+  clubId: null,
+  clubData: null,
 }
 
 export class CostDetailsState {
@@ -12,6 +15,9 @@ export class CostDetailsState {
     quarter: number,
     costData: any
     progress: any,
-    update: boolean
+    update: boolean,
+    clubbed: boolean,
+    clubId: string,
+    clubData: any,
   } = QPR;
 }

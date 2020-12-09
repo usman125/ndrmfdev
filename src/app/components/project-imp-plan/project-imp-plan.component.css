@@ -47,10 +47,10 @@ mat-tree-node .form-group {
   position: absolute;
   font-size: 15px;
   color: #fff;
-  right: -3.5px;
-  top: -6.5px;
-  height: 17px;
-  width: 24px;
+  right: 25px;
+  top: 2px;
+  height: 15px;
+  width: 16px;
   cursor: pointer;
 }
 
@@ -135,7 +135,7 @@ mat-tree-node .form-group {
 }
 .mat-tree {
   max-height: 400px;
-  overflow: auto;
+  /* overflow: auto; */
   padding-top: 5px;
 }
 .mat-tree-node:nth-child(1) .form-group {
@@ -159,8 +159,41 @@ mat-tree-node .form-group {
   min-width: 200px;
   border: 1px solid #e2e2e2;
   padding: 4px 10px;
+  
 }
 
 .notUser {
   padding-left: 27px !important;
+}
+
+.top-quarters {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  height: 30px;
+}
+
+.top-quarters .item span {
+  padding: 0.4rem 23px;
+  margin: 0px 5px;
+  background-color: #fff;
+  border: 1px solid rgb(130, 170, 214);
+  /* cursor: pointer; */
+}
+
+.top-head {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.top-head .title {
+  min-width: 291px;
+  text-align: center;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.all-tree {
+  overflow: auto;
 }
