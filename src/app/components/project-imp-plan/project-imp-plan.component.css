@@ -47,8 +47,8 @@ mat-tree-node .form-group {
   position: absolute;
   font-size: 15px;
   color: #fff;
-  right: 25px;
-  top: 2px;
+  right: 23px;
+  top: 4.5px;
   height: 15px;
   width: 16px;
   cursor: pointer;
@@ -68,7 +68,10 @@ mat-tree-node .form-group {
 .quarters .item span,
 .quarters .proc-item span,
 .quarters .finance-item span {
-  padding: 0.4rem 25px;
+  /* padding: 0.4rem 25px; */
+  display: block;
+  padding: 2px;
+  width: 53px;
   margin: 0px 5px;
   background-color: #fff;
   border: 1px solid #eee;
@@ -159,7 +162,6 @@ mat-tree-node .form-group {
   min-width: 200px;
   border: 1px solid #e2e2e2;
   padding: 4px 10px;
-  
 }
 
 .notUser {
@@ -174,10 +176,14 @@ mat-tree-node .form-group {
 }
 
 .top-quarters .item span {
-  padding: 0.4rem 23px;
+  /* padding: 0.4rem 23px; */
+  display: block;
+  padding: 2px;
+  width: 53px;
   margin: 0px 5px;
   background-color: #fff;
   border: 1px solid rgb(130, 170, 214);
+  text-align: center;
   /* cursor: pointer; */
 }
 
@@ -196,4 +202,8 @@ mat-tree-node .form-group {
 
 .all-tree {
   overflow: auto;
+}
+.bold-entry {
+  font-weight: bold !important;
+  color: #000 !important;
 }

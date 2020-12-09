@@ -174,9 +174,12 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
           if (data.selectedProject.implementationPlan === null) {
             this.getCostingHeads();
           } else {
+            this.clubs = typeof (data.selectedProject.implementationPlan) === 'string' ?
+              (JSON.parse(data.selectedProject.implementationPlan)).clubs :
+              data.selectedProject.implementationPlan.clubs;
             this.allCosts = typeof (data.selectedProject.implementationPlan) === 'string' ?
-              JSON.parse(data.selectedProject.implementationPlan) :
-              data.selectedProject.implementationPlan;
+              (JSON.parse(data.selectedProject.implementationPlan)).costs :
+              data.selectedProject.implementationPlan.costs;
             this.allSubCosts = [];
             this.allCosts.forEach((c) => {
               this.selectedActivity = c;
@@ -187,8 +190,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
             this.selectedActivity = null;
             this.prepareForm();
           }
+          console.log("DATA FROM PIP STORE MANIPULATION:--", data.selectedProject, this.allCosts, this.allSubCosts, this.clubs);
         }
-        console.log("DATA FROM PIP STORE MANIPULATION:--", data.selectedProject, this.allCosts, this.allSubCosts);
       })
     );
 
@@ -200,6 +203,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         console.log("DATA BASE RESULTS ALL COSTS:--", result);
         this.allCosts = [];
         // this.allCosts = result;
+        // let costs = JSON.parse(result.costs);
+        // let clubs = JSON.parse(result.clubs);
         for (let i = 0; i < result.length; i++) {
           var cost = {
             title: result[i].name,
@@ -439,6 +444,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       //     "name": this.allCosts[i].title
       //   }
       //   console.log("KEY TO SAVE:--", object);
+      // var object 
       this._projectService.addCostingHeads(this.allCosts).subscribe(
         result => {
           this.apiLoading = false;
@@ -452,7 +458,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       // }
     } else {
       var object = {
-        implementationPlan: JSON.stringify(this.allCosts)
+        // implementationPlan: JSON.stringify({ costs: this.allCosts, clubs: this.clubs })
+        implementationPlan: JSON.stringify({ costs: this.allCosts, clubs: this.clubs })
       }
       this._projectService.submitPip(object, this.selectedProject.id).subscribe(
         result => {
@@ -467,7 +474,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
           };
           this.apiLoading = false;
           this._confirmModelService.open(options);
-          this._primaryAppraisalFormsStore.addPipToProject(this.allCosts);
+          this._primaryAppraisalFormsStore.addPipToProject(this.allCosts, this.clubs);
         },
         error => {
           this.apiLoading = false;
@@ -582,6 +589,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       isProcurement: values.isProcurement,
       procurementHeads: values.procurementHeads,
       _id: new Date().toISOString(),
+      randomColor: '#' + Math.floor(Math.random() * 16777215).toString(16),
     }
     this.clubs.push(object);
     console.log("ALL CLUBS:--", this.clubs);
@@ -627,6 +635,36 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         key.clubId = null;
         break;
       }
+    }
+  }
+
+  getClubColor(clubId) {
+    let color = null;
+    if (this.clubs) {
+      for (let i = 0; i < this.clubs.length; i++) {
+        let key = this.clubs[i];
+        if (clubId === key._id) {
+          // console.log("CLUB CALLED:--", key, clubId);
+          color = key.randomColor;
+          break;
+        }
+      }
+      return color;
+    }
+  }
+
+  getClubTitle(clubId) {
+    let title = null;
+    if (this.clubs) {
+      for (let i = 0; i < this.clubs.length; i++) {
+        let key = this.clubs[i];
+        if (clubId === key._id) {
+          // console.log("CLUB CALLED:--", key, clubId);
+          title = key.title;
+          break;
+        }
+      }
+      return title;
     }
   }
 

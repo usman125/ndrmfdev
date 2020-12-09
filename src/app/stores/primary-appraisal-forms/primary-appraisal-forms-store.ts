@@ -356,12 +356,16 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     })
   }
 
-  addPipToProject(allCosts) {
+  addPipToProject(allCosts, clubs) {
+    let object = {
+      costs: allCosts,
+      clubs: clubs
+    }
     this.setState({
       ...this.state,
       selectedProject: {
         ...this.state.selectedProject,
-        implementationPlan: allCosts
+        implementationPlan: object
       }
     });
 

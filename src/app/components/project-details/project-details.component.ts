@@ -135,13 +135,13 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         this.unassignedProposalSections = [];
         if (this.proposalSections.length) {
           this.proposalSections.forEach(c => {
-            if (c.data === null ||
-              c.data !== null && c.reassignmentStatus === 'Pending'
+            if ((c.data) === null ||
+              (c.data !== null && c.reassignmentStatus === 'Pending')
             ) {
               pendingCount = pendingCount + 1;
             }
-            if (c.data !== null && c.reassignmentStatus === null ||
-              c.data !== null && c.reassignmentStatus === 'Complete'
+            if ((c.data !== null && c.reassignmentStatus === null) ||
+              (c.data !== null && c.reassignmentStatus === 'Complete')
             ) {
               submitCount = submitCount + 1;
             }
