@@ -62,39 +62,61 @@
   </mat-toolbar>
   <mat-card>
     <mat-card-content>
-      <mat-form-field appearance="outline" *ngIf="quarters.length">
-        <mat-label>Select Quarter</mat-label>
-        <select matNativeControl (change)="quarterSelectionChange($event)" [(ngModel)]="quarterSelection"
-          name="quarter">
-          <option value="-1" selected>-1</option>
-          <option *ngFor="let item of quarters" [value]="item.quarter">
-            {{item.quarter}}
-          </option>
-        </select>
-      </mat-form-field>
-      <div class="toggle-btns" *ngIf="loggedUser?.role !== 'fip' && detailBtn !== 'gia-projects'">
-        <mat-button-toggle-group [(ngModel)]="filterType" #group="matButtonToggleGroup" vertical="false">
-          <mat-button-toggle (change)="filterChanged(item)" *ngFor="let item of filterTypes; let i = index;"
-            [value]="item">
-            <span>{{item}}</span>
-          </mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
-      <!-- <div class="table-header">
-        <span class="top-title">Activity</span>
-        <div class="top-quarters">
-          <div *ngFor="let obj of quarters">
-            <span>{{obj.quarter}}</span>
+      <div class="toggle-clubs">
+        <div *ngFor="let item of clubs;">
+          <div [matTooltip]="'Fip:'+' '+(item.fipShare) +' '+ 'NDRMF:'+' '+(item.ndrmfShare)"
+            class="d-flex justify-content-between align-items-center">
+            <span class="mr-2"
+              [ngStyle]="{'background-color': item.randomColor, 'width.px':20, 'height.px': 20}">&nbsp;</span>
+            <span class="mr-4">{{item.title}}</span>
           </div>
         </div>
-      </div> -->
+      </div>
+      <div class="row mb-3" *ngIf="loggedUser?.role !== 'fip' && detailBtn !== 'gia-projects'">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" *ngIf="quarters.length">
+            <mat-label>Select Quarter</mat-label>
+            <select matNativeControl (change)="quarterSelectionChange($event)" [(ngModel)]="quarterSelection"
+              name="quarter">
+              <option value="-1" selected>-1</option>
+              <option *ngFor="let item of quarters" [value]="item.quarter">
+                {{item.quarter}}
+              </option>
+            </select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-button-toggle-group [(ngModel)]="filterType" #group="matButtonToggleGroup" vertical="false">
+            <mat-button-toggle (change)="filterChanged(item)" *ngFor="let item of filterTypes; let i = index;"
+              [value]="item">
+              <span>{{item}}</span>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+      </div>
+      <div class="toolbox">
+        <div class="d-flex align-items-center justify-content-end mt-3 mb-3">
+          <div class="entries-total ml-2 mr-2">
+            {{'Activities Total' | uppercase}}: <span id="answer">{{totalUnClubbedEntriesCount}}</span>
+          </div>
+          <div class="entries-total ml-2 mr-2">
+            {{'Clubs Total' | uppercase}}: <span id="answer">{{totalClubsCount}}</span>
+          </div>
+          <div class="entries-total ml-2 mr-2">
+            {{'Grand Total' | uppercase}}: <span id="answer">{{totalClubsCount + totalUnClubbedEntriesCount}}</span>
+          </div>
+        </div>
+      </div>
 
       <div class="all-tree">
         <div class="top-head">
           <div class="title">Activities</div>
           <div class="top-quarters">
-            <div class="item" *ngFor="let object of quarters">
+            <div [matTooltip]="'Q '+object.quarter" class="item" *ngFor="let object of quarters">
               <span>{{object.quarter}}</span>
+            </div>
+            <div class="item">
+              <span>{{'Total'}}</span>
             </div>
           </div>
         </div>
@@ -107,12 +129,12 @@
             <!-- {{node.name}} -->
             <div style="display: flex;" *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'">
 
-              <button mat-icon-button color="warn" (click)="removeSubCost(node._id)">
+              <button matTooltip="Remove!" mat-icon-button color="warn" (click)="removeSubCost(node._id)">
                 <mat-icon>
                   close
                 </mat-icon>
               </button>
-              <button mat-icon-button color="primary" (click)="addSubCost(node._id)">
+              <button matTooltip="Add Child!" mat-icon-button color="primary" (click)="addSubCost(node._id)">
                 <mat-icon>
                   add
                 </mat-icon>
@@ -131,7 +153,7 @@
               <mat-icon>{{!node.clubbed ? 'share' : 'push_pin'}}</mat-icon>
             </button>
             <mat-menu #menu2="matMenu" class="p-2">
-              <p>All Clubs</p>
+              <p class="border-heading mb-0 pr-3 pl-3 pb-2">Select a club</p>
               <button [disabled]="!node.clubbed" mat-menu-item (click)="unClubEntry(node, 'unclub')">
                 <div class="d-flex justify-content-between">
                   <span>{{'Un-Club It!'}}</span>
@@ -139,7 +161,7 @@
               </button>
               <div *ngFor="let item of clubs;">
 
-                <button mat-menu-item (click)="clubEntry(node, item)">
+                <button [disabled]="loggedUser?.role !== 'fip'" mat-menu-item (click)="clubEntry(node, item)">
                   <div class="d-flex justify-content-between align-items-center">
                     <span class="mr-2"
                       [ngStyle]="{'background-color': item.randomColor, 'width.px':20, 'height.px': 20}">&nbsp;</span>
@@ -167,8 +189,6 @@
                     <span *ngIf="loggedUser?.role === 'fip' && viewType === 'progress'">
                       &nbsp;
                     </span>
-                    <!-- <small *ngIf="object.value === true" (click)="openActivityDetails(item, object)"> -->
-                    <!-- </small> -->
                     <mat-icon
                       [matTooltip]="object?.data?.startDate === null || !object?.data?.ndrmfShare || !object?.data?.fipShare  ? 'Pending Details' : 'Completed'"
                       [ngStyle]="{'color': object?.data?.startDate === null || !object?.data?.ndrmfShare || !object?.data?.fipShare  ? '#EEFF41' : null}"
@@ -178,11 +198,20 @@
                       [matTooltip]="object?.data?.startDate === null || !object?.data?.ndrmfShare || !object?.data?.fipShare  ? 'Pending Details' : 'Completed'"
                       [ngStyle]="{'color': object?.data?.startDate === null || !object?.data?.ndrmfShare || !object?.data?.fipShare  ? '#EEFF41' : null}"
                       *ngIf="object.value === true && viewType === 'progress' && detailBtn !== 'gia-projects'"
-                      (click)="openProgressDetails(object, item)">create</mat-icon>
-                    <!-- *ngIf="object.value === true" (click)="openActivityDetails(item, object)">pageview</mat-icon> -->
-                    <!-- <small *ngIf="object.value === true" (click)="openQuarterDetails(object, item);"></small> -->
+                      (click)="openProgressDetails(object, item)">insights</mat-icon>
                   </div>
-                  <span>Total: <span style="font-weight: bold;" id="comment">{{item.totalCost || 0}}</span></span>
+                  <div class="item">
+                    <span *ngIf="!node.clubbed" id="answer" style="text-align: center;">{{item.totalCost || 0}}</span>
+                    <span [matTooltip]="item.totalCost" *ngIf="node.clubbed">
+                      <span [ngStyle]="{
+                          'background-color': getClubColor(node.clubId), 
+                          'width.px':12, 
+                          'height.px': 12,
+                          'margin': '0 auto',
+                          'border-radius.em': 3
+                        }">&nbsp;</span>
+                    </span>
+                  </div>
                 </div>
                 <div *ngIf="filterType === 'Financial'" class="quarters">
                   <div class="finance-item" [ngClass]="{'active': object.value === true}"
@@ -243,9 +272,7 @@
                 {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
               </mat-icon>
             </button>
-            <!-- {{node.name}} -->
             <div style="display: flex;" *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'">
-
               <button mat-icon-button color="primary">
                 <mat-icon (click)="addSubCost(node._id)">
                   add
@@ -267,17 +294,19 @@
                 <div class="quarters">
                   <div class="disable-item item" *ngFor="let object of item.quarters">
                     <span>&nbsp;</span>
-                    <!-- <span>{{object.quarter}}</span> -->
+                  </div>
+                  <div class="disable-item item">
+                    <span>&nbsp;</span>
                   </div>
                 </div>
               </div>
             </div>
           </mat-tree-node>
         </mat-tree>
+
       </div>
       <span id="myTopElement5" #myTopElement5></span>
       <app-cost-details (costUpdated)="calculateActivityTotal($event)"></app-cost-details>
     </mat-card-content>
   </mat-card>
-  <!-- <app-activity-details></app-activity-details> -->
 </div>

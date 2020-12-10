@@ -92,6 +92,9 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   clubs: any = [];
   clubForm: FormGroup;
 
+  totalClubsCount: any = 0;
+  totalUnClubbedEntriesCount: any = 0;
+
   constructor(
     public dialog: MatDialog,
     public _authStore: AuthStore,
@@ -181,12 +184,18 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
               (JSON.parse(data.selectedProject.implementationPlan)).costs :
               data.selectedProject.implementationPlan.costs;
             this.allSubCosts = [];
+            // if (this.allCosts) {
+
             this.allCosts.forEach((c) => {
               this.selectedActivity = c;
               this.calculateActivityTotal(null);
               if (c.mainCostId !== null)
                 this.allSubCosts.push(c);
             });
+            // }
+            // this.addClubsCount();
+            this.getClubsCount();
+            this.getClubActivitiesCount();
             this.selectedActivity = null;
             this.prepareForm();
           }
@@ -195,6 +204,20 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       })
     );
 
+  }
+
+  addClubsCount() {
+    for (let i = 0; i < this.clubs.length; i++) {
+      let key1 = this.clubs[i];
+      key1.numOfActivities = 0;
+      for (let j = 0; j < this.allCosts.length; j++) {
+        let key2 = this.allCosts[j];
+        if (key2.clubbed && key2.clubId === key1._id) {
+          key1.numOfActivities = key1.numOfActivities + 1
+        }
+      }
+    }
+    console.log("COUBS AFTER COUNT:--", this.clubs);
   }
 
   getCostingHeads() {
@@ -371,24 +394,58 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     if (this.quarterSelection > object.quarter) {
       this._confirmModelService.open(options);
     } else {
+
       object.value = !object.value;
-      object.data = {
-        available: null,
-        startDate: null,
-        endDate: null,
-        description: null,
-        latitude: null,
-        longitude: null,
-        ndrmfShare: null,
-        fipShare: null,
-        isProcurement: false,
-        procurementHeads: [],
-        rfSubmitData: null,
-        tehsil: null,
-        district: null,
-        uc: null,
-        city: null
+      let club = null;
+      if (item.clubbed) {
+        club = this.getClub(item.clubId);
+        club ? item.totalCost = (club.fipShare + club.ndrmfShare) : null;
+        item.quarters = item.quarters.map((c) => {
+          if (c.quarter === object.quarter) {
+            return {
+              ...c,
+              data: {
+                ...c.data,
+                available: null,
+                startDate: null,
+                endDate: null,
+                description: null,
+                latitude: null,
+                longitude: null,
+                ndrmfShare: club ? club.ndrmfShare : null,
+                fipShare: club ? club.fipShare : null,
+                isProcurement: false,
+                procurementHeads: [],
+                rfSubmitData: null,
+                tehsil: null,
+                district: null,
+                uc: null,
+                city: null
+              }
+            }
+          }
+          return c;
+        })
+      } else {
+        object.data = {
+          available: null,
+          startDate: null,
+          endDate: null,
+          description: null,
+          latitude: null,
+          longitude: null,
+          ndrmfShare: null,
+          fipShare: null,
+          isProcurement: false,
+          procurementHeads: [],
+          rfSubmitData: null,
+          tehsil: null,
+          district: null,
+          uc: null,
+          city: null
+        }
       }
+      this.clearCostDetails();
     }
   }
 
@@ -538,14 +595,21 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
 
   calculateActivityTotal($event) {
     var activityCount = 0;
-    for (let i = 0; i < this.selectedActivity.quarters.length; i++) {
-      var key = this.selectedActivity.quarters[i];
-      if (key.data) {
-        console.log("SHARES:---", key.data.fipShare, key.data.ndrmfShare);
-        activityCount = activityCount + key.data.ndrmfShare + key.data.fipShare
+    var club = null;
+    if (this.selectedActivity.clubbed === false) {
+      for (let i = 0; i < this.selectedActivity.quarters.length; i++) {
+        var key = this.selectedActivity.quarters[i];
+        if (key.data) {
+          console.log("SHARES:---", key.data.fipShare, key.data.ndrmfShare);
+          activityCount = activityCount + key.data.ndrmfShare + key.data.fipShare
+        }
       }
+      this.selectedActivity.totalCost = activityCount;
+    } else {
+      club = this.getClub(this.selectedActivity.clubId);
+      this.selectedActivity.totalCost = club ? club.ndrmfShare + club.fipShare : null;
     }
-    this.selectedActivity.totalCost = activityCount;
+
     console.log("CALCULATE TOTAL FOR ACTIVITY:---", this.selectedActivity, $event, activityCount);
   }
 
@@ -581,6 +645,19 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     this.Subscription.unsubscribe();
   }
 
+  clearCostDetails() {
+    this._costDetailsStore.setDefaults(
+      null,
+      null,
+      null,
+      null,
+      true,
+      false,
+      null,
+      null
+    );
+  }
+
   addNewClub(values) {
     var object = {
       title: values.title,
@@ -590,6 +667,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       procurementHeads: values.procurementHeads,
       _id: new Date().toISOString(),
       randomColor: '#' + Math.floor(Math.random() * 16777215).toString(16),
+      numOfActivities: 0,
     }
     this.clubs.push(object);
     console.log("ALL CLUBS:--", this.clubs);
@@ -599,6 +677,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   clubEntry(cost, clubItem) {
     cost.clubbed = true;
     cost.clubId = clubItem._id;
+    clubItem.numOfActivities = clubItem.numOfActivities + 1;
     for (let i = 0; i < this.allCosts.length; i++) {
       let key = this.allCosts[i];
       if (key._id === cost._id) {
@@ -622,20 +701,39 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         break;
       }
     }
+    this.clearCostDetails();
     console.log("CLUB ENTRY:---", cost, clubItem);
   }
 
   unClubEntry(cost, clubItem) {
     cost.clubbed = false;
+    let club = this.getClub(cost.clubId);
+    club.numOfActivities = club.numOfActivities - 1;
     cost.clubId = null;
+    console.log("CLUB ENTRY:---", cost, clubItem, club);
     for (let i = 0; i < this.allCosts.length; i++) {
       let key = this.allCosts[i];
       if (key._id === cost._id) {
         key.clubbed = false;
         key.clubId = null;
+        key.totalCost = 0;
+        key.quarters = key.quarters.map(element => {
+          if (element.value) {
+            return {
+              ...element,
+              data: {
+                ...element.data,
+                fipShare: null,
+                ndrmfShare: null,
+              }
+            }
+          }
+          return element;
+        });
         break;
       }
     }
+    this.clearCostDetails();
   }
 
   getClubColor(clubId) {
@@ -666,6 +764,47 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       }
       return title;
     }
+  }
+
+  getClub(clubId) {
+    let club = null;
+    if (this.clubs) {
+      for (let i = 0; i < this.clubs.length; i++) {
+        let key = this.clubs[i];
+        if (clubId === key._id) {
+          // console.log("CLUB CALLED:--", key, clubId);
+          club = key;
+          break;
+        }
+      }
+      return club;
+    }
+  }
+
+  getClubsCount() {
+    let clubsCount = 0;
+    for (let i = 0; i < this.clubs.length; i++) {
+      let key = this.clubs[i];
+      if (key.numOfActivities > 0) {
+        clubsCount = clubsCount + (key.fipShare + key.ndrmfShare);
+      }
+    }
+    console.log("ALL CLUBS COUNT:--", clubsCount);
+    this.totalClubsCount = clubsCount;
+  }
+
+  getClubActivitiesCount() {
+    let unClubActivitiesCount = 0;
+    let unClubEntries = [];
+    for (let i = 0; i < this.allCosts.length; i++) {
+      let key = this.allCosts[i];
+      if (!key.children && !key.clubbed) {
+        unClubEntries.push(key);
+        unClubActivitiesCount = unClubActivitiesCount + key.totalCost;
+      }
+    }
+    console.log("ALL NON CLUBBED ENTRIES COUNT:--", unClubActivitiesCount, unClubEntries);
+    this.totalUnClubbedEntriesCount = unClubActivitiesCount;
   }
 
 }
