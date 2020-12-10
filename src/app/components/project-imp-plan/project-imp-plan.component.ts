@@ -416,8 +416,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
                 longitude: null,
                 ndrmfShare: club ? club.ndrmfShare : null,
                 fipShare: club ? club.fipShare : null,
-                isProcurement: false,
-                procurementHeads: [],
+                isProcurement: club ? club.isProcurement : false,
+                procurementHeads: club ? club.procurementHeads : null,
                 rfSubmitData: null,
                 tehsil: null,
                 district: null,
@@ -447,7 +447,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
           city: null
         }
       }
-      this.clearCostDetails();
+      // this.clearCostDetails();
     }
   }
 
@@ -693,6 +693,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
                 ...element.data,
                 fipShare: clubItem.fipShare,
                 ndrmfShare: clubItem.ndrmfShare,
+                isProcurement: clubItem.isProcurement,
+                procurementHeads: clubItem.procurementHeads,
               }
             }
           }
@@ -706,7 +708,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     this.clearCostDetails();
     console.log("CLUB ENTRY:---", cost, clubItem);
   }
-
+  
   unClubEntry(cost, clubItem) {
     cost.clubbed = false;
     let club = this.getClub(cost.clubId);
@@ -727,6 +729,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
                 ...element.data,
                 fipShare: null,
                 ndrmfShare: null,
+                isProcurement: false,
+                procurementHeads: [],
               }
             }
           }

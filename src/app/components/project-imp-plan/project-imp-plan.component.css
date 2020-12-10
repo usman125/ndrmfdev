@@ -241,6 +241,10 @@ mat-tree-node.active + mat-tree-node.active {
   text-transform: uppercase;
 }
 
+.top-head .title.po {
+  min-width: 264px;
+}
+
 .all-tree {
   overflow: auto;
 }

@@ -111,7 +111,7 @@
 
       <div class="all-tree">
         <div class="top-head">
-          <div class="title">Activities</div>
+          <div class="title" [ngClass]="{'po': loggedUser?.role !== 'fip'}">Activities</div>
           <div class="top-quarters">
             <div [matTooltip]="'Q '+object.quarter" class="item" *ngFor="let object of quarters">
               <span>{{object.quarter}}</span>
@@ -159,7 +159,8 @@
             </button>
             <mat-menu #menu2="matMenu" class="p-2">
               <p class="border-heading mb-0 pr-3 pl-3 pb-2">Select a club</p>
-              <button [disabled]="!node.clubbed" mat-menu-item (click)="unClubEntry(node, 'unclub')">
+              <button [disabled]="!node.clubbed || loggedUser?.role !== 'fip'" mat-menu-item
+                (click)="unClubEntry(node, 'unclub')">
                 <div class="d-flex justify-content-between">
                   <span>{{'Un-Club It!'}}</span>
                 </div>
