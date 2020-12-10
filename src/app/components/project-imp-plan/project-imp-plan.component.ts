@@ -95,6 +95,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   totalClubsCount: any = 0;
   totalUnClubbedEntriesCount: any = 0;
 
+  selectedClub: any = null;
+
   constructor(
     public dialog: MatDialog,
     public _authStore: AuthStore,
@@ -805,6 +807,18 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     }
     console.log("ALL NON CLUBBED ENTRIES COUNT:--", unClubActivitiesCount, unClubEntries);
     this.totalUnClubbedEntriesCount = unClubActivitiesCount;
+  }
+
+  selectClub(item) {
+    if (this.selectedClub === null) {
+      this.selectedClub = item;
+    } else {
+      if (this.selectedClub._id === item._id)
+        this.selectedClub = null;
+      else
+        this.selectedClub = item;
+    }
+    console.log("SEELCTED CLUB:--", this.selectedClub);
   }
 
 }

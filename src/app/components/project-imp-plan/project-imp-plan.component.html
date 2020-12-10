@@ -63,9 +63,10 @@
   <mat-card>
     <mat-card-content>
       <div class="toggle-clubs">
-        <div *ngFor="let item of clubs;">
+        <div *ngFor="let item of clubs;" (click)="selectClub(item);" class="clubs">
           <div [matTooltip]="'Fip:'+' '+(item.fipShare) +' '+ 'NDRMF:'+' '+(item.ndrmfShare)"
-            class="d-flex justify-content-between align-items-center">
+            class="d-flex justify-content-between align-items-center"
+            [ngClass]="{'club-item': item._id === selectedClub?._id}">
             <span class="mr-2"
               [ngStyle]="{'background-color': item.randomColor, 'width.px':20, 'height.px': 20}">&nbsp;</span>
             <span class="mr-4">{{item.title}}</span>
@@ -122,11 +123,15 @@
         </div>
         <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" matTreeNodePaddingIndent="5">
           <!-- This is the tree node template for leaf nodes -->
-          <mat-tree-node [ngClass]="{'notUser': loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin'}"
-            *matTreeNodeDef="let node" matTreeNodePadding>
+          <mat-tree-node [ngClass]="{'notUser': loggedUser?.role !== 'fip' && loggedUser?.role !== 'admin',
+          'active': node.clubId === selectedClub?._id && node.clubbed}" *matTreeNodeDef="let node" matTreeNodePadding
+            [ngStyle]="{'border-color':getClubColor(node.clubId)}">
             <!-- use a disabled button to provide padding for tree leaf -->
             <!-- <button mat-icon-button disabled></button> -->
             <!-- {{node.name}} -->
+            <!-- <div [ngStyle]="{'active': node.clubId === selectedClub?.clubId}">
+              
+            </div> -->
             <div style="display: flex;" *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'">
 
               <button matTooltip="Remove!" mat-icon-button color="warn" (click)="removeSubCost(node._id)">
@@ -207,7 +212,7 @@
                           'background-color': getClubColor(node.clubId), 
                           'width.px':12, 
                           'height.px': 12,
-                          'margin': '0 auto',
+                          'margin': '3.5px auto',
                           'border-radius.em': 3
                         }">&nbsp;</span>
                     </span>

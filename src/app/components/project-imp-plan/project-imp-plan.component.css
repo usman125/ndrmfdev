@@ -13,6 +13,35 @@ mat-tree-node .form-group {
   margin-bottom: 0px;
 }
 
+mat-tree-node.active .form-group {
+  margin-left: -1px;
+}
+
+mat-tree-node.active {
+  border: 1px solid;
+  /* margin-top: -1px; */
+}
+
+mat-tree-node.active + mat-tree-node.active {
+  /* border: 1px solid; */
+  margin-top: -1px;
+}
+
+.clubs div {
+  position: relative;
+  cursor: pointer;
+}
+
+.club-item:after {
+  content: "";
+  width: 95%;
+  height: 2px;
+  position: absolute;
+  background: #000;
+  display: block;
+  left: -8px;
+}
+
 .form-group input {
   border-radius: 0;
   border: 1px solid #ddd;
@@ -200,9 +229,9 @@ mat-tree-node .form-group {
   align-items: center;
   flex: 1;
   position: sticky;
-    top: 0px;
-    background: #fff;
-    z-index: 1111;
+  top: 0px;
+  background: #fff;
+  z-index: 1111;
 }
 
 .top-head .title {
