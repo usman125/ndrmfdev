@@ -4,6 +4,14 @@ import { Subscription } from 'rxjs';
 import { AuthStore } from 'src/app/stores/auth/auth-store';
 import { SettingsService } from '../../services/settings.service';
 import { CostDetailsStore } from "../../stores/cost-details/cost-details-store";
+import {
+  PROVINCE,
+  DISTRICT,
+  // DIVISION
+  TEHSIL,
+  UC,
+} from "../../components/uc_data";
+
 
 @Component({
   selector: 'app-cost-details',
@@ -44,7 +52,13 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   loggedUser: any = null;
   currentQuarter: any = null;
 
+  province: any = PROVINCE;
+  district: any = DISTRICT;
+  tehsil: any = TEHSIL;
+  // uc: any = UC;
+
   @Output() costUpdated: EventEmitter<any> = new EventEmitter();
+  @Output() rfUpdated: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private fb: FormBuilder,
@@ -67,11 +81,13 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
       fipShare: [null, Validators.required],
       isProcurement: [false],
       procurementHeads: [null],
+      target: [null],
       rfSubmitData: [null],
-      tehsil: [null],
+      province: [null],
       district: [null],
+      division: [null],
+      tehsil: [null],
       uc: [null],
-      city: [null],
     });
   }
 
@@ -96,7 +112,6 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     );
     this.Subscription.add(
       this._costDetailsStore.state$.subscribe(result => {
-        console.log("DATA IN COST DETAILS:--", result.cost, this.selectedQuarter);
         setTimeout(() => { this.selectedIndex = 0; }, 0);
         this.rfSubmitData = null;
         this.selectedQuarter = result.cost.costData;
@@ -106,6 +121,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
         this.progressData = result.cost.progress;
         this.clubbed = result.cost.clubbed;
         this.clubData = result.cost.clubData;
+        console.log("DATA IN COST DETAILS:--", result.cost, this.selectedQuarter);
         if (this.selectedQuarter !== null && this.updateFlag) {
           this._form.patchValue({
             startDate: this.selectedQuarter.startDate,
@@ -118,10 +134,12 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             isProcurement: !result.cost.clubbed ? this.selectedQuarter.isProcurement : result.cost.clubData.isProcurement,
             procurementHeads: !result.cost.clubbed ? this.selectedQuarter.procurementHeads : result.cost.clubData.procurementHeads,
             rfSubmitData: this.selectedQuarter.rfSubmitData,
-            tehsil: this.selectedQuarter.tehsil,
+            target: this.selectedQuarter.target ? this.selectedQuarter.target : this.clubbed ? this.clubData.numOfActivities : 1,
+            province: this.selectedQuarter.province,
             district: this.selectedQuarter.district,
+            division: this.selectedQuarter.division,
+            tehsil: this.selectedQuarter.tehsil,
             uc: this.selectedQuarter.uc,
-            city: this.selectedQuarter.city,
           }, { onlySelf: true });
 
 
@@ -146,7 +164,6 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
           result.cost.clubbed ? this._form.controls['isProcurement'].disable({ onlySelf: true }) : this._form.controls['isProcurement'].enable({ onlySelf: true });
           // result.cost.clubbed ? this._form.controls['isProcurement'].clearValidators() : null;
           result.cost.clubbed ? this._form.controls['procurementHeads'].disable({ onlySelf: true }) : this._form.controls['procurementHeads'].enable({ onlySelf: true });
-          // result.cost.clubbed ? this._form.controls['procurementHeads'].clearValidators() : null;
         }
         if (!this.updateFlag) {
           if (this.clubbed) {
@@ -154,14 +171,14 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             this.selectedQuarter.procurementHeads = this.clubData.procurementHeads;
             this._form.patchValue({
               isProcurement: this.clubData.isProcurement,
-              procurementHeads: this.clubData.procurementHeads
+              procurementHeads: this.clubData.procurementHeads,
             }, { onlySelf: true });
             this._form.controls['isProcurement'].disable({ onlySelf: true });
             this._form.controls['procurementHeads'].disable({ onlySelf: true });
           } else {
             this._form.patchValue({
               isProcurement: this.selectedQuarter.isProcurement,
-              procurementHeads: this.selectedQuarter.procurementHeads
+              procurementHeads: this.selectedQuarter.procurementHeads,
             }, { onlySelf: true });
             this._form.controls['isProcurement'].disable({ onlySelf: true });
             this._form.controls['procurementHeads'].disable({ onlySelf: true });
@@ -242,6 +259,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     console.log("RESULT FRAMEWORK SUBMITTED:---", $event);
     this.rfSubmitData = $event.data;
     this._form.patchValue({ rfSubmitData: $event.data }, { onlySelf: true });
+    this.rfUpdated.emit({ 'rfUpdated': JSON.stringify($event.data) });
     // this._form.patchValue({ rfSubmitData: JSON.stringify($event.data) }, { onlySelf: true });
   }
 

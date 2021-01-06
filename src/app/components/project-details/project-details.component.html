@@ -31,10 +31,10 @@
           </div>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-button color="accent"
-            (click)="uploadTacMoms('TAC_MEETING', 'yestac')">{{'approve' | uppercase}}</button>
-          <button mat-button color="warn"
-            (click)="uploadTacMoms('TAC_MEETING', 'no')">{{'disapprove' | uppercase}}</button>
+          <button mat-button color="accent" (click)="uploadTacMoms('TAC_MEETING', 'yestac')">{{'approve' |
+            uppercase}}</button>
+          <button mat-button color="warn" (click)="uploadTacMoms('TAC_MEETING', 'no')">{{'disapprove' |
+            uppercase}}</button>
         </mat-card-actions>
       </mat-card>
 
@@ -66,10 +66,10 @@
           </div>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-button color="accent"
-            (click)="uploadTacMoms('RMC_MEETING', 'yesrmc')">{{'approve' | uppercase}}</button>
-          <button mat-button color="warn"
-            (click)="uploadTacMoms('RMC_MEETING', 'no')">{{'disapprove' | uppercase}}</button>
+          <button mat-button color="accent" (click)="uploadTacMoms('RMC_MEETING', 'yesrmc')">{{'approve' |
+            uppercase}}</button>
+          <button mat-button color="warn" (click)="uploadTacMoms('RMC_MEETING', 'no')">{{'disapprove' |
+            uppercase}}</button>
         </mat-card-actions>
       </mat-card>
 
@@ -101,10 +101,13 @@
           </div>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-button color="accent"
-            (click)="uploadTacMoms('BOD_MEETING', 'yesbod')">{{'approve' | uppercase}}</button>
-          <button mat-button color="warn"
-            (click)="uploadTacMoms('BOD_MEETING', 'no')">{{'disapprove' | uppercase}}</button>
+          <button mat-button color="accent" (click)="uploadTacMoms('BOD_MEETING', 'yesbod')">
+            {{'approve' | uppercase}}
+          </button>
+          <button mat-button color="warn" (click)="uploadTacMoms('BOD_MEETING', 'no')">
+            {{'disapprove' | uppercase}}
+          </button>
+
         </mat-card-actions>
       </mat-card>
 
@@ -119,6 +122,77 @@
       <mat-card class="m-20" style="padding: 30px;"
         *ngIf="selectedProject?.status === 'Offer Letter' && loggedUser?.role === 'process owner'">
         <mat-card-content>
+
+          <mat-chip-list *ngIf="selectedProject?.offerLetter?.fipMarkingStatus !== null || 
+                              selectedProject?.offerLetter?.gmStatus !== null">
+            <mat-chip class="mt-2" *ngIf="selectedProject?.offerLetter?.fipMarkingStatus === 'Pending'
+                                || selectedProject?.offerLetter?.fipStatus === 'Pending'" color="primary" selected>
+              Marked To FIP
+            </mat-chip>
+            <mat-chip *ngIf="(selectedProject?.offerLetter?.fipMarkingStatus === 'Pending'
+                                                || selectedProject?.offerLetter?.fipStatus === 'Pending') && 
+                                                selectedProject?.offerLetter?.status !== 'Expired'" color="primary"
+              selected>
+              Pending: {{selectedProject.offerLetter.offerLetterDays ? selectedProject.offerLetter.offerLetterDays
+              : selectedProject.offerLetter.expiryDate | date:'shortDate'}} Days Remaining
+            </mat-chip>
+            <mat-chip *ngIf="(selectedProject?.offerLetter?.fipMarkingStatus === 'Pending'
+                                                || selectedProject?.offerLetter?.fipStatus === 'Pending') && 
+                                                selectedProject?.offerLetter?.status === 'Expired'" color="warn"
+              selected>
+              Expired: {{selectedProject.offerLetter.offerLetterDays ? selectedProject.offerLetter.offerLetterDays
+              : selectedProject.offerLetter.expiryDate | date:'shortDate'}} Days Ago
+            </mat-chip>
+          </mat-chip-list>
+
+          <mat-chip-list *ngIf="selectedProject?.offerLetter?.fipResponse !== null">
+            <mat-chip class="mt-2" *ngIf="selectedProject?.offerLetter?.fipResponse === 'Approved'
+                                && (selectedProject?.offerLetter?.fipStatus === 'Completed' || 
+                                selectedProject?.offerLetter?.fipMarkingStatus === 'Completed')" color="primary"
+              selected>
+              Approved By FIP
+            </mat-chip>
+            <mat-chip class="mt-2" *ngIf="selectedProject?.offerLetter?.fipResponse === 'Rejected'
+                                && (selectedProject?.offerLetter?.fipStatus === 'Completed' || 
+                                selectedProject?.offerLetter?.fipMarkingStatus === 'Completed')" color="primary"
+              selected>
+              Rejected By FIP
+            </mat-chip>
+          </mat-chip-list>
+
+          <mat-chip-list *ngIf="selectedProject?.offerLetter?.gmMarkingStatus !== null || 
+                              selectedProject?.offerLetter?.gmStatus !== null">
+            <mat-chip class="mt-2" *ngIf="selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
+                                || selectedProject?.offerLetter?.gmStatus === 'Pending'" color="accent" selected>
+              Marked To GM
+            </mat-chip>
+            <mat-chip *ngIf="selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
+                        || selectedProject?.offerLetter?.gmStatus === 'Pending' && 
+                        selectedProject?.offerLetter?.status !== 'Expired'" color="primary" selected>
+              Pending: {{selectedProject?.offerLetter?.offerLetterDays}} Days Remaining
+            </mat-chip>
+            <mat-chip *ngIf="selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
+                        || selectedProject?.offerLetter?.gmStatus === 'Pending' && 
+                        selectedProject?.offerLetter?.status === 'Expired'" color="primary" selected>
+              Expired: {{selectedProject?.offerLetter?.offerLetterDays}} Days Ago
+            </mat-chip>
+          </mat-chip-list>
+
+          <mat-chip-list *ngIf="selectedProject?.offerLetter?.gmResponse !== null">
+            <mat-chip class="mt-2" *ngIf="selectedProject?.offerLetter?.gmResponse === 'Approved'
+                                && (selectedProject?.offerLetter?.gmStatus === 'Completed' || 
+                                selectedProject?.offerLetter?.gmMarkingStatus === 'Completed')" color="accent"
+              selected>
+              Approved By GM
+            </mat-chip>
+            <mat-chip class="mt-2" *ngIf="selectedProject?.offerLetter?.gmResponse === 'Rejected'
+                                && (selectedProject?.offerLetter?.gmStatus === 'Completed' || 
+                                selectedProject?.offerLetter?.gmMarkingStatus === 'Completed')" color="accent"
+              selected>
+              Rejected By GM
+            </mat-chip>
+          </mat-chip-list>
+
           <div class="input-box mt-3">
             <ul>
               <li *ngFor="let file of files" style="list-style-type: none;">
@@ -131,16 +205,91 @@
               accept="{{accept}}" style="display: none;" />
             <button mat-raised-button color="warn" (click)="uploadFile()">
               <mat-icon>file_upload</mat-icon>
-              {{'Upload File(s)'}}
+              {{'Select Offer Letter File(s)'}}
             </button>
           </div>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-button color="accent" (click)="uploadOfferLetter()">{{'assign for signing' | uppercase}}
+          <button [disabled]="files.length === 0" mat-button color="accent" (click)="uploadOfferLetter()">
+            {{'assign for signing' | uppercase}}
             <mat-icon class="ml-2">gesture</mat-icon>
+          </button>
+          <button mat-button color="warn" (click)="markOfferLetterToFip()" *ngIf="selectedProject?.offerLetter"
+            [disabled]="selectedProject?.offerLetter?.gmResponse === null || 
+            selectedProject?.offerLetter?.fipStatus === 'Pending' || 
+            selectedProject?.offerLetter?.fipMarkingStatus === 'Pending'">
+            {{'MARK TO FIP' | uppercase}}
           </button>
         </mat-card-actions>
       </mat-card>
+
+      <mat-toolbar *ngIf="selectedProject?.status === 'Offer Letter' && loggedUser?.role === 'gm'"
+        class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+        <mat-toolbar-row>
+          <span>Offer Letter Actions</span>
+          <div class="example-spacer"></div>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-card class="m-20" style="padding: 30px;"
+        *ngIf="selectedProject?.status === 'Offer Letter' && loggedUser?.role === 'gm'">
+        <mat-card-content>
+          <mat-chip-list *ngIf="selectedProject?.offerLetter?.gmMarkingStatus !== null || 
+          selectedProject?.offerLetter?.gmStatus !== null">
+            <mat-chip *ngIf="selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
+            || selectedProject?.offerLetter?.gmStatus === 'Pending'" color="primary" selected>
+              Marked To GM
+            </mat-chip>
+            <mat-chip *ngIf="selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
+                                    || selectedProject?.offerLetter?.gmStatus === 'Pending' && 
+                                    selectedProject?.offerLetter?.status !== 'Expired'" color="primary" selected>
+              Pending: {{selectedProject?.offerLetter?.offerLetterDays}} Days Remaining
+            </mat-chip>
+            <mat-chip *ngIf="selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
+                                    || selectedProject?.offerLetter?.gmStatus === 'Pending' && 
+                                    selectedProject?.offerLetter?.status === 'Expired'" color="primary" selected>
+              Expired: {{selectedProject?.offerLetter?.offerLetterDays}} Days Ago
+            </mat-chip>
+          </mat-chip-list>
+          <mat-chip-list *ngIf="selectedProject?.offerLetter?.gmResponse !== null">
+            <mat-chip *ngIf="selectedProject?.offerLetter?.gmResponse === 'Approved'
+            || selectedProject?.offerLetter?.gmStatus === 'Approved'" color="primary" selected>
+              Approved By GM
+            </mat-chip>
+            <mat-chip *ngIf="selectedProject?.offerLetter?.gmResponse === 'Rejected'
+            || selectedProject?.offerLetter?.gmStatus === 'Rejected'" color="primary" selected>
+              Rejected By GM
+            </mat-chip>
+          </mat-chip-list>
+          <div class="info-box mt-2" *ngIf="selectedProject?.offerLetter?.gm_comments">
+            <span>{{selectedProject.offerLetter.gm_comments}}</span>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <div *ngIf="selectedProject?.offerLetter">
+            <button mat-button color="accent" (click)="approveOfferLetter()" [disabled]="selectedProject?.offerLetter?.gmMarkingStatus === null || 
+              selectedProject?.offerLetter?.gmMarkingStatus === 'Completed' || selectedProject?.offerLetter?.gmStatus === null || 
+              selectedProject?.offerLetter?.gmStatus === 'Completed'
+              ">
+              {{'Approve Offer Letter' | uppercase}}
+            </button>
+            <button mat-button color="warn" (click)="disApproveOfferLetter()" [disabled]="selectedProject?.offerLetter?.gmMarkingStatus === null || 
+              selectedProject?.offerLetter?.gmMarkingStatus === 'Completed' || selectedProject?.offerLetter?.gmStatus === null || 
+              selectedProject?.offerLetter?.gmStatus === 'Completed'
+              ">
+              {{'Disapprove Offer Letter' | uppercase}}
+            </button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- <mat-toolbar *ngIf="selectedProject?.status === 'Offer Letter' && loggedUser?.role === 'fip'"
+        class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+        <mat-toolbar-row>
+          <span>Offer Letter Actions</span>
+          <div class="example-spacer"></div>
+        </mat-toolbar-row>
+      </mat-toolbar> -->
+
 
       <!-- GIA CARD -->
       <mat-toolbar
@@ -570,9 +719,9 @@
                  selectedProject?.preAppraisal?.status === 'Pending'" class="mt-1 mb-1" mat-button color="primary"
                   (click)="confirmApprasial()">
                   <mat-icon class="mr-1">description</mat-icon>
-                  {{selectedProject?.preAppraisal && 
-                    selectedProject?.preAppraisal.status === 'Expired' ? 'EXTEND PRE-APPRAISAL' : 
-                    'Prepare Pre-appraisal' | uppercase}}
+                  {{selectedProject?.preAppraisal &&
+                  selectedProject?.preAppraisal.status === 'Expired' ? 'EXTEND PRE-APPRAISAL' :
+                  'Prepare Pre-appraisal' | uppercase}}
                 </button>
                 <mat-chip-list>
                   <mat-chip class="ml-3 mt-2" color="accent" selected
@@ -644,11 +793,11 @@
                   selectedProject?.extendedAppraisal?.subStatus === 'Pending') || 
                 (selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to CEO' && 
                 selectedProject?.extendedAppraisal?.subStatus === 'Pending')" (click)="prepareExtAppraisal()">
-                  <mat-icon class="mr-1">description</mat-icon> {{selectedProject?.extendedAppraisal && 
-                    selectedProject?.extendedAppraisal.status === 'Expired' ? 
-                    'EXTEND EXT-APPRAISAL' : selectedProject?.extendedAppraisal && 
-                    selectedProject?.extendedAppraisal.status === 'Completed' ?
-                    'RE-ASSIGN EXT-APPRAISAL' : 'Prepare ext-appraisal' | uppercase}}
+                  <mat-icon class="mr-1">description</mat-icon> {{selectedProject?.extendedAppraisal &&
+                  selectedProject?.extendedAppraisal.status === 'Expired' ?
+                  'EXTEND EXT-APPRAISAL' : selectedProject?.extendedAppraisal &&
+                  selectedProject?.extendedAppraisal.status === 'Completed' ?
+                  'RE-ASSIGN EXT-APPRAISAL' : 'Prepare ext-appraisal' | uppercase}}
                 </button>
                 <mat-chip-list>
                   <mat-chip class="ml-3 mt-1" color="accent" selected
@@ -924,7 +1073,6 @@
 
 
       </mat-card>
-
     </div>
 
     <!-- SUBMITTED DETAILS FOR PROPOSAL SECTIONS-->
@@ -932,14 +1080,15 @@
       <div *ngIf="loggedUser?.role === 'fip' && viewType === 'user' && selectedProject?.status !== 'Draft'">
         <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
           <mat-toolbar-row>
-            <span>Pending Actions</span>
+            <span>{{selectedProject.status}} Actions</span>
             <div class="example-spacer"></div>
           </mat-toolbar-row>
         </mat-toolbar>
-        <mat-card class="m-20">
+        <mat-card class="m-20 mb-0">
           <mat-card-content>
+            <!-- CHECK LIST TO FIP CODE -->
             <ng-container>
-              <div *ngIf="selectedProject?.giaChecklist !== null && selectedProject?.status === 'Checklist to FIP'">
+              <div *ngIf="selectedProject?.giaChecklist !== null">
                 <p>Please fill the checklist to accept the pendig GIA request generated by NDMRF, you can also view the
                   GIA and print it.</p>
                 <mat-list>
@@ -968,6 +1117,7 @@
                 </button>
               </div>
             </ng-container>
+            <!-- GOVT. FIP CODE HERE -->
             <ng-container>
               <span class="mb-3" *ngIf="selectedProject.status === 'Upload PC1'">
                 You need to upload your PC1 files in order to move forward with other project requirements
@@ -1003,6 +1153,68 @@
             </button>
           </mat-card-actions>
         </mat-card>
+
+        <!-- OFFER LETTER ACTION FOR FIP -->
+        <mat-card class="m-20 mt-0" style="padding: 30px;" *ngIf="selectedProject?.status === 'Offer Letter'">
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-8">
+
+                <mat-chip-list *ngIf="selectedProject?.offerLetter?.fipMarkingStatus !== null || 
+                  selectedProject?.offerLetter?.gmStatus !== null">
+                  <mat-chip *ngIf="selectedProject?.offerLetter?.fipMarkingStatus === 'Pending' || 
+                  selectedProject?.offerLetter?.fipStatus === 'Pending'" color="primary" selected>
+                    Marked To FIP
+                  </mat-chip>
+                  <mat-chip *ngIf="(selectedProject?.offerLetter?.fipMarkingStatus === 'Pending' || 
+                  selectedProject?.offerLetter?.fipStatus === 'Pending') && 
+                  selectedProject?.offerLetter?.status !== 'Expired'" color="primary" selected>
+                    Pending: {{selectedProject.offerLetter.offerLetterDays ? selectedProject.offerLetter.offerLetterDays
+                    : selectedProject.offerLetter.expiryDate | date:'shortDate'}} Days Remaining
+                  </mat-chip>
+                  <mat-chip *ngIf="(selectedProject?.offerLetter?.fipMarkingStatus === 'Pending' || 
+                  selectedProject?.offerLetter?.fipStatus === 'Pending') && 
+                  selectedProject?.offerLetter?.status === 'Expired'" color="warn" selected>
+                    Expired: {{selectedProject.offerLetter.offerLetterDays ? selectedProject.offerLetter.offerLetterDays
+                    : selectedProject.offerLetter.expiryDate | date:'shortDate'}} Days Ago
+                  </mat-chip>
+                </mat-chip-list>
+                <mat-chip-list *ngIf="selectedProject?.offerLetter?.fipResponse !== null">
+                  <mat-chip *ngIf="selectedProject?.offerLetter?.fipResponse === 'Approved' || 
+                  selectedProject?.offerLetter?.fipStatus === 'Approved'" color="primary" selected>
+                    Approved By FIP
+                  </mat-chip>
+                  <mat-chip *ngIf="selectedProject?.offerLetter?.fipResponse === 'Rejected' || 
+                  selectedProject?.offerLetter?.fipStatus === 'Rejected'" color="primary" selected>
+                    Rejected By FIP
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+              <div class="col-md-4">
+                <div class="info-box" *ngIf="selectedProject?.offerLetter?.gm_comments">
+                  <span>{{selectedProject.offerLetter.fip_comments}}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <div *ngIf="selectedProject?.offerLetter">
+              <button mat-button color="accent" (click)="fipApproveOfferLetter()" [disabled]="selectedProject?.offerLetter?.fipMarkingStatus === null || 
+                      selectedProject?.offerLetter?.fipMarkingStatus === 'Completed' || selectedProject?.offerLetter?.fipStatus === null || 
+                      selectedProject?.offerLetter?.fipStatus === 'Completed' || 
+                      selectedProject?.offerLetter?.status === 'Expired'">
+                {{'Approve Offer Letter' | uppercase}}
+              </button>
+              <button mat-button color="warn" (click)="fipDisApproveOfferLetter()" [disabled]="selectedProject?.offerLetter?.fipMarkingStatus === null || 
+                      selectedProject?.offerLetter?.fipMarkingStatus === 'Completed' || selectedProject?.offerLetter?.fipStatus === null || 
+                      selectedProject?.offerLetter?.fipStatus === 'Completed' || 
+                      selectedProject?.offerLetter?.status === 'Expired'">
+                {{'Disapprove Offer Letter' | uppercase}}
+              </button>
+            </div>
+          </mat-card-actions>
+        </mat-card>
+
       </div>
       <span id="myTopElement" #myTopElement>
       </span>
@@ -1102,7 +1314,8 @@
                   <mat-icon class="mr-2"
                     [style.color]="groupType?.reviewStatus === null || groupType?.reviewStatus === 'Pending' ? '#F57F17' : null"
                     [color]="groupType?.reviewStatus === 'Pending' ? 'warn' : 'accent'">
-                    {{groupType?.reviewStatus === 'Pending' ? 'pending_actions' : groupType?.reviewStatus === null ? 'warning' : 'check'}}
+                    {{groupType?.reviewStatus === 'Pending' ? 'pending_actions' : groupType?.reviewStatus === null ?
+                    'warning' : 'check'}}
                   </mat-icon>
                   SME:
                   <span id="comment" class="ml-2">{{groupType.sme?.name}}</span>
@@ -1114,8 +1327,8 @@
                   </small>
                   <small *ngIf="groupType.reviewStatus === 'Completed'" style="display: block;font-weight: bold;">
                     COMPLETED:
-                    <span id="comment"
-                      class="ml-1">{{groupType.reviewCompletedDate | date:'fullDate' | uppercase}}</span>
+                    <span id="comment" class="ml-1">{{groupType.reviewCompletedDate | date:'fullDate' |
+                      uppercase}}</span>
                   </small>
                   <small *ngIf="groupType.reviewStatus === null" style="display: block;font-weight: bold;">
                     <span class="info-comment"> NOT ASSIGNED:</span>
@@ -1160,13 +1373,31 @@
         </mat-button-toggle-group> -->
   <!-- </div> -->
   <!-- <app-project-plan [proMonths]="proMonths" [show]="show"></app-project-plan> -->
-  <div
-    *ngIf="sectionStats.pendingCount === 0 && (selectedProject?.status !== 'Upload PC1' && selectedProject?.status !== 'Upload PDRMC Mins')">
+  <div *ngIf="sectionStats.pendingCount === 0 && 
+    (selectedProject?.status !== 'Upload PC1' && selectedProject?.status !== 'Upload PDRMC Mins') 
+    && loggedUser?.role === 'fip'">
+    <app-project-imp-plan [proMonths]="proMonths" [show]="show"></app-project-imp-plan>
+  </div>
+  <div *ngIf="sectionStats.pendingCount === 0 && loggedUser?.role !== 'fip'">
     <app-project-imp-plan [proMonths]="proMonths" [show]="show"></app-project-imp-plan>
   </div>
   <!-- </mat-card-content> -->
   <!-- </mat-card> -->
   <!-- <app-pip></app-pip> -->
+  <ng-container>
+    <mat-toolbar style="padding: 15px 0px;" color="primary">
+      <mat-toolbar-row>
+        <span>Result Framework Report</span>
+        <div class="example-spacer"></div>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <mat-card class="m-20 mt-0" style="overflow: hidden;
+    overflow-x: scroll;">
+      <mat-card-content>
+        <app-result-framework-report></app-result-framework-report>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
 </ng-container>
 <ng-container *ngIf="apiLoading">
   <mat-card class="m-20">

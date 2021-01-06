@@ -346,6 +346,16 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     })
   }
 
+  setOfferLetter(offerLetter) {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        offerLetter: offerLetter
+      }
+    })
+  }
+
   addSelectedProjectFiles(files) {
     this.setState({
       ...this.state,

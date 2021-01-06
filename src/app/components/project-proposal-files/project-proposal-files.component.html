@@ -10,7 +10,13 @@
     <!-- {{node.name}} -->
     <div class="node-title child-node">
       {{node.name}}
-      <mat-icon (click)="downloadFile(node)" class="download-btn">cloud_download</mat-icon>
+      <!-- <a class="view-btn-attach" [href]="selectedFileBLOB" target="_blank"> -->
+      <a class="view-btn-attach" [download]="node.name" [href]="'data:image/jpeg;base64,' + node.picBytes"
+        target="_blank">
+        <!-- <mat-icon (click)="downloadFile(node)" class="download-btn">cloud_download</mat-icon> -->
+        <mat-icon class="download-btn">cloud_download</mat-icon>
+      </a>
+
     </div>
   </mat-tree-node>
   <!-- This is the tree node template for expandable nodes -->
@@ -26,3 +32,5 @@
     </div>
   </mat-tree-node>
 </mat-tree>
+
+<img [src]="'data:image/jpeg;base64,'+selectedFile?.picBytes" alt="">

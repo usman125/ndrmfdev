@@ -386,11 +386,23 @@ export class ProjectService {
     );
   }
 
-  updateProposalOfferLetterStatus(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/offerLetterStatus/${id}?status=PENDING`;
+  updateProposalOfferLetterStatus(
+    id,
+    status,
+    subStatus,
+    body
+  ) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=${status}&subStatus=${subStatus}`;
     return this._httpClient.put(
       url,
-      null
+      body
+    );
+  }
+
+  getOfferLetter(id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/offerLetter/${id}`;
+    return this._httpClient.get(
+      url,
     );
   }
 

@@ -22,6 +22,7 @@ interface FoodNode {
   clubId: string;
   _id: string,
   children?: FoodNode[];
+  addRf: boolean;
 }
 /** Flat node with expandable and level information */
 interface ExampleFlatNode {
@@ -31,6 +32,7 @@ interface ExampleFlatNode {
   title: string;
   level: number;
   _id: string;
+  addRf: boolean;
 }
 
 @Component({
@@ -48,7 +50,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       level: level,
       clubbed: node.clubbed,
       clubId: node.clubId,
-      _id: node._id
+      _id: node._id,
+      addRf: node.addRf,
     };
   }
   treeControl = new FlatTreeControl<ExampleFlatNode>(
@@ -188,6 +191,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
             this.allSubCosts = [];
             // if (this.allCosts) {
 
+
             this.allCosts.forEach((c) => {
               this.selectedActivity = c;
               this.calculateActivityTotal(null);
@@ -237,7 +241,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
             _id: result[i].id,
             mainCostId: null,
             clubbed: false,
-            clubId: null
+            clubId: null,
+            addRf: false,
           }
           for (let i = 0; i < Math.ceil(this.months / 3) + 3; i++) {
             var object = {
@@ -278,7 +283,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       _id: 'cost' + new Date().toISOString(),
       mainCostId: null,
       clubbed: false,
-      clubId: null
+      clubId: null,
+      addRf: false,
     }
     for (let i = 0; i < Math.ceil(this.months / 3) + 3; i++) {
       var object = {
@@ -303,7 +309,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       _id: 'subcost' + new Date().toISOString(),
       mainCostId: mainCostId,
       clubbed: false,
-      clubId: null
+      clubId: null,
+      addRf: false,
     }
 
     for (let i = 0; i < Math.ceil(this.months / 3) + 3; i++) {
@@ -419,10 +426,12 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
                 isProcurement: club ? club.isProcurement : false,
                 procurementHeads: club ? club.procurementHeads : null,
                 rfSubmitData: null,
-                tehsil: null,
+                province: null,
                 district: null,
+                division: null,
+                tehsil: null,
                 uc: null,
-                city: null
+                target: club ? club.numOfActivities : 1,
               }
             }
           }
@@ -441,10 +450,12 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
           isProcurement: false,
           procurementHeads: [],
           rfSubmitData: null,
-          tehsil: null,
+          province: null,
           district: null,
+          division: null,
+          tehsil: null,
           uc: null,
-          city: null
+          target: 1,
         }
       }
       // this.clearCostDetails();
@@ -466,10 +477,12 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         fipShare: object.data.fipShare,
         isProcurement: object.data.isProcurement,
         procurementHeads: object.data.procurementHeads,
-        tehsil: object.data.tehsil,
+        province: object.data.province,
         district: object.data.district,
+        division: object.data.division,
+        tehsil: object.data.tehsil,
         uc: object.data.uc,
-        city: object.data.city,
+        target: object.data.target,
 
       }
     });
@@ -485,10 +498,12 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         object.data.fipShare = result.fipShare;
         object.data.isProcurement = result.isProcurement;
         object.data.procurementHeads = result.procurementHeads;
-        object.data.tehsil = result.tehsil;
+        object.data.province = result.province;
         object.data.district = result.district;
+        object.data.division = result.division;
+        object.data.tehsil = result.tehsil;
         object.data.uc = result.uc;
-        object.data.city = result.city;
+        object.data.target = result.target;
       }
     });
   }
@@ -551,6 +566,27 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     console.log("OPEN QUARTER DETAILS:--", object, item);
     this.selectedQuarter = object;
     this.selectedActivity = item;
+    if (object.data === null) {
+      object.data = {
+        available: null,
+        startDate: null,
+        endDate: null,
+        description: null,
+        latitude: null,
+        longitude: null,
+        ndrmfShare: null,
+        fipShare: null,
+        isProcurement: false,
+        procurementHeads: [],
+        rfSubmitData: null,
+        province: null,
+        district: null,
+        division: null,
+        tehsil: null,
+        uc: null,
+        target: 1,
+      }
+    }
     // this.set
     this._costDetailsStore.setDefaults(
       item.title,
@@ -598,7 +634,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   calculateActivityTotal($event) {
     var activityCount = 0;
     var club = null;
-    if (this.selectedActivity.clubbed === false) {
+    if (!this.selectedActivity.clubbed) {
       for (let i = 0; i < this.selectedActivity.quarters.length; i++) {
         var key = this.selectedActivity.quarters[i];
         if (key.data) {
@@ -612,7 +648,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       this.selectedActivity.totalCost = club ? club.ndrmfShare + club.fipShare : null;
     }
 
-    console.log("CALCULATE TOTAL FOR ACTIVITY:---", this.selectedActivity, $event, activityCount);
+    // console.log("CALCULATE TOTAL FOR ACTIVITY:---", this.selectedActivity, $event, activityCount);
   }
 
   getClubData(id) {
@@ -708,7 +744,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     this.clearCostDetails();
     console.log("CLUB ENTRY:---", cost, clubItem);
   }
-  
+
   unClubEntry(cost, clubItem) {
     cost.clubbed = false;
     let club = this.getClub(cost.clubId);
@@ -790,7 +826,15 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   getClubsCount() {
     let clubsCount = 0;
     for (let i = 0; i < this.clubs.length; i++) {
+      var count = 0;
       let key = this.clubs[i];
+      for (let j = 0; j < this.allCosts.length; j++) {
+        var c = this.allCosts[j];
+        if (c.clubbed && (key._id === c.clubId)) {
+          count = count + 1;
+        }
+      }
+      key.numOfActivities = count;
       if (key.numOfActivities > 0) {
         clubsCount = clubsCount + (key.fipShare + key.ndrmfShare);
       }
@@ -823,6 +867,16 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         this.selectedClub = item;
     }
     console.log("SEELCTED CLUB:--", this.selectedClub);
+  }
+
+  rfUpdated($event) {
+    for (let i = 0; i < this.selectedActivity.quarters.length; i++) {
+      var x = this.selectedActivity.quarters[i];
+      if (x.data)
+        x.data.rfSubmitData = JSON.parse($event.rfUpdated);
+    }
+    this.selectedActivity.addRf = true;
+    console.log("RF UPDATED:--", $event, this.selectedActivity.quarters);
   }
 
 }

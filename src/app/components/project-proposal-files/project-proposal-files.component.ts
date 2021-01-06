@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from "rxjs";
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
@@ -6,13 +6,14 @@ import { PrimaryAppraisalFormsStore } from '../../stores/primary-appraisal-forms
 import { AuthStore } from '../../stores/auth/auth-store';
 import * as _ from 'lodash';
 import { ProjectService } from 'src/app/services/project.service';
-
+import { DomSanitizer } from '@angular/platform-browser';
 /**
  * Food data with nested structure.
  * Each node has a name and an optional list of children.
  */
 interface FoodNode {
   status: string;
+  picBytes: any;
   name: string;
   path: string;
   children?: FoodNode[];
@@ -24,6 +25,7 @@ interface ExampleFlatNode {
   name: string;
   path: string;
   status: string;
+  picBytes: any;
 }
 
 @Component({
@@ -36,13 +38,18 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
 
   Subscription: Subscription = new Subscription();
 
+  selectedFile: any = null;
+  selectedFileBLOB: any = null;
+  @ViewChild('downloadLink') downloadLink;
+
   private _transformer = (node: FoodNode, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0,
       name: node.name,
       level: level,
       path: node.path,
-      status: node.status
+      status: node.status,
+      picBytes: node.picBytes
     };
   }
   treeControl = new FlatTreeControl<ExampleFlatNode>(
@@ -55,6 +62,7 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
     private _projectService: ProjectService,
     private _authStore: AuthStore,
+    private _domSanitizer: DomSanitizer,
   ) { }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
@@ -97,6 +105,8 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
         return 'RMC Meeting';
       case 'BOD Meeting':
         return 'BOD Meeting';
+      case 'Offer Letter':
+        return 'Offer Letter';
       default:
         return 'Others';
     }
@@ -104,25 +114,77 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
 
   downloadFile(file) {
     console.log("FILE TO DOWNLOAD:---", file);
-    this._projectService.downloadAttachments(file.name, file.path).subscribe(
-      (result: any) => {
-        var reader = new FileReader();
-        reader.readAsDataURL(result);
-        reader.onloadend = () => {
-          
-          // just putting the data url to img element
-          // document.querySelector('#image').src = reader.result;
-        }
-        
-        // let blob = new Blob([result.text], { type: 'application/octet-stream' });
-        // let url = window.URL.createObjectURL(blob);
-        // let pwa = window.open(url);
-        // console.log("REUSLT FROM DOWNLOADING:---", reader, blob, url);
-      },
-      error => {
-        console.log("REUSLT FROM DOWNLOADING:---", error);
-      }
-    )
+    // let el: HTMLElement = this.downloadLink.nativeElement;
+    this.selectedFile = 'data:image/jpeg;base64,' + file.picBytes;
+    // el.click();
+    // this.selectedFile = null;
+    // this._projectService.downloadAttachments(file.name, file.path).subscribe(
+    //   (result: any) => {
+
+    // this._projectService.downloadAttachments(file.name, file.path).subscribe(
+    //   (result: any) => {
+    // let blob = new Blob([file.picBytes], { type: 'application/octet-stream' });
+    // let url = window.URL.createObjectURL(blob);
+    // this.selectedFileBLOB = this._domSanitizer.bypassSecurityTrustUrl(url);
+    // var reader = new FileReader();
+    // reader.readAsDataURL(blob);
+    // reader.onloadend = () => {
+    //   console.log("FILE READER COMPLETED")
+    //   console.log("REUSLT FROM DOWNLOADING:---", this.selectedFileBLOB, blob, url);
+    // }
+    //     // let pwa = window.open(url);
+    // const url = 'data:image/jpeg;base64,' + file.picBytes;
+    // window.open(this.selectedFileBLOB);
+    //     console.log("REUSLT FROM DOWNLOADING:---", result);
+    //   },
+    //   error => {
+    //     console.log("REUSLT FROM DOWNLOADING:---", error);
+    //   }
+    // );
+
+    // this._projectService.downloadAttachments(file.name, file.path).subscribe(
+    //   (result: any) => {
+
+
+    //     var keys = ['name', 'path', 'status', 'picBytes'];
+    //     var newArr = result;
+    //     var formatted = [],
+    //       data = newArr,
+    //       cols = keys,
+    //       l = cols.length;
+    //     for (var i = 0; i < data.length; i++) {
+    //       var d = data[i],
+    //         o = {};
+    //       for (var j = 0; j < l; j++)
+    //         o[cols[j]] = d[j];
+    //       formatted.push(o);
+    //     }
+
+    //     console.log("REUSLT FROM DOWNLOADING:---", result, formatted);
+
+    //     setTimeout(() => {
+    //       let el: HTMLElement = this.downloadLink.nativeElement;
+    //       this.selectedFile = 'data:image/jpeg;base64,' + formatted[0].picBytes;
+    //       this.selectedFileBLOB = formatted[0].name;
+    //       el.click();
+    //     }, 100);
+
+    //     // this.selectedFile = null;
+    //     // this.selectedFileBLOB = null;
+
+
+    //     // var blob = new Blob([result[3]], { type: 'application/octet-stream' });
+    //     // var downloadURL = window.URL.createObjectURL(blob);
+    //     // var link = document.createElement('a');
+    //     // link.href = downloadURL;
+    //     // link.download;
+    //     // link.target = '_blank';
+    //     // link.click();
+    //   },
+    //   error => {
+    //     console.log("REUSLT FROM DOWNLOADING:---", error);
+    //   }
+    // );
   }
 
   ngOnDestroy(): void {

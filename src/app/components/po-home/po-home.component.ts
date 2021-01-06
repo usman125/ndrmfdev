@@ -9,6 +9,10 @@ import { ChartDataSets, ChartOptions, ChartType, RadialChartOptions } from 'char
 import { MultiDataSet, Label, SingleDataSet } from 'ng2-charts';
 // import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 
+import * as XLSX from 'xlsx';
+
+import * as _ from 'lodash';
+
 
 @Component({
   selector: 'app-po-home',
@@ -325,5 +329,36 @@ export class PoHomeComponent implements OnInit {
   //     (Math.random() * 100),
   //     40];
   // }
+
+  onFileChange(event: any) {
+    /* wire up file reader */
+    const target: DataTransfer = <DataTransfer>(event.target);
+    if (target.files.length !== 1) {
+      throw new Error('Cannot use multiple files');
+    }
+    const reader: FileReader = new FileReader();
+    reader.readAsBinaryString(target.files[0]);
+    reader.onload = (e: any) => {
+      /* create workbook */
+      const binarystr: string = e.target.result;
+      const wb: XLSX.WorkBook = XLSX.read(binarystr, { type: 'binary' });
+
+      /* selected the first sheet */
+      const wsname: string = wb.SheetNames[0];
+      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+      /* save data */
+      const data = XLSX.utils.sheet_to_json(ws); // to get 2d array pass 2nd parameter as object {header: 1}
+      console.log(data); // Data will be logged in array format containing objects
+
+      // let PROVINCE = _.uniqBy(data, 'PROVINCE');
+      // let DISTRICT = _.uniqBy(data, 'DISTRICT');
+      // let DIVISION = _.uniqBy(data, 'DIVISION');
+      // let TEHSIL = _.uniqBy(data, 'TEHSIL');
+      // let UC = _.uniqBy(data, 'UC');
+
+      // console.log('\nPROVINCE:', PROVINCE, '\nDISTRICT:', DISTRICT, '\nDIVISION:', DIVISION, '\nTEHSIL:', TEHSIL, '\nUC:', UC);
+    };
+  }
 
 }

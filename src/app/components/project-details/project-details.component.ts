@@ -79,7 +79,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   // @Input() target = 'https://file.io';
   /** File extension that accepted, same as 'accept' of <input type="file" />. 
       By the default, it's set to 'image/*'. */
-  @Input() accept = 'image/*';
+  @Input() accept = '*/*';
   /** Allow you to add handler after its completion. Bubble up response text from remote. */
   // @Output() complete = new EventEmitter<string>();
 
@@ -318,7 +318,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             (result: any) => {
               //javascript create JSON object from two dimensional Array
               //vacate keys from main array
-              var keys = ['name', 'path', 'status'];
+              var keys = ['name', 'path', 'status', 'picBytes'];
               var newArr = result;
               var formatted = [],
                 data = newArr,
@@ -331,21 +331,29 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
                   o[cols[j]] = d[j];
                 formatted.push(o);
               }
-              // let array = _.groupBy(formatted, 'stage');
-              // let array = _.reduce(formatted, function (result, value, key) {
-              // let array = _.map(formatted, 'status');
-              // var array = _.chain(formatted)
-              //   .groupBy('status')
-              //   .map((val, status) => {
-              //     return {
-              //       files: val,
-              //       _id: status,
-              //     }
-              //   })
-              //   .value();
               console.log("FILES FOR THIS PROJECT:--", result, formatted);
-              // this.selectedProject.files = formatted;
               this._primaryAppraisalFormsStore.addSelectedProjectFiles(formatted);
+              if (this.selectedProject.status === 'Offer Letter') {
+                this._projectService.getOfferLetter(this.selectedProjectId).subscribe(
+                  (result: any) => {
+                    console.log("RESULT AFTER OFFER LETTER:--", result);
+                    console.log("******OFFER LETTER ENABLED******");
+                    if (result) {
+                      if (result.expiryDate){
+                        result.expiryDate = result.expiryDate.split('T')[0];
+                        result.offerLetterDays = this.calculateDaysDifference(result.expiryDate);
+                        if (result.offerLetterDays < parseInt('0')) {
+                          result.status = 'Expired';
+                        }
+                      }
+                      this._primaryAppraisalFormsStore.setOfferLetter(result);
+                    }
+                  },
+                  error => {
+                    console.log("RESULT AFTER OFFER LETTER:--", error);
+                  }
+                );
+              }
             },
             error => {
               console.log("FILES FOR THIS PROJECT:--", error);
@@ -373,7 +381,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
     console.log("TIME DIFFERENCE:", Difference_In_Time, Math.trunc(Difference_In_Days), Math.floor(Difference_In_Days));
     if (Math.trunc(Difference_In_Days) < 0) {
-      return -1 * Math.trunc(Difference_In_Days);
+      return Math.trunc(Difference_In_Days);
     } else {
       return Math.trunc(Difference_In_Days);
 
@@ -1034,35 +1042,51 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       setStatus: false,
       assignToGm: false,
       offerLetter: true,
+      comments: null,
     };
 
     this._confirmModelService.open(options);
     this._confirmModelService.confirmed().subscribe(confirmed => {
       console.log("MARK TO GM STATUS", confirmed);
       if (confirmed) {
-        this._projectService.updateProposalOfferLetterStatus(this.selectedProjectId).subscribe(
+        var body = {
+          fipComments: null,
+          gmComments: confirmed.comments,
+          expiryDate: confirmed.endDate,
+          gmStatus: 'Pending',
+          fipStatus: null,
+          gmResponse: null,
+          fipResponse: null,
+        }
+        // this._projectService.updateProposalOfferLetterStatus(
+        //   this.selectedProjectId,
+        //   'OFFER_LETTER',
+        //   'PENDING',
+        //   body
+        // ).subscribe(
+        //   (result: any) => {
+        //     console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", result);
+        //     this.files = [];
+        //   },
+        //   error => {
+        //     console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", error);
+        //   }
+        // );
+        const fd = new FormData();
+        fd.append(this.param, this.files[0].data);
+        this._projectService.uploadFiles(
+          this.selectedProjectId,
+          'OFFER_LETTER',
+          fd
+        ).subscribe(
           (result: any) => {
-            console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", result);
+            console.log("RESULT AFTER UPLOADING FILE FOR OFFER LETTER:--", result);
             this.files = [];
           },
           error => {
-            console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", error);
+            console.log("ERROR AFTER OFFER LETTER FILE UPLOAD:--", error);
           }
         );
-        // const fd = new FormData();
-        // fd.append(this.param, this.files[0].data);
-        // this._projectService.uploadFiles(
-        //   this.selectedProjectId,
-        //   'OFFER_LETTER',
-        //   fd
-        // ).subscribe(
-        //   (result: any) => {
-        //     console.log("RESULT AFTER UPLOADING FILE FOR OFFER LETTER:--", result);
-        //   },
-        //   error => {
-        //     console.log("ERROR AFTER OFFER LETTER FILE UPLOAD:--", error);
-        //   }
-        // );
       }
     });
 
@@ -1378,6 +1402,161 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         console.log("ERROR AFTER UPDATING MOM STAUS:--", error);
       }
     );
+  }
+
+  approveOfferLetter() {
+    var body = {
+      fipComments: this.selectedProject.offerLetter.fip_comments,
+      gmComments: this.selectedProject.offerLetter.gm_comments,
+      expiryDate: this.selectedProject.offerLetter.expiryDate,
+      gmStatus: 'Completed',
+      fipStatus: this.selectedProject.offerLetter.fipMarkingStatus,
+      gmResponse: 'Approved',
+      fipResponse: this.selectedProject.offerLetter.fipResponse,
+    }
+    this._projectService.updateProposalOfferLetterStatus(
+      this.selectedProjectId,
+      'OFFER_LETTER',
+      'PENDING',
+      body
+    ).subscribe(
+      (result: any) => {
+        console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", result);
+        this._primaryAppraisalFormsStore.setOfferLetter(body);
+      },
+      error => {
+        console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", error);
+      }
+    );
+  }
+
+  disApproveOfferLetter() {
+    var body = {
+      fipComments: this.selectedProject.offerLetter.fip_comments,
+      gmComments: this.selectedProject.offerLetter.gm_comments,
+      expiryDate: this.selectedProject.offerLetter.expiryDate,
+      gmStatus: 'Completed',
+      fipStatus: this.selectedProject.offerLetter.fipMarkingStatus,
+      gmResponse: 'Rejected',
+      fipResponse: this.selectedProject.offerLetter.fipResponse,
+    }
+    this._projectService.updateProposalOfferLetterStatus(
+      this.selectedProjectId,
+      'OFFER_LETTER',
+      'PENDING',
+      body
+    ).subscribe(
+      (result: any) => {
+        console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", result);
+        this._primaryAppraisalFormsStore.setOfferLetter(body);
+      },
+      error => {
+        console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", error);
+      }
+    );
+
+  }
+
+  fipApproveOfferLetter() {
+    var body = {
+      fipComments: this.selectedProject.offerLetter.fip_comments,
+      gmComments: this.selectedProject.offerLetter.gm_comments,
+      expiryDate: this.selectedProject.offerLetter.expiryDate,
+      gmStatus: this.selectedProject.offerLetter.gmMarkingStatus,
+      fipStatus: 'Completed',
+      gmResponse: this.selectedProject.offerLetter.gmResponse,
+      fipResponse: 'Approved',
+    }
+    this._projectService.updateProposalOfferLetterStatus(
+      this.selectedProjectId,
+      'OFFER_LETTER',
+      'PENDING',
+      body
+    ).subscribe(
+      (result: any) => {
+        console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", result);
+        this._primaryAppraisalFormsStore.setOfferLetter(body);
+      },
+      error => {
+        console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", error);
+      }
+    );
+
+  }
+
+  fipDisApproveOfferLetter() {
+    var body = {
+      fipComments: this.selectedProject.offerLetter.fip_comments,
+      gmComments: this.selectedProject.offerLetter.gm_comments,
+      expiryDate: this.selectedProject.offerLetter.expiryDate,
+      gmStatus: this.selectedProject.offerLetter.gmMarkingStatus,
+      fipStatus: 'Completed',
+      gmResponse: this.selectedProject.offerLetter.gmResponse,
+      fipResponse: 'Rejected',
+    }
+    this._projectService.updateProposalOfferLetterStatus(
+      this.selectedProjectId,
+      'OFFER_LETTER',
+      'PENDING',
+      body
+    ).subscribe(
+      (result: any) => {
+        console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", result);
+        this._primaryAppraisalFormsStore.setOfferLetter(body);
+      },
+      error => {
+        console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", error);
+      }
+    );
+
+  }
+
+  markOfferLetterToFip() {
+    const options = {
+      title: 'Select a due date for the Signing!',
+      message: 'By Clicking "OK" offer letter will be generated',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: false,
+      offerLetter: true,
+      comments: null,
+    };
+
+    this._confirmModelService.open(options);
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("MARK TO GM STATUS", confirmed);
+      if (confirmed) {
+        var body = {
+          fipComments: confirmed.comments,
+          gmComments: this.selectedProject.offerLetter.gm_comments,
+          expiryDate: confirmed.endDate,
+          gmStatus: this.selectedProject.offerLetter.gmMarkingStatus,
+          fipStatus: 'Pending',
+          gmResponse: this.selectedProject.offerLetter.gmResponse,
+          fipResponse: null,
+        }
+        this._projectService.updateProposalOfferLetterStatus(
+          this.selectedProjectId,
+          'OFFER_LETTER',
+          'PENDING',
+          body
+        ).subscribe(
+          (result: any) => {
+            console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", result);
+            this._primaryAppraisalFormsStore.setOfferLetter(body);
+          },
+          error => {
+            console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", error);
+          }
+        );
+      }
+    });
+
+
+
   }
 
   viewGia() {

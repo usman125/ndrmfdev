@@ -71,6 +71,7 @@ import { JwtModule } from "@auth0/angular-jwt";
 import { ActivityDetailsComponent } from './components/activity-details/activity-details.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+// import { ResultFrameworkReportComponent } from './components/result-framework-report/result-framework-report.component';
 // import { ProjectProposalFilesComponent } from './components/project-proposal-files/project-proposal-files.component';
 
 export function tokenGetter() {
@@ -88,6 +89,7 @@ export function tokenGetter() {
     NoHeaderLayoutComponent,
     AddProjectComponent,
     ActivityDetailsComponent,
+    // ResultFrameworkReportComponent,
     // ProjectProposalFilesComponent,
   ],
   imports: [
@@ -125,6 +127,7 @@ export function tokenGetter() {
       config: {
         tokenGetter: tokenGetter,
         whitelistedDomains: ["attendance.tallymarkscloud.com:8080"]
+        // whitelistedDomains: ["localhost:8080"]
       }
     }),
     FormioModule,

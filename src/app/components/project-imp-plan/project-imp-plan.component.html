@@ -157,6 +157,10 @@
               [matMenuTriggerFor]="menu2">
               <mat-icon>{{!node.clubbed ? 'share' : 'push_pin'}}</mat-icon>
             </button>
+            <button [matTooltip]="!node.addRf ? 'M & E Not Attached' : 'M & E Attached'"
+              [ngStyle]="{'color': !node.addRf ? 'red' : 'green'}" mat-icon-button>
+              <mat-icon>{{!node.addRf ? 'link_off' : 'link'}}</mat-icon>
+            </button>
             <mat-menu #menu2="matMenu" class="p-2">
               <p class="border-heading mb-0 pr-3 pl-3 pb-2">Select a club</p>
               <button [disabled]="!node.clubbed || loggedUser?.role !== 'fip'" mat-menu-item
@@ -197,12 +201,12 @@
                     </span>
                     <mat-icon
                       [matTooltip]="object?.data?.startDate === null || !object?.data?.ndrmfShare || !object?.data?.fipShare  ? 'Pending Details' : 'Completed'"
-                      [ngStyle]="{'color': object?.data?.startDate === null || !object?.data?.ndrmfShare || !object?.data?.fipShare  ? '#EEFF41' : null}"
+                      [ngStyle]="{'color': object?.data?.startDate === null || object?.data?.ndrmfShare === null || object?.data?.fipShare === null  ? '#EEFF41' : null}"
                       *ngIf="object.value === true && viewType !== 'progress' && detailBtn !== 'gia-projects'"
                       (click)="openQuarterDetails(object, item)">pageview</mat-icon>
                     <mat-icon
                       [matTooltip]="object?.data?.startDate === null || !object?.data?.ndrmfShare || !object?.data?.fipShare  ? 'Pending Details' : 'Completed'"
-                      [ngStyle]="{'color': object?.data?.startDate === null || !object?.data?.ndrmfShare || !object?.data?.fipShare  ? '#EEFF41' : null}"
+                      [ngStyle]="{'color': (object?.data?.startDate === null || object?.data?.ndrmfShare === null || object?.data?.fipShare === null)  ? '#EEFF41' : null}"
                       *ngIf="object.value === true && viewType === 'progress' && detailBtn !== 'gia-projects'"
                       (click)="openProgressDetails(object, item)">insights</mat-icon>
                   </div>
@@ -295,6 +299,10 @@
             <button disabled color="warn" mat-icon-button>
               <mat-icon>share</mat-icon>
             </button>
+            <button disabled [matTooltip]="!node.addRf ? 'M & E Not Attached' : 'M & E Attached'"
+              [ngStyle]="{'color': !node.addRf ? 'red' : 'green'}" mat-icon-button>
+              <mat-icon>link_off</mat-icon>
+            </button>
             <div *ngFor="let item of allCosts;let i=index;">
               <div *ngIf="item._id === node._id">
                 <div class="quarters">
@@ -312,7 +320,8 @@
 
       </div>
       <span id="myTopElement5" #myTopElement5></span>
-      <app-cost-details (costUpdated)="calculateActivityTotal($event)"></app-cost-details>
+      <app-cost-details (rfUpdated)="rfUpdated($event)" (costUpdated)="calculateActivityTotal($event)">
+      </app-cost-details>
     </mat-card-content>
   </mat-card>
 </div>

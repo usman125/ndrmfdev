@@ -15,6 +15,12 @@
       <mat-tab label="General" class="p-4">
         <div class="m-4">
           <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Target</mat-label>
+                <input type="number" matInput formControlName="target">
+              </mat-form-field>
+            </div>
             <div class="col-md-8">
               <div class="row">
                 <div class="col-md-6">
@@ -69,79 +75,54 @@
           <div class="row">
             <div class="col-md-3 mt-3">
               <mat-form-field appearance="outline">
-                <mat-label>Tehsil</mat-label>
-                <mat-select multiple formControlName="tehsil">
-                  <mat-option value="DeraGhaziKhanDivision">Dera Ghazi Khan Division</mat-option>
-                  <mat-option value="FaisalabadDivision">Faisalabad Division</mat-option>
-                  <mat-option value="GujranwalaDivision">Gujranwala Division</mat-option>
-                  <mat-option value="LahoreDivision">Lahore Division</mat-option>
-                  <mat-option value="MultanDivision">Multan Division</mat-option>
-                  <mat-option value="RawalpindiDivision">Rawalpindi Division</mat-option>
-                  <mat-option value="SahiwalDivision">Sahiwal Division</mat-option>
-                  <mat-option value="SargodhaDivision">Sargodha Division</mat-option>
-                  <mat-option value="KhushabDistrict">Khushab District</mat-option>
-                  <mat-option value="SargodhaDistrict">Sargodha District</mat-option>
+                <mat-label>{{'province' | uppercase}}</mat-label>
+                <mat-select multiple formControlName="province">
+                  <mat-option *ngFor="let item of province" [value]="item">
+                    {{item.PROVINCE | titlecase}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
             <div class="col-md-3 mt-3">
               <mat-form-field appearance="outline">
-                <mat-label>Dsitrict</mat-label>
+                <mat-label>{{'district' | uppercase}}</mat-label>
                 <mat-select multiple formControlName="district">
-                  <mat-option value="DeraGhaziKhanDistrict">Dera Ghazi Khan District</mat-option>
-                  <mat-option value="LayyahDistrict">Layyah District</mat-option>
-                  <mat-option value="MuzaffargarhDistrict">Muzaffargarh District</mat-option>
-                  <mat-option value="RajanpurDistrict">Rajanpur District</mat-option>
-                  <mat-option value="ChiniotDistrict">Chiniot District</mat-option>
-                  <mat-option value="FaisalabadDistrict">Faisalabad District</mat-option>
-                  <mat-option value="JhangDistrict">Jhang District</mat-option>
-                  <mat-option value="TobaTekSinghDistrict">Toba Tek Singh District</mat-option>
-                  <mat-option value="GujranwalaDistrict">Gujranwala District</mat-option>
-                  <mat-option value="GujratDistrict">Gujrat District</mat-option>
-                  <mat-option value="MandiBahauddinDistrict">Mandi Bahauddin District</mat-option>
-                  <mat-option value="NarowalDistrict">Narowal District</mat-option>
-                  <mat-option value="SialkotDistrict">Sialkot District</mat-option>
-                  <mat-option value="KasurDistrict">Kasur District</mat-option>
-                  <mat-option value="LahoreDistrict">Lahore District</mat-option>
-                  <mat-option value="NankanaSahibDistrict">Nankana Sahib District</mat-option>
-                  <mat-option value="SheikhupuraDistrict">Sheikhupura District</mat-option>
-                  <mat-option value="KhanewalDistrict">Khanewal District</mat-option>
-                  <mat-option value="LodhranDistrict">Lodhran District</mat-option>
-                  <mat-option value="MultanDistrict">Multan District</mat-option>
-                  <mat-option value="AttockDistrict">Attock District</mat-option>
-                  <mat-option value="ChakwalDistrict">Chakwal District</mat-option>
-                  <mat-option value="JhelumDistrict">Jhelum District</mat-option>
-                  <mat-option value="RawalpindiDistrict">Rawalpindi District</mat-option>
-                  <mat-option value="OkaraDistrict">Okara District</mat-option>
-                  <mat-option value="PakpattanDistrict">Pakpattan District</mat-option>
-                  <mat-option value="SahiwalDistrict">Sahiwal District</mat-option>
-                  <mat-option value="BhakkarDistrict">Bhakkar District</mat-option>
-                  <mat-option value="KhushabDistrict">Khushab District</mat-option>
-                  <mat-option value="MianwaliDistrict">Mianwali District</mat-option>
-                  <mat-option value="SargodhaDistrict">Sargodha District</mat-option>
-                  <mat-option value="BahawalnagarDistrict">Bahawalnagar District</mat-option>
-                  <mat-option value="BahawalpurDistrict">Bahawalpur District</mat-option>
-                  <mat-option value="RahimYarKhanDistrict">Rahim Yar Khan District</mat-option>
+                  <mat-option *ngFor="let item of district" [value]="item">
+                    {{item.DISTRICT | titlecase}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
             <div class="col-md-3 mt-3">
               <mat-form-field appearance="outline">
-                <mat-label>UC</mat-label>
+                <mat-label>{{'division' | uppercase}}</mat-label>
+                <mat-select multiple formControlName="division">
+                  <mat-option *ngFor="let item of tehsil" [value]="item">
+                    {{item.DIVISION | titlecase}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3 mt-3">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'tehsil' | uppercase}}</mat-label>
+                <mat-select multiple formControlName="tehsil">
+                  <mat-option *ngFor="let item of tehsil" [value]="item">
+                    {{item.TEHSIL | titlecase}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <!-- <div class="col-md-3 mt-3">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'uc' | uppercase}}</mat-label>
                 <mat-select multiple formControlName="uc">
-                  <mat-option value="1">Head 1</mat-option>
-                  <mat-option value="2">Head 2</mat-option>
-                  <mat-option value="3">Head 3</mat-option>
-                  <mat-option value="4">Head 4</mat-option>
+                  <mat-option *ngFor="let item of uc" [value]="item">
+                    {{item.UC | titlecase}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
-            </div>
-            <div class="col-md-3 mt-3">
-              <mat-form-field appearance="outline">
-                <mat-label>City</mat-label>
-                <input matInput formControlName="uc">
-              </mat-form-field>
-            </div>
+            </div> -->
           </div>
         </div>
       </mat-tab>
@@ -211,6 +192,17 @@
             </div>
           </div>
           <div class="row">
+            <div class="col-md-6 mb-3">
+              <div class="general-info">
+                <span id="title">Target</span>
+                <span id="value" *ngIf="selectedQuarter.target">
+                  {{selectedQuarter.target}}
+                </span>
+                <span id="value" *ngIf="!selectedQuarter.target">
+                  &nbsp;
+                </span>
+              </div>
+            </div>
             <div class="col-md-8">
               <div class="row">
                 <div class="col-md-6">

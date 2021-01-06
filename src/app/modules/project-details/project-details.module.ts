@@ -25,6 +25,7 @@ import { PipComponent } from '../../components/pip/pip.component';
 import { PipModule } from '../pip/pip.module';
 import { ProjectImpPlanModule } from '../project-imp-plan/project-imp-plan.module';
 import { ProjectProposalFilesModule } from '../project-proposal-files/project-proposal-files.module';
+import { ResultFrameworkReportModule } from '../result-framework-report/result-framework-report.module';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ProjectProposalFilesModule } from '../project-proposal-files/project-pr
     // PipModule,
     ProjectImpPlanModule,
     ProjectProposalFilesModule,
+    ResultFrameworkReportModule,
     MatProgressSpinnerModule,
     FormioModule,
     MatButtonModule,

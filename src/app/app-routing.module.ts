@@ -462,7 +462,12 @@ const routes: Routes = [
     path: 'plan-report',
     loadChildren: () => import('./modules/qualification-report/qualification-report.module').then(m => m.QualificationReportModule),
     // component: ProjectWorkPlanComponent
-  }
+  },
+  // {
+  //   path: 'result-framework-report/:projectId',
+  //   loadChildren: () => import('./modules/result-framework-report/result-framework-report.module').then(m => m.ResultFrameworkReportModule),
+  //   // component: ProjectWorkPlanComponent
+  // }
 ];
 
 @NgModule({

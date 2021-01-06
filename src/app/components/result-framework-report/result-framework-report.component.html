@@ -1,0 +1,79 @@
+<ng-container>
+  <ul>
+    <li class="main-node">
+      <span style="font-weight: 600; color:#919191;" class="header">
+        {{'Result Chain' | uppercase}}
+      </span>
+      <ul>
+        <li class="main-node">
+          <div class="kpi-title">
+            <span style="font-weight: 600; color:#919191;">
+              {{'Activity' | uppercase}}
+            </span>
+          </div>
+          <div class="kpi-title">
+            <span style="font-weight: 600; color:#919191;">
+              {{'KPI' | uppercase}}
+            </span>
+          </div>
+          <!-- <div class="node-quarters">
+            <div *ngFor="let item of obj.quarters" class="quarter">
+              <div *ngIf="item.value" class="box">
+                
+              </div>
+            </div>
+          </div> -->
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <ul>
+    <li *ngFor="let i of resultsChain" class="main-node">
+      <span class="header">
+        <span style="font-weight: 500;color:#919191;">{{i._id}}</span>
+        <span style="font-weight: 300;color:#919191;">{{getChainTitle(i._id, i.children[0].mneData.type1)}}</span>
+      </span>
+      <ul *ngIf="i.children">
+        <li *ngFor="let obj of i.children" class="main-node">
+          <div class="kpi-title">
+            <span class="mr-2">{{obj.title}}</span>
+          </div>
+          <div class="kpi-title">
+            <span *ngIf="obj?.mneData?.type === 'output'">
+              <span style="font-weight: 500;color:#919191;">
+                {{obj.mneData.subOutputs}}
+              </span>
+              <span style="font-weight: 300;color:#919191;">
+                {{getSubOutPutTitle(obj.mneData.subOutputs)}}
+              </span>
+            </span>
+          </div>
+          <div class="node-quarters">
+            <div *ngFor="let item of obj.quarters" class="quarter">
+              <div *ngIf="item.value" class="box">
+                <div *ngIf="item.value" class="d-flex flex-column target">
+                  <span style="font-weight: 600;">Target</span>
+                  <span>{{item.data && item.data.target ? item.data.target : '&nbsp;'}}</span>
+                </div>
+                <div *ngIf="item.value" class="d-flex flex-column achieved">
+                  <span style="font-weight: 600;">Achieved</span>
+                  <span>{{item.progress && item.progress.mneProgress ? (item.progress.mneProgress + '%') :
+                    '&nbsp;'}}</span>
+                </div>
+              </div>
+              <div *ngIf="item.value" class="box region">
+                <span style="font-weight: 600;">Region</span>
+                <span>Province: {{item.data.province ? item.data.district[0].PROVINCE : '&nbsp;'}}</span>
+                <span>Division: {{item.data.district ? item.data.district[0].DISTRICT : '&nbsp;'}}</span>
+                <span>Tehsil: {{item.data.tehsil ? item.data.district[0].TEHSIL : '&nbsp;'}}</span>
+              </div>
+              <div *ngIf="!item.value">
+                {{'&nbsp;'}}
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</ng-container>

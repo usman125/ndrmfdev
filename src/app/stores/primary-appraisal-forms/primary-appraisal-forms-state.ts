@@ -344,6 +344,7 @@ export class PrimaryAppraisalFormsState {
     implementationPlan: any,
     giaChecklist: any,
     files: any,
+    offerLetter: any;
   } = null;
 }
 

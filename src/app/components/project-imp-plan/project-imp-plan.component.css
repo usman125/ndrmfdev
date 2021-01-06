@@ -235,20 +235,23 @@ mat-tree-node.active + mat-tree-node.active {
 }
 
 .top-head .title {
-  min-width: 291px;
+  min-width: 318px;
   text-align: center;
   font-weight: 600;
   text-transform: uppercase;
+  color: #4f4f4f !important;
+  font-family: sans-serif !important;
 }
 
 .top-head .title.po {
-  min-width: 264px;
+  min-width: 291px;
 }
 
 .all-tree {
   overflow: auto;
 }
 .bold-entry {
-  font-weight: bold !important;
-  color: #000 !important;
+  font-weight: 600 !important;
+  color: #4f4f4f !important;
+  font-family: sans-serif !important;
 }

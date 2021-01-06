@@ -161,3 +161,10 @@ mat-button-toggle-group .mat-button-toggle-checked .mat-button-toggle-label-cont
 .govfip {
   width: 100% !important;
 }
+
+
+.info-box {
+    background: #f4f4f4;
+    padding: 10px;
+    color: #4f4f4f;
+}
