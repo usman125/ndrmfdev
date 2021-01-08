@@ -22,13 +22,14 @@
   display: flex;
   min-width: 320px;
   color: #919191;
+  min-height: 150px;
 }
 
 .node-quarters .quarter .box {
   font-size: 12px;
   display: flex;
   flex-direction: column;
-  padding: 5px 15px;
+  padding: 12px 15px;
 }
 
 .node-quarters .quarter .box span {

@@ -37,7 +37,10 @@
             ],
             "allowedCommonJsDependencies": [
               "lodash",
-              "formiojs"
+              "formiojs",
+              "chart.js",
+              "xlsx",
+              "chartjs-plugin-datalabels"
             ]
           },
           "configurations": {

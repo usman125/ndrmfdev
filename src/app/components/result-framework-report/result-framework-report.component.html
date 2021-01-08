@@ -1,4 +1,17 @@
-<ng-container>
+<div class="row">
+  <div class="col-md-12">
+
+    <mat-button-toggle-group #group="matButtonToggleGroup" class="pull-right">
+      <mat-button-toggle value="boxes" [checked]="true" aria-label="Boxes">
+        <mat-icon>list_alt</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="graph" aria-label="Info Graphs">
+        <mat-icon>analytics</mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+</div>
+<ng-container *ngIf="group.value === 'boxes'">
   <ul>
     <li class="main-node">
       <span style="font-weight: 600; color:#919191;" class="header">
@@ -19,7 +32,6 @@
           <!-- <div class="node-quarters">
             <div *ngFor="let item of obj.quarters" class="quarter">
               <div *ngIf="item.value" class="box">
-                
               </div>
             </div>
           </div> -->
@@ -36,15 +48,16 @@
       <ul *ngIf="i.children">
         <li *ngFor="let obj of i.children" class="main-node">
           <div class="kpi-title">
-            <span class="mr-2">{{obj.title}}</span>
+            <span style="color: #919191;font-weight: 300;" class="mr-2">{{obj.title}}</span>
           </div>
           <div class="kpi-title">
             <span *ngIf="obj?.mneData?.type === 'output'">
               <span style="font-weight: 500;color:#919191;">
-                {{obj.mneData.subOutputs}}
+                <!-- {{obj.mneData.subOutputs}} -->
+                {{getSubOutPutIndicator(obj)}}
               </span>
               <span style="font-weight: 300;color:#919191;">
-                {{getSubOutPutTitle(obj.mneData.subOutputs)}}
+                {{getSubOutPutTitle(obj)}}
               </span>
             </span>
           </div>
@@ -63,9 +76,10 @@
               </div>
               <div *ngIf="item.value" class="box region">
                 <span style="font-weight: 600;">Region</span>
-                <span>Province: {{item.data.province ? item.data.district[0].PROVINCE : '&nbsp;'}}</span>
-                <span>Division: {{item.data.district ? item.data.district[0].DISTRICT : '&nbsp;'}}</span>
-                <span>Tehsil: {{item.data.tehsil ? item.data.district[0].TEHSIL : '&nbsp;'}}</span>
+                <span>Province: {{item.data.province ? item.data.province.PROVINCE : '&nbsp;'}}</span>
+                <span>Division: {{item.data.division ? item.data.division.DIVISION : '&nbsp;'}}</span>
+                <span>District: {{item.data.district ? item.data.district.DISTRICT : '&nbsp;'}}</span>
+                <span>Tehsil: {{item.data.tehsil ? item.data.tehsil.TEHSIL : '&nbsp;'}}</span>
               </div>
               <div *ngIf="!item.value">
                 {{'&nbsp;'}}
@@ -76,4 +90,80 @@
       </ul>
     </li>
   </ul>
+</ng-container>
+
+<ng-container *ngIf="group.value === 'graph'">
+  <ng-container>
+    <div class="row">
+      <div class="col-md-12">
+        <p id="answer">Output/Outcome(s) Record(s)</p>
+        <div style="display: block">
+          <canvas baseChart [datasets]="kpiChartData" [labels]="kpiChartLabels" [options]="barChartOptions"
+            [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="kpiChartType">
+          </canvas>
+        </div>
+        <button class="mt-2" mat-raised-button color="accent" (click)="changeChartType()">
+          {{kpiChartType === 'bar' ? 'Line' : 'Bar'}}
+        </button>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container>
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <p id="answer">KPI Record(s)</p>
+        <div style="display: block">
+          <canvas baseChart [datasets]="indicatorChartData" [labels]="indicatorChartLabels" [options]="barChartOptions"
+            [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
+          </canvas>
+        </div>
+        <button class="mt-2" mat-raised-button color="accent" (click)="changeIndiChartType()">
+          {{barChartType === 'bar' ? 'Line' : 'Bar'}}
+        </button>
+        <!-- <button mat-button mat-raised-button color="primary" (click)="randomize()">Update</button> -->
+      </div>
+    </div>
+  </ng-container>
+  <!-- <ng-container>
+  <div>
+    <div>
+      <div style="display: block">
+        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+        [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
+      </canvas>
+    </div>
+    <button mat-button mat-raised-button color="primary" (click)="randomize()">Update</button>
+  </div>
+</div>
+</ng-container> -->
+  <!-- <ng-container>
+  <div>
+    <div *ngFor="let chart of kpiProvinceArray;">
+      <div style="display: block">
+        <canvas baseChart [data]="chart.provinceChartData" [options]="provinceChartOptions"
+        [labels]="chart.provinceChartLabels" [chartType]="provinceChartType">
+      </canvas>
+    </div>
+  </div>
+</div>
+</ng-container> -->
+  <ng-container>
+    <p id="answer" class="mt-5 mb-5">Region(s) Wise KPI Record(s)</p>
+    <div class="row">
+      <div *ngFor="let chart of kpiProvinceArray;" class="col-md-12">
+        <div class="p-2">
+          <div>
+            <span style="color: #919191;font-weight: 600;">{{chart.indicatorValue}}</span>
+            <span class="ml-2" style="color: #919191;font-weight: 300;">{{getKpiValue(chart.indicatorValue,
+              chart.indicator)}}</span>
+          </div>
+          <div style="display: block">
+            <canvas baseChart [datasets]="chart.provinceChartData" [options]="provinceChartOptions"
+              [labels]="chart.provinceChartLabels" [chartType]="provinceChartType">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </ng-container>

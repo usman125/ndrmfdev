@@ -6,8 +6,8 @@ import { SettingsService } from '../../services/settings.service';
 import { CostDetailsStore } from "../../stores/cost-details/cost-details-store";
 import {
   PROVINCE,
+  DIVISION,
   DISTRICT,
-  // DIVISION
   TEHSIL,
   UC,
 } from "../../components/uc_data";
@@ -52,10 +52,17 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   loggedUser: any = null;
   currentQuarter: any = null;
 
-  province: any = PROVINCE;
-  district: any = DISTRICT;
-  tehsil: any = TEHSIL;
+  // province: any = PROVINCE;
+  // division: any = DIVISION;
+  // district: any = DISTRICT;
+  // tehsil: any = TEHSIL;
   // uc: any = UC;
+
+  province: any = PROVINCE;
+  division: any = [];
+  district: any = [];
+  tehsil: any = [];
+  uc: any = [];
 
   @Output() costUpdated: EventEmitter<any> = new EventEmitter();
   @Output() rfUpdated: EventEmitter<any> = new EventEmitter();
@@ -81,13 +88,13 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
       fipShare: [null, Validators.required],
       isProcurement: [false],
       procurementHeads: [null],
-      target: [null],
+      target: [null, Validators.required],
       rfSubmitData: [null],
-      province: [null],
-      district: [null],
-      division: [null],
-      tehsil: [null],
-      uc: [null],
+      province: [null, Validators.required],
+      district: [null, Validators.required],
+      division: [null, Validators.required],
+      tehsil: [null, Validators.required],
+      uc: [null, Validators.required],
     });
   }
 
@@ -122,6 +129,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
         this.clubbed = result.cost.clubbed;
         this.clubData = result.cost.clubData;
         console.log("DATA IN COST DETAILS:--", result.cost, this.selectedQuarter);
+        // EDIT CASE
         if (this.selectedQuarter !== null && this.updateFlag) {
           this._form.patchValue({
             startDate: this.selectedQuarter.startDate,
@@ -141,6 +149,24 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             tehsil: this.selectedQuarter.tehsil,
             uc: this.selectedQuarter.uc,
           }, { onlySelf: true });
+
+
+          this.division = DIVISION.filter((c) => {
+            if (this.selectedQuarter.province && (c.P_ID === this.selectedQuarter.province.P_ID))
+              return c;
+          });
+          this.district = DISTRICT.filter((c) => {
+            if (this.selectedQuarter.division && (c.DIVISION === this.selectedQuarter.division.DIVISION))
+              return c;
+          });
+          this.tehsil = DISTRICT.filter((c) => {
+            if (this.selectedQuarter.district && (c.D_ID === this.selectedQuarter.district.D_ID))
+              return c;
+          });
+          this.uc = UC.filter((c) => {
+            if (this.selectedQuarter.tehsil && (c.T_ID === this.selectedQuarter.tehsil.T_ID))
+              return c;
+          });
 
 
           if (this.selectedQuarter.rfSubmitData) {
@@ -165,6 +191,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
           // result.cost.clubbed ? this._form.controls['isProcurement'].clearValidators() : null;
           result.cost.clubbed ? this._form.controls['procurementHeads'].disable({ onlySelf: true }) : this._form.controls['procurementHeads'].enable({ onlySelf: true });
         }
+        // PROGRESS CASE
         if (!this.updateFlag) {
           if (this.clubbed) {
             this.selectedQuarter.isProcurement = this.clubData.isProcurement;
@@ -271,9 +298,9 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
       this._form.value,
       this.progressData,
       true,
-      false,
-      null,
-      null,
+      this.clubbed,
+      this.clubData._id,
+      this.clubData,
     );
     this.costUpdated.emit({ 'costUpdated': true });
     // this.rfSubmitData = null;
@@ -295,11 +322,99 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
 
 
   compareProcObjects(o1: any, o2: any): boolean {
-    // console.log("COMPARE SME:--", o1, o2)
     if (o2) {
       return o1.name === o2.name && o1.id === o2.id;
     }
     return false;
+  }
+
+
+  compareProvinceObjects(o1: any, o2: any): boolean {
+    if (o2) {
+      return o1.PROVINCE === o2.PROVINCE && o1.P_ID === o2.P_ID;
+    }
+    return false;
+  }
+  compareDivisionObjects(o1: any, o2: any): boolean {
+    if (o2) {
+      return o1.DIVISION === o2.DIVISION;
+    }
+    return false;
+  }
+  compareDistrictObjects(o1: any, o2: any): boolean {
+    if (o2) {
+      return o1.D_ID === o2.D_ID && o1.DISTRICT === o2.DISTRICT;
+    }
+    return false;
+  }
+  compareTehsilObjects(o1: any, o2: any): boolean {
+    if (o2) {
+      return o1.TEHSIL === o2.TEHSIL && o1.T_ID === o2.T_ID;
+    }
+    return false;
+  }
+  compareUcObjects(o1: any, o2: any): boolean {
+    if (o2) {
+      return o1.UC === o2.UC && o1.UC_ID === o2.UC_ID;
+    }
+    return false;
+  }
+
+  provinceChanged($event) {
+    console.log("provinceChanged::---", $event);
+    this.district = [];
+    this.division = [];
+    this.tehsil = [];
+    this.uc = [];
+    this.division = DIVISION.filter((c) => {
+      if (c.P_ID === $event.value.P_ID)
+        return c;
+    });
+    this._form.patchValue({
+      'district': null,
+      'division': null,
+      'tehsil': null,
+      'uc': null,
+    })
+  }
+  divisionChanged($event) {
+    console.log("divisionChanged::---", $event);
+    this.district = [];
+    this.tehsil = [];
+    this.uc = [];
+    this.district = DISTRICT.filter((c) => {
+      if (c.DIVISION === $event.value.DIVISION)
+        return c;
+    });
+    this._form.patchValue({
+      'district': null,
+      'tehsil': null,
+      'uc': null,
+    })
+  }
+  districtChanged($event) {
+    console.log("districtChanged::---", $event);
+    this.tehsil = [];
+    this.uc = [];
+    this.tehsil = DISTRICT.filter((c) => {
+      if (c.D_ID === $event.value.D_ID)
+        return c;
+    });
+    this._form.patchValue({
+      'tehsil': null,
+      'uc': null,
+    })
+  }
+  tehsilChanged($event) {
+    console.log("tehsilChanged::---", $event);
+    this.uc = [];
+    this.uc = UC.filter((c) => {
+      if (c.T_ID === $event.value.T_ID)
+        return c;
+    });
+    this._form.patchValue({
+      'uc': null,
+    })
   }
 
   ngOnDestroy() {

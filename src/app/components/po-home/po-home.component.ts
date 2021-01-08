@@ -351,13 +351,13 @@ export class PoHomeComponent implements OnInit {
       const data = XLSX.utils.sheet_to_json(ws); // to get 2d array pass 2nd parameter as object {header: 1}
       console.log(data); // Data will be logged in array format containing objects
 
-      // let PROVINCE = _.uniqBy(data, 'PROVINCE');
-      // let DISTRICT = _.uniqBy(data, 'DISTRICT');
-      // let DIVISION = _.uniqBy(data, 'DIVISION');
-      // let TEHSIL = _.uniqBy(data, 'TEHSIL');
-      // let UC = _.uniqBy(data, 'UC');
+      let PROVINCE = _.uniqBy(data, 'PROVINCE');
+      let DISTRICT = _.uniqBy(data, 'DISTRICT');
+      let DIVISION = _.uniqBy(data, 'DIVISION');
+      let TEHSIL = _.uniqBy(data, 'TEHSIL');
+      let UC = _.uniqBy(data, 'UC');
 
-      // console.log('\nPROVINCE:', PROVINCE, '\nDISTRICT:', DISTRICT, '\nDIVISION:', DIVISION, '\nTEHSIL:', TEHSIL, '\nUC:', UC);
+      console.log('\nPROVINCE:', PROVINCE, '\nDISTRICT:', DISTRICT, '\nDIVISION:', DIVISION, '\nTEHSIL:', TEHSIL, '\nUC:', UC);
     };
   }
 

@@ -1,4 +1,4 @@
-<div class="m-20" *ngIf="selectedQuarter !== null">
+<div class="m-2" *ngIf="selectedQuarter !== null">
   <div class="info-header d-flex align-items-center">
     <mat-chip-list aria-label="Quarter Info">
       <mat-chip color="primary" selected>Activity: {{costTitle}}</mat-chip>
@@ -15,7 +15,7 @@
       <mat-tab label="General" class="p-4">
         <div class="m-4">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12 mb-3">
               <mat-form-field appearance="outline">
                 <mat-label>Target</mat-label>
                 <input type="number" matInput formControlName="target">
@@ -72,57 +72,63 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-3 mt-3">
+          <div class="row mt-3">
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
-                <mat-label>{{'province' | uppercase}}</mat-label>
-                <mat-select multiple formControlName="province">
-                  <mat-option *ngFor="let item of province" [value]="item">
+                <mat-label>{{'province' | titlecase}}</mat-label>
+                <mat-select [compareWith]="compareProvinceObjects" formControlName="province"
+                  (selectionChange)="provinceChanged($event)">
+                  <mat-option *ngFor="let item of province;let i= index;" [value]="item">
                     {{item.PROVINCE | titlecase}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-md-3 mt-3">
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
-                <mat-label>{{'district' | uppercase}}</mat-label>
-                <mat-select multiple formControlName="district">
-                  <mat-option *ngFor="let item of district" [value]="item">
-                    {{item.DISTRICT | titlecase}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div class="col-md-3 mt-3">
-              <mat-form-field appearance="outline">
-                <mat-label>{{'division' | uppercase}}</mat-label>
-                <mat-select multiple formControlName="division">
-                  <mat-option *ngFor="let item of tehsil" [value]="item">
+                <mat-label>{{'division' | titlecase}}</mat-label>
+                <mat-select [compareWith]="compareDivisionObjects" formControlName="division"
+                  (selectionChange)="divisionChanged($event)">
+                  <mat-option *ngFor="let item of division;let i= index;" [value]="item">
                     {{item.DIVISION | titlecase}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-md-3 mt-3">
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
-                <mat-label>{{'tehsil' | uppercase}}</mat-label>
-                <mat-select multiple formControlName="tehsil">
-                  <mat-option *ngFor="let item of tehsil" [value]="item">
+                <mat-label>{{'district' | titlecase}}</mat-label>
+                <mat-select [compareWith]="compareDistrictObjects" formControlName="district"
+                  (selectionChange)="districtChanged($event)">
+                  <mat-option *ngFor="let item of district;let i= index;" [value]="item">
+                    {{item.DISTRICT | titlecase}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'tehsil' | titlecase}}</mat-label>
+                <mat-select [compareWith]="compareTehsilObjects" formControlName="tehsil"
+                  (selectionChange)="tehsilChanged($event)">
+                  <mat-option *ngFor="let item of tehsil;let i= index;" [value]="item">
                     {{item.TEHSIL | titlecase}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
-            <!-- <div class="col-md-3 mt-3">
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
-                <mat-label>{{'uc' | uppercase}}</mat-label>
-                <mat-select multiple formControlName="uc">
-                  <mat-option *ngFor="let item of uc" [value]="item">
+                <mat-label>{{'uc' | titlecase}}</mat-label>
+                <mat-select [compareWith]="compareUcObjects" formControlName="uc">
+                  <mat-option *ngFor="let item of uc;let i = index;" [value]="item">
                     {{item.UC | titlecase}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-            </div> -->
+            </div>
           </div>
         </div>
       </mat-tab>
@@ -261,6 +267,45 @@
                     {{selectedQuarter.description}}
                   </span>
                   <span id="value" *ngIf="!selectedQuarter.description">
+                    &nbsp;
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="d-flex mt-3">
+                <div class="general-info">
+                  <span id="title">Province</span>
+                  <span id="value" *ngIf="selectedQuarter.province?.PROVINCE">
+                    {{selectedQuarter.province.PROVINCE | titlecase}}
+                  </span>
+                  <span id="value" *ngIf="!selectedQuarter.province?.PROVINCE">
+                    &nbsp;
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="d-flex mt-3">
+                <div class="general-info">
+                  <span id="title">Division</span>
+                  <span id="value" *ngIf="selectedQuarter.province?.DIVISION">
+                    {{selectedQuarter.province.DIVISION | titlecase}}
+                  </span>
+                  <span id="value" *ngIf="!selectedQuarter.province?.DIVISION">
+                    &nbsp;
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="d-flex mt-3">
+                <div class="general-info">
+                  <span id="title">District</span>
+                  <span id="value" *ngIf="selectedQuarter.province?.DISTRICT">
+                    {{selectedQuarter.province.DISTRICT | titlecase}}
+                  </span>
+                  <span id="value" *ngIf="!selectedQuarter.province?.DISTRICT">
                     &nbsp;
                   </span>
                 </div>
