@@ -161,7 +161,44 @@ export class ResultFrameworkReportComponent implements OnInit, OnDestroy {
         //     ? context.dataset.label + '\n' + value
         //     : Math.round(value);
         // },
+      },
+      scales: {
+        // xAxes: [{
+        //   ticks: {
+        //     // Include a dollar sign in the ticks
+        //     callback: function (value, index, values) {
+        //       return '$' + value;
+        //     }
+        //   },
+        //   scaleLabel: {
+        //     fontSize: 15,
+        //     padding: 5,
+        //   },
+        // }],
+        // yAxes: [{
+        //   ticks: {
+        //     // Include a dollar sign in the ticks
+        //     callback: function (value, index, values) {
+        //       return '$' + value;
+        //     }
+        //   },
+        //   scaleLabel: {
+        //     fontSize: 15,
+        //     padding: 5,
+        //   },
+        // }],
+        ticks: {
+          // Include a dollar sign in the ticks
+          callback: function (value, index, values) {
+            return '$' + value;
+          }
+        },
       }
+
+
+      // scaleLabel:{
+      //   font
+      // }
     }
   };
   public provinceChartLabels: Label[] = [];
@@ -203,8 +240,10 @@ export class ResultFrameworkReportComponent implements OnInit, OnDestroy {
       this.getRfMeta();
       this._primaryAppraisalFormsStore.state$.subscribe((data) => {
         // if (data.selectedProject)
-        typeof (data.selectedProject.implementationPlan) === 'string' ? this.pip = JSON.parse(data.selectedProject.implementationPlan) : this.pip = data.selectedProject.implementationPlan;
-        this.allCosts = this.pip.costs;
+        data.selectedProject && typeof (data.selectedProject.implementationPlan) === 'string'
+          ? this.pip = data.selectedProject ? JSON.parse(data.selectedProject.implementationPlan) : null
+          : this.pip = data.selectedProject ? data.selectedProject.implementationPlan : null;
+        this.allCosts = this.pip ? this.pip.costs : null;
         this.rfCosts = _.filter(this.allCosts, (c) => {
           if (c.addRf) {
             // return {
@@ -394,10 +433,10 @@ export class ResultFrameworkReportComponent implements OnInit, OnDestroy {
         let object = {
           indicatorValue,
           indicator: 'indicator' + indicator,
-          provinces,
+          provinces: provinces || [],
           provincesTarget,
           provincesAchieved,
-          provinceChartLabels: provinces,
+          provinceChartLabels: provinces || [],
           provinceChartData: [
             { data: provincesTarget, label: 'Target' },
             { data: provincesAchieved, label: 'Achieved' }

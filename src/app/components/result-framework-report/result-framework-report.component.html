@@ -1,6 +1,5 @@
 <div class="row">
   <div class="col-md-12">
-
     <mat-button-toggle-group #group="matButtonToggleGroup" class="pull-right">
       <mat-button-toggle value="boxes" [checked]="true" aria-label="Boxes">
         <mat-icon>list_alt</mat-icon>
@@ -53,7 +52,6 @@
           <div class="kpi-title">
             <span *ngIf="obj?.mneData?.type === 'output'">
               <span style="font-weight: 500;color:#919191;">
-                <!-- {{obj.mneData.subOutputs}} -->
                 {{getSubOutPutIndicator(obj)}}
               </span>
               <span style="font-weight: 300;color:#919191;">
@@ -120,7 +118,6 @@
         <button class="mt-2" mat-raised-button color="accent" (click)="changeIndiChartType()">
           {{barChartType === 'bar' ? 'Line' : 'Bar'}}
         </button>
-        <!-- <button mat-button mat-raised-button color="primary" (click)="randomize()">Update</button> -->
       </div>
     </div>
   </ng-container>

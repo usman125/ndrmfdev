@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccreditationRequestService } from "../../services/accreditation-request.service";
 import { AuthStore } from "../../stores/auth/auth-store";
@@ -12,6 +12,7 @@ import { MultiDataSet, Label, SingleDataSet } from 'ng2-charts';
 import * as XLSX from 'xlsx';
 
 import * as _ from 'lodash';
+import { PrimaryAppraisalFormsStore } from 'src/app/stores/primary-appraisal-forms/primary-appraisal-forms-store';
 
 
 @Component({
@@ -19,7 +20,7 @@ import * as _ from 'lodash';
   templateUrl: './po-home.component.html',
   styleUrls: ['./po-home.component.css']
 })
-export class PoHomeComponent implements OnInit {
+export class PoHomeComponent implements OnInit, OnDestroy {
 
   eligiUnderReviewCount: any = 0;
   eligiApprovedCount: any = 0;
@@ -102,6 +103,13 @@ export class PoHomeComponent implements OnInit {
     legend: {
       position: 'left',
     },
+    plugins: {
+      datalabels: {
+        display: function (context) {
+          return context.dataset.data[context.dataIndex] > 0;
+        },
+      }
+    },
   };
   public pieChartLabels: Label[] = ['Under Review', 'Approved', 'Rejected'];
   public pieChartData: number[] = [];
@@ -115,11 +123,16 @@ export class PoHomeComponent implements OnInit {
   //   },
   // ];
 
+  projectTabs: any = [];
+  allProjects: any = [];
+  selectedProject: any = null;
+
   constructor(
     private _accreditationRequestService: AccreditationRequestService,
     private _projectService: ProjectService,
     private _authStore: AuthStore,
     private _settingsService: SettingsService,
+    private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
     private _router: Router,
   ) { }
 
@@ -135,6 +148,13 @@ export class PoHomeComponent implements OnInit {
 
     this.getAllProject();
     this.getProcessTypes();
+
+    this.Subscription.add(
+      this._primaryAppraisalFormsStore.state$.subscribe(data => {
+        this.selectedProject = data.selectedProject;
+        console.log("SELECTED PROJECT ON PO HOME***********", this.selectedProject);
+      })
+    )
   }
 
 
@@ -196,7 +216,7 @@ export class PoHomeComponent implements OnInit {
     this.apiLoading = true;
     this._projectService.getAllProjects().subscribe(
       (result: any) => {
-        console.log("DM PM ALL PROJECTS:--", result);
+        this.allProjects = result;
         var preCount = 0;
         var extCount = 0;
         var urCount = 0;
@@ -204,6 +224,7 @@ export class PoHomeComponent implements OnInit {
           if (element.status === "Extended Appraisal") extCount = extCount + 1;
           if (element.status === "Preliminary Appraisal") preCount = preCount + 1;
           if (element.status === "Under Review") urCount = urCount + 1;
+
         });
         this.projectStats = {
           preCount,
@@ -212,6 +233,7 @@ export class PoHomeComponent implements OnInit {
           totalCount: result.length
         }
         this.apiLoading = false;
+        console.log("PROCESS OWNER ALL PROJECTS:--", result);
       },
       error => {
         this.apiLoading = false;
@@ -219,6 +241,7 @@ export class PoHomeComponent implements OnInit {
       }
     );
   }
+
 
 
   eligiStats() {
@@ -359,6 +382,40 @@ export class PoHomeComponent implements OnInit {
 
       console.log('\nPROVINCE:', PROVINCE, '\nDISTRICT:', DISTRICT, '\nDIVISION:', DIVISION, '\nTEHSIL:', TEHSIL, '\nUC:', UC);
     };
+  }
+
+  toggleChanged($event) {
+    console.log("TOGGLE CHNAGED:--", $event);
+    if ($event.value === 'rfr')
+      this.getProjectTabs();
+  }
+
+  getProjectTabs() {
+    this.projectTabs = this.allProjects.filter((element) => {
+      if (element.status !== 'Draft')
+        return element;
+    })
+    console.log("PROCESS OWNER ALL PROJECTS:--", this.projectTabs);
+    this.setProjectData(this.projectTabs[0].id);
+  }
+
+  onTabChanged($event) {
+    this._primaryAppraisalFormsStore.addSelectedProject(null);
+    console.log("TAB CHANGED:---", $event);
+    this.setProjectData(this.projectTabs[$event.index].id);
+  }
+
+  setProjectData(id) {
+    this._projectService.getSingleProject(id).subscribe(
+      (result: any) => {
+        console.log("RESULT FROM SINGLE PROJECT:----", result);
+        this._primaryAppraisalFormsStore.addSelectedProject(result);
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.Subscription.unsubscribe();
   }
 
 }

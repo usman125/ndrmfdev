@@ -10,6 +10,8 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { ChartsModule } from 'ng2-charts';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ResultFrameworkReportModule } from '../result-framework-report/result-framework-report.module';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
   imports: [
     CommonModule,
     PoHomeRoutingModule,
+    ResultFrameworkReportModule,
     MatCardModule,
     MatIconModule,
     MatButtonModule,
@@ -25,7 +28,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatToolbarModule,
     MatProgressSpinnerModule,
     ChartsModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatTabsModule
   ]
 })
 export class PoHomeModule { }

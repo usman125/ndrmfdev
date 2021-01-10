@@ -4,11 +4,14 @@
       <span>My Trackpad</span>
       <span class="example-spacer"></span>
       <mat-button-toggle-group #group="matButtonToggleGroup">
-        <mat-button-toggle value="boxes" [checked]="true" aria-label="Boxes">
+        <mat-button-toggle (change)="toggleChanged($event)" value="boxes" [checked]="true" aria-label="Boxes">
           <mat-icon>list_alt</mat-icon>
         </mat-button-toggle>
-        <mat-button-toggle value="graph" aria-label="Info Graphs">
+        <mat-button-toggle (change)="toggleChanged($event)" value="graph" aria-label="Info Graphs">
           <mat-icon>analytics</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle (change)="toggleChanged($event)" value="rfr" aria-label="Projects Info">
+          <mat-icon>insights</mat-icon>
         </mat-button-toggle>
       </mat-button-toggle-group>
     </mat-toolbar-row>
@@ -289,5 +292,22 @@
     </mat-card> -->
 
 
+  </div>
+  <div *ngIf="group.value === 'rfr'">
+    <!-- <mat-tab-group (selectedTabChange)="onTabChanged($event);">
+      <mat-tab label="General" class="p-4">
+      </mat-tab>
+    </mat-tab-group> -->
+    <mat-card class="m-20">
+      <mat-card-content>
+        <mat-tab-group (selectedTabChange)="onTabChanged($event);">
+          <mat-tab [id]="tab.id" *ngFor="let tab of projectTabs; let index = index" [label]="tab.name">
+            <div *ngIf="selectedProject !== null" class="mt-4">
+              <app-result-framework-report></app-result-framework-report>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
   </div>
 </ng-container>
