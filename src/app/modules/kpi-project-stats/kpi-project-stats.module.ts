@@ -7,6 +7,8 @@ import { FormioModule } from 'angular-formio';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
+import { ChartsModule } from 'ng2-charts';
+import { MatButtonModule } from '@angular/material/button';
 
 
 
@@ -21,7 +23,9 @@ import { MatIconModule } from '@angular/material/icon';
     FormioModule,
     MatProgressSpinnerModule,
     MatExpansionModule,
-    MatIconModule
+    MatIconModule,
+    ChartsModule,
+    MatButtonModule
   ],
   exports: [KpiProjectStatsComponent]
 })

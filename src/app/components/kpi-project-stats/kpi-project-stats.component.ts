@@ -4,6 +4,10 @@ import { SettingsService } from 'src/app/services/settings.service';
 import FormioUtils from 'formiojs/utils';
 import * as _ from 'lodash';
 
+import { ChartDataSets, ChartOptions, ChartType, RadialChartOptions } from 'chart.js';
+import * as pluginDataLabels from 'chartjs-plugin-datalabels';
+import { Label } from 'ng2-charts';
+
 @Component({
   selector: 'app-kpi-project-stats',
   templateUrl: './kpi-project-stats.component.html',
@@ -19,6 +23,54 @@ export class KpiProjectStatsComponent implements OnInit {
   outPutsArray: any = null;
   step: any = null;
 
+  // BAR CHAT DATA
+  public indicatorChartOptions: ChartOptions = {
+    responsive: true,
+    scales: { xAxes: [{ stacked: true }], yAxes: [{ stacked: true }] },
+    plugins: {
+      datalabels: {
+        anchor: 'start',
+        align: 'end',
+        font: {
+          weight: 'bold'
+        },
+        color: '#919191',
+        display: function (context) {
+          return context.dataset.data[context.dataIndex] > 0;
+        },
+      },
+    },
+    hover: {
+      mode: 'index',
+      intersect: false
+    },
+    elements: {
+      line: {
+        fill: false
+      },
+      point: {
+        hoverRadius: 7,
+        radius: 5
+      }
+    },
+  };
+
+  public indicatorChartLegend = true;
+  public indicatorChartPlugins = [pluginDataLabels];
+  public indicatorChartType: ChartType = 'bar';
+
+  public indicatorChartLabels: Label[] = [];
+  public indicatorChartData: ChartDataSets[] = [
+    {
+      data: [],
+      label: 'Target',
+    },
+    {
+      data: [],
+      label: 'Achieved',
+    },
+  ];
+
   constructor(
     private _projectService: ProjectService,
     private _settingsService: SettingsService,
@@ -31,6 +83,7 @@ export class KpiProjectStatsComponent implements OnInit {
   }
 
   getRfMeta() {
+    this.apiLoading = true;
     this._settingsService.getProcessTemplate('PROJECT_PROPOSAL').subscribe(
       (result: any) => {
         this.formElements = [];
@@ -61,6 +114,7 @@ export class KpiProjectStatsComponent implements OnInit {
               "\n", this.formElements, "\n", contentElements, "\n", this.outPutsArray);
           }
         });
+        this.apiLoading = false;
       },
       error => {
         console.log("ERROR FROM TEMPLATES:--", error);
@@ -147,6 +201,7 @@ export class KpiProjectStatsComponent implements OnInit {
   }
 
   prepareChartData(projectData) {
+    this.apiLoading = true;
     projectData.kpiChartLabels = [];
     projectData.kpiChartData = [
       { data: [] },
@@ -275,6 +330,7 @@ export class KpiProjectStatsComponent implements OnInit {
     //   '\nKPI PROVINCES ARRAY:---', this.kpiProvinceArray,
 
     // );
+    this.apiLoading = false;
   }
 
   getRfType(quarters) {
@@ -296,13 +352,23 @@ export class KpiProjectStatsComponent implements OnInit {
 
   checkProjectsForKpi(value) {
     this.step = value;
+    this.indicatorChartLabels = [];
+    this.indicatorChartData[0].data = [];
+    this.indicatorChartData[1].data = [];
     console.log("checkProjectsForKpi(indicator.value)", value);
     for (let i = 0; i < this.allProjects.length; i++) {
       let key = this.allProjects[i];
       if (key.indicatorChartLabels.indexOf(value) > -1) {
         console.log("PROJECT FOUND:---", key, key.indicatorChartLabels.indexOf(value));
+        this.indicatorChartLabels.push(key.name);
+        this.indicatorChartData[0].data.push(key.indicatorChartData[0].data[key.indicatorChartLabels.indexOf(value)]);
+        this.indicatorChartData[1].data.push(key.indicatorChartData[1].data[key.indicatorChartLabels.indexOf(value)]);
       }
     }
+  }
+
+  changeIndiChartType() {
+    this.indicatorChartType === 'line' ? this.indicatorChartType = 'bar' : this.indicatorChartType = 'line';
   }
 
 }

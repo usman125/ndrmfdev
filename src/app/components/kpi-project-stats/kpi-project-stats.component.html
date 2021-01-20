@@ -1,5 +1,5 @@
 <ng-container *ngIf="apiLoading">
-  <mat-progress-spinner [mode]="indeterminate" [diameter]="20"></mat-progress-spinner>
+  <mat-progress-spinner mode="indeterminate" [diameter]="25"></mat-progress-spinner>
 </ng-container>
 <ng-container *ngIf="!apiLoading">
   <mat-accordion>
@@ -11,7 +11,8 @@
             {{suboutput.value}} - {{suboutput.label}}
           </span>
         </div>
-        <mat-expansion-panel (opened)="checkProjectsForKpi(indicator.value);" *ngFor="let indicator of suboutput.indicators">
+        <mat-expansion-panel (opened)="checkProjectsForKpi(indicator.value);"
+          *ngFor="let indicator of suboutput.indicators">
           <mat-expansion-panel-header>
             <mat-panel-title>
               {{indicator.value}}
@@ -20,11 +21,26 @@
               <small>{{indicator.label}}</small>
             </mat-panel-description>
           </mat-expansion-panel-header>
-          <!-- <p>{{indicator.label}}</p> -->
+
+          <ng-container *ngIf="indicatorChartLabels.length">
+            <div class="row mt-5">
+              <div class="col-md-12">
+                <p id="answer">KPI Record(s)</p>
+                <div style="display: block">
+                  <canvas baseChart [datasets]="indicatorChartData" [labels]="indicatorChartLabels"
+                    [options]="indicatorChartOptions" [plugins]="indicatorChartPlugins" [legend]="indicatorChartLegend"
+                    [chartType]="indicatorChartType">
+                  </canvas>
+                </div>
+                <button class="mt-2" mat-raised-button color="accent" (click)="changeIndiChartType()">
+                  {{indicatorChartType === 'bar' ? 'Line' : 'Bar'}}
+                </button>
+              </div>
+            </div>
+          </ng-container>
+
         </mat-expansion-panel>
       </div>
     </div>
   </mat-accordion>
 </ng-container>
-<!-- <ng-container></ng-container>
-<p>kpi-project-stats works!</p> -->
