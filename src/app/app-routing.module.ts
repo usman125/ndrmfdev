@@ -456,18 +456,27 @@ const routes: Routes = [
   {
     path: 'plan',
     loadChildren: () => import('./modules/project-imp-plan/project-imp-plan.module').then(m => m.ProjectImpPlanModule),
+    canActivate: [AuthGuard],
     // component: ProjectWorkPlanComponent
   },
   {
     path: 'plan-report',
     loadChildren: () => import('./modules/qualification-report/qualification-report.module').then(m => m.QualificationReportModule),
+    canActivate: [AuthGuard],
     // component: ProjectWorkPlanComponent
   },
-  // {
-  //   path: 'result-framework-report/:projectId',
-  //   loadChildren: () => import('./modules/result-framework-report/result-framework-report.module').then(m => m.ResultFrameworkReportModule),
-  //   // component: ProjectWorkPlanComponent
-  // }
+  {
+    path: 'grant-disbursments',
+    loadChildren: () => import('./modules/grant-disbursments/grant-disbursments.module').then(m => m.GrantDisbursmentsModule),
+    canActivate: [AuthGuard],
+    // component: ProjectWorkPlanComponent
+  },
+  {
+    path: 'view-grant-disbursment/:requestId',
+    loadChildren: () => import('./modules/view-grant-disbursment/view-grant-disbursment.module').then(m => m.ViewGrantDisbursmentModule),
+    canActivate: [AuthGuard],
+    // component: ProjectWorkPlanComponent
+  }
 ];
 
 @NgModule({

@@ -111,7 +111,7 @@
         </mat-card-actions>
       </mat-card>
 
-      <!-- OFFER LETTER CARD -->
+      <!-- OFFER LETTER CARD PROCESS OWNER -->
       <mat-toolbar *ngIf="selectedProject?.status === 'Offer Letter' && loggedUser?.role === 'process owner'"
         class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
         <mat-toolbar-row>
@@ -223,6 +223,8 @@
         </mat-card-actions>
       </mat-card>
 
+
+      <!-- OFFER LETTER CARD GM -->
       <mat-toolbar *ngIf="selectedProject?.status === 'Offer Letter' && loggedUser?.role === 'gm'"
         class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
         <mat-toolbar-row>
@@ -281,15 +283,6 @@
           </div>
         </mat-card-actions>
       </mat-card>
-
-      <!-- <mat-toolbar *ngIf="selectedProject?.status === 'Offer Letter' && loggedUser?.role === 'fip'"
-        class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
-        <mat-toolbar-row>
-          <span>Offer Letter Actions</span>
-          <div class="example-spacer"></div>
-        </mat-toolbar-row>
-      </mat-toolbar> -->
-
 
       <!-- GIA CARD -->
       <mat-toolbar
@@ -617,7 +610,7 @@
 
 
 
-    <!-- BUTTON ADN INFO -->
+    <!-- ACTION BUTTONS AND PROJECT GENERAL INFO -->
     <div class="col-md-5 pl-0 mt-4">
       <mat-card class="m-20 ml-0" style="padding: 0px;position: sticky;top: 60px;" *ngIf="loggedUser.role !== 'fip'">
         <mat-toolbar class="mat-elevation-z8 no-margin" style="padding: 15px 0px;" color="primary">
@@ -704,6 +697,10 @@
               </mat-list-item>
             </mat-list> -->
           </div>
+          <div class="heading-contain m-20 d-flex align-items-center">
+            <mat-icon>settings</mat-icon>
+            <span class="ml-2" style="font-weight: bold;">{{'toolbox' | uppercase}}</span>
+          </div>
         </mat-card-content>
 
         <mat-card-actions class="pr-3 pl-3 pt-0 pb-3 footer-btns"
@@ -720,8 +717,8 @@
                   (click)="confirmApprasial()">
                   <mat-icon class="mr-1">description</mat-icon>
                   {{selectedProject?.preAppraisal &&
-                  selectedProject?.preAppraisal.status === 'Expired' ? 'EXTEND PRE-APPRAISAL' :
-                  'Prepare Pre-appraisal' | uppercase}}
+                  selectedProject?.preAppraisal.status === 'Expired' ? ('EXTEND PRE-APPRAISAL' | titlecase) :
+                  ('Prepare Pre-appraisal' | titlecase)}}
                 </button>
                 <mat-chip-list>
                   <mat-chip class="ml-3 mt-2" color="accent" selected
@@ -746,7 +743,7 @@
               <div class="expiry-sections">
                 <button *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button color="primary"
                   (click)="viewPreApprasial()">
-                  <mat-icon class="mr-1">description</mat-icon> {{'View pre-appraisal' | uppercase}}
+                  <mat-icon class="mr-1">description</mat-icon> {{'View pre-appraisal' | titlecase}}
                 </button>
               </div>
               <div class="expiry-sections">
@@ -755,27 +752,27 @@
                   (selectedProject?.preAppraisal?.isMarkedTo === 'Marked to GM' && selectedProject?.preAppraisal?.subStatus === 'Pending') || 
                   (selectedProject?.preAppraisal?.isMarkedTo === 'Marked to CEO' && selectedProject?.preAppraisal?.subStatus === 'Pending') ||
                   selectedProject?.status !== 'Preliminary Appraisal'">
-                  <mat-icon class="mr-1">description</mat-icon> {{'Mark pre-appraisal to gm' | uppercase}}
+                  <mat-icon class="mr-1">description</mat-icon> {{'Mark pre-appraisal to gm' | titlecase}}
                 </button>
                 <mat-chip-list>
                   <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.preAppraisal?.isMarkedTo === 'Marked to GM'
                   && selectedProject?.preAppraisal?.subStatus === 'Pending'" color="warn" selected>
-                    {{'marked to gm - pending' | uppercase}}</mat-chip>
+                    {{'marked to gm - pending' | titlecase}}</mat-chip>
                   <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.preAppraisal?.isMarkedTo === 'Marked to CEO'
                   && selectedProject?.preAppraisal?.subStatus === 'Pending'" color="warn" selected>
-                    {{'marked to ceo - pending' | uppercase}}</mat-chip>
+                    {{'marked to ceo - pending' | titlecase}}</mat-chip>
                   <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.preAppraisal?.subStatus === 'Approved' &&
                   selectedProject?.preAppraisal?.isMarkedTo === 'Marked to GM'" color="warn" selected>
-                    {{'Approved by gm' | uppercase}}</mat-chip>
+                    {{'Approved by gm' | titlecase}}</mat-chip>
                   <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.preAppraisal?.subStatus === 'Rejected' &&
                   selectedProject?.preAppraisal?.isMarkedTo === 'Marked to GM'" color="warn" selected>
-                    {{'rejected by gm' | uppercase}}</mat-chip>
+                    {{'rejected by gm' | titlecase}}</mat-chip>
                   <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.preAppraisal?.subStatus === 'Approved' &&
                   selectedProject?.preAppraisal?.isMarkedTo === 'Marked to CEO'" color="warn" selected>
-                    {{'Approved by gm' | uppercase}}</mat-chip>
+                    {{'Approved by gm' | titlecase}}</mat-chip>
                   <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.preAppraisal?.subStatus === 'Rejected' &&
                   selectedProject?.preAppraisal?.isMarkedTo === 'Marked to CEO'" color="warn" selected>
-                    {{'rejected by gm' | uppercase}}</mat-chip>
+                    {{'rejected by gm' | titlecase}}</mat-chip>
                 </mat-chip-list>
               </div>
             </div>
@@ -797,7 +794,7 @@
                   selectedProject?.extendedAppraisal.status === 'Expired' ?
                   'EXTEND EXT-APPRAISAL' : selectedProject?.extendedAppraisal &&
                   selectedProject?.extendedAppraisal.status === 'Completed' ?
-                  'RE-ASSIGN EXT-APPRAISAL' : 'Prepare ext-appraisal' | uppercase}}
+                  ('RE-ASSIGN EXT-APPRAISAL' | titlecase) : ('Prepare ext-appraisal' | titlecase)}}
                 </button>
                 <mat-chip-list>
                   <mat-chip class="ml-3 mt-1" color="accent" selected
@@ -824,7 +821,7 @@
                 <button class="mt-1 mb-1" *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed' || 
                   selectedProject?.status === 'Extended Appraisal'" mat-button color="primary"
                   (click)="viewExtAppraisal()">
-                  <mat-icon class="mr-1">description</mat-icon> {{'View ext-appraisal' | uppercase}}
+                  <mat-icon class="mr-1">description</mat-icon> {{'View ext-appraisal' | titlecase}}
                 </button>
               </div>
               <div class="expiry-sections">
@@ -836,45 +833,45 @@
                                 (selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to CEO'
                                 && selectedProject?.extendedAppraisal?.subStatus === 'Pending')"
                   (click)="markExtToGm()">
-                  <mat-icon class="mr-1">description</mat-icon> {{'Mark ext-appraisal to gm' | uppercase}}
+                  <mat-icon class="mr-1">description</mat-icon> {{'Mark ext-appraisal to gm' | titlecase}}
                 </button>
               </div>
 
               <mat-chip-list>
                 <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to GM'
                                 && selectedProject?.extendedAppraisal?.subStatus === 'Pending'" color="warn" selected>
-                  {{'marked to gm - pending' | uppercase}}</mat-chip>
+                  {{'marked to gm - pending' | titlecase}}</mat-chip>
                 <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to CEO'
                                 && selectedProject?.extendedAppraisal?.subStatus === 'Pending'" color="warn" selected>
-                  {{'marked to ceo - pending' | uppercase}}</mat-chip>
+                  {{'marked to ceo - pending' | titlecase}}</mat-chip>
                 <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.extendedAppraisal?.subStatus === 'Approved' &&
                                 selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to GM'" color="warn"
                   selected>
-                  {{'Approved by gm' | uppercase}}</mat-chip>
+                  {{'Approved by gm' | titlecase}}</mat-chip>
                 <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.extendedAppraisal?.subStatus === 'Rejected' &&
                                 selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to GM'" color="warn"
                   selected>
-                  {{'rejected by gm' | uppercase}}</mat-chip>
+                  {{'rejected by gm' | titlecase}}</mat-chip>
                 <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.extendedAppraisal?.subStatus === 'Approved' &&
                                 selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to CEO'" color="warn"
                   selected>
-                  {{'Approved by gm' | uppercase}}</mat-chip>
+                  {{'Approved by gm' | titlecase}}</mat-chip>
                 <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.extendedAppraisal?.subStatus === 'Rejected' &&
                                 selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to CEO'" color="warn"
                   selected>
-                  {{'rejected by gm' | uppercase}}</mat-chip>
+                  {{'rejected by gm' | titlecase}}</mat-chip>
               </mat-chip-list>
 
               <div class="expiry-sections mt-2">
                 <button (click)="prepareGia()" *ngIf="selectedProject?.status === 'GIA' && 
                 selectedProject?.gia?.data === null" mat-button color="accent">
-                  <mat-icon class="mr-1">edit</mat-icon> {{'Prepare gia' | uppercase}}
+                  <mat-icon class="mr-1">edit</mat-icon> {{'Prepare gia' | titlecase}}
                 </button>
               </div>
 
               <div class="expiry-sections mt-2" *ngIf="selectedProject?.gia?.data !== null">
                 <button (click)="prepareGia()" mat-button color="primary">
-                  <mat-icon class="mr-1">edit</mat-icon> {{'View gia' | uppercase}}
+                  <mat-icon class="mr-1">edit</mat-icon> {{'View gia' | titlecase}}
                 </button>
                 <mat-chip-list>
                   <mat-chip class="ml-3 mt-1" color="accent" selected>
@@ -886,14 +883,14 @@
 
               <div class="expiry-sections mt-2" *ngIf="selectedProject?.gia?.data !== null">
                 <a [routerLink]="['/gia-comments-matrix', selectedProjectId]" mat-button color="primary">
-                  <mat-icon class="mr-1">view_module</mat-icon> {{'View gia comments' | uppercase}}
+                  <mat-icon class="mr-1">view_module</mat-icon> {{'View gia comments' | titlecase}}
                 </a>
               </div>
 
               <div class="expiry-sections mt-2">
                 <button (click)="goToGiaChecklist()" *ngIf="selectedProject?.giaChecklist?.data !== null" mat-button
                   color="primary">
-                  <mat-icon class="mr-1">grading</mat-icon> {{'View gia checklist' | uppercase}}
+                  <mat-icon class="mr-1">grading</mat-icon> {{'View gia checklist' | titlecase}}
                 </button>
               </div>
 
@@ -904,10 +901,10 @@
                   selectedProject?.status === 'RMC Meeting' || selectedProject?.status === 'Offer Letter'
                    || selectedProject?.status === 'GIA') && 
                   (selectedProject?.extendedAppraisal  !== null)" mat-button color="accent">
-                  <mat-icon class="mr-1">sync_alt</mat-icon> {{'change Project stage' | uppercase}}
+                  <mat-icon class="mr-1">sync_alt</mat-icon> {{'change Project stage' | titlecase}}
                 </button>
                 <button (click)="setProjectStages()" mat-button color="accent">
-                  <mat-icon class="mr-1">sync_alt</mat-icon> {{'change Project stage' | uppercase}}
+                  <mat-icon class="mr-1">sync_alt</mat-icon> {{'change Project stage' | titlecase}}
                 </button>
               </div>
             </div>
@@ -919,11 +916,11 @@
           <div class="expiry-sections mb-2">
             <a *ngIf="selectedProject?.preAppraisal?.status === 'Pending'" mat-button color="primary"
               (click)="viewPreApprasial()">
-              <mat-icon class="mr-1">description</mat-icon> {{'Fill pre-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'Fill pre-appraisal' | titlecase}}
             </a>
             <button *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button color="primary"
               (click)="viewPreApprasial()">
-              <mat-icon class="mr-1">description</mat-icon> {{'View pre-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'View pre-appraisal' | titlecase}}
             </button>
             <mat-chip-list>
               <mat-chip class="ml-3 mt-2" color="accent" selected
@@ -948,11 +945,11 @@
           <div class="expiry-sections mb-2">
             <a class="mt-1 mb-1" *ngIf="selectedProject?.extendedAppraisal?.status === 'Pending'" mat-button
               color="primary" (click)="viewExtAppraisal()">
-              <mat-icon class="mr-1">description</mat-icon> {{'Fill ext-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'Fill ext-appraisal' | titlecase}}
             </a>
             <button class="mt-1 mb-1" *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed'" mat-button
               color="primary" (click)="viewExtAppraisal()">
-              <mat-icon class="mr-1">description</mat-icon> {{'View ext-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'View ext-appraisal' | titlecase}}
             </button>
             <mat-chip-list>
               <mat-chip class="ml-3 mt-1" color="accent" selected
@@ -976,7 +973,7 @@
           </div>
           <button [disabled]="selectedProject?.extendedAppraisal === null" (click)="assginProposalSections()"
             class="m-1" mat-button color="accent">
-            <mat-icon class="mr-1">schedule</mat-icon> {{'ASSIGN SECTIONS TO DESK' | uppercase}}
+            <mat-icon class="mr-1">schedule</mat-icon> {{'ASSIGN SECTIONS TO DESK' | titlecase}}
           </button>
         </mat-card-actions>
 
@@ -984,41 +981,41 @@
           <div class="expiry-sections mb-2">
             <button *ngIf="selectedProject?.preAppraisal !== null" mat-button color="primary"
               (click)="viewPreApprasial()">
-              <mat-icon class="mr-1">description</mat-icon> {{'View pre-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'View pre-appraisal' | titlecase}}
             </button>
             <button mat-button color="accent" [disabled]="selectedProject?.preAppraisal?.isMarkedTo !== 'Marked to GM'
           || selectedProject?.preAppraisal?.isMarkedTo === null || 
           selectedProject?.preAppraisal?.subStatus !== 'Pending'" (click)="approvePreApprasial()">
-              <mat-icon class="mr-1">description</mat-icon> {{'Approve pre-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'Approve pre-appraisal' | titlecase}}
             </button>
             <button mat-button color="warn" [disabled]="selectedProject?.preAppraisal?.isMarkedTo !== 'Marked to GM'
           || selectedProject?.preAppraisal?.isMarkedTo === null || 
           selectedProject?.preAppraisal?.subStatus !== 'Pending'" (click)="rejectPreApprasial()">
-              <mat-icon class="mr-1">description</mat-icon> {{'Reject pre-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'Reject pre-appraisal' | titlecase}}
             </button>
             <button *ngIf="loggedUser.role === 'gm'" mat-button color="warn" [disabled]="selectedProject?.preAppraisal?.isMarkedTo !== 'Marked to GM'
               || selectedProject?.preAppraisal?.isMarkedTo !== 'Pending'" (click)="markToCeo()">
-              <mat-icon class="mr-1">description</mat-icon> {{'Mark pre-appraisal To Ceo' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'Mark pre-appraisal To Ceo' | titlecase}}
             </button>
           </div>
           <div class="expiry-sections mb-2">
             <button *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed'" mat-button color="primary"
               (click)="viewExtAppraisal()">
-              <mat-icon class="mr-1">description</mat-icon> {{'View ext-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'View ext-appraisal' | titlecase}}
             </button>
             <button mat-button color="accent" [disabled]="selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to CEO'
            || selectedProject?.extendedAppraisal?.isMarkedTo === null || 
           selectedProject?.extendedAppraisal?.subStatus !== 'Pending'" (click)="approveExtApprasial()">
-              <mat-icon class="mr-1">description</mat-icon> {{'Approve ext-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'Approve ext-appraisal' | titlecase}}
             </button>
             <button mat-button color="accent" [disabled]="selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to CEO'
            || selectedProject?.extendedAppraisal?.isMarkedTo === null || 
           selectedProject?.extendedAppraisal?.subStatus !== 'Pending'" (click)="rejectExtApprasial()">
-              <mat-icon class="mr-1">description</mat-icon> {{'Reject ext-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'Reject ext-appraisal' | titlecase}}
             </button>
             <button *ngIf="loggedUser.role === 'gm'" mat-button color="warn" [disabled]="selectedProject?.extendedAppraisal?.isMarkedTo !== 'Marked to GM'
           || selectedProject?.extendedAppraisal?.subStatus !== 'Pending'" (click)="markExtToCeo()">
-              <mat-icon class="mr-1">description</mat-icon> {{'Mark extended-appraisal To Ceo' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'Mark extended-appraisal To Ceo' | titlecase}}
             </button>
           </div>
         </mat-card-actions>
@@ -1028,45 +1025,52 @@
           <div class="expiry-sections mb-2">
             <button *ngIf="selectedProject?.preAppraisal !== null" mat-button color="primary"
               (click)="viewPreApprasial()">
-              <mat-icon class="mr-1">description</mat-icon> {{'View pre-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'View pre-appraisal' | titlecase}}
             </button>
             <button mat-button color="accent" [disabled]="selectedProject?.status === 'Extended Appraisal' 
             || selectedProject?.preAppraisal?.subStatus !== null" (click)="approvePreApprasial()">
-              <mat-icon class="mr-1">description</mat-icon> {{'Approve pre-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'Approve pre-appraisal' | titlecase}}
             </button>
             <button mat-button color="warn" [disabled]="selectedProject?.status === 'Extended Appraisal' 
             || selectedProject?.preAppraisal?.subStatus !== null" (click)="rejectPreApprasial()">
-              <mat-icon class="mr-1">description</mat-icon> {{'reject pre-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'reject pre-appraisal' | titlecase}}
             </button>
           </div>
           <div class="expiry-sections mb-2">
             <button *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed'" mat-button color="primary"
               (click)="viewExtAppraisal()">
-              <mat-icon class="mr-1">description</mat-icon> {{'View ext-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'View ext-appraisal' | titlecase}}
             </button>
             <button mat-button color="accent" [disabled]="selectedProject?.status === 'Preliminary Appraisal'"
               (click)="approveExtApprasial()">
-              <mat-icon class="mr-1">description</mat-icon> {{'Approve ext-appraisal' | uppercase}}
+              <mat-icon class="mr-1">description</mat-icon> {{'Approve ext-appraisal' | titlecase}}
             </button>
           </div>
         </mat-card-actions>
 
+        <mat-card-actions class="p-3 footer-btns">
+
+          <button (click)="commenceGrantDisbursment()" class="m-1" mat-button color="basic">
+            <mat-icon class="mr-1">table_chart</mat-icon> {{'Inititate Grant Disbursment' | titlecase}}
+          </button>
+
+        </mat-card-actions>
         <mat-card-actions class="p-3 footer-btns" *ngIf="loggedUser.role !== 'sme'">
 
           <button (click)="viewCommentsMatrix()" class="m-1" mat-button color="basic">
-            <mat-icon class="mr-1">table_chart</mat-icon> {{'View Comments Matrix' | uppercase}}
+            <mat-icon class="mr-1">table_chart</mat-icon> {{'View Comments Matrix' | titlecase}}
           </button>
 
           <button (click)="myTopElement2.scrollIntoView({ behavior: 'smooth', block: 'center' })" class="m-1" mat-button
             color="basic">
-            <mat-icon class="mr-1">comment</mat-icon> {{'add general remarks' | uppercase}}
+            <mat-icon class="mr-1">comment</mat-icon> {{'add general remarks' | titlecase}}
           </button>
         </mat-card-actions>
 
         <mat-card-actions class="p-3 footer-btns" *ngIf="loggedUser.role === 'sme'">
 
           <button (click)="fillProposalReports()" class="m-1" mat-button color="basic">
-            <mat-icon class="mr-1">table_chart</mat-icon> {{'Fill Proposal reports' | uppercase}}
+            <mat-icon class="mr-1">table_chart</mat-icon> {{'Fill Proposal reports' | titlecase}}
           </button>
 
         </mat-card-actions>

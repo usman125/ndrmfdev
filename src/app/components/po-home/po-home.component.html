@@ -4,14 +4,21 @@
       <span>My Trackpad</span>
       <span class="example-spacer"></span>
       <mat-button-toggle-group #group="matButtonToggleGroup">
-        <mat-button-toggle (change)="toggleChanged($event)" value="boxes" [checked]="true" aria-label="Boxes">
+        <mat-button-toggle matTooltip="List View!" (change)="toggleChanged($event)" value="boxes" [checked]="true"
+          aria-label="Boxes">
           <mat-icon>list_alt</mat-icon>
         </mat-button-toggle>
-        <mat-button-toggle (change)="toggleChanged($event)" value="graph" aria-label="Info Graphs">
-          <mat-icon>analytics</mat-icon>
+        <mat-button-toggle matTooltip="Graph View!" (change)="toggleChanged($event)" value="graph"
+          aria-label="Info Graphs">
+          <mat-icon>donut_small</mat-icon>
         </mat-button-toggle>
-        <mat-button-toggle (change)="toggleChanged($event)" value="rfr" aria-label="Projects Info">
-          <mat-icon>insights</mat-icon>
+        <mat-button-toggle matTooltip="Proposal Insights!" (change)="toggleChanged($event)" value="rfr"
+          aria-label="Projects Info">
+          <mat-icon>auto_graph</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle matTooltip="Result Framework Report!" (change)="toggleChanged($event)" value="kpi-projects"
+          aria-label="Projects Info">
+          <mat-icon>query_stats</mat-icon>
         </mat-button-toggle>
       </mat-button-toggle-group>
     </mat-toolbar-row>
@@ -307,6 +314,20 @@
             </div>
           </mat-tab>
         </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div *ngIf="group.value === 'kpi-projects'">
+    <mat-card class="m-20">
+      <mat-card-content>
+        <!-- <mat-tab-group (selectedTabChange)="onTabChanged($event);">
+          <mat-tab [id]="tab.id" *ngFor="let tab of projectTabs; let index = index" [label]="tab.name">
+            <div *ngIf="selectedProject !== null" class="mt-4">
+              <app-result-framework-report></app-result-framework-report>
+            </div>
+          </mat-tab>
+        </mat-tab-group> -->
+        <app-kpi-project-stats></app-kpi-project-stats>
       </mat-card-content>
     </mat-card>
   </div>

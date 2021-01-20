@@ -1666,4 +1666,15 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this._router.navigate(['/fill-proposal-reports', this.selectedProjectId]);
   }
 
+  commenceGrantDisbursment(){
+    this._projectService.commenceGrantDisbursment(this.selectedProjectId).subscribe(
+      (result: any) => {
+        console.log("ERROR COMMENING GD:---", result);
+      },
+      error => {
+        console.log("ERROR COMMENING GD:---", error);
+      }
+    )
+  }
+
 }

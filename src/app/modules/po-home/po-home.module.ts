@@ -12,6 +12,8 @@ import { ChartsModule } from 'ng2-charts';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ResultFrameworkReportModule } from '../result-framework-report/result-framework-report.module';
+import { KpiProjectStatsModule } from '../kpi-project-stats/kpi-project-stats.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import { ResultFrameworkReportModule } from '../result-framework-report/result-f
     CommonModule,
     PoHomeRoutingModule,
     ResultFrameworkReportModule,
+    KpiProjectStatsModule,
     MatCardModule,
     MatIconModule,
     MatButtonModule,
@@ -29,7 +32,8 @@ import { ResultFrameworkReportModule } from '../result-framework-report/result-f
     MatProgressSpinnerModule,
     ChartsModule,
     MatButtonToggleModule,
-    MatTabsModule
+    MatTabsModule,
+    MatTooltipModule
   ]
 })
 export class PoHomeModule { }

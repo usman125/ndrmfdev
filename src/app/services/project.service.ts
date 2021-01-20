@@ -406,5 +406,16 @@ export class ProjectService {
     );
   }
 
+  commenceGrantDisbursment(id) {
+    const url = `${AppConfig.apiUrl}/grant-disbursement/commence/${id}`;
+    return this._httpClient.post(
+      url,
+      {
+        body: null,
+        amount: null,
+      }
+    );
+  }
+
 
 }

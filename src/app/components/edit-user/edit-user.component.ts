@@ -6,6 +6,7 @@ import { UserService } from "../../services/user.service";
 import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 import { AuthStore } from 'src/app/stores/auth/auth-store';
 import { Subscription } from 'rxjs';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-edit-user',
@@ -23,6 +24,7 @@ export class EditUserComponent implements OnInit {
 
   allUserTypes: any = [];
   allRoles: any = [];
+  allDepartments: any = [];
 
   Subscription: Subscription = new Subscription();
 
@@ -33,6 +35,7 @@ export class EditUserComponent implements OnInit {
     private _authStore: AuthStore,
     private _confirmModelService: ConfirmModelService,
     private _router: Router,
+    private _settingsService: SettingsService,
   ) {
     this._buildEditUserForm();
   }
@@ -58,6 +61,7 @@ export class EditUserComponent implements OnInit {
         this.apiLoading = data.auth.apiCall;
       })
     );
+    this.getAllDepartments();
 
     this._activatedRoute.paramMap.subscribe(params => {
       this.selectedUserId = params.get("userId");
@@ -174,6 +178,23 @@ export class EditUserComponent implements OnInit {
       error => {
         this._authStore.removeLoading();
         console.log("ERROR FROM ALL ORGS:--", error);
+      }
+    );
+  }
+
+
+  getAllDepartments() {
+    // this.apiLoading = true;
+    this._settingsService.getAllDepartments().subscribe(
+      (result: any) => {
+        console.log("RESULT FROM DEPARTMENTS:--", result);
+        // this._departmentsStore.addAllDepartments(result);
+        // this.apiLoading = false;
+        this.allDepartments = result;
+      },
+      error => {
+        // this.apiLoading = false;
+        console.log("ERROR FROM DEPARTMENTS:--", error);
       }
     );
   }

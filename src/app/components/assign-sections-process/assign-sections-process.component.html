@@ -68,8 +68,9 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
 
-      <div
-        *ngIf="process !== 'GIA' && allProcessType.length !== 0 && (allProcessType.processOwner !== null || allProcessType.sections !== null) && !apiLoading">
+      <div *ngIf="(process !== 'GIA' && process !== 'DISBURSEMENT') && allProcessType.length !== 0 && 
+        (allProcessType.processOwner !== null || allProcessType.sections !== null) && 
+        !apiLoading">
         <div class="po">
           <div class="po-name">Select Process Owner</div>
           <mat-form-field>
@@ -97,8 +98,7 @@
           </div>
         </div>
       </div>
-      <div
-        *ngIf="process === 'GIA' && !apiLoading">
+      <div *ngIf="process === 'GIA' && !apiLoading">
         <div class="po">
           <div class="po-name">Select Process Owner</div>
           <mat-form-field>
@@ -126,22 +126,37 @@
           </div>
         </div>
       </div>
+      <div *ngIf="process === 'DISBURSEMENT' && !apiLoading">
+        <div class="po">
+          <div class="po-name">Select Process Owner</div>
+          <mat-form-field>
+            <mat-label>Select Process Owner</mat-label>
+            <mat-select [compareWith]="comparePoObjects" [(ngModel)]="allProcessType.processOwner"
+              (ngModelChange)="poChanged($event)">
+              <mat-option *ngFor="let po of poUsers;" [value]="po">
+                {{po.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
       <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" color="primary" diameter="35">
       </mat-progress-spinner>
 
       <mat-action-row>
         <div class="save-btn">
-          <button
-            *ngIf="process !== 'GIA' && allProcessType.length !== 0 && (allProcessType.processOwner !== null || allProcessType.sections !== null) && !apiLoading"
-            (click)="updateProcessMeta()" mat-button color="accent">SAVE</button>
-          <button
-            *ngIf="process === 'GIA' && !apiLoading"
-            (click)="updateProcessMeta()" mat-button color="primary">SAVE</button>
+          <button *ngIf="(process !== 'GIA' && process !== 'DISBURSEMENT') && allProcessType.length !== 0 && 
+            (allProcessType.processOwner !== null || allProcessType.sections !== null) && 
+            !apiLoading" (click)="updateProcessMeta()" mat-button color="accent">SAVE</button>
+          <button *ngIf="process === 'GIA' && !apiLoading" (click)="updateProcessMeta()" mat-button
+            color="primary">SAVE</button>
+          <button *ngIf="process === 'DISBURSEMENT' && !apiLoading" (click)="updateProcessMeta()" mat-button
+            color="primary">SAVE</button>
         </div>
         <div class="actio-btns">
           <button mat-button color="warn" (click)="prevArrayStep()">{{'Previous' | uppercase}}</button>
-          <button mat-button color="primary"
-            (click)="nextArrayStep()">{{i !== allProcess.length-1 ? 'NEXT' : 'END'}}</button>
+          <button mat-button color="primary" (click)="nextArrayStep()">{{i !== allProcess.length-1 ? 'NEXT' :
+            'END'}}</button>
         </div>
       </mat-action-row>
     </mat-expansion-panel>

@@ -299,7 +299,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
       this.progressData,
       true,
       this.clubbed,
-      this.clubData._id,
+      this.clubData ? this.clubData._id : null,
       this.clubData,
     );
     this.costUpdated.emit({ 'costUpdated': true });

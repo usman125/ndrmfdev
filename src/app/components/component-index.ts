@@ -52,6 +52,8 @@ export { SmeHomeComponent } from './sme-home/sme-home.component';
 export { AdminHomeComponent } from './admin-home/admin-home.component';
 export { AssignThematicAreaComponent } from './assign-thematic-area/assign-thematic-area.component';
 export { DataFilterPipe } from '../pipes/data-filter.pipe'
+export { CostsFilterPipe } from '../pipes/costs-filter.pipe'
+export { DepUserFilterPipe } from '../pipes/dep-user-filter.pipe'
 
 export { CeoHomeComponent } from './ceo-home/ceo-home.component';
 export { CeoProposalComponent } from './ceo-proposal/ceo-proposal.component';
@@ -97,3 +99,7 @@ export { EligibilityRequestViewComponent } from './eligibility-request-view/elig
 export { QualificationReportComponent } from './qualification-report/qualification-report.component';
 export { ProjectProposalFilesComponent } from './project-proposal-files/project-proposal-files.component';
 export { ResultFrameworkReportComponent } from './result-framework-report/result-framework-report.component';
+export { GrantDisbursmentsComponent } from './grant-disbursments/grant-disbursments.component';
+export { ViewGrantDisbursmentComponent } from './view-grant-disbursment/view-grant-disbursment.component';
+
+export { KpiProjectStatsComponent } from './kpi-project-stats/kpi-project-stats.component';

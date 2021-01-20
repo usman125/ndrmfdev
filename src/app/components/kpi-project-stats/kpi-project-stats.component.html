@@ -1,0 +1,30 @@
+<ng-container *ngIf="apiLoading">
+  <mat-progress-spinner [mode]="indeterminate" [diameter]="20"></mat-progress-spinner>
+</ng-container>
+<ng-container *ngIf="!apiLoading">
+  <mat-accordion>
+    <div class="p-2 mb-3" *ngFor="let output of outPutsArray">
+      <h4 class="mb-3" id="comment">{{output.value}} - {{output.label}}</h4>
+      <div *ngFor="let suboutput of output.subOutputs" class="mb-3">
+        <div class="d-flex align-items-center header-box mb-2">
+          <span class="p-3" id="answer">
+            {{suboutput.value}} - {{suboutput.label}}
+          </span>
+        </div>
+        <mat-expansion-panel (opened)="checkProjectsForKpi(indicator.value);" *ngFor="let indicator of suboutput.indicators">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{indicator.value}}
+            </mat-panel-title>
+            <mat-panel-description>
+              <small>{{indicator.label}}</small>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <!-- <p>{{indicator.label}}</p> -->
+        </mat-expansion-panel>
+      </div>
+    </div>
+  </mat-accordion>
+</ng-container>
+<!-- <ng-container></ng-container>
+<p>kpi-project-stats works!</p> -->

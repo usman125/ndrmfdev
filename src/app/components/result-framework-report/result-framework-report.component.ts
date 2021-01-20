@@ -469,7 +469,6 @@ export class ResultFrameworkReportComponent implements OnInit, OnDestroy {
       "CHART LABELS:---", this.kpiChartLabels,
       '\nKPI CHART DATA:---', this.kpiChartData,
       '\nKPI PROVINCES ARRAY:---', this.kpiProvinceArray,
-
     );
   }
 

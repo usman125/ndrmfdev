@@ -58,35 +58,44 @@ export class AssignSectionsProcessComponent implements OnInit {
   processChanged($event) {
     console.log("PROCESS CHANGED:---", $event);
     // this.apiLoading = true;
-    this._settingsService.getProcessMeta($event).subscribe(
-      (result: any) => {
-        // this.apiLoading = false;
-        console.log("RESULT FETCHING TYPE:---", result);
-        this.allProcessType = result;
-        // var object = {
-        //   processOwner: null,
-        //   sections: [],
-        // }
-        // let dummyTypes = [];
-        // object.processOwner = result.processOwner;
-        // result.sections.forEach(element => {
-        //   if (element.sme === null){
-        //     dummyTypes.push(element);
-        //   }
-        // });
-        // object.sections = dummyTypes;
-        // this.allProcessType = object;
-        this.apiLoading = true;
-        this.getProcessOwners();
-        this.getSMES();
-        if ($event === 'EXTENDED_APPRAISAL') {
-          this.getDmPams();
+    if ($event !== 'DISBURSEMENT') {
+
+      this._settingsService.getProcessMeta($event).subscribe(
+        (result: any) => {
+          // this.apiLoading = false;
+          console.log("RESULT FETCHING TYPE:---", result);
+          this.allProcessType = result;
+          // var object = {
+          //   processOwner: null,
+          //   sections: [],
+          // }
+          // let dummyTypes = [];
+          // object.processOwner = result.processOwner;
+          // result.sections.forEach(element => {
+          //   if (element.sme === null){
+          //     dummyTypes.push(element);
+          //   }
+          // });
+          // object.sections = dummyTypes;
+          // this.allProcessType = object;
+          this.apiLoading = true;
+          this.getProcessOwners();
+          this.getSMES();
+          if ($event === 'EXTENDED_APPRAISAL') {
+            this.getDmPams();
+          }
+        },
+        error => {
+          console.log("ERROR FETCHING TYPE:---", error);
         }
-      },
-      error => {
-        console.log("ERROR FETCHING TYPE:---", error);
+      );
+    } else {
+      this.allProcessType = {
+        processOwner: null,
       }
-    );
+      this.getProcessOwners();
+
+    }
   }
 
   getProcessOwners() {

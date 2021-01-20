@@ -61,6 +61,7 @@ import { SubProjectDocSectionsStore } from "./stores/sub-proj-doc-sections/sub-p
 import { QprSectionsStore } from './stores/qpr-sections/qpr-sections-store';
 import { QprStore } from './stores/qpr/qpr-store';
 import { CostDetailsStore } from './stores/cost-details/cost-details-store';
+import { GrantDisbursmentsStore } from './stores/grant-disbursments/grant-disbursments-store';
 import { IntimateFipModule } from './modules/fip-intimations/fip-intimations.module';
 import { AssigntaskModule } from './modules/assigntask/assigntask.module';
 import { ConfirmDialogModule } from './modules/confirm-dialog/confirm-dialog.module';
@@ -71,6 +72,10 @@ import { JwtModule } from "@auth0/angular-jwt";
 import { ActivityDetailsComponent } from './components/activity-details/activity-details.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { SingleGrantDisbursmentsStore } from './stores/single-grant-disbursment/single-grant-disbursment-store';
+// import { KpiProjectStatsComponent } from './components/kpi-project-stats/kpi-project-stats.component';
+// import { GrantDisbursmentsComponent } from './components/grant-disbursments/grant-disbursments.component';
+// import { ViewGrantDisbursmentComponent } from './components/view-grant-disbursment/view-grant-disbursment.component';
 // import { ResultFrameworkReportComponent } from './components/result-framework-report/result-framework-report.component';
 // import { ProjectProposalFilesComponent } from './components/project-proposal-files/project-proposal-files.component';
 
@@ -89,6 +94,9 @@ export function tokenGetter() {
     NoHeaderLayoutComponent,
     AddProjectComponent,
     ActivityDetailsComponent,
+    // KpiProjectStatsComponent,
+    // ViewGrantDisbursmentComponent,
+    // GrantDisbursmentsComponent,
     // ResultFrameworkReportComponent,
     // ProjectProposalFilesComponent,
   ],
@@ -179,6 +187,8 @@ export function tokenGetter() {
     QprSectionsStore,
     QprStore,
     CostDetailsStore,
+    GrantDisbursmentsStore,
+    SingleGrantDisbursmentsStore
   ],
   bootstrap: [AppComponent],
   exports: [],
