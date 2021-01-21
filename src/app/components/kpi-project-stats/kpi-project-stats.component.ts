@@ -71,6 +71,85 @@ export class KpiProjectStatsComponent implements OnInit {
     },
   ];
 
+  // Radar
+  public provinceChartOptions: RadialChartOptions = {
+    responsive: true,
+    plugins: {
+      datalabels: {
+        backgroundColor: function (context) {
+          return context.active ?
+            '#2e7d32' :
+            context.dataset.backgroundColor[context.dataIndex];
+        },
+        color: function (context) {
+          return context.active ?
+            '#fff' :
+            '#919191';
+        },
+        // color: '#919191',
+        font: {
+          weight: 'bold',
+          size: 12,
+        },
+        // formatter: Math.round,
+        display: function (context) {
+          return context.dataset.data[context.dataIndex] > 0;
+        },
+        padding: 3,
+
+        // formatter: function (value, context) {
+        //   return context.active
+        //     ? context.dataset.label + '\n' + value
+        //     : Math.round(value);
+        // },
+      },
+      scales: {
+        // xAxes: [{
+        //   ticks: {
+        //     // Include a dollar sign in the ticks
+        //     callback: function (value, index, values) {
+        //       return '$' + value;
+        //     }
+        //   },
+        //   scaleLabel: {
+        //     fontSize: 15,
+        //     padding: 5,
+        //   },
+        // }],
+        // yAxes: [{
+        //   ticks: {
+        //     // Include a dollar sign in the ticks
+        //     callback: function (value, index, values) {
+        //       return '$' + value;
+        //     }
+        //   },
+        //   scaleLabel: {
+        //     fontSize: 15,
+        //     padding: 5,
+        //   },
+        // }],
+        ticks: {
+          // Include a dollar sign in the ticks
+          callback: function (value, index, values) {
+            return '$' + value;
+          }
+        },
+      }
+
+
+      // scaleLabel:{
+      //   font
+      // }
+    }
+  };
+  public provinceChartLabels: Label[] = [];
+  public provinceChartData: ChartDataSets[] = [
+    { data: [], label: 'Target' },
+    { data: [], label: 'Achieved' }
+  ];
+  public provinceChartType: ChartType = 'radar';
+
+
   constructor(
     private _projectService: ProjectService,
     private _settingsService: SettingsService,
@@ -253,23 +332,23 @@ export class KpiProjectStatsComponent implements OnInit {
           if (z.data !== null && z.value) {
             if (z.data.province) {
               if (provinces.length === 0) {
-                provinces.push(z.data.province.PROVINCE);
+                z.data.province.PROVINCE ? provinces.push(z.data.province.PROVINCE) : provinces.push(z.data.province[0].PROVINCE);
                 provincesTarget.push(z.data.target);
                 if (z.progress && z.progress !== null)
-                  provincesAchieved.push(z.progress.mneProgress);
+                  provincesAchieved.push(parseInt(z.progress.mneProgress));
                 else
                   provincesAchieved.push(0);
               } else {
-                let provinceIndex = provinces.indexOf(z.data.province.PROVINCE);
+                let provinceIndex = z.data.province.PROVINCE ? provinces.indexOf(z.data.province.PROVINCE) : provinces.indexOf(z.data.province[0].PROVINCE);
                 if (provinceIndex > -1) {
                   provincesTarget[provinceIndex] = provincesTarget[provinceIndex] + z.data.target;
                   if (z.progress && z.progress !== null)
-                    provincesAchieved[provinceIndex] = provincesAchieved[provinceIndex] + z.progress.mneProgress;
+                    provincesAchieved[provinceIndex] = provincesAchieved[provinceIndex] + parseInt(z.progress.mneProgress);
                 } else {
-                  provinces.push(z.data.province.PROVINCE);
+                  z.data.province.PROVINCE ? provinces.push(z.data.province.PROVINCE) : provinces.push(z.data.province[0].PROVINCE);
                   provincesTarget.push(z.data.target);
                   if (z.progress && z.progress !== null)
-                    provincesAchieved.push(z.progress.mneProgress);
+                    provincesAchieved.push(parseInt(z.progress.mneProgress));
                   else
                     provincesAchieved.push(0);
                 }
@@ -281,18 +360,18 @@ export class KpiProjectStatsComponent implements OnInit {
             }
           }
           if (z.progress && z.progress !== null) {
-            childrenAchieved = childrenAchieved + z.progress.mneProgress;
-            achievedCount = achievedCount + z.progress.mneProgress;
+            childrenAchieved = childrenAchieved + parseInt(z.progress.mneProgress);
+            achievedCount = achievedCount + parseInt(z.progress.mneProgress);
           }
         }
 
         let object = {
           indicatorValue,
           indicator: 'indicator' + indicator,
-          provinces: provinces || [],
+          provinces: provinces.length ? provinces : [],
           provincesTarget,
           provincesAchieved,
-          provinceChartLabels: provinces || [],
+          provinceChartLabels: provinces.length ? provinces : [],
           provinceChartData: [
             { data: provincesTarget, label: 'Target' },
             { data: provincesAchieved, label: 'Achieved' }
@@ -355,7 +434,8 @@ export class KpiProjectStatsComponent implements OnInit {
     this.indicatorChartLabels = [];
     this.indicatorChartData[0].data = [];
     this.indicatorChartData[1].data = [];
-    console.log("checkProjectsForKpi(indicator.value)", value);
+    let provincesChart = null;
+    let provincesChartArray = [];
     for (let i = 0; i < this.allProjects.length; i++) {
       let key = this.allProjects[i];
       if (key.indicatorChartLabels.indexOf(value) > -1) {
@@ -363,8 +443,27 @@ export class KpiProjectStatsComponent implements OnInit {
         this.indicatorChartLabels.push(key.name);
         this.indicatorChartData[0].data.push(key.indicatorChartData[0].data[key.indicatorChartLabels.indexOf(value)]);
         this.indicatorChartData[1].data.push(key.indicatorChartData[1].data[key.indicatorChartLabels.indexOf(value)]);
+        provincesChartArray.push(_.find(key.provinceArray, { indicatorValue: value }));
       }
     }
+    let tempProvinces = [];
+    let tempProvincesTarget = [];
+    let tempProvincesAchieved = [];
+    for (let i = 0; i < provincesChartArray.length; i++) {
+      let key = provincesChartArray[i];
+      tempProvinces = tempProvinces.concat(key.provinces);
+      tempProvincesTarget = tempProvincesTarget.concat(key.provincesTarget);
+      tempProvincesAchieved = tempProvincesAchieved.concat(key.provincesAchieved);
+    }
+    this.provinceChartLabels = tempProvinces;
+    this.provinceChartData[0].data = tempProvincesTarget;
+    this.provinceChartData[1].data = tempProvincesAchieved;
+    console.log("checkProjectsForKpi(indicator.value)", value,
+      '\n', provincesChartArray,
+      '\n', tempProvinces,
+      '\n', tempProvincesTarget,
+      '\n', tempProvincesAchieved,
+    );
   }
 
   changeIndiChartType() {

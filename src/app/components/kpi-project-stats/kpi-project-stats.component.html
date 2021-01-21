@@ -39,6 +39,19 @@
             </div>
           </ng-container>
 
+          <ng-container *ngIf="indicatorChartLabels.length">
+            <div class="row mt-5">
+              <div class="col-md-12">
+                <p id="answer">Province(s) Data</p>
+                <div style="display: block">
+                  <canvas baseChart [datasets]="provinceChartData" [options]="provinceChartOptions"
+                    [labels]="provinceChartLabels" [chartType]="provinceChartType">
+                  </canvas>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
         </mat-expansion-panel>
       </div>
     </div>
