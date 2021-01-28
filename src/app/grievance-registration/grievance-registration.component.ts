@@ -1,9 +1,10 @@
 import { LoginService } from './../services/login.service';
 import { Input, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
+import { UserService } from 'src/app/services/user.service';
 import { FormGroup, FormBuilder, Validators} from '@angular/forms';
 import { Router } from "@angular/router";
-import * as moment from "moment";
+import * as moment from "moment"; 
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 @Component({
@@ -30,10 +31,13 @@ export class GrievanceRegistrationComponent implements OnInit {
   public registrationForm: FormGroup;
    testUser: any;
    files: any = [];
+  fd: FormData;
+  responseReult: Object;
   constructor(private formBuilder: FormBuilder,
     private loginservices: LoginService,
     private _confirmModelService: ConfirmModelService,
-    private _router: Router,) {
+    private _router: Router,
+    private userServices: UserService) {
     this.grievanceFormBuilder();
   }
 ngAfterViewInit() {
@@ -65,14 +69,17 @@ ngAfterViewInit() {
       // this.uploadFiles();
       console.log("Uploaded Files:---", this.files);
 
-        const fd = new FormData();
-     fd.append(this.param, this.files["data"]);
-      console.log("fd", fd)
+         this.fd = new FormData();
+     this.fd.append(this.param, this.files[0].data);
+  
+    
 
 
     };
     fileUpload.click();
+  
   }
+
   goBack() {
     this._router.navigate(['login']);
   }
@@ -127,8 +134,19 @@ registerGrievanceUser(){
 
   }
   console.log("registerd Complaint", complaintToSendData)
+
+ 
   this.loginservices.reggisterComplaint(complaintToSendData).subscribe(
     res => {
+      if(this.fd){
+        this.userServices.fileUpload(res['complaintId'], this.fd).subscribe(
+          res => {
+            console.log("fileupload api is hitting", res)
+          }
+        )
+      }
+     
+    
 console.log("hitting successfully",res)
 const options = {
   title: 'Successfully  added!',
@@ -138,8 +156,10 @@ const options = {
   add: true,
   confirm: false,
 };
+
 this._confirmModelService.open(options);
 this._router.navigate(['login']);
+
     },
     _err => {
       var error = _err.json();

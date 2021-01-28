@@ -228,6 +228,18 @@ const routes: Routes = [
     data: { roles: [Role.Admin] }
   },
   {
+    path: 'grcActions/:userId',
+    loadChildren: () => import('./modules/grc-actions/grc-actions.module').then(m => m.GrcActionsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'showAttachments/:userId',
+    loadChildren: () => import('./modules/show-attachments/show-attachments.module').then(m => m.ShowAttachmentsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
     path: 'UpdateStatus/:userId',
     loadChildren: () => import('./modules/update-complaint-status/update-complaint-status.module').then(m => m.UpdateComplaintStatusModule),
     canActivate: [AuthGuard],
@@ -252,8 +264,26 @@ const routes: Routes = [
     data: { roles: [Role.Admin] }
   },
   {
+    path: 'evidenceAndReviews/:userId',
+    loadChildren: () => import('./modules/evidence-and-reviews/evidence-and-reviews.module').then(m => m.EvidenceAndReviewsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
     path: 'GRC',
     loadChildren: () => import('./modules/grc/grc.module').then(m => m.GRCModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'CEO',
+    loadChildren: () => import('./modules/ceo/ceo.module').then(m => m.CEOModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'ceoActions/:userId',
+    loadChildren: () => import('./modules/ceo-actions/ceo-actions.module').then(m => m.CeoActionsModule),
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin] }
   },

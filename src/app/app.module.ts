@@ -117,6 +117,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { GrievanceRegistrationComponent } from './grievance-registration/grievance-registration.component';
 import { ConcernedPersonDialogComponent } from './components/concerned-person-dialog/concerned-person-dialog.component';
+//import { CeoActionsComponent } from './components/ceo-actions/ceo-actions.component';
+//import { CEOComponent } from './components/ceo/ceo.component';
+//import { GrcActionsComponent } from './components/grc-actions/grc-actions.component';
+//import { EvidenceAndReviewsComponent } from './components/evidence-and-reviews/evidence-and-reviews.component';
+//import { ShowAttachmentsComponent } from './components/show-attachments/show-attachments.component';
 //import { UpdateComplaintComponent } from './components/update-complaint/update-complaint.component';
 //import { UpdateComplaintStatusComponent } from './components/update-complaint-status/update-complaint-status.component';
 //import { GRCComponent } from './components/grc/grc.component';
@@ -191,6 +196,11 @@ export function tokenGetter() {
     ActivityDetailsComponent,
     GrievanceRegistrationComponent,
     ConcernedPersonDialogComponent,
+    //CeoActionsComponent,
+    //CEOComponent,
+    //GrcActionsComponent,
+    //EvidenceAndReviewsComponent,
+   // ShowAttachmentsComponent,
     //UpdateComplaintComponent,
     //UpdateComplaintStatusComponent,
     //GRCComponent,

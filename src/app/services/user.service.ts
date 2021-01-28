@@ -39,6 +39,19 @@ getAllComplains(){
     url,
   );
 }
+addComplaintAppeal(appealBody){
+  const url = `${AppConfig.apiUrl}/complaint/appeal`;
+  return this._httpClient.post(
+    url,
+    appealBody
+  );
+}
+CEOComplains(){
+  const url = `${AppConfig.apiUrl}/complaint/appeal/findall?status=INITIATED`;
+  return this._httpClient.get(
+    url,
+  );
+}
   editUser(values, id) {
     const url = `${AppConfig.apiUrl}/user/${id}`;
     console.log("VALUES IN EDIT USER:--", values);
@@ -95,8 +108,51 @@ getAllComplains(){
     );
 
   }
+
+  fileUpload(complaintId, postBody){
+    const url = `${AppConfig.apiUrl}/complaint/attachment/uploadFile?applicationRefNo=${complaintId}`;
+    return this._httpClient.post(
+      url,
+      postBody
+    );
+  }
+  getUserListByRole(){
+    const url = `${AppConfig.apiUrl}/complaint/user/findByRole?role=CEO`;
+    return this._httpClient.get(
+      url,
+    );
+
+  }
+  downLoadFile(complaintId): any{
+    const url = `${AppConfig.apiUrl}/complaint/attachment/find/${complaintId}/`;
+    return this._httpClient.get(
+      url,
+    );
+
+  }
+  RejectAppeal(appealId){
+    const url = `${AppConfig.apiUrl}/complaint/appeal/status/update?appealId=${appealId}&status=REJECTED`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+  ReAssignAppeal(appealId){
+    const url = `${AppConfig.apiUrl}/complaint/appeal/status/update?appealId=${appealId}&status=REASSIGNED`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+  submitFeedback(feedbackBody){
+    const url = `${AppConfig.apiUrl}/complaint/complainant/feedback`;
+    return this._httpClient.post(
+      url,
+      feedbackBody
+    );
+  }
   getComplaintById(complaintId){
-    const url = `${AppConfig.apiUrl}/complaint/find?id=${complaintId}`;
+    const url = `${AppConfig.apiUrl}/complaint/find/${complaintId}`;
     return this._httpClient.get(
       url,
     );
@@ -108,7 +164,7 @@ getAllComplains(){
     );
   }
 AssignComplainToConcernedPerson(complaintId, postBody){
-  const url = `${AppConfig.apiUrl}/complaint/${complaintId}/assign/concerned-person?notificationTitle=avc`;
+  const url = `${AppConfig.apiUrl}/complaint/${complaintId}/assign/concerned-person?notificationBody=heelo&notificationTitle=hello`;
   return this._httpClient.post(
     url,
     postBody

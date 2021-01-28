@@ -16,6 +16,7 @@ export class EditComplainComponent implements OnInit {
   status: any;
   sequenceNumber: any;
   logggedInUserData: any;
+  loading: Boolean;
   constructor(
     private _router: Router,
     private userServices: UserService,
@@ -35,6 +36,7 @@ export class EditComplainComponent implements OnInit {
 
   }
 SubmitEditComplain(){
+  this.loading = true;
   let postBody = {
      "assignee": [
       {
@@ -49,6 +51,7 @@ SubmitEditComplain(){
   }
 console.log("PutBody", postBody)
 this.userServices.acknowledgeComplaint(this.complainToedit.id, postBody).subscribe((result: any) => {
+
   console.log("Acknowledge results", result);
   const options = {
     title: 'Successfully  added!',

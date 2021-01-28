@@ -1,6 +1,6 @@
 <mat-toolbar style="margin-bottom:15px;padding: 15px 0px;" color="primary">
     <mat-toolbar-row>
-      <span>Update Complaint</span>
+      <span>View Complaint</span>
       <span class="example-spacer"></span>
       <button  (click)="goBack()" mat-icon-button aria-label="Login Page">
         <mat-icon>keyboard_backspace</mat-icon>
@@ -10,16 +10,11 @@
   <div style="padding: 1rem;">
     <div>
       <mat-form-field class="col col-md-12">
-      <textarea matInput placeholder="Name" [(ngModel)]="name"></textarea>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field class="col col-md-12">
       <textarea matInput placeholder="Complaint Id" [(ngModel)]="complaintId"></textarea>
       </mat-form-field>
     </div>
     <div>
-      <button  mat-flat-button color="primary" (click)="updateComplaint()">Update </button>
+      <button  mat-flat-button color="primary" (click)="updateComplaint()">View </button>
     </div>
   </div>
   <div *ngIf = "responseResults">
@@ -48,10 +43,26 @@
           <h6><strong>Reviews</strong></h6>
           <p *ngFor = "let review of responseResults.reviews"> {{review.comments}}</p>
         </div>
-      <div style="position: relative;">
-        <button style="align-content: flex-end; margin-left: 4rem;" (click)="openDialog(responseResults.id)" mat-flat-button color="primary" >Add review</button>
-      </div>
+        <div >
+          <h6><strong>Complainant Feedback</strong></h6>
+          <p *ngFor = "let feedback of responseResults.complainantReviews"> {{feedback.feedback}}</p>
+        </div>
+        <div *ngIf = "responseResults.status != 'Closed'">
+          <mat-form-field class="col col-md-12">
+          <textarea  matInput  placeholder="Feedback"  [(ngModel)]="feedback"></textarea>
+          </mat-form-field>
+        </div>
+        <div *ngIf = "responseResults.status == 'Closed'" >
+          <mat-form-field class="col col-md-12">
+          <textarea matInput  placeholder="Remarks" [(ngModel)]="remarks"></textarea>
+          </mat-form-field>
+        </div>
     </mat-card-content>
+    <div style="padding: 1rem;">
+      <button  *ngIf="!loading && responseResults.status != 'Closed'" mat-flat-button color="primary" (click)="submitFeedback()">Submit feedback </button>
+      <button  *ngIf="!loading && responseResults.status == 'Closed'  " style="margin-left: 3rem;"  mat-flat-button color="primary" (click)="UserAppeal()">Appeal </button>
+      <mat-progress-spinner   *ngIf="loading" class="spinner p-3" diameter="35" mode="indeterminate"></mat-progress-spinner>
+    </div>
   
     </mat-card>
   

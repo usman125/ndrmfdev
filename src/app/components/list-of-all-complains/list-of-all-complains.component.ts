@@ -10,7 +10,7 @@ import { Router } from "@angular/router";
   styleUrls: ['./list-of-all-complains.component.css']
 })
 export class ListOfAllComplainsComponent implements OnInit {
-  displayedColumns = ['date','email','name','status','againstPerson', 'contactNumber', 'priority','sequence','action', 'assign', 'emailToConcernPerson','UpdateSatus'];
+  displayedColumns = ['date','email','name','status','againstPerson', 'contactNumber', 'priority','sequence','action', 'assign', 'emailToConcernPerson','UpdateSatus','ShowAttachments'];
   dataSource
  allComplainsData: any;
  loading: boolean;
@@ -30,6 +30,7 @@ this.userServices.getAllComplains().subscribe(
     console.log("ALL Complains:--", result);
    this.allComplainsData = result
    this.dataSource= this.allComplainsData
+ 
   },
   error => {
     console.log("ERROR FROM ALL COMPLAINS:--", error);
@@ -50,6 +51,10 @@ this.userServices.getAllComplains().subscribe(
   emailToConcernPerson(user){
    this._router.navigate(['/emailtoConcernPerson', user.id]);
     localStorage.setItem('complainToEdit', JSON.stringify(user));
+  }
+  ShowAtatchments(user){
+   this._router.navigate(['/showAttachments', user.id]);
+   localStorage.setItem('complainToEdit', JSON.stringify(user));
   }
   updateComplaintStatus(user){
     this._router.navigate(['/UpdateStatus', user.id]);

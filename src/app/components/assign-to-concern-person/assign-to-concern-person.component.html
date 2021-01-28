@@ -18,7 +18,8 @@
 
   </mat-card-content>
   <div style="position: relative; padding: 1rem;">
-    <button  mat-flat-button color="primary" (click)="ConfirmAssignToConcernedPerson()">Assign</button>
+    <button *ngIf="!loading" mat-flat-button color="primary" (click)="ConfirmAssignToConcernedPerson()">Assign</button>
+    <mat-progress-spinner   *ngIf="loading" class="spinner p-3" diameter="35" mode="indeterminate"></mat-progress-spinner>
   </div>
 </mat-card>
 

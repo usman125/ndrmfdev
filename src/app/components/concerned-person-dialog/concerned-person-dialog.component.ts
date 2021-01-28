@@ -2,7 +2,7 @@ import { UserService } from 'src/app/services/user.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmModelService } from 'src/app/services/confirm-model.service';
-
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-concerned-person-dialog',
@@ -19,6 +19,7 @@ export class ConcernedPersonDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private userservices: UserService,
     private _confirmModelService: ConfirmModelService,
+    private _router: Router,
   ) { }
 
 
@@ -36,6 +37,7 @@ console.log("statusBody", statusBody.status)
       "comments": this.coments,
       "reviewAddBy":this.logggedInUserData.userId,
       "reviewAddDateTime": this.myDate,
+      "satisfied": false,
     }
      console.log("dialogPostBody", postBody)
      this.userservices.addreview(this.data.id, postBody ).subscribe((result: any) => {
@@ -53,6 +55,7 @@ console.log("statusBody", statusBody.status)
         confirm: false,
       };
       this._confirmModelService.open(options);
+      this._router.navigate(['complainant']);
     }
     );
 

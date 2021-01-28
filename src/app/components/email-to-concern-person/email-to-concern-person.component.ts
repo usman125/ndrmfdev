@@ -12,6 +12,7 @@ export class EmailToConcernPersonComponent implements OnInit {
    body: any;
    subject: any;
   complainToedit: any;
+  loading: Boolean;
   constructor(
     private userServices: UserService,
     private _confirmModelService: ConfirmModelService,
@@ -21,9 +22,10 @@ export class EmailToConcernPersonComponent implements OnInit {
   ngOnInit(): void {
   }
 EamiltoComplainant(){
+  this.loading = true;
   this.complainToedit = JSON.parse(localStorage.getItem('complainToEdit'));
 this.userServices.emailToComplainant(this.complainToedit.id,this.body, this.subject).subscribe((result: any) => {
-  console.log("caomplainant results", result);
+  console.log("email complainant results", result);
   const options = {
     title: 'Successfully  added!',
     message: 'OK to exit',
@@ -33,6 +35,7 @@ this.userServices.emailToComplainant(this.complainToedit.id,this.body, this.subj
     confirm: false,
   };
   this._confirmModelService.open(options);
+  this._router.navigate(['allcomplains']);
 });
 }
 goBack() {

@@ -15,7 +15,8 @@ export class AssignToConcernPersonComponent implements OnInit {
   logggedInUserData: any;
   assigneePerson: any;
   date: Date;
-
+  assignedPersonIds = [];
+  loading: Boolean;
   constructor(private userServices: UserService,
     private _confirmModelService: ConfirmModelService,
     private _router: Router,
@@ -29,24 +30,20 @@ export class AssignToConcernPersonComponent implements OnInit {
     this.logggedInUserData = JSON.parse(localStorage.getItem('user'));
     this.assigneePerson = JSON.parse(localStorage.getItem('complainToEdit'));
   }
+  
   getUserId(id) {
-    let userIds = [];
-    console.log("userId", id);
-    userIds.push(id);
-    console.log("userIds", userIds);
+    let previousUserID = id
+    this.assignedPersonIds.push(
+      {
+        "assignedDateTime":this.myDate,
+        "assignedPersonId": previousUserID
+      }, );
+ 
+    
   }
   ConfirmAssignToConcernedPerson() {
-
-    let PostBody =
-    [
-      {
-        "assignedDateTime":  this.myDate,
-        "assignedPersonId": this.logggedInUserData.userId
-      }
-    ]
-
-    console.log("postbody", PostBody)
-    this.userServices.AssignComplainToConcernedPerson(this.assigneePerson.id, PostBody).subscribe((result: any) => {
+    this.loading = true;
+    this.userServices.AssignComplainToConcernedPerson(this.assigneePerson.id, this.assignedPersonIds).subscribe((result: any) => {
       console.log("assigned", result);
       const options = {
         title: 'Successfully  added!',
