@@ -16,6 +16,7 @@ import { Label } from 'ng2-charts';
 export class KpiProjectStatsComponent implements OnInit {
 
   apiLoading: boolean = false;
+  chartLoading: boolean = false;
   allProjects: any = null;
   formElements: any = null;
   projectStats: any = null;
@@ -71,8 +72,49 @@ export class KpiProjectStatsComponent implements OnInit {
     },
   ];
 
-  // Radar
+  // Radar PROVINCES
   public provinceChartOptions: RadialChartOptions = {
+    responsive: true,
+    plugins: {
+      datalabels: {
+        backgroundColor: function (context) {
+          // console.log("PROVINCES CONTECT:---", context)
+          return context.active ?
+            '#2e7d32' :
+            context.dataset.backgroundColor[context.dataIndex];
+        },
+        // color: function (context) {
+        //   return context.active ?
+        //     '#fff' :
+        //     '#191919';
+        // },
+        color: '#191919',
+        font: {
+          weight: 'bold',
+          size: 12,
+        },
+        display: function (context) {
+          return context.dataset.data[context.dataIndex] > 0;
+        },
+        padding: 3,
+        // formatter: function (value, context) {
+        //   return context.active
+        //     ? context.dataset.label + '\n' + value
+        //     : Math.round(value);
+        // },
+      },
+
+    }
+  };
+  public provinceChartLabels: Label[] = [];
+  public provinceChartData: ChartDataSets[] = [
+    { data: [], label: 'Target' },
+    { data: [], label: 'Achieved' }
+  ];
+  public provinceChartType: ChartType = 'radar';
+
+  // Radar DIVISIONS
+  public divisionChartOptions: RadialChartOptions = {
     responsive: true,
     plugins: {
       datalabels: {
@@ -84,70 +126,59 @@ export class KpiProjectStatsComponent implements OnInit {
         color: function (context) {
           return context.active ?
             '#fff' :
-            '#919191';
+            '#191919';
         },
-        // color: '#919191',
+        // pointBackgroundColor: function (context) {
+        //   return context.active ?
+        //     '#2e7d32' :
+        //     context.dataset.hoverBackgroundColor[context.dataIndex];
+        // },
+        // color: '#191919',
         font: {
           weight: 'bold',
           size: 12,
         },
-        // formatter: Math.round,
         display: function (context) {
           return context.dataset.data[context.dataIndex] > 0;
         },
+        // pointHoverBackgroundColor: 'red',
         padding: 3,
-
+        // margin: 3,
         // formatter: function (value, context) {
         //   return context.active
         //     ? context.dataset.label + '\n' + value
         //     : Math.round(value);
         // },
       },
-      scales: {
-        // xAxes: [{
-        //   ticks: {
-        //     // Include a dollar sign in the ticks
-        //     callback: function (value, index, values) {
-        //       return '$' + value;
-        //     }
-        //   },
-        //   scaleLabel: {
-        //     fontSize: 15,
-        //     padding: 5,
-        //   },
-        // }],
-        // yAxes: [{
-        //   ticks: {
-        //     // Include a dollar sign in the ticks
-        //     callback: function (value, index, values) {
-        //       return '$' + value;
-        //     }
-        //   },
-        //   scaleLabel: {
-        //     fontSize: 15,
-        //     padding: 5,
-        //   },
-        // }],
-        ticks: {
-          // Include a dollar sign in the ticks
-          callback: function (value, index, values) {
-            return '$' + value;
-          }
-        },
-      }
-
-
-      // scaleLabel:{
-      //   font
-      // }
     }
   };
-  public provinceChartLabels: Label[] = [];
-  public provinceChartData: ChartDataSets[] = [
+  public divisionChartLabels: Label[] = [];
+  public divisionChartData: ChartDataSets[] = [
     { data: [], label: 'Target' },
     { data: [], label: 'Achieved' }
   ];
-  public provinceChartType: ChartType = 'radar';
+  public divisionChartType: ChartType = 'radar';
+
+  public districtChartLabels: Label[] = [];
+  public districtChartData: ChartDataSets[] = [
+    { data: [], label: 'Target', hoverBackgroundColor: '#2e7d32', pointHoverBackgroundColor: 'red' },
+    { data: [], label: 'Achieved', hoverBackgroundColor: '#2e7d32', pointHoverBackgroundColor: 'red' }
+  ];
+  public districtChartType: ChartType = 'radar';
+
+  public tehsilChartLabels: Label[] = [];
+  public tehsilChartData: ChartDataSets[] = [
+    { data: [], label: 'Target' },
+    { data: [], label: 'Achieved' }
+  ];
+  public tehsilChartType: ChartType = 'radar';
+
+  public ucChartLabels: Label[] = [];
+  public ucChartData: ChartDataSets[] = [
+    { data: [], label: 'Target' },
+    { data: [], label: 'Achieved' }
+  ];
+  public ucChartType: ChartType = 'radar';
 
 
   constructor(
@@ -327,30 +358,173 @@ export class KpiProjectStatsComponent implements OnInit {
         let provinces = [];
         let provincesTarget = [];
         let provincesAchieved = [];
+
+        let divisions = [];
+        let divisionsTarget = [];
+        let divisionsAchieved = [];
+
+        let districts = [];
+        let districtsTarget = [];
+        let districtsAchieved = [];
+
+        let tehsils = [];
+        let tehsilsTarget = [];
+        let tehsilsAchieved = [];
+
+        let ucs = [];
+        let ucsTarget = [];
+        let ucsAchieved = [];
+
         for (let k = 0; k < y.quarters.length; k++) {
           var z = y.quarters[k];
           if (z.data !== null && z.value) {
             if (z.data.province) {
               if (provinces.length === 0) {
-                z.data.province.PROVINCE ? provinces.push(z.data.province.PROVINCE) : provinces.push(z.data.province[0].PROVINCE);
-                provincesTarget.push(z.data.target);
+                z.data.province.PROVINCE ?
+                  provinces.push(z.data.province.PROVINCE) :
+                  provinces.push(z.data.province[0].PROVINCE);
+                provincesTarget.push(parseInt(z.data.target));
                 if (z.progress && z.progress !== null)
                   provincesAchieved.push(parseInt(z.progress.mneProgress));
                 else
                   provincesAchieved.push(0);
               } else {
-                let provinceIndex = z.data.province.PROVINCE ? provinces.indexOf(z.data.province.PROVINCE) : provinces.indexOf(z.data.province[0].PROVINCE);
+                let provinceIndex = z.data.province.PROVINCE ?
+                  provinces.indexOf(z.data.province.PROVINCE) :
+                  provinces.indexOf(z.data.province[0].PROVINCE);
                 if (provinceIndex > -1) {
-                  provincesTarget[provinceIndex] = provincesTarget[provinceIndex] + z.data.target;
+                  provincesTarget[provinceIndex] = provincesTarget[provinceIndex] + parseInt(z.data.target);
                   if (z.progress && z.progress !== null)
                     provincesAchieved[provinceIndex] = provincesAchieved[provinceIndex] + parseInt(z.progress.mneProgress);
                 } else {
-                  z.data.province.PROVINCE ? provinces.push(z.data.province.PROVINCE) : provinces.push(z.data.province[0].PROVINCE);
-                  provincesTarget.push(z.data.target);
+                  z.data.province.PROVINCE ?
+                    provinces.push(z.data.province.PROVINCE) :
+                    provinces.push(z.data.province[0].PROVINCE);
+                  provincesTarget.push(parseInt(z.data.target));
                   if (z.progress && z.progress !== null)
                     provincesAchieved.push(parseInt(z.progress.mneProgress));
                   else
                     provincesAchieved.push(0);
+                }
+              }
+            }
+            if (z.data.division) {
+              if (divisions.length === 0) {
+                z.data.division.DIVISION ?
+                  divisions.push(z.data.division.DIVISION) :
+                  divisions.push(z.data.division[0].DIVISION);
+                divisionsTarget.push(parseInt(z.data.target));
+                if (z.progress && z.progress !== null)
+                  divisionsAchieved.push(parseInt(z.progress.mneProgress));
+                else
+                  divisionsAchieved.push(0);
+              } else {
+                let divisionIndex = z.data.division.DIVISION ?
+                  divisions.indexOf(z.data.division.DIVISION) :
+                  divisions.indexOf(z.data.division[0].DIVISION);
+                if (divisionIndex > -1) {
+                  divisionsTarget[divisionIndex] = divisionsTarget[divisionIndex] + parseInt(z.data.target);
+                  if (z.progress && z.progress !== null)
+                    divisionsAchieved[divisionIndex] = divisionsAchieved[divisionIndex] + parseInt(z.progress.mneProgress);
+                } else {
+                  z.data.division.DIVISION ?
+                    divisions.push(z.data.division.DIVISION) :
+                    divisions.push(z.data.division[0].DIVISION);
+                  divisionsTarget.push(parseInt(z.data.target));
+                  if (z.progress && z.progress !== null)
+                    divisionsAchieved.push(parseInt(z.progress.mneProgress));
+                  else
+                    divisionsAchieved.push(0);
+                }
+              }
+            }
+            if (z.data.district) {
+              if (districts.length === 0) {
+                z.data.district.DISTRICT ?
+                  districts.push(z.data.district.DISTRICT) :
+                  districts.push(z.data.district[0].DISTRICT);
+                districtsTarget.push(parseInt(z.data.target));
+                if (z.progress && z.progress !== null)
+                  districtsAchieved.push(parseInt(z.progress.mneProgress));
+                else
+                  districtsAchieved.push(0);
+              } else {
+                let districtIndex = z.data.district.DISTRICT ?
+                  districts.indexOf(z.data.district.DISTRICT) :
+                  districts.indexOf(z.data.district[0].DISTRICT);
+                if (districtIndex > -1) {
+                  districtsTarget[districtIndex] = districtsTarget[districtIndex] + parseInt(z.data.target);
+                  if (z.progress && z.progress !== null)
+                    districtsAchieved[districtIndex] = districtsAchieved[districtIndex] + parseInt(z.progress.mneProgress);
+                } else {
+                  z.data.district.DISTRICT ?
+                    districts.push(z.data.district.DISTRICT) :
+                    districts.push(z.data.district[0].DISTRICT);
+                  districtsTarget.push(parseInt(z.data.target));
+                  if (z.progress && z.progress !== null)
+                    districtsAchieved.push(parseInt(z.progress.mneProgress));
+                  else
+                    districtsAchieved.push(0);
+                }
+              }
+            }
+            if (z.data.tehsil) {
+              if (tehsils.length === 0) {
+                z.data.tehsil.TEHSIL ?
+                  tehsils.push(z.data.tehsil.TEHSIL) :
+                  tehsils.push(z.data.tehsil[0].TEHSIL);
+                tehsilsTarget.push(parseInt(z.data.target));
+                if (z.progress && z.progress !== null)
+                  tehsilsAchieved.push(parseInt(z.progress.mneProgress));
+                else
+                  tehsilsAchieved.push(0);
+              } else {
+                let tehsilIndex = z.data.tehsil.TEHSIL ?
+                  tehsils.indexOf(z.data.tehsil.TEHSIL) :
+                  tehsils.indexOf(z.data.tehsil[0].TEHSIL);
+                if (tehsilIndex > -1) {
+                  tehsilsTarget[tehsilIndex] = tehsilsTarget[tehsilIndex] + parseInt(z.data.target);
+                  if (z.progress && z.progress !== null)
+                    tehsilsAchieved[tehsilIndex] = tehsilsAchieved[tehsilIndex] + parseInt(z.progress.mneProgress);
+                } else {
+                  z.data.tehsil.TEHSIL ?
+                    tehsils.push(z.data.tehsil.TEHSIL) :
+                    tehsils.push(z.data.tehsil[0].TEHSIL);
+                  tehsilsTarget.push(parseInt(z.data.target));
+                  if (z.progress && z.progress !== null)
+                    tehsilsAchieved.push(parseInt(z.progress.mneProgress));
+                  else
+                    tehsilsAchieved.push(0);
+                }
+              }
+            }
+            if (z.data.uc) {
+              if (ucs.length === 0) {
+                z.data.uc.UC ?
+                  ucs.push(z.data.uc.UC) :
+                  ucs.push(z.data.uc[0].UC);
+                ucsTarget.push(parseInt(z.data.target));
+                if (z.progress && z.progress !== null)
+                  ucsAchieved.push(parseInt(z.progress.mneProgress));
+                else
+                  ucsAchieved.push(0);
+              } else {
+                let ucIndex = z.data.uc.UC ?
+                  ucs.indexOf(z.data.uc.UC) :
+                  ucs.indexOf(z.data.uc[0].UC);
+                if (ucIndex > -1) {
+                  ucsTarget[ucIndex] = ucsTarget[ucIndex] + parseInt(z.data.target);
+                  if (z.progress && z.progress !== null)
+                    ucsAchieved[ucIndex] = ucsAchieved[ucIndex] + parseInt(z.progress.mneProgress);
+                } else {
+                  z.data.uc.UC ?
+                    ucs.push(z.data.uc.UC) :
+                    ucs.push(z.data.uc[0].UC);
+                  ucsTarget.push(parseInt(z.data.target));
+                  if (z.progress && z.progress !== null)
+                    ucsAchieved.push(parseInt(z.progress.mneProgress));
+                  else
+                    ucsAchieved.push(0);
                 }
               }
             }
@@ -375,6 +549,38 @@ export class KpiProjectStatsComponent implements OnInit {
           provinceChartData: [
             { data: provincesTarget, label: 'Target' },
             { data: provincesAchieved, label: 'Achieved' }
+          ],
+          divisions: divisions.length ? divisions : [],
+          divisionsTarget,
+          divisionsAchieved,
+          divisionChartLabels: divisions.length ? divisions : [],
+          divisionChartData: [
+            { data: divisionsTarget, label: 'Target' },
+            { data: divisionsAchieved, label: 'Achieved' }
+          ],
+          districts: districts.length ? districts : [],
+          districtsTarget,
+          districtsAchieved,
+          disctrictChartLabels: districts.length ? districts : [],
+          disctrictChartData: [
+            { data: districtsTarget, label: 'Target' },
+            { data: districtsAchieved, label: 'Achieved' }
+          ],
+          tehsils: tehsils.length ? tehsils : [],
+          tehsilsTarget,
+          tehsilsAchieved,
+          tehsilChartLabels: tehsils.length ? tehsils : [],
+          tehsilChartData: [
+            { data: tehsilsTarget, label: 'Target' },
+            { data: tehsilsAchieved, label: 'Achieved' }
+          ],
+          ucs: ucs.length ? ucs : [],
+          ucsTarget,
+          ucsAchieved,
+          ucChartLabels: ucs.length ? ucs : [],
+          ucChartData: [
+            { data: ucsTarget, label: 'Target' },
+            { data: ucsAchieved, label: 'Achieved' }
           ],
         }
         projectData.provinceArray.push(object);
@@ -434,9 +640,14 @@ export class KpiProjectStatsComponent implements OnInit {
     this.indicatorChartLabels = [];
     this.indicatorChartData[0].data = [];
     this.indicatorChartData[1].data = [];
+
     let provincesChart = null;
     let provincesChartArray = [];
+
+
+
     for (let i = 0; i < this.allProjects.length; i++) {
+      this.chartLoading = true;
       let key = this.allProjects[i];
       if (key.indicatorChartLabels.indexOf(value) > -1) {
         console.log("PROJECT FOUND:---", key, key.indicatorChartLabels.indexOf(value));
@@ -446,24 +657,94 @@ export class KpiProjectStatsComponent implements OnInit {
         provincesChartArray.push(_.find(key.provinceArray, { indicatorValue: value }));
       }
     }
+    this.chartLoading = false;
+
     let tempProvinces = [];
     let tempProvincesTarget = [];
     let tempProvincesAchieved = [];
+
+    let tempDivisions = [];
+    let tempDivisionsTarget = [];
+    let tempDivisionsAchieved = [];
+
+    let tempDistricts = [];
+    let tempDistrictsTarget = [];
+    let tempDistrictsAchieved = [];
+
+    let tempTehsils = [];
+    let tempTehsilsTarget = [];
+    let tempTehsilsAchieved = [];
+
+    let tempUcs = [];
+    let tempUcsTarget = [];
+    let tempUcsAchieved = [];
+
     for (let i = 0; i < provincesChartArray.length; i++) {
+
+      this.chartLoading = true;
       let key = provincesChartArray[i];
+
       tempProvinces = tempProvinces.concat(key.provinces);
       tempProvincesTarget = tempProvincesTarget.concat(key.provincesTarget);
       tempProvincesAchieved = tempProvincesAchieved.concat(key.provincesAchieved);
+
+      tempDivisions = tempDivisions.concat(key.divisions);
+      tempDivisionsTarget = tempDivisionsTarget.concat(key.divisionsTarget);
+      tempDivisionsAchieved = tempDivisionsAchieved.concat(key.divisionsAchieved);
+
+      tempDistricts = tempDistricts.concat(key.districts);
+      tempDistrictsTarget = tempDistrictsTarget.concat(key.districtsTarget);
+      tempDistrictsAchieved = tempDistrictsAchieved.concat(key.districtsAchieved);
+
+      tempTehsils = tempTehsils.concat(key.tehsils);
+      tempTehsilsTarget = tempTehsilsTarget.concat(key.tehsilsTarget);
+      tempTehsilsAchieved = tempTehsilsAchieved.concat(key.tehsilsAchieved);
+
+      tempUcs = tempUcs.concat(key.ucs);
+      tempUcsTarget = tempUcsTarget.concat(key.ucsTarget);
+      tempUcsAchieved = tempUcsAchieved.concat(key.ucsAchieved);
     }
+    this.chartLoading = false;
+
     this.provinceChartLabels = tempProvinces;
     this.provinceChartData[0].data = tempProvincesTarget;
     this.provinceChartData[1].data = tempProvincesAchieved;
+
+    this.divisionChartLabels = tempDivisions;
+    this.divisionChartData[0].data = tempDivisionsTarget;
+    this.divisionChartData[1].data = tempDivisionsAchieved;
+
+    this.districtChartLabels = tempDistricts;
+    this.districtChartData[0].data = tempDistrictsTarget;
+    this.districtChartData[1].data = tempDistrictsAchieved;
+
+    this.tehsilChartLabels = tempTehsils;
+    this.tehsilChartData[0].data = tempTehsilsTarget;
+    this.tehsilChartData[1].data = tempTehsilsAchieved;
+
+    this.ucChartLabels = tempUcs;
+    this.ucChartData[0].data = tempUcsTarget;
+    this.ucChartData[1].data = tempUcsAchieved;
+
     console.log("checkProjectsForKpi(indicator.value)", value,
       '\n', provincesChartArray,
       '\n', tempProvinces,
       '\n', tempProvincesTarget,
       '\n', tempProvincesAchieved,
+      '\n', tempDivisions,
+      '\n', tempDivisionsTarget,
+      '\n', tempDivisionsAchieved,
+      '\n', tempDistricts,
+      '\n', tempDistrictsTarget,
+      '\n', tempDistrictsAchieved,
+      '\n', tempTehsils,
+      '\n', tempTehsilsTarget,
+      '\n', tempTehsilsAchieved,
+      '\n', tempUcs,
+      '\n', tempUcsTarget,
+      '\n', tempUcsAchieved,
     );
+    this.chartLoading = false;
   }
 
   changeIndiChartType() {

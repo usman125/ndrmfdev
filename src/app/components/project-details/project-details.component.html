@@ -333,25 +333,25 @@
           <button [disabled]="giaDoc.length === 0" *ngIf="selectedProject?.status === 'GIA'" mat-button color="primary"
             (click)="uploadGIA()">
             <mat-icon class="mr-1">grading</mat-icon>
-            {{'enable gia checklist' | uppercase}}
+            {{'enable gia checklist' | titlecase}}
           </button>
           <button disabled
             *ngIf="selectedProject?.status === 'Checklist to FIP'  && selectedProject?.giaChecklist?.data === null"
             mat-button color="primary" (click)="extendGIATimeline()">
             <mat-icon class="mr-1">alarm</mat-icon>
-            {{'extend timeline for gia checklist' | uppercase}}
+            {{'extend timeline for gia checklist' | titlecase}}
           </button>
           <a mat-button [routerLink]="['/view-gia-checklist', selectedProjectId]"
             *ngIf="selectedProject?.status === 'Checklist to FIP' && selectedProject?.giaChecklist?.data !== null"
             color="primary">
             <mat-icon class="mr-1">grading</mat-icon>
-            {{'view checklist' | uppercase}}
+            {{'view checklist' | titlecase}}
           </a>
           <button mat-button (click)="commenceQPR()"
             *ngIf="selectedProject?.status === 'Checklist to FIP' && selectedProject?.giaChecklist?.data !== null"
             color="warn">
             <mat-icon class="mr-1">grading</mat-icon>
-            {{'COMMence qpr' | uppercase}}
+            {{'COMMence qpr' | titlecase}}
           </button>
 
         </mat-card-actions>
@@ -1255,7 +1255,9 @@
             {{selectedProject?.status}}
           </small>
           <div class="example-spacer"></div>
-          <button *ngIf="!apiLoading && viewType === 'user' && loggedUser.role === 'fip'" [disabled]="(submitSections === proposalSections.length && 
+          <button
+            *ngIf="!apiLoading && selectedProject?.status === 'Draft' && viewType === 'user' && loggedUser.role === 'fip'"
+            [disabled]="(submitSections === proposalSections.length && 
                             selectedProject?.status !== 'Draft') || 
                             (proposalSections.length !== submitSections && 
                             selectedProject?.status === 'Draft')" mat-raised-button (click)="submitRequest()">
@@ -1342,8 +1344,13 @@
               <div class="top-form pb-0">
                 <formio *ngIf="form.id !== 'pip' && form && !formSubmitData && loggedUser.role === 'fip'" [form]="form"
                   (submit)="onSubmit($event)"></formio>
-                <formio *ngIf="form.id !== 'pip' && form && formSubmitData && loggedUser.role === 'fip'" readOnly="true"
-                  [submission]="{data: formSubmitData}" [form]="form"></formio>
+                <formio *ngIf="form.id !== 'pip' && form && 
+                (formSubmitData && (groupType.reassignmentStatus === null || groupType.reassignmentStatus === 'Completed')) && 
+                loggedUser.role === 'fip'" readOnly="true" [submission]="{data: formSubmitData}" [form]="form">
+                </formio>
+                <formio
+                  *ngIf="form.id !== 'pip' && form && (formSubmitData && groupType.reassignmentStatus === 'Pending') && loggedUser.role === 'fip'"
+                  [submission]="{data: formSubmitData}" (submit)="onSubmit($event)" [form]="form"></formio>
                 <formio *ngIf="form.id !== 'pip' && form && loggedUser.role !== 'fip'" readOnly="true"
                   [submission]="{data: formSubmitData}" [form]="form"></formio>
               </div>

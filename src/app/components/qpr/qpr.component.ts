@@ -71,9 +71,9 @@ export class QprComponent implements OnInit {
 
   goToRequest(element) {
     console.log("REQUEST TO VIEW:--", element);
-    if (this.loggedUser.role === 'fip') {
-      this._router.navigate(['/fill-qpr', element.id]);
-    }
+    // if (this.loggedUser.role === 'fip') {
+    this._router.navigate(['/fill-qpr', element.id]);
+    // }
   }
 
 }

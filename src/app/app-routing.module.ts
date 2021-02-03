@@ -476,7 +476,14 @@ const routes: Routes = [
     loadChildren: () => import('./modules/view-grant-disbursment/view-grant-disbursment.module').then(m => m.ViewGrantDisbursmentModule),
     canActivate: [AuthGuard],
     // component: ProjectWorkPlanComponent
-  }
+  },
+  {
+    path: 'sme-qpr-requests',
+    loadChildren: () => import('./modules/sme-qpr-requests/sme-qpr-requests.module').then(m => m.SmeQprRequestsModule),
+    canActivate: [AuthGuard],
+    data: {roles: [Role.Sme]}
+    // component: ProjectWorkPlanComponent
+  },
 ];
 
 @NgModule({

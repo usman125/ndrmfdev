@@ -26,19 +26,35 @@ export class QprService {
     );
   }
 
-  saveSection(id) {
+  saveSection(id, body) {
     const url = `${AppConfig.apiUrl}/qpr/${id}/section/submit?action=SAVE`;
     return this._httpClient.post(
       url,
-      null
+      body
     );
   }
 
-  submitSection(id) {
+  submitSection(id, body) {
     const url = `${AppConfig.apiUrl}/qpr/${id}/section/submit?action=SUBMIT`;
     return this._httpClient.post(
       url,
-      null
+      body
+    );
+  }
+
+  addTaskForSection(sectionId, body) {
+    const url = `${AppConfig.apiUrl}/qpr/section/${sectionId}/task/add`;
+    return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
+  addReview(sectionId, body) {
+    const url = `${AppConfig.apiUrl}/qpr/section/${sectionId}/review/add`;
+    return this._httpClient.post(
+      url,
+      body
     );
   }
 

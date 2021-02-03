@@ -103,3 +103,4 @@ export { GrantDisbursmentsComponent } from './grant-disbursments/grant-disbursme
 export { ViewGrantDisbursmentComponent } from './view-grant-disbursment/view-grant-disbursment.component';
 
 export { KpiProjectStatsComponent } from './kpi-project-stats/kpi-project-stats.component';
+export { SmeQprRequestsComponent } from './sme-qpr-requests/sme-qpr-requests.component';

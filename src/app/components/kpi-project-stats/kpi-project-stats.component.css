@@ -1,0 +1,7 @@
+mat-expansion-panel.active {
+  border: 1px solid #4d97c6;
+  margin-top: 5px !important;
+}
+.active .mat-expansion-indicator::after {
+  color: #4d97c6 !important;
+}

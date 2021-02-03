@@ -1,12 +1,104 @@
-<mat-card class="m-20">
-  <mat-card-content>
-    <div class="qpr-sections">
-      <div *ngFor="let item of qprSections; let i=index;">
-        <formio [form]="item.template" (submit)="onSubmit($event)"></formio>
-      </div>
+<ng-container>
+  <div class="row pt-3">
+    <div class="col-md-8">
+      <mat-card class="m-20 mr-0">
+        <mat-card-content>
+          <div class="qpr-sections">
+            <div *ngFor="let item of qprSections; let i=index;"
+              [ngClass]="{'mt-5':i > 0}">
+              <!-- TOP SECTION INFO -->
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <span class="d-flex align-items-center">
+                  <mat-icon class="mr-2">{{item.reviewStatus === null ?
+                    'warning' : item.reviewStatus === 'Pending' ? 'info' : 'check'}}</mat-icon>
+                  <div class="d-flex flex-column">
+                    <span>
+                      <span id="answer"> Sme: </span>
+                      {{item.sme.name}}
+                    </span>
+                    <small>{{(item.reviewDeadline && item.reviewStatus === 'Pending') ?
+                      'Pending: ' + (item.reviewDeadline | date:'shortDate') :
+                      (item.reviewStatus === 'Completed') ?
+                      'Completed: ' + (item.reviewCompletedDate | date:'shortDate') : null}}</small>
+                  </div>
+                </span>
+                <button *ngIf="loggedUser?.role === 'process owner'" (click)="assignTasks(item.id, 'single')"
+                  mat-flat-button [disabled]="item.reviewStatus === 'Pending' || allLoading || singleLoading">
+                  <mat-icon>{{(item.reviewStatus === null) ?
+                    'assignment' : 'redo'}}</mat-icon>
+                  {{(item.reviewStatus === null) ?
+                  'Assign Task' : 'Re-Evaluate'}}
+                </button>
+              </div>
+              <!-- FORMS SECTION -->
+              <formio *ngIf="item.data === null && item.reassignmentStatus === null && 
+              loggedUser?.role === 'fip'" [form]="item.template" (submit)="onSubmit($event, item.id)"></formio>
+
+              <formio class="margin-5" *ngIf="item.data !== null && item.reassignmentStatus === 'Pending' && 
+              loggedUser?.role === 'fip'" [submission]="{data:item.data}" [form]="item.template"
+                (submit)="onSubmit($event, item.id)">
+              </formio>
+              <formio class="margin-5" *ngIf="item.data !== null && (item.reassignmentStatus === 'Completed'
+              || item.reassignmentStatus === null) && 
+              loggedUser?.role === 'fip'" readOnly="true" [submission]="{data:item.data}" [form]="item.template">
+              </formio>
+              <formio class="margin-5" *ngIf="loggedUser?.role !== 'fip'" readOnly="true"
+                [submission]="{data:item.data}" [form]="item.template"></formio>
+              <!-- SECTION REVIEW SME FORM FIELDS -->
+              <div *ngIf="item.assigned" class="d-flex align-items-center justify-content-between mt-2 mb-3">
+                <mat-form-field appearance="outline" class="mr-1">
+                  <mat-label>Your Remarks</mat-label>
+                  <textarea [disabled]="item.reviewStatus === 'Completed'" [(ngModel)]="comments"
+                    *ngIf="item.review === null && (item.reviewStatus === null || item.reviewStatus === 'Pending')"
+                    matInput cols="30" placeholder="Write comments here..." rows="3"></textarea>
+                  <textarea [disabled]="item.reviewStatus === 'Completed'" [(ngModel)]="item.review.comments"
+                    *ngIf="item.review !== null && item.reviewStatus === 'Pending'" matInput cols="30"
+                    placeholder="Write comments here..." rows="3"></textarea>
+                  <textarea [disabled]="item.reviewStatus === 'Completed'" [(ngModel)]="item.review.comments"
+                    *ngIf="item.reviewStatus === 'Completed' && item.review !== null" matInput cols="30"
+                    placeholder="Write comments here..." rows="3"></textarea>
+                </mat-form-field>
+                <button *ngIf="item.review === null && 
+                (item.reviewStatus === null || item.reviewStatus === 'Pending')" (click)="addQprSectionReview(item.id)"
+                  [disabled]="!comments || allLoading" mat-mini-fab color="accent">
+                  <mat-icon>send</mat-icon>
+                </button>
+                <button *ngIf="item.review !== null && 
+                (item.reviewStatus === 'Pending')" (click)="addQprSectionReview(item)"
+                  [disabled]="!item.review.comments || allLoading" mat-mini-fab color="accent">
+                  <mat-icon>send</mat-icon>
+                </button>
+              </div>
+              <div *ngIf="loggedUser?.role === 'process owner' && item.review !== null"
+                class="d-flex align-items-center justify-content-between mt-2 mb-3">
+                <mat-form-field appearance="outline" class="mr-1">
+                  <mat-label>Review Remarks</mat-label>
+                  <textarea disabled [(ngModel)]="item.review.comments" matInput cols="30"
+                    placeholder="Write comments here..." rows="5"></textarea>
+                </mat-form-field>
+              </div>
+              <mat-divider *ngIf="i !== qprSections.length - 1"></mat-divider>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
-  </mat-card-content>
-</mat-card>
+    <div class="col-md-4">
+      <mat-card class="m-20 ml-0">
+        <mat-card-content>
+          <button *ngIf="loggedUser?.role === 'process owner'" [disabled]="allLoading" mat-raised-button color="primary"
+            (click)="assignTasks(null, 'all');">
+            Assign All Task(s)
+          </button>
+          <button *ngIf="loggedUser?.role === 'sme'" [disabled]="allLoading" mat-raised-button color="primary">
+            Filter Current Task
+          </button>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  </div>
+</ng-container>
 
 <mat-card class="m-20">
   <mat-card-content>
@@ -47,13 +139,15 @@
           <td>{{qprSectionStats?.ndrmfShare}}</td>
           <td>
             <mat-form-field appearance="outline">
-              <input placeholder="amount" type="number" matInput [(ngModel)]="ndrmfDisbursment">
+              <input [disabled]="loggedUser?.role !== 'fip'" placeholder="amount" type="number" matInput
+                [(ngModel)]="ndrmfDisbursment">
             </mat-form-field>
           </td>
           <td></td>
           <td>
             <mat-form-field appearance="outline">
-              <input placeholder="amount" type="number" matInput [(ngModel)]="ndrmfActual">
+              <input [disabled]="loggedUser?.role !== 'fip'" placeholder="amount" type="number" matInput
+                [(ngModel)]="ndrmfActual">
             </mat-form-field>
           </td>
           <td></td>
@@ -97,13 +191,15 @@
           <td>{{qprSectionStats?.fipShare}}</td>
           <td>
             <mat-form-field appearance="outline">
-              <input placeholder="amount" type="number" matInput [(ngModel)]="fipContribution">
+              <input [disabled]="loggedUser?.role !== 'fip'" placeholder="amount" type="number" matInput
+                [(ngModel)]="fipContribution">
             </mat-form-field>
           </td>
           <td></td>
           <td>
             <mat-form-field appearance="outline">
-              <input placeholder="amount" type="number" matInput [(ngModel)]="fipActual">
+              <input [disabled]="loggedUser?.role !== 'fip'" placeholder="amount" type="number" matInput
+                [(ngModel)]="fipActual">
             </mat-form-field>
           </td>
           <td></td>

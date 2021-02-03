@@ -141,7 +141,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
               pendingCount = pendingCount + 1;
             }
             if ((c.data !== null && c.reassignmentStatus === null) ||
-              (c.data !== null && c.reassignmentStatus === 'Complete')
+              (c.data !== null && c.reassignmentStatus === 'Completed')
             ) {
               submitCount = submitCount + 1;
             }
@@ -228,7 +228,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this._accreditationCommentsMatrixStore.addCommentsArray(this.selectedProject.commentsMatrix);
         }
         if (this.selectedProject) {
-          if (this.selectedProject.gia !== null) {
+          if (this.selectedProject.gia !== null && this.selectedProject.gia !== undefined) {
             if (this.selectedProject.gia.status !== "Not Initiated") {
 
               if (this.selectedProject.gia.reviews !== null) {
@@ -318,28 +318,28 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             (result: any) => {
               //javascript create JSON object from two dimensional Array
               //vacate keys from main array
-              var keys = ['name', 'path', 'status', 'picBytes'];
-              var newArr = result;
-              var formatted = [],
-                data = newArr,
-                cols = keys,
-                l = cols.length;
-              for (var i = 0; i < data.length; i++) {
-                var d = data[i],
-                  o = {};
-                for (var j = 0; j < l; j++)
-                  o[cols[j]] = d[j];
-                formatted.push(o);
-              }
-              console.log("FILES FOR THIS PROJECT:--", result, formatted);
-              this._primaryAppraisalFormsStore.addSelectedProjectFiles(formatted);
+              // var keys = ['name', 'path', 'status', 'picBytes'];
+              // var newArr = result;
+              // var formatted = [],
+              //   data = newArr,
+              //   cols = keys,
+              //   l = cols.length;
+              // for (var i = 0; i < data.length; i++) {
+              //   var d = data[i],
+              //     o = {};
+              //   for (var j = 0; j < l; j++)
+              //     o[cols[j]] = d[j];
+              //   formatted.push(o);
+              // }
+              console.log("FILES FOR THIS PROJECT:--", result);
+              this._primaryAppraisalFormsStore.addSelectedProjectFiles(result);
               if (this.selectedProject.status === 'Offer Letter') {
                 this._projectService.getOfferLetter(this.selectedProjectId).subscribe(
                   (result: any) => {
                     console.log("RESULT AFTER OFFER LETTER:--", result);
                     console.log("******OFFER LETTER ENABLED******");
                     if (result) {
-                      if (result.expiryDate){
+                      if (result.expiryDate) {
                         result.expiryDate = result.expiryDate.split('T')[0];
                         result.offerLetterDays = this.calculateDaysDifference(result.expiryDate);
                         if (result.offerLetterDays < parseInt('0')) {
@@ -735,7 +735,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this._confirmModelService.open(options);
 
     this._confirmModelService.confirmed().subscribe(confirmed => {
-      console.log("CONFIRMED FROM MODEL", confirmed);
+      console.log("CONFIRMED FROM MODEL", confirmed, this.proposalSections);
       if (confirmed) {
         for (let i = 0; i < this.proposalSections.length; i++) {
           let key = this.proposalSections[i];
@@ -1666,7 +1666,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this._router.navigate(['/fill-proposal-reports', this.selectedProjectId]);
   }
 
-  commenceGrantDisbursment(){
+  commenceGrantDisbursment() {
     this._projectService.commenceGrantDisbursment(this.selectedProjectId).subscribe(
       (result: any) => {
         console.log("ERROR COMMENING GD:---", result);

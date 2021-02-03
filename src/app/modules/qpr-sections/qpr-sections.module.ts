@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 
@@ -25,7 +26,9 @@ import { FormsModule } from '@angular/forms';
     MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    FormsModule
+    FormsModule,
+    MatButtonModule,
+    MatDividerModule
   ],
   exports: [QprSectionsComponent]
 })

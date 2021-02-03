@@ -73,7 +73,7 @@ export class AllQualificationRequestsComponent implements OnInit, OnDestroy {
     this.apiLoading = true;
     this._accreditationRequestService.getSmeTasks().subscribe(
       (result: any) => {
-        // console.log("RESULT SME TASKS:--", result);
+        console.log("RESULT SME TASKS:--", result);
         const array: any = result.qualification.map(c => {
           const date1: any = new Date();
           const date2: any = new Date(c.endDate);

@@ -489,8 +489,12 @@ h6 {
 }
 
 .border-heading {
-  border-bottom: 1px solid #c3c3c3;
+  border-bottom: 0.1px solid #ddd;
   margin-bottom: 30px;
+  padding-bottom: 10px;
+  font-size: 15px;
+  color: #151515;
+  text-transform: uppercase;
 }
 
 .heading-contain {
@@ -529,4 +533,8 @@ h6 {
 .responsive-text {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.active .mat-expansion-indicator::after {
+  color: #4d97c6 !important;
 }

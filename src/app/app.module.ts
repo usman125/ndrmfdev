@@ -73,6 +73,7 @@ import { ActivityDetailsComponent } from './components/activity-details/activity
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { SingleGrantDisbursmentsStore } from './stores/single-grant-disbursment/single-grant-disbursment-store';
+// import { SmeQprRequestsComponent } from './components/sme-qpr-requests/sme-qpr-requests.component';
 // import { KpiProjectStatsComponent } from './components/kpi-project-stats/kpi-project-stats.component';
 // import { GrantDisbursmentsComponent } from './components/grant-disbursments/grant-disbursments.component';
 // import { ViewGrantDisbursmentComponent } from './components/view-grant-disbursment/view-grant-disbursment.component';
@@ -94,6 +95,7 @@ export function tokenGetter() {
     NoHeaderLayoutComponent,
     AddProjectComponent,
     ActivityDetailsComponent,
+    // SmeQprRequestsComponent,
     // KpiProjectStatsComponent,
     // ViewGrantDisbursmentComponent,
     // GrantDisbursmentsComponent,
@@ -134,8 +136,8 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        whitelistedDomains: ["attendance.tallymarkscloud.com:8080"]
-        // whitelistedDomains: ["localhost:8080"]
+        // whitelistedDomains: ["attendance.tallymarkscloud.com:8080"]
+        allowedDomains: ["localhost:8080", "attendance.tallymarkscloud.com:8080"]
       }
     }),
     FormioModule,

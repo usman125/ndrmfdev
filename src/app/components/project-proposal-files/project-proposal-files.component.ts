@@ -16,6 +16,7 @@ interface FoodNode {
   picBytes: any;
   name: string;
   path: string;
+  created_by: string;
   children?: FoodNode[];
 }
 /** Flat node with expandable and level information */
@@ -25,6 +26,7 @@ interface ExampleFlatNode {
   name: string;
   path: string;
   status: string;
+  created_by: string;
   picBytes: any;
 }
 
@@ -49,6 +51,7 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
       level: level,
       path: node.path,
       status: node.status,
+      created_by: node.created_by,
       picBytes: node.picBytes
     };
   }

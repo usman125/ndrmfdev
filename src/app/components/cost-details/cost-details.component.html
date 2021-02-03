@@ -178,6 +178,15 @@
     <mat-tab-group (selectedTabChange)="onTabChanged($event);">
       <mat-tab label="General" class="p-4">
         <div class="m-3">
+          <!-- FIP FORM PROGRESS -->
+          <div class="mt-3 mb-3 d-flex align-items-center border-heading">
+            <!-- <mat-icon>
+              settings_applications
+            </mat-icon> -->
+            <span class="pl-2">
+              Progress
+            </span>
+          </div>
           <div class="row mb-3" *ngIf="loggedUser?.role === 'fip'">
             <div class="col-md-4">
               <mat-form-field appearance="outline">
@@ -190,12 +199,47 @@
               <mat-form-field appearance="outline">
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="generalProgressStatus">
-                  <mat-option value="1">Completed</mat-option>
-                  <mat-option value="2">Pending</mat-option>
-                  <mat-option value="3">Blocked</mat-option>
+                  <mat-option value="Completed">Completed</mat-option>
+                  <mat-option value="Pending">Pending</mat-option>
+                  <mat-option value="Blocked">Blocked</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
+          </div>
+          <!-- OTHER USERS COST INFO -->
+          <div class="row mb-3" *ngIf="loggedUser?.role !== 'fip'">
+            <div class="col-md-4">
+              <div class="general-info">
+                <span id="title">Achieved</span>
+                <span id="value" *ngIf="progressData">
+                  {{progressData.generalProgress}}
+                </span>
+                <span id="value" *ngIf="!progressData">
+                  &nbsp;
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="general-info">
+                <span id="title">Status</span>
+                <span id="value" *ngIf="progressData">
+                  {{progressData.generalProgressStatus}}
+                </span>
+                <span id="value" *ngIf="!progressData">
+                  &nbsp;
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUBMITTED GENERAL INFO FOR COST -->
+          <div class="mt-4 mb-3 d-flex align-items-center border-heading">
+            <!-- <mat-icon>
+                        settings_applications
+                      </mat-icon> -->
+            <span class="pl-2">
+              Details
+            </span>
           </div>
           <div class="row">
             <div class="col-md-6 mb-3">
@@ -263,7 +307,7 @@
               <div class="d-flex">
                 <div class="general-info">
                   <span id="title">Description</span>
-                  <span id="value" *ngIf="selectedQuarter.description">
+                  <span style="height: 133px;" id="value" *ngIf="selectedQuarter.description">
                     {{selectedQuarter.description}}
                   </span>
                   <span id="value" *ngIf="!selectedQuarter.description">
@@ -316,6 +360,15 @@
       </mat-tab>
       <mat-tab label="Financials">
         <div class="m-4">
+          <!-- PROGRESS FORM FIELDS -->
+          <div class="mt-3 mb-3 d-flex align-items-center border-heading">
+            <!-- <mat-icon>
+                        settings_applications
+                      </mat-icon> -->
+            <span class="pl-2">
+              Progress
+            </span>
+          </div>
           <div class="row mb-3" *ngIf="loggedUser?.role === 'fip'">
             <div class="col-md-3">
               <mat-form-field appearance="outline">
@@ -333,12 +386,21 @@
               <mat-form-field appearance="outline">
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="financialProgressStatus">
-                  <mat-option value="1">Completed</mat-option>
-                  <mat-option value="2">Pending</mat-option>
-                  <mat-option value="3">Blocked</mat-option>
+                  <mat-option value="Completed">Completed</mat-option>
+                  <mat-option value="Pending">Pending</mat-option>
+                  <mat-option value="Blocked">Blocked</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
+          </div>
+          <!-- SUBMITTED DETAILS -->
+          <div class="mt-4 mb-3 d-flex align-items-center border-heading">
+            <!-- <mat-icon>
+                                  settings_applications
+                                </mat-icon> -->
+            <span class="pl-2">
+              Details
+            </span>
           </div>
           <div class="d-flex mt-3">
             <div class="general-info">
@@ -364,6 +426,15 @@
       </mat-tab>
       <mat-tab label="Procurement">
         <div class="m-3">
+          <div class="mt-3 mb-3 d-flex align-items-center border-heading">
+            <!-- <mat-icon>
+                        settings_applications
+                      </mat-icon> -->
+            <span class="pl-2">
+              Progress
+            </span>
+          </div>
+          <!-- PROGRESS FROM FIELDS -->
           <div class="row mb-3" *ngIf="loggedUser?.role === 'fip'">
             <div class="col-md-3">
               <mat-form-field appearance="outline">
@@ -375,17 +446,26 @@
               <mat-form-field appearance="outline">
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="procProgressStatus">
-                  <mat-option value="1">Completed</mat-option>
-                  <mat-option value="2">Pending</mat-option>
-                  <mat-option value="3">Blocked</mat-option>
+                  <mat-option value="Completed">Completed</mat-option>
+                  <mat-option value="Pending">Pending</mat-option>
+                  <mat-option value="Blocked">Blocked</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
           </div>
         </div>
+        <!-- SUBMITTED DETAILS -->
+        <div class="mt-4 mb-3 d-flex align-items-center border-heading">
+          <!-- <mat-icon>
+                                          settings_applications
+                                        </mat-icon> -->
+          <span class="pl-2">
+            Details
+          </span>
+        </div>
         <form [formGroup]="_form">
           <div class="m-3">
-            <mat-checkbox labelPosition="'before'" disabled formControlName="isProcurement">Is Procurement
+            <mat-checkbox labelPosition="'before'" formControlName="isProcurement">Is Procurement
             </mat-checkbox>
             <mat-form-field appearance="fill">
               <mat-label>Procurement Heads</mat-label>
@@ -404,6 +484,14 @@
           <div *ngIf="rfForm === null">
             <h3>Loading ...</h3>
           </div>
+          <div *ngIf="rfForm !== null" class="mt-3 mb-3 d-flex align-items-center border-heading">
+            <!-- <mat-icon>
+                        settings_applications
+                      </mat-icon> -->
+            <span class="pl-2">
+              Progress
+            </span>
+          </div>
           <div class="row mb-3" *ngIf="loggedUser?.role === 'fip'">
             <div class="col-md-4">
               <mat-form-field appearance="outline">
@@ -415,12 +503,20 @@
               <mat-form-field appearance="outline">
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="mneProgressStatus">
-                  <mat-option value="1">Completed</mat-option>
-                  <mat-option value="2">Pending</mat-option>
-                  <mat-option value="3">Blocked</mat-option>
+                  <mat-option value="Completed">Completed</mat-option>
+                  <mat-option value="Pending">Pending</mat-option>
+                  <mat-option value="Blocked">Blocked</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
+          </div>
+          <div class="mt-4 mb-3 d-flex align-items-center border-heading">
+            <!-- <mat-icon>
+                                                    settings_applications
+                                                  </mat-icon> -->
+            <span class="pl-2">
+              Details
+            </span>
           </div>
           <formio [readOnly]="true" *ngIf="rfForm !== null && selectedQuarter?.rfSubmitData" [form]="rfForm"
             (submit)="onSubmit($event)" [submission]="{data:selectedQuarter.rfSubmitData}">

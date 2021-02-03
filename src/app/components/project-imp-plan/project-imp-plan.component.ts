@@ -99,6 +99,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   totalUnClubbedEntriesCount: any = 0;
 
   selectedClub: any = null;
+  @Input() qprView;
+  @Input() activeQuarter;
 
   constructor(
     public dialog: MatDialog,
@@ -149,7 +151,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         this.months = data.auth.proMonths;
         console.log("****MONTHS IN PROJECT IMPLEMENTATION PLAN*****\n", data);
         setTimeout(() => {
-          this.getQuarters();
+          this.getQuarters('personal');
         });
       })
     );
@@ -171,9 +173,14 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       this._primaryAppraisalFormsStore.state$.subscribe((data) => {
         this.selectedProject = data.selectedProject;
         if (this.selectedProject) {
-          if (this.loggedUser.role === 'fip' && this.selectedProject.status === 'Checklist to FIP') {
+          // if (this.loggedUser.role === 'fip' && this.selectedProject.status === 'Checklist to FIP') {
+          //   this.viewType = 'progress';
+          // }
+          if (this.qprView) {
             this.viewType = 'progress';
           }
+          // if (this.activeQuarter)
+          //   this.selectedQuarter = this.activeQuarter;
         }
         if (this.loggedUser.role === 'admin') {
           this.getCostingHeads();
@@ -263,17 +270,28 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     );
   }
 
-  getQuarters() {
-
-    for (let i = 0; i < Math.ceil(this.months / 3) + 3; i++) {
-      var object = {
-        quarter: i + 1,
-        value: false,
-        data: null
+  getQuarters(type) {
+    if (type === 'personal') {
+      for (let i = 0; i < Math.ceil(this.months / 3) + 3; i++) {
+        var object = {
+          quarter: i + 1,
+          value: false,
+          data: null
+        }
+        this.quarters.push(object);
       }
-      this.quarters.push(object);
+      console.log("ALL QUARTERS PERSONAL:--", this.quarters);
+    } else {
+      for (let i = 0; i < this.allCosts[0].quarters.length; i++) {
+        var object = {
+          quarter: i + 1,
+          value: false,
+          data: null
+        }
+        this.quarters.push(object);
+      }
+      console.log("ALL QUARTERS:--", this.quarters);
     }
-    console.log("ALL QUARTERS:--", this.quarters);
   }
 
   addCost() {
