@@ -27,6 +27,7 @@ export class KpiProjectStatsComponent implements OnInit {
   // BAR CHAT DATA
   public indicatorChartOptions: ChartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     scales: { xAxes: [{ stacked: true }], yAxes: [{ stacked: true }] },
     plugins: {
       datalabels: {
@@ -75,6 +76,7 @@ export class KpiProjectStatsComponent implements OnInit {
   // Radar PROVINCES
   public provinceChartOptions: RadialChartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       datalabels: {
         backgroundColor: function (context) {
@@ -116,6 +118,7 @@ export class KpiProjectStatsComponent implements OnInit {
   // Radar DIVISIONS
   public divisionChartOptions: RadialChartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       datalabels: {
         backgroundColor: function (context) {

@@ -238,47 +238,47 @@ export class ResultFrameworkReportComponent implements OnInit, OnDestroy {
       this.selectedProjectId = params.get("projectId");
       // this.getProjectDetails();
       this.getRfMeta();
-      this._primaryAppraisalFormsStore.state$.subscribe((data) => {
-        // if (data.selectedProject)
-        data.selectedProject && typeof (data.selectedProject.implementationPlan) === 'string'
-          ? this.pip = data.selectedProject ? JSON.parse(data.selectedProject.implementationPlan) : null
-          : this.pip = data.selectedProject ? data.selectedProject.implementationPlan : null;
-        this.allCosts = this.pip ? this.pip.costs : null;
-        this.rfCosts = _.filter(this.allCosts, (c) => {
-          if (c.addRf) {
-            // return {
-            //   ...c,
-            //   type: this.getRfType(c.quarters),
-            // };
-            let mneType = this.getRfType(c.quarters);
-            console.log("GET RF CALLED:--", mneType);
-            c.mneType = mneType.mneType;
-            c.mneData = mneType.mneData;
-            return {
-              c
-            };
+    });
+    this._primaryAppraisalFormsStore.state$.subscribe((data) => {
+      // if (data.selectedProject)
+      data.selectedProject && typeof (data.selectedProject.implementationPlan) === 'string'
+        ? this.pip = data.selectedProject ? JSON.parse(data.selectedProject.implementationPlan) : null
+        : this.pip = data.selectedProject ? data.selectedProject.implementationPlan : null;
+      this.allCosts = this.pip ? this.pip.costs : null;
+      this.rfCosts = _.filter(this.allCosts, (c) => {
+        if (c.addRf) {
+          // return {
+          //   ...c,
+          //   type: this.getRfType(c.quarters),
+          // };
+          let mneType = this.getRfType(c.quarters);
+          console.log("GET RF CALLED:--", mneType);
+          c.mneType = mneType.mneType;
+          c.mneData = mneType.mneData;
+          return {
+            c
+          };
+        }
+      })
+      this.resultsChain = [];
+      this.resultsChain = _.chain(this.rfCosts)
+        .groupBy('mneType')
+        .map((val, _id) => {
+          return {
+            children: val,
+            _id: _id,
           }
         })
-        this.resultsChain = [];
-        this.resultsChain = _.chain(this.rfCosts)
-          .groupBy('mneType')
-          .map((val, _id) => {
-            return {
-              children: val,
-              _id: _id,
-            }
-          })
-          .value();
-        console.log("********SELECTED FRAMEWORK DATA*********", data.selectedProject,
-          this.pip,
-          this.allCosts,
-          this.rfCosts,
-          this.resultsChain
-        );
-        this.prepareChartData();
+        .value();
+      console.log("********SELECTED FRAMEWORK DATA*********", data.selectedProject,
+        this.pip,
+        this.allCosts,
+        this.rfCosts,
+        this.resultsChain
+      );
+      this.prepareChartData();
 
-      })
-    });
+    })
 
     // this.doughnut = new Chart(this.chart.nativeElement, {
     //   type: 'doughnut',
