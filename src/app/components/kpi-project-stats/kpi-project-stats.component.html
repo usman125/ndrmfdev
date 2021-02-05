@@ -19,18 +19,15 @@
             </mat-panel-title>
             <mat-panel-description>
               <small>{{indicator.label}}</small>
-              <ng-container *ngIf="chartLoading">
-                <mat-progress-spinner mode="indeterminate" [diameter]="25"></mat-progress-spinner>
-              </ng-container>
             </mat-panel-description>
           </mat-expansion-panel-header>
 
 
           <ng-container *ngIf="indicatorChartLabels.length && !chartLoading">
-            <div class="row mt-3">
+            <div class="row mt-3 indi-chart">
               <div class="col-md-12">
                 <p id="answer">KPI Record(s)</p>
-                <div style="display: block">
+                <div class="d-flex justify-content-center">
                   <canvas baseChart [datasets]="indicatorChartData" [labels]="indicatorChartLabels"
                     [options]="indicatorChartOptions" [plugins]="indicatorChartPlugins" [legend]="indicatorChartLegend"
                     [chartType]="indicatorChartType">
@@ -45,8 +42,6 @@
 
           <div class="row" *ngIf="!chartLoading">
             <div class="col-md-6">
-
-
               <ng-container *ngIf="provinceChartLabels.length">
                 <div class="row mt-5">
                   <div class="col-md-12">
@@ -61,8 +56,6 @@
               </ng-container>
             </div>
             <div class="col-md-6">
-
-
               <ng-container *ngIf="divisionChartLabels.length">
                 <div class="row mt-5">
                   <div class="col-md-12">
@@ -109,6 +102,7 @@
                   </div>
                 </div>
               </ng-container>
+
             </div>
           </div>
 
@@ -128,6 +122,16 @@
               </ng-container>
             </div>
           </div>
+
+          <ng-container *ngIf="chartLoading && 
+          (indicatorChartLabels.length === 0 ||
+          provinceChartLabels.length === 0 ||
+          divisionChartLabels.length === 0 ||
+          districtChartLabels.length === 0 ||
+          tehsilChartLabels.length === 0 ||
+          ucChartLabels.length === 0)">
+            <mat-progress-spinner mode="indeterminate" [diameter]="25"></mat-progress-spinner>
+          </ng-container>
 
         </mat-expansion-panel>
       </div>

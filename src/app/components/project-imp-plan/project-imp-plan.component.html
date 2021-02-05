@@ -9,7 +9,7 @@
         <mat-icon>add</mat-icon> Add Clubs
       </button>
       <button *ngIf="loggedUser?.role === 'fip' || loggedUser?.role === 'admin'" class="ml-2" mat-raised-button
-      color="primary" (click)="saveCostings()">Save</button>
+        color="primary" (click)="saveCostings()">Save</button>
       <div *ngIf="qprView" class="example-spacer"></div>
       <mat-menu #menu="matMenu" class="p-2">
         <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
@@ -35,19 +35,29 @@
 
             <div class="row">
               <div class="col-md-12">
-                <mat-checkbox labelPosition="'before'" formControlName="isProcurement">Is Procurement</mat-checkbox>
+                <mat-checkbox (change)="procurementChanged($event)" labelPosition="'before'"
+                  formControlName="isProcurement">Is Procurement</mat-checkbox>
                 <mat-form-field appearance="outline" *ngIf="clubForm.controls['isProcurement'].value">
                   <mat-label>Procurement Heads</mat-label>
-                  <mat-select multiple formControlName="procurementHeads">
-                    <mat-option value="1">Head 1</mat-option>
-                    <mat-option value="2">Head 2</mat-option>
-                    <mat-option value="3">Head 3</mat-option>
-                    <mat-option value="4">Head 4</mat-option>
+                  <mat-select (selectionChange)="headChanged($event)" formControlName="procurementHeads">
+                    <mat-option *ngFor="let head of heads" [value]="head">
+                      {{head.label}}
+                    </mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
               <div class="col-md-12">
-                <button mat-raised-button color="primary" type="submit">Add Club</button>
+                <mat-form-field appearance="outline" *ngIf="clubForm.controls['isProcurement'].value">
+                  <mat-label>Procurement Method</mat-label>
+                  <mat-select (selectionChange)="methodChanged($event)" formControlName="procurementMethod">
+                    <mat-option *ngFor="let method of methods" [value]="method">
+                      {{method.label}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-12">
+                <button [disabled]="!clubForm.valid" mat-raised-button color="primary" type="submit">Add Club</button>
               </div>
             </div>
           </form>

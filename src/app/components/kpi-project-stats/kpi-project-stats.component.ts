@@ -26,7 +26,7 @@ export class KpiProjectStatsComponent implements OnInit {
 
   // BAR CHAT DATA
   public indicatorChartOptions: ChartOptions = {
-    responsive: true,
+    responsive: false,
     maintainAspectRatio: false,
     scales: { xAxes: [{ stacked: true }], yAxes: [{ stacked: true }] },
     plugins: {
@@ -75,7 +75,7 @@ export class KpiProjectStatsComponent implements OnInit {
 
   // Radar PROVINCES
   public provinceChartOptions: RadialChartOptions = {
-    responsive: true,
+    responsive: false,
     maintainAspectRatio: false,
     plugins: {
       datalabels: {
@@ -117,8 +117,12 @@ export class KpiProjectStatsComponent implements OnInit {
 
   // Radar DIVISIONS
   public divisionChartOptions: RadialChartOptions = {
-    responsive: true,
+    responsive: false,
     maintainAspectRatio: false,
+    title: {
+      fontSize: 15,
+      padding: 5,
+    },
     plugins: {
       datalabels: {
         backgroundColor: function (context) {
@@ -141,6 +145,8 @@ export class KpiProjectStatsComponent implements OnInit {
           weight: 'bold',
           size: 12,
         },
+
+
         display: function (context) {
           return context.dataset.data[context.dataIndex] > 0;
         },
@@ -153,6 +159,7 @@ export class KpiProjectStatsComponent implements OnInit {
         //     : Math.round(value);
         // },
       },
+
     }
   };
   public divisionChartLabels: Label[] = [];
@@ -644,6 +651,18 @@ export class KpiProjectStatsComponent implements OnInit {
     this.indicatorChartData[0].data = [];
     this.indicatorChartData[1].data = [];
 
+    let indicatorChartLabels = [];
+    let indicatorChartData = [
+      {
+        data: [],
+        label: 'Target',
+      },
+      {
+        data: [],
+        label: 'Achieved',
+      },
+    ];
+
     let provincesChart = null;
     let provincesChartArray = [];
 
@@ -654,12 +673,18 @@ export class KpiProjectStatsComponent implements OnInit {
       let key = this.allProjects[i];
       if (key.indicatorChartLabels.indexOf(value) > -1) {
         console.log("PROJECT FOUND:---", key, key.indicatorChartLabels.indexOf(value));
-        this.indicatorChartLabels.push(key.name);
-        this.indicatorChartData[0].data.push(key.indicatorChartData[0].data[key.indicatorChartLabels.indexOf(value)]);
-        this.indicatorChartData[1].data.push(key.indicatorChartData[1].data[key.indicatorChartLabels.indexOf(value)]);
+        indicatorChartLabels.push(key.name);
+        indicatorChartData[0].data.push(key.indicatorChartData[0].data[key.indicatorChartLabels.indexOf(value)]);
+        indicatorChartData[1].data.push(key.indicatorChartData[1].data[key.indicatorChartLabels.indexOf(value)]);
         provincesChartArray.push(_.find(key.provinceArray, { indicatorValue: value }));
       }
     }
+
+    this.indicatorChartLabels = indicatorChartLabels;
+    this.indicatorChartData[0].data = indicatorChartData[0].data;
+    this.indicatorChartData[1].data = indicatorChartData[1].data;
+
+
     this.chartLoading = false;
 
     let tempProvinces = [];
@@ -729,24 +754,24 @@ export class KpiProjectStatsComponent implements OnInit {
     this.ucChartData[0].data = tempUcsTarget;
     this.ucChartData[1].data = tempUcsAchieved;
 
-    console.log("checkProjectsForKpi(indicator.value)", value,
-      '\n', provincesChartArray,
-      '\n', tempProvinces,
-      '\n', tempProvincesTarget,
-      '\n', tempProvincesAchieved,
-      '\n', tempDivisions,
-      '\n', tempDivisionsTarget,
-      '\n', tempDivisionsAchieved,
-      '\n', tempDistricts,
-      '\n', tempDistrictsTarget,
-      '\n', tempDistrictsAchieved,
-      '\n', tempTehsils,
-      '\n', tempTehsilsTarget,
-      '\n', tempTehsilsAchieved,
-      '\n', tempUcs,
-      '\n', tempUcsTarget,
-      '\n', tempUcsAchieved,
-    );
+    // console.log("checkProjectsForKpi(indicator.value)", value,
+    //   '\n', provincesChartArray,
+    //   '\n', tempProvinces,
+    //   '\n', tempProvincesTarget,
+    //   '\n', tempProvincesAchieved,
+    //   '\n', tempDivisions,
+    //   '\n', tempDivisionsTarget,
+    //   '\n', tempDivisionsAchieved,
+    //   '\n', tempDistricts,
+    //   '\n', tempDistrictsTarget,
+    //   '\n', tempDistrictsAchieved,
+    //   '\n', tempTehsils,
+    //   '\n', tempTehsilsTarget,
+    //   '\n', tempTehsilsAchieved,
+    //   '\n', tempUcs,
+    //   '\n', tempUcsTarget,
+    //   '\n', tempUcsAchieved,
+    // );
     this.chartLoading = false;
   }
 

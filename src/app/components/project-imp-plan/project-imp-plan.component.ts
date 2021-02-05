@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input, EventEmitter } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import * as _ from 'lodash';
@@ -11,7 +11,12 @@ import { CostDetailsStore } from '../../stores/cost-details/cost-details-store';
 import { PrimaryAppraisalFormsStore } from '../../stores/primary-appraisal-forms/primary-appraisal-forms-store';
 import { ProjectService } from '../../services/project.service';
 import { ConfirmModelService } from '../../services/confirm-model.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  heads,
+  methods,
+  options
+} from '../../../proc';
 /**
  * Food data with nested structure.
  * Each node has a name and an optional list of children.
@@ -98,6 +103,9 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   totalClubsCount: any = 0;
   totalUnClubbedEntriesCount: any = 0;
 
+  heads: any = [];
+  methods: any = [];
+  options: any = [];
   selectedClub: any = null;
   @Input() qprView;
   @Input() activeQuarter;
@@ -109,6 +117,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     public _projectService: ProjectService,
     public _confirmModelService: ConfirmModelService,
     public _costDetailsStore: CostDetailsStore,
+    public _cdr: ChangeDetectorRef,
     public _fb: FormBuilder,
   ) {
     this._createVlubForm();
@@ -116,11 +125,13 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
 
   _createVlubForm() {
     this.clubForm = this._fb.group({
-      title: [null],
-      fipShare: [null],
-      ndrmfShare: [null],
+      title: [null, Validators.required],
+      fipShare: [null, Validators.required],
+      ndrmfShare: [null, Validators.required],
       isProcurement: [false],
       procurementHeads: [null],
+      procurementMethod: [null],
+      procurementOptions: [null],
     });
   }
 
@@ -128,6 +139,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log("SHOW FOR PIP:----", this.show);
+    this.heads = heads;
+    this.options = options;
     if (this.show) {
       this.filterType = this.show;
     }
@@ -443,13 +456,19 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
                 fipShare: club ? club.fipShare : null,
                 isProcurement: club ? club.isProcurement : false,
                 procurementHeads: club ? club.procurementHeads : null,
-                rfSubmitData: null,
+                procurementMethod: club ? club.procurementMethod : null,
+                procurementOptions: club ? club.procurementOptions : null,
+                rfSubmitData: item.addRf ? this.getRfSubmitData(item.quarters) : null,
                 province: null,
                 district: null,
                 division: null,
                 tehsil: null,
                 uc: null,
                 target: club ? club.numOfActivities : 1,
+                targetType: null,
+                maleTarget: null,
+                femaleTarget: null,
+                hectare: null,
               }
             }
           }
@@ -466,14 +485,20 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
           ndrmfShare: null,
           fipShare: null,
           isProcurement: false,
-          procurementHeads: [],
-          rfSubmitData: null,
+          procurementHeads: null,
+          procurementMethod: null,
+          procurementOptions: null,
+          rfSubmitData: item.addRf ? this.getRfSubmitData(item.quarters) : null,
           province: null,
           district: null,
           division: null,
           tehsil: null,
           uc: null,
           target: 1,
+          targetType: null,
+          maleTarget: null,
+          femaleTarget: null,
+          hectare: null,
         }
       }
       // this.clearCostDetails();
@@ -501,6 +526,9 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         tehsil: object.data.tehsil,
         uc: object.data.uc,
         target: object.data.target,
+        targetType: object.data.targetType,
+        maleTarget: object.data.maleTarget,
+        femaleTarget: object.data.femaleTarget,
 
       }
     });
@@ -522,8 +550,19 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         object.data.tehsil = result.tehsil;
         object.data.uc = result.uc;
         object.data.target = result.target;
+        object.data.targetType = result.targetType;
+        object.data.maleTarget = result.maleTarget;
+        object.data.femaleTarget = result.femaleTarget;
       }
     });
+  }
+
+  getRfSubmitData(items) {
+    for (let i = 0; i < items.length; i++) {
+      // console.log("item[i]", items[i]);
+      if (items[i].data && items[i].data.rfSubmitData)
+        return items[i].data.rfSubmitData;
+    }
   }
 
   saveCostings() {
@@ -595,7 +634,9 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         ndrmfShare: null,
         fipShare: null,
         isProcurement: false,
-        procurementHeads: [],
+        procurementHeads: null,
+        procurementMethod: null,
+        procurementOptions: null,
         rfSubmitData: null,
         province: null,
         district: null,
@@ -603,6 +644,10 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         tehsil: null,
         uc: null,
         target: 1,
+        targetType: null,
+        maleTarget: null,
+        femaleTarget: null,
+        hectare: null,
       }
     }
     // this.set
@@ -626,11 +671,19 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       object.progress = {
         generalProgress: null,
         generalProgressStatus: null,
+        generalMaleAchieved: null,
+        generalFemaleAchieved: null,
+        generalTotalAchieved: null,
+        heactareAchieved: null,
         financialProgress: null,
         financialProgressStatus: null,
-        financialProgressAmount: null,
+        expenditureNdrmf: null,
+        expenditureFip: null,
+        disbursedNdrmf: null,
+        contributedFip: null,
         procProgress: null,
         procProgressStatus: null,
+        procProgressOptions: object.data.procurementOptions,
         mneProgress: null,
         mneProgressStatus: null,
       }
@@ -721,6 +774,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       fipShare: values.fipShare,
       isProcurement: values.isProcurement,
       procurementHeads: values.procurementHeads,
+      procurementMethod: values.procurementMethod,
+      procurementOptions: values.procurementOptions,
       _id: new Date().toISOString(),
       randomColor: '#' + Math.floor(Math.random() * 16777215).toString(16),
       numOfActivities: 0,
@@ -749,6 +804,9 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
                 ndrmfShare: clubItem.ndrmfShare,
                 isProcurement: clubItem.isProcurement,
                 procurementHeads: clubItem.procurementHeads,
+                procurementMethod: clubItem.procurementMethod,
+                procurementOptions: clubItem.procurementOptions,
+                target: clubItem.numOfActivities
               }
             }
           }
@@ -784,7 +842,10 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
                 fipShare: null,
                 ndrmfShare: null,
                 isProcurement: false,
-                procurementHeads: [],
+                procurementHeads: null,
+                procurementMethod: null,
+                procurementOptions: null,
+                target: 1
               }
             }
           }
@@ -894,7 +955,59 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         x.data.rfSubmitData = JSON.parse($event.rfUpdated);
     }
     this.selectedActivity.addRf = true;
+    let result = this.search(this.selectedActivity, this.allCosts);
+    result.addRf = true;
     console.log("RF UPDATED:--", $event, this.selectedActivity.quarters);
+  }
+
+  search(title, parent) {
+    const stack = [parent];
+    while (stack.length) {
+      const node = stack.pop();
+      let i = 0;
+      while (i < node.length) {
+        if (node[i]._id === title) return node[i];
+        i++;
+      }
+      node.children && stack.push(...node.children);
+    }
+    return stack.pop() || null;
+  }
+
+  procurementChanged($event) {
+    console.log("PROCUREMENT CHANGED:---", $event);
+    if ($event.checked) {
+      this.clubForm.controls['procurementHeads'].setValidators([Validators.required])
+      this.clubForm.controls['procurementMethod'].setValidators([Validators.required])
+      this.clubForm.controls['procurementOptions'].setValidators([Validators.required])
+    } else {
+      this.clubForm.controls['procurementHeads'].clearValidators();
+      this.clubForm.controls['procurementMethod'].clearValidators();
+      this.clubForm.controls['procurementOptions'].clearValidators();
+    }
+    this._cdr.detectChanges();
+  }
+
+  headChanged($event) {
+    let headMethods = methods.filter(c => {
+      if (c.h_id === $event.value.h_id)
+        return c;
+    });
+    this.methods = headMethods;
+    // console.log("HEAD CHANGED:---", $event, headMethods);
+  }
+
+  methodChanged($event) {
+    // let methodOptions = null;
+    // let methodOptions = null;
+    // this.options = methodOptions;
+    this.clubForm.patchValue({
+      procurementOptions: this.options.filter(element => {
+        if (element.h_id.indexOf($event.value.h_id) >= 0)
+          return element;
+      })
+    }, { onlySelf: true });
+    // console.log("METHOD CHANGED:---", $event, this.options);
   }
 
 }

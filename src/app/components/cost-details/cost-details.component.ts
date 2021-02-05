@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AuthStore } from 'src/app/stores/auth/auth-store';
@@ -11,6 +11,11 @@ import {
   TEHSIL,
   UC,
 } from "../../components/uc_data";
+import {
+  heads,
+  methods,
+  options
+} from '../../../proc';
 
 
 @Component({
@@ -64,6 +69,12 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   tehsil: any = [];
   uc: any = [];
 
+  methods: any = [];
+  heads: any = [];
+  options: any = [];
+
+  // targetType: any = ['Beneficiary', 'Land']
+
   @Output() costUpdated: EventEmitter<any> = new EventEmitter();
   @Output() rfUpdated: EventEmitter<any> = new EventEmitter();
 
@@ -72,6 +83,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     private _settingsService: SettingsService,
     private _costDetailsStore: CostDetailsStore,
     private _authStore: AuthStore,
+    private _changeDetectorRef: ChangeDetectorRef,
   ) {
     this._buildForm();
     this._buildProgressForm();
@@ -88,7 +100,13 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
       fipShare: [null, Validators.required],
       isProcurement: [false],
       procurementHeads: [null],
+      procurementMethod: [null],
+      procurementOptions: [null],
       target: [null, Validators.required],
+      targetType: [null, Validators.required],
+      maleTarget: [null],
+      femaleTarget: [null],
+      hectare: [null],
       rfSubmitData: [null],
       province: [null, Validators.required],
       district: [null, Validators.required],
@@ -100,6 +118,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
 
   _buildProgressForm() {
     this.progressForm = this.fb.group({
+
       generalProgress: [null, Validators.required],
       generalProgressStatus: [null, Validators.required],
       financialProgress: [null, Validators.required],
@@ -109,17 +128,28 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
       procProgressStatus: [null, Validators.required],
       mneProgress: [null, Validators.required],
       mneProgressStatus: [null, Validators.required],
+
+      generalMaleAchieved: [null, Validators.required],
+      generalFemaleAchieved: [null, Validators.required],
+      generalTotalAchieved: [null, Validators.required],
+      heactareAchieved: [null, Validators.required],
+      expenditureNdrmf: [null, Validators.required],
+      expenditureFip: [null, Validators.required],
+      disbursedNdrmf: [null, Validators.required],
+      contributedFip: [null, Validators.required],
+      procProgressOptions: [null],
+
     });
   }
 
   ngOnInit(): void {
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
-    this.Subscription.add(
-
-    );
+    this.heads = heads;
+    this.options = options;
     this.Subscription.add(
       this._costDetailsStore.state$.subscribe(result => {
         setTimeout(() => { this.selectedIndex = 0; }, 0);
+
         this.rfSubmitData = null;
         this.selectedQuarter = result.cost.costData;
         this.quarter = result.cost.quarter;
@@ -128,9 +158,12 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
         this.progressData = result.cost.progress;
         this.clubbed = result.cost.clubbed;
         this.clubData = result.cost.clubData;
+
         console.log("DATA IN COST DETAILS:--", result.cost, this.selectedQuarter);
+
         // EDIT CASE
         if (this.selectedQuarter !== null && this.updateFlag) {
+
           this._form.patchValue({
             startDate: this.selectedQuarter.startDate,
             endDate: this.selectedQuarter.endDate,
@@ -141,8 +174,14 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             fipShare: !result.cost.clubbed ? this.selectedQuarter.fipShare : result.cost.clubData.fipShare,
             isProcurement: !result.cost.clubbed ? this.selectedQuarter.isProcurement : result.cost.clubData.isProcurement,
             procurementHeads: !result.cost.clubbed ? this.selectedQuarter.procurementHeads : result.cost.clubData.procurementHeads,
+            procurementMethod: !result.cost.clubbed ? this.selectedQuarter.procurementMethod : result.cost.clubData.procurementMethod,
+            procurementOptions: !result.cost.clubbed ? this.selectedQuarter.procurementOptions : result.cost.clubData.procurementOptions,
             rfSubmitData: this.selectedQuarter.rfSubmitData,
             target: this.selectedQuarter.target ? this.selectedQuarter.target : this.clubbed ? this.clubData.numOfActivities : 1,
+            targetType: this.selectedQuarter.targetType ? this.selectedQuarter.targetType : null,
+            maleTarget: this.selectedQuarter.maleTarget ? this.selectedQuarter.maleTarget : null,
+            femaleTarget: this.selectedQuarter.femaleTarget ? this.selectedQuarter.femaleTarget : null,
+            hectare: this.selectedQuarter.hectare ? this.selectedQuarter.hectare : null,
             province: this.selectedQuarter.province,
             district: this.selectedQuarter.district,
             division: this.selectedQuarter.division,
@@ -155,14 +194,17 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             if (this.selectedQuarter.province && (c.P_ID === this.selectedQuarter.province.P_ID))
               return c;
           });
+
           this.district = DISTRICT.filter((c) => {
             if (this.selectedQuarter.division && (c.DIVISION === this.selectedQuarter.division.DIVISION))
               return c;
           });
+
           this.tehsil = DISTRICT.filter((c) => {
             if (this.selectedQuarter.district && (c.D_ID === this.selectedQuarter.district.D_ID))
               return c;
           });
+
           this.uc = UC.filter((c) => {
             if (this.selectedQuarter.tehsil && (c.T_ID === this.selectedQuarter.tehsil.T_ID))
               return c;
@@ -174,6 +216,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
               JSON.parse(this.selectedQuarter.rfSubmitData) :
               this.selectedQuarter.rfSubmitData;
           }
+
           this._authStore.state$.subscribe(data => {
             console.log("CURRENT QUARTER:--", data.auth.currentQuarter);
             this.currentQuarter = data.auth.currentQuarter;
@@ -183,13 +226,51 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
               this._form.enable({ onlySelf: true });
             }
           })
+
           result.cost.clubbed ? this._form.controls['ndrmfShare'].disable({ onlySelf: true }) : this._form.controls['ndrmfShare'].enable({ onlySelf: true });
           result.cost.clubbed ? this._form.controls['ndrmfShare'].clearValidators() : this._form.controls['ndrmfShare'].setValidators([Validators.required]);
+
           result.cost.clubbed ? this._form.controls['fipShare'].disable({ onlySelf: true }) : this._form.controls['fipShare'].enable({ onlySelf: true });
           result.cost.clubbed ? this._form.controls['fipShare'].clearValidators() : this._form.controls['fipShare'].setValidators([Validators.required]);
+
           result.cost.clubbed ? this._form.controls['isProcurement'].disable({ onlySelf: true }) : this._form.controls['isProcurement'].enable({ onlySelf: true });
-          // result.cost.clubbed ? this._form.controls['isProcurement'].clearValidators() : null;
           result.cost.clubbed ? this._form.controls['procurementHeads'].disable({ onlySelf: true }) : this._form.controls['procurementHeads'].enable({ onlySelf: true });
+          result.cost.clubbed ? this._form.controls['procurementMethod'].disable({ onlySelf: true }) : this._form.controls['procurementMethod'].enable({ onlySelf: true });
+          result.cost.clubbed ? this._form.controls['procurementOptions'].disable({ onlySelf: true }) : this._form.controls['procurementOptions'].enable({ onlySelf: true });
+
+          if (this.selectedQuarter.isProcurement && !this.clubbed) {
+            this._form.controls['procurementHeads'].setValidators([Validators.required])
+            this._form.controls['procurementMethod'].setValidators([Validators.required])
+            this._form.controls['procurementOptions'].setValidators([Validators.required])
+          }
+
+          if (!this.selectedQuarter.isProcurement && !this.clubbed) {
+            this._form.controls['procurementHeads'].clearValidators();
+            this._form.controls['procurementMethod'].clearValidators();
+            this._form.controls['procurementOptions'].clearValidators();
+          }
+
+          if (this.selectedQuarter.targetType === 'land') {
+            this._form.controls['hectare'].setValidators([Validators.required]);
+            this._form.controls['maleTarget'].clearValidators();
+            this._form.controls['femaleTarget'].clearValidators();
+          }
+
+          if (this.selectedQuarter.targetType === 'beneficiary') {
+            this._form.controls['hectare'].clearValidators();
+            this._form.controls['maleTarget'].setValidators([Validators.required]);
+            this._form.controls['femaleTarget'].setValidators([Validators.required]);
+          }
+
+
+        }
+        if (this.selectedQuarter !== null) {
+
+          this.methods = methods.filter(c => {
+            if (c.h_id === (this.selectedQuarter.procurementHeads !== null &&
+              this.selectedQuarter.procurementHeads.h_id))
+              return c;
+          });
         }
         // PROGRESS CASE
         if (!this.updateFlag) {
@@ -199,18 +280,27 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             this._form.patchValue({
               isProcurement: this.clubData.isProcurement,
               procurementHeads: this.clubData.procurementHeads,
+              procurementMethod: this.clubData.procurementMethod,
+              procurementOptions: this.clubData.procurementOptions,
             }, { onlySelf: true });
             this._form.controls['isProcurement'].disable({ onlySelf: true });
             this._form.controls['procurementHeads'].disable({ onlySelf: true });
+            this._form.controls['procurementMethod'].disable({ onlySelf: true });
+            this._form.controls['procurementOptions'].disable({ onlySelf: true });
           } else {
             this._form.patchValue({
               isProcurement: this.selectedQuarter.isProcurement,
               procurementHeads: this.selectedQuarter.procurementHeads,
+              procurementMethod: this.selectedQuarter.procurementMethod,
+              procurementOptions: this.selectedQuarter.procurementOptions,
             }, { onlySelf: true });
             this._form.controls['isProcurement'].disable({ onlySelf: true });
             this._form.controls['procurementHeads'].disable({ onlySelf: true });
+            this._form.controls['procurementMethod'].disable({ onlySelf: true });
+            this._form.controls['procurementOptions'].disable({ onlySelf: true });
           }
           this.progressForm.patchValue({
+
             generalProgress: this.progressData.generalProgress,
             generalProgressStatus: this.progressData.generalProgressStatus,
             financialProgress: this.progressData.financialProgress,
@@ -220,6 +310,17 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             procProgressStatus: this.progressData.procProgressStatus,
             mneProgress: this.progressData.mneProgress,
             mneProgressStatus: this.progressData.mneProgressStatus,
+
+            generalMaleAchieved: this.progressData.generalMaleAchieved,
+            generalFemaleAchieved: this.progressData.generalFemaleAchieved,
+            generalTotalAchieved: this.progressData.generalTotalAchieved,
+            heactareAchieved: this.progressData.heactareAchieved,
+            expenditureNdrmf: this.progressData.expenditureNdrmf,
+            expenditureFip: this.progressData.expenditureFip,
+            disbursedNdrmf: this.progressData.disbursedNdrmf,
+            contributedFip: this.progressData.contributedFip,
+            procProgressOptions: this.progressData.procProgressOptions,
+
           }, { onlySelf: true });
           this._authStore.state$.subscribe(data => {
             console.log("CURRENT QUARTER:--", data.auth.currentQuarter);
@@ -252,8 +353,20 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
                 this.progressForm.controls['mneProgress'].enable({ onlySelf: true });
                 this.progressForm.controls['mneProgressStatus'].enable({ onlySelf: true });
               }
+              if (this.selectedQuarter.targetType === 'land') {
+                this.progressForm.controls['generalMaleAchieved'].clearValidators();
+                this.progressForm.controls['generalFemaleAchieved'].clearValidators();
+                this.progressForm.controls['generalTotalAchieved'].clearValidators();
+                // this.progressForm.controls['heactareAchieved'].setValidators([Validators.required]);
+              }
+              if (this.selectedQuarter.targetType === 'beneficiary') {
+                this.progressForm.controls['heactareAchieved'].clearValidators();
+                // this.progressForm.controls['generalMaleAchieved'].setValidators([Validators.required]);
+                // this.progressForm.controls['generalFemaleAchieved'].setValidators([Validators.required]);
+                // this.progressForm.controls['generalTotalAchieved'].setValidators([Validators.required]);
+              }
             }
-          })
+          });
         }
       })
     );
@@ -290,7 +403,6 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     // this._form.patchValue({ rfSubmitData: JSON.stringify($event.data) }, { onlySelf: true });
   }
 
-
   submit() {
     this._costDetailsStore.setDefaults(
       this.costTitle,
@@ -319,7 +431,6 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
       null,
     );
   }
-
 
   compareProcObjects(o1: any, o2: any): boolean {
     if (o2) {
@@ -356,6 +467,18 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   compareUcObjects(o1: any, o2: any): boolean {
     if (o2) {
       return o1.UC === o2.UC && o1.UC_ID === o2.UC_ID;
+    }
+    return false;
+  }
+  compareHeads(o1: any, o2: any): boolean {
+    if (o2) {
+      return o1.UC === o2.UC && o1.UC_ID === o2.UC_ID;
+    }
+    return false;
+  }
+  compareMethods(o1: any, o2: any): boolean {
+    if (o2) {
+      return o1.h_id === o2.h_id;
     }
     return false;
   }
@@ -415,6 +538,66 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     this._form.patchValue({
       'uc': null,
     })
+  }
+
+  targetTypeChanged(value) {
+    console.log("TARGET TYPE CHANGED:--", value);
+    if (value === 'land') {
+      this._form.controls['hectare'].setValidators([Validators.required]);
+      this._form.controls['maleTarget'].clearValidators();
+      this._form.controls['femaleTarget'].clearValidators();
+      this._form.patchValue({
+        maleTarget: null,
+        femaleTarget: null,
+      }, { onlySelf: true });
+      this._changeDetectorRef.detectChanges();
+    }
+
+    if (value === 'beneficiary') {
+      this._form.controls['hectare'].clearValidators();
+      this._form.controls['maleTarget'].setValidators([Validators.required]);
+      this._form.controls['femaleTarget'].setValidators([Validators.required]);
+      this._form.patchValue({
+        hectare: null,
+      }, { onlySelf: true });
+      this._changeDetectorRef.detectChanges();
+    }
+
+  }
+
+  procurementChanged($event) {
+    console.log("PROCUREMENT CHANGED:---", $event);
+    if ($event.checked) {
+      this._form.controls['procurementHeads'].setValidators([Validators.required])
+      this._form.controls['procurementMethod'].setValidators([Validators.required])
+      this._form.controls['procurementOptions'].setValidators([Validators.required])
+    } else {
+      this._form.controls['procurementHeads'].clearValidators();
+      this._form.controls['procurementMethod'].clearValidators();
+      this._form.controls['procurementOptions'].clearValidators();
+    }
+    this._changeDetectorRef.detectChanges();
+  }
+
+  headChanged($event) {
+    let headMethods = methods.filter(c => {
+      if (c.h_id === $event.value.h_id)
+        return c;
+    });
+    this.methods = headMethods;
+    // console.log("HEAD CHANGED:---", $event, headMethods);
+  }
+
+  methodChanged($event) {
+    // let methodOptions = null;
+    // this.options = methodOptions;
+    this._form.patchValue({
+      procurementOptions: this.options.filter(element => {
+        if (element.h_id.indexOf($event.value.h_id) >= 0)
+          return element;
+      })
+    }, { onlySelf: true });
+    // console.log("METHOD CHANGED:---", $event, this.options);
   }
 
   ngOnDestroy() {
