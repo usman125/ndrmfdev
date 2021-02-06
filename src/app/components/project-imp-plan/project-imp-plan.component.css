@@ -255,3 +255,34 @@ mat-tree-node.active + mat-tree-node.active {
   color: #4f4f4f !important;
   font-family: sans-serif !important;
 }
+
+.club-info .row {
+  background: #f9f9f9;
+}
+
+.details {
+  color: #919191;
+  padding: 5px 15px;
+}
+
+.general-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.general-info #value {
+  background: #f0f0f0;
+  padding: 15px 20px;
+  display: block;
+  width: 100%;
+  font-size: 12px;
+  color: #474b56;
+}
+
+.general-info #title {
+  margin-bottom: 5px;
+  font-size: 11px;
+  color: #474b56;
+}

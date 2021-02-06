@@ -77,6 +77,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   selectedQuarter: any = null;
   selectedActivity: any = null;
   apiLoading: boolean = false;
+  editClubFlag: boolean = false;
 
   filterType: any = 'General';
   filterTypes: any = [
@@ -106,6 +107,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   heads: any = [];
   methods: any = [];
   options: any = [];
+  selectedHeadOptions: any = [];
   selectedClub: any = null;
   @Input() qprView;
   @Input() activeQuarter;
@@ -937,13 +939,15 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   }
 
   selectClub(item) {
+    this.editClubFlag = false;
     if (this.selectedClub === null) {
       this.selectedClub = item;
     } else {
-      if (this.selectedClub._id === item._id)
+      if (this.selectedClub._id === item._id) {
         this.selectedClub = null;
-      else
+      } else {
         this.selectedClub = item;
+      }
     }
     console.log("SEELCTED CLUB:--", this.selectedClub);
   }
@@ -994,20 +998,89 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         return c;
     });
     this.methods = headMethods;
-    // console.log("HEAD CHANGED:---", $event, headMethods);
+    console.log("HEAD CHANGED:---", $event, headMethods);
   }
 
   methodChanged($event) {
     // let methodOptions = null;
     // let methodOptions = null;
-    // this.options = methodOptions;
     this.clubForm.patchValue({
       procurementOptions: this.options.filter(element => {
         if (element.h_id.indexOf($event.value.h_id) >= 0)
           return element;
       })
     }, { onlySelf: true });
+    this.selectedHeadOptions = this.clubForm.controls['procurementOptions'].value;
     // console.log("METHOD CHANGED:---", $event, this.options);
   }
 
+  openEditClubForm() {
+    console.log("OPEN EDIT FORM:---",);
+    let object = null;
+    if (this.selectedClub.isProcurement) {
+      object = {
+        value: {
+          h_id: this.selectedClub.procurementHeads.h_id,
+        }
+      }
+      this.headChanged(object);
+    }
+    this.editClubFlag = true;
+  }
+
+  closeEditClubForm() {
+    console.log("OPEN EDIT FORM:---",);
+    this.editClubFlag = true;
+  }
+
+  updateClub() {
+    let object = null;
+    if (this.selectedClub.isProcurement) {
+      object = {
+        value: {
+          h_id: this.selectedClub.procurementMethod.h_id,
+        }
+      }
+      this.methodChanged(object);
+    }
+    this.selectedClub.procurementOptions = this.selectedHeadOptions;
+    for (let i = 0; i < this.allCosts.length; i++) {
+      // let key = this.allCosts[i];
+      if (this.allCosts[i].clubbed && this.allCosts[i].clubId === this.selectedClub._id) {
+        this.allCosts[i].quarters = this.allCosts[i].quarters.map(c => {
+          if (c.value && c.data !== null) {
+            return {
+              ...c,
+              data: {
+                ...c.data,
+                isProcurement: this.selectedClub.isProcurement,
+                procurementHeads: this.selectedClub.procurementHeads,
+                procurementMethod: this.selectedClub.procurementMethod,
+                procurementOptions: this.selectedClub.procurementOptions,
+                title: this.selectedClub.title,
+                ndrmfShare: this.selectedClub.ndrmfShare,
+                fipShare: this.selectedClub.fipShare,
+              }
+            }
+          }
+          return c;
+        })
+        console.log("MATCHED KEY:---", this.allCosts[i], this.selectedClub);
+      }
+    }
+  }
+
+  compareHeads(o1: any, o2: any): boolean {
+    if (o2) {
+      return o1.UC === o2.UC && o1.UC_ID === o2.UC_ID;
+    }
+    return false;
+  }
+
+  compareMethods(o1: any, o2: any): boolean {
+    if (o2) {
+      return o1.h_id === o2.h_id;
+    }
+    return false;
+  }
 }

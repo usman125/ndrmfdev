@@ -268,7 +268,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
 
           this.methods = methods.filter(c => {
             if (c.h_id === (this.selectedQuarter.procurementHeads !== null &&
-              this.selectedQuarter.procurementHeads.h_id))
+              this.selectedQuarter.procurementHeads !== undefined && this.selectedQuarter.procurementHeads.h_id))
               return c;
           });
         }
