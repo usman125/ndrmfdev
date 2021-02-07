@@ -149,7 +149,8 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._costDetailsStore.state$.subscribe(result => {
         setTimeout(() => { this.selectedIndex = 0; }, 0);
-
+        this._form.reset();
+        this.progressForm.reset();
         this.rfSubmitData = null;
         this.selectedQuarter = result.cost.costData;
         this.quarter = result.cost.quarter;
@@ -256,10 +257,15 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             this._form.controls['femaleTarget'].clearValidators();
           }
 
-          if (this.selectedQuarter.targetType === 'beneficiary') {
+          else if (this.selectedQuarter.targetType === 'beneficiary') {
             this._form.controls['hectare'].clearValidators();
             this._form.controls['maleTarget'].setValidators([Validators.required]);
             this._form.controls['femaleTarget'].setValidators([Validators.required]);
+          } else {
+
+            this._form.controls['hectare'].clearValidators();
+            this._form.controls['maleTarget'].clearValidators();
+            this._form.controls['femaleTarget'].clearValidators();
           }
 
 

@@ -215,7 +215,7 @@ mat-tree-node.active + mat-tree-node.active {
 .top-quarters .item span {
   /* padding: 0.4rem 23px; */
   display: block;
-  padding: 2px;
+  padding: 6.5px;
   width: 53px;
   margin: 0px 5px;
   background-color: #fff;
@@ -236,11 +236,14 @@ mat-tree-node.active + mat-tree-node.active {
 
 .top-head .title {
   min-width: 318px;
-  text-align: center;
-  font-weight: 600;
+  font-weight: 550;
   text-transform: uppercase;
-  color: #4f4f4f !important;
-  font-family: sans-serif !important;
+  color: #191919 !important;
+  padding-left: 55px;
+  background: #f0f0f0;
+  /* background: #f9f9f9; */
+  padding-top: 7.5px;
+  padding-bottom: 7.5px;
 }
 
 .top-head .title.po {

@@ -23,7 +23,7 @@ export class AllEligibilityRequestsComponent implements OnInit, OnDestroy {
   loadingApi: boolean = false;
   allRequests: any = [];
   dataSource: any = [];
-  public displayedColumns = ['user', 'status', 'actions'];
+  public displayedColumns = ['user', 'status', 'submittedAt', 'comment', 'actions'];
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;

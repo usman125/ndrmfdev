@@ -91,7 +91,7 @@
           </div>
         </div>
       </div>
-      <div class="d-flex align-items-center mt-3 mb-3">
+      <div class="d-flex align-items-center mb-3">
         <div *ngIf="!editClubFlag && selectedClub !== null" style="width: 100%;">
           <!-- <div class="club-info">
             <div class="row">
@@ -130,7 +130,7 @@
           <div class="row mt-3">
             <div class="col-md-3">
               <div class="general-info">
-                <span id="title">Title</span>
+                <span style="color: #0070b1;font-weight:600;" id="title">Title</span>
                 <span id="value" *ngIf="selectedClub.title">
                   {{selectedClub.title}}
                 </span>
@@ -141,7 +141,7 @@
             </div>
             <div class="col-md-3">
               <div class="general-info">
-                <span id="title">Ndrmf Share</span>
+                <span style="color: #0070b1;font-weight:600;" id="title">Ndrmf Share</span>
                 <span id="value" *ngIf="selectedClub.ndrmfShare">
                   {{selectedClub.ndrmfShare}}
                 </span>
@@ -152,7 +152,7 @@
             </div>
             <div class="col-md-3">
               <div class="general-info">
-                <span id="title">Fip Share</span>
+                <span style="color: #0070b1;font-weight:600;" id="title">Fip Share</span>
                 <span id="value" *ngIf="selectedClub.fipShare">
                   {{selectedClub.fipShare}}
                 </span>
@@ -163,7 +163,7 @@
             </div>
             <div class="col-md-3">
               <div class="general-info">
-                <span id="title">Activities</span>
+                <span style="color: #0070b1;font-weight:600;" id="title">Activities</span>
                 <span id="value" *ngIf="selectedClub.numOfActivities">
                   {{selectedClub.numOfActivities}}
                 </span>
@@ -176,7 +176,7 @@
           <div class="row mt-3">
             <div class="col-md-3">
               <div class="general-info">
-                <span id="title">Is Procurement?</span>
+                <span style="color: #0070b1;font-weight:600;" id="title">Is Procurement?</span>
                 <span id="value" *ngIf="selectedClub.isProcurement">
                   {{'Yes'}}
                 </span>
@@ -187,7 +187,7 @@
             </div>
             <div class="col-md-3" *ngIf="selectedClub?.isProcurement">
               <div class="general-info">
-                <span id="title">Head</span>
+                <span style="color: #0070b1;font-weight:600;" id="title">Head</span>
                 <span id="value" *ngIf="selectedClub.procurementHeads">
                   {{selectedClub.procurementHeads.label}}
                 </span>
@@ -198,7 +198,7 @@
             </div>
             <div class="col-md-6" *ngIf="selectedClub?.isProcurement">
               <div class="general-info">
-                <span id="title">Method</span>
+                <span style="color: #0070b1;font-weight:600;" id="title">Method</span>
                 <span id="value" *ngIf="selectedClub.procurementMethod">
                   {{selectedClub.procurementMethod.label}}
                 </span>
@@ -209,27 +209,35 @@
             </div>
           </div>
         </div>
-        <div *ngIf="editClubFlag">
-          <mat-form-field appearance="outline">
-            <mat-label>Title</mat-label>
-            <input type="text" [(ngModel)]="selectedClub.title" matInput placeholder="Title">
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>NDRMF Share</mat-label>
-            <input type="number" [(ngModel)]="selectedClub.ndrmfShare" matInput placeholder="NDRMF Share">
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>FIP Share</mat-label>
-            <input type="number" [(ngModel)]="selectedClub.fipShare" matInput placeholder="FIP Share">
-          </mat-form-field>
-
-          <div class="row">
+        <div *ngIf="editClubFlag" style="display: block;width: 100%;">
+          <div class="row mb-3">
             <div class="col-md-12">
               <mat-checkbox (change)="procurementChanged($event)" labelPosition="'before'"
                 [(ngModel)]="selectedClub.isProcurement">Is
                 Procurement</mat-checkbox>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Title</mat-label>
+                <input type="text" [(ngModel)]="selectedClub.title" matInput placeholder="Title">
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>NDRMF Share</mat-label>
+                <input type="number" [(ngModel)]="selectedClub.ndrmfShare" matInput placeholder="NDRMF Share">
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>FIP Share</mat-label>
+                <input type="number" [(ngModel)]="selectedClub.fipShare" matInput placeholder="FIP Share">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
               <mat-form-field appearance="outline" *ngIf="selectedClub.isProcurement">
                 <mat-label>Procurement Heads</mat-label>
                 <mat-select [compareWith]="compareMethods" (selectionChange)="headChanged($event)"
@@ -240,7 +248,7 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-6">
               <mat-form-field appearance="outline" *ngIf="selectedClub.isProcurement">
                 <mat-label>Procurement Method</mat-label>
                 <mat-select [compareWith]="compareMethods" (selectionChange)="methodChanged($event)"
@@ -251,7 +259,7 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-12 mt-3">
               <button class="pull-right" (click)="updateClub()" mat-raised-button
                 [ngStyle]="{'background-color': selectedClub.randomColor}" type="submit">Update Club</button>
             </div>
@@ -279,7 +287,7 @@
           </mat-button-toggle>
         </mat-button-toggle-group>
       </div>
-      <div class="toolbox">
+      <!-- <div class="toolbox">
         <div class="d-flex align-items-center justify-content-end mt-3 mb-3">
           <div class="entries-total ml-2 mr-2">
             {{'Activities Total' | uppercase}}: <span id="answer">{{totalUnClubbedEntriesCount}}</span>
@@ -289,6 +297,41 @@
           </div>
           <div class="entries-total ml-2 mr-2">
             {{'Grand Total' | uppercase}}: <span id="answer">{{totalClubsCount + totalUnClubbedEntriesCount}}</span>
+          </div>
+        </div>
+      </div> -->
+      <div class="row mb-3 mt-2">
+        <div class="col-md-4">
+          <div class="general-info">
+            <span style="color: #0070b1;font-weight:600;" id="title">{{'Activities Total' | titlecase}}</span>
+            <span id="value" *ngIf="totalUnClubbedEntriesCount">
+              {{totalUnClubbedEntriesCount}}
+            </span>
+            <span id="value" *ngIf="!totalUnClubbedEntriesCount">
+              &nbsp;
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="general-info">
+            <span style="color: #0070b1;font-weight:600;" id="title">{{'Clubs Total' | titlecase}}</span>
+            <span id="value" *ngIf="totalClubsCount">
+              {{totalClubsCount}}
+            </span>
+            <span id="value" *ngIf="!totalClubsCount">
+              &nbsp;
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="general-info">
+            <span style="color: #0070b1;font-weight:600;" id="title">{{'Grand Total' | titlecase}}</span>
+            <span id="value" *ngIf="totalClubsCount">
+              {{totalClubsCount + totalUnClubbedEntriesCount}}
+            </span>
+            <span id="value" *ngIf="!totalClubsCount">
+              &nbsp;
+            </span>
           </div>
         </div>
       </div>

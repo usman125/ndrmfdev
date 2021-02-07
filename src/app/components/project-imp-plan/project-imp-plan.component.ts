@@ -1068,6 +1068,16 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         console.log("MATCHED KEY:---", this.allCosts[i], this.selectedClub);
       }
     }
+    this._costDetailsStore.setDefaults(
+      null,
+      null,
+      null,
+      null,
+      true,
+      false,
+      null,
+      null
+    );
   }
 
   compareHeads(o1: any, o2: any): boolean {
