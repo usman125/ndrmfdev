@@ -1,8 +1,8 @@
 <mat-toolbar *ngIf="toggle && !commentsFlag && !mitigationsFlag && !viewReport"
   style="margin-top:0px;padding: 10px 0px;" color="primary">
   <mat-toolbar-row>
-    <span
-      *ngIf="currentUser?.role === 'process owner'">{{selectedRequest?.initiatorFullName ? selectedRequest?.initiatorFullName : selectedRequest?.initiatedBy.name}}</span>
+    <span *ngIf="currentUser?.role === 'process owner'">{{selectedRequest?.initiatorFullName ?
+      selectedRequest?.initiatorFullName : selectedRequest?.initiatedBy.name}}</span>
     <span *ngIf="currentUser?.role === 'sme'">{{selectedRequest?.initiatedBy.name}}</span>
     <span class="example-spacer"></span>
     <span *ngIf="currentUser?.role === 'process owner'">{{selectedRequest?.submittedAt | date:'fullDate'}}</span>
@@ -85,7 +85,7 @@
             </span>
             <span class="mb-3" style="display: block;font-weight: bold;" *ngIf="item.review.rating !== null">
               SCORED WEITAGE:
-              <span id="comment">{{item.review.rating}}</span>
+              <span id="comment">{{(item.review.rating/2) | number:'1.0-4'}}</span>
             </span>
             <button *ngIf="item.assigned && selectedSection === item.id || currentUser?.role !== 'sme'"
               mat-raised-button color="primary" (click)="toggleEntryForm(item)">
@@ -307,7 +307,8 @@
                   <mat-label>Comments for fip</mat-label>
                   <textarea matInput [(ngModel)]="commentsForFip" placeholder="write your comments..."></textarea>
                 </mat-form-field>
-                <button (click)="intimateFip()" [disabled]="!commentsForFip || sectionStats?.unassignCount !== 0"
+                <button (click)="intimateFip()"
+                  [disabled]="!commentsForFip || (sectionStats?.unassignCount !== userReviewRequests.length)"
                   color="accent" mat-raised-button>INTIMATE
                   FIP</button>
               </div>
@@ -331,12 +332,12 @@
               <span class="head">Accredit Status:</span>
               <span id="comment" class="answer mb-3">{{selectedRequest?.status | uppercase}}</span>
               <span class="head" *ngIf="allReviewsFlag && currentUser?.role !== 'sme'">System Status:</span>
-              <span id="warn" class="answer"
-                *ngIf="allReviewsFlag && currentUser?.role !== 'sme'">{{userSystemStatus | uppercase}}</span>
+              <span id="warn" class="answer" *ngIf="allReviewsFlag && currentUser?.role !== 'sme'">{{userSystemStatus |
+                uppercase}}</span>
             </div>
             <div class="right-block">
               <span class="head">Current Score</span>
-              <span class="comments">{{userAllScore || 0 | number:'1.0-4'}}</span>
+              <span class="comments">{{(userAllScore/2) || 0 | number:'1.0-4'}}</span>
               <!-- <span *ngIf="userAllScore" id="answer" class="comments">{{(userAllScore/5 * 100)}}%</span> -->
             </div>
           </div>
@@ -650,7 +651,7 @@
         </div>
         <div class="col-md-8">
           <div class="controls-wise" *ngFor="let obj of item.review.controlWiseComments">
-            <span *ngIf="obj.status === 'un-satisfy'">-{{obj.title}}</span>
+            <span *ngIf="obj.status === 'un-satisfy'">-{{obj.comments}}</span>
           </div>
         </div>
       </div>

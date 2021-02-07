@@ -72,7 +72,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
   totalFormScore: any = 0;
   totalPassScore: any = 0;
 
-  max = 5;
+  max = 6;
 
   startDate: string;
   endDate: string;
@@ -552,8 +552,9 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
       3: 0,
       4: 0,
       5: 0,
+      6: 0,
     };
-    for (let j = 0; j <= 5; j++) {
+    for (let j = 0; j <= 6; j++) {
       var count = 0;
       for (let i = 0; i < item.formReviewObjects.length; i++) {
         if (item.formReviewObjects[i].rating === j) {
@@ -570,12 +571,14 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
       count1 = count1 + parseInt(key) * rating[key];
       count2 = count2 + rating[key];
     })
-    if ((count1 / count2) >= 0 && (count1 / count2) <= 2) {
-      requestStatus = "Failed";
-    } else if ((count1 / count2) > 2 && (count1 / count2) <= 3) {
-      requestStatus = "Deffered";
+    if ((count1 / count2) >= 0.00 && (count1 / count2) <= 0.75) {
+      requestStatus = "High Risk";
+    } else if ((count1 / count2) > 0.75 && (count1 / count2) <= 2.00) {
+      requestStatus = "Substantial Risk";
+    } else if ((count1 / count2) > 2.00 && (count1 / count2) <= 2.25) {
+      requestStatus = "Moderate Risk";
     } else {
-      requestStatus = "Accredited";
+      requestStatus = "Low Risk";
     }
     var apiValues = {
       "comments": item.review.comments,
@@ -649,8 +652,9 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
       3: 0,
       4: 0,
       5: 0,
+      6: 0,
     };
-    for (let j = 0; j <= 5; j++) {
+    for (let j = 0; j <= 6; j++) {
       var count = 0;
       for (let i = 0; i < item.length; i++) {
         if (item[i].review.rating !== null) {
@@ -683,7 +687,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
         // console.log('COUNT FOR:--', count, rating[j], { pendingCount, reviewsCount });
       }
       // this.sectionStats = { pendingCount, reviewsCount, unassignCount };
-      if (j === 5) {
+      if (j === 6) {
         this.rateApplication(rating);
       }
     }
@@ -728,23 +732,27 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
       count2 = count2 + parseFloat(rating[key]);
     })
 
-    if ((count1 / count2) >= 0 && (count1 / count2) <= 2) {
-      requestStatus = "Failed";
+    if (((count1 / count2) / 2) >= 0 && ((count1 / count2) / 2) <= 0.75) {
+      requestStatus = "High Risk";
       this.userSystemStatus = requestStatus;
       this.userAllScore = (count1 / count2);
-    } else if ((count1 / count2) > 2 && (count1 / count2) <= 3) {
-      requestStatus = "Deffered";
+    } else if (((count1 / count2) / 2) > 0.75 && ((count1 / count2) / 2) <= 2.00) {
+      requestStatus = "Substantial Risk";
       this.userSystemStatus = requestStatus;
       this.userAllScore = (count1 / count2);
-    } else if ((count1 / count2) > 3 && (count1 / count2) <= 5) {
-      requestStatus = "Accredited";
+    } else if (((count1 / count2) / 2) > 2.00 && ((count1 / count2) / 2) <= 2.25) {
+      requestStatus = "Moderate Risk";
+      this.userSystemStatus = requestStatus;
+      this.userAllScore = (count1 / count2);
+    } else if (((count1 / count2) / 2) > 2.25 && ((count1 / count2) / 2) <= 3) {
+      requestStatus = "Low Risk";
       this.userSystemStatus = requestStatus;
       this.userAllScore = (count1 / count2);
     }
     console.log(
       "ALL Request SCORES:--\n", rating,
       "SYSTEM STATUS:--\n", requestStatus,
-      "USER SCORES:--\n", count1/count2, this.userAllScore, count1, count2,
+      "USER SCORES:--\n", count1 / count2, this.userAllScore, count1, count2,
 
     );
 
