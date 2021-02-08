@@ -60,6 +60,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
 
   allSmes: any = null;
   selectedSme: any = null;
+  formToSave: any = null;
 
   Subscription: Subscription = new Subscription();
 
@@ -248,6 +249,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selctedRequest = form;
     this.editFormFlag = !this.editFormFlag;
     this.secondForm = JSON.parse(form.template);
+    this.formToSave = JSON.parse(form.template);
     console.log("FORM TO EDIT:--", this.secondForm, this.selctedRequest);
     let macthedEntry = null;
     // this.fetchSectons(this.selctedRequest.processType);
@@ -259,9 +261,9 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     this.patchForm(macthedEntry);
-    this.refreshForm.emit({
-      form: this.secondForm
-    })
+    // this.refreshForm.emit({
+    //   form: this.secondForm
+    // })
   }
 
   patchForm(sme) {
@@ -342,9 +344,11 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     //   this.jsonElement.nativeElement.innerHTML = '';
     //   this.jsonElement.nativeElement.appendChild(document.createTextNode(JSON.stringify(event.form, null, 4)));
     // }
-    this.refreshForm.emit({
-      form: event.form
-    });
+    // this.refreshForm.emit({
+    //   form: event.form
+    // });
+    this.formToSave = event.form;
+    console.log("CHANGED FORM:--", event, this.formToSave);
   }
 
 
@@ -372,9 +376,9 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   saveForm(values) {
-    values.components = this.secondForm.components
-    values.page = this.secondForm.page;
-    values.numOfPages = this.secondForm.numPages;
+    values.components = this.formToSave.components
+    values.page = this.formToSave.page;
+    values.numOfPages = this.formToSave.numPages;
     console.log("UPADTED FORM VALUES:--", values, this.secondForm);
     const options = {
       title: 'Success!',
@@ -388,7 +392,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
       result => {
         console.log("RESULT FROM UPDATE SURVEY FORM:--", result);
         this.refreshForm.emit({
-          form: this.secondForm
+          form: this.formToSave
         });
         this._confirmModelService.open(options);
       },
@@ -396,8 +400,6 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log("ERROR FROM ADD SURVEY:--", error);
       }
     );
-
-
   }
 
   PROCESS_NAME(name) {

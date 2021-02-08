@@ -46,6 +46,8 @@ export class CreateSurveyComponent implements OnInit {
 
   Subscription: Subscription = new Subscription();
 
+  formForDisplay: any = null;
+
   constructor(
     private _router: Router,
     private _authStore: AuthStore,
@@ -76,6 +78,8 @@ export class CreateSurveyComponent implements OnInit {
     this.refreshForm.emit({
       form: event.form
     });
+    this.formForDisplay = event.form;
+    console.log("FORM CHANGES:---", event.form);
   }
 
   ngOnInit() {
@@ -173,6 +177,8 @@ export class CreateSurveyComponent implements OnInit {
 
   toggleBuilder() {
     this.toggle = !this.toggle;
+    if (this.formForDisplay !== null)
+      this.form = this.formForDisplay;
   }
 
   typeChanged($event) {

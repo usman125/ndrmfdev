@@ -177,7 +177,7 @@
               </button>
             </form>
           </div>
-          <form-builder [refresh]="refreshForm" [form]="secondForm"></form-builder>
+          <form-builder (change)="onChange($event)" [form]="secondForm"></form-builder>
         </div>
         <!-- {{secondForm | json}}
         {{secondForm.data | json}} -->
