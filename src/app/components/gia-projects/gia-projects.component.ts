@@ -205,6 +205,11 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
             }
           }
           this.reviewUsers.patchValue(assignedUsers, { onlySelf: true });
+          // if (this.selectedProject.gia.subStatus === 'Review Pending') {
+          //   this.reviewUsers.disable({ onlySelf: true });
+          // } else {
+          //   this.reviewUsers.enable({ onlySelf: true });
+          // }
           this.sectionStats = {
             reviewsCount,
             pendingCount: assignedUsers.length - reviewsCount
@@ -215,7 +220,6 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
             if (result !== null) {
               if (c.data) {
                 this.selectedProjectInfo = typeof (c.data) === 'string' ? JSON.parse(c.data) : c.data;
-                this._authStore.setProjectMonths(c.data.duration);
               }
             }
             if (this.selectedProjectInfo) {
@@ -224,6 +228,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
                   this.selectedProjectInfo.pb = typeof (c.data) === 'string' ? JSON.parse(c.data) : c.data;
                 }
               }
+              this._authStore.setProjectMonths(this.selectedProjectInfo.duration);
             }
           });
           this.apiLoading = false;
@@ -356,6 +361,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
           this._primaryAppraisalFormsStore.addGiaReviewers(storeArray);
         }
         this._confirmModelService.open(options);
+        // this.reviewUsers.disable({ onlySelf: true });
       },
       error => {
         console.log("RESULT AFTER SUBMIT GIA:---", error);
@@ -386,7 +392,10 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
               id: null,
               assignee: this.reviewUsers.value[i],
               comments: null,
-              assigned: false
+              assigned: false,
+              poComments: confirmed.comments,
+              startDate: confirmed.startDate,
+              endDate: confirmed.endDate,
             }
             storeArray.push(object);
             reviewersArray.push(this.reviewUsers.value[i].id)
@@ -398,14 +407,20 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
           this.selectedProjectId,
           {
             data: JSON.stringify(this.appraisalDoc),
-            reviewers: this.reviewersArray
+            reviewers: this.reviewersArray,
+            poComments: confirmed.comments,
+            startDate: confirmed.startDate,
+            endDate: confirmed.endDate,
           }
         ).subscribe(
           (result: any) => {
             console.log("RESULT AFTER SUBMIT GIA:---", result);
             options.title = 'Users Assigned Successfully!'
             options.message = 'click OK to close!'
+            options.add = true;
+            options.confirm = false;
             this._confirmModelService.open(options);
+            // this.reviewUsers.disable({ onlySelf: true });
             // this._primaryAppraisalFormsStore.submitGia(this.appraisalDoc);
           },
           error => {
@@ -463,6 +478,20 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
     )
   }
 
+  getPoComments() {
+    if (this.selectedProject.gia !== null) {
+      if (this.selectedProject.gia.reviews !== null ||
+        this.selectedProject.gia.reviews.length !== 0) {
+        for (let i = 0; i < this.selectedProject.gia.reviews.length; i++) {
+          let key = this.selectedProject.gia.reviews[i];
+          if (key.assigned)
+            return key.poComments;
+        }
+      }
+    }
+    return '&nbsp;';
+  }
+
 
   compareSmeObjects(o1: any, o2: any): boolean {
     // console.log("COMPARE SME:--", o1, o2)
@@ -470,6 +499,15 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
       return o1.name === o2.name && o1.id === o2.id;
     }
     return false;
+  }
+
+  checkHidden(item) {
+    for (let i = 0; i < this.selectedProject.gia.reviews.length; i++) {
+      let key = this.selectedProject.gia.reviews[i];
+      console.log("ITEM TO CHECK:--", item, key);
+      if (key.assignee.id === item.id)
+        return true;
+    }
   }
 
 

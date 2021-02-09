@@ -16,6 +16,9 @@
     <div class="col-md-4 item">
       <h6> Name</h6>
     </div>
+    <div class="col-md-4 item">
+      <h6> Status</h6>
+    </div>
     <!-- <div class="col-md-4 item">
       <h6> Proposal Sections</h6>
     </div> -->
@@ -24,13 +27,23 @@
     </div>
   </div>
   <div class="row data-row" *ngFor="let item of allComments;">
-    <div class="col-md-4 item"><span class="mobileheads">Name</span><span>{{item?.assignee?.name || 'N/A'}}</span></div>
+    <div class="col-md-4 item">
+      <span class="mobileheads">Name</span>
+      <span>{{item?.assignee?.name || 'N/A'}}</span>
+    </div>
+    <div class="col-md-4 item">
+      <span class="mobileheads">Status</span>
+      <span [ngStyle]="{'color': item.status === 'Pending' ? '#f44336' : '#2e7d32'}">{{item?.status || 'N/A'}}</span>
+    </div>
     <!-- <div class="col-md-4 item">
       <span class="mobileheads">Section(s)</span>
       <mat-chip-list>
         <mat-chip *ngFor="let section of item.sections;">{{section}}</mat-chip>
       </mat-chip-list>
     </div> -->
-    <div class="col-md-4 item"><span class="mobileheads">Comments</span><span>{{item?.comments || 'N/A'}}</span></div>
+    <div class="col-md-4 item">
+      <span class="mobileheads">Comments</span>
+      <span>{{item?.comments || 'N/A'}}</span>
+    </div>
   </div>
 </div>

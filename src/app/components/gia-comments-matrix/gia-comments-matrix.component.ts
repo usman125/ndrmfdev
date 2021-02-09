@@ -43,7 +43,7 @@ export class GiaCommentsMatrixComponent implements OnInit {
   getGiaComments() {
     this._projectService.getSingleProject(this.selectedProjectId).subscribe(
       (result: any) => {
-        this.allComments = result.gia.reviews !== null ? result.gia.reviews : [];
+        this.allComments = result.gia.reviewsHistory !== null ? result.gia.reviewsHistory : [];
         console.log("PROJECT DETAILS FROM DATABASE:--", result, this.allComments);
       },
       error => {

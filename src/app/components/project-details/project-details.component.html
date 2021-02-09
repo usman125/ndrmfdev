@@ -285,16 +285,18 @@
       </mat-card>
 
       <!-- GIA CARD -->
-      <mat-toolbar
-        *ngIf="(selectedProject?.status === 'GIA' || selectedProject?.status === 'Checklist to FIP') && loggedUser?.role === 'process owner'"
-        class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+      <mat-toolbar *ngIf="(selectedProject?.status === 'GIA' || 
+        selectedProject?.status === 'Checklist to FIP') && 
+        loggedUser?.role === 'process owner'" class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
         <mat-toolbar-row>
-          <span>{{selectedProject?.status === 'Checklist to FIP' ? 'Uploaded Final GIA' : 'Upload Final GIA'}}</span>
+          <span>{{selectedProject?.status === 'Checklist to FIP' ?
+            'Uploaded Final GIA' : 'Upload Final GIA'}}</span>
           <div class="example-spacer"></div>
           <!-- <mat-chip-list *ngIf="selectedProject?.gia.data !== null">
             <mat-chip (click)="viewGia()" color="primary" selected>View GIA</mat-chip>
           </mat-chip-list> -->
-          <button (click)="prepareGia()" *ngIf="selectedProject?.gia?.data === null" mat-button color="primary">
+          <button (click)="prepareGia()" *ngIf="selectedProject?.gia?.data === null && 
+          selectedProject?.gia.processOwner.id === loggedUser?.id" mat-button color="primary">
             <mat-icon class="mr-1">edit</mat-icon> {{'Prepare gia' | uppercase}}
           </button>
           <button (click)="prepareGia()" *ngIf="selectedProject?.gia?.data !== null" mat-button color="primary">
@@ -302,8 +304,9 @@
           </button>
         </mat-toolbar-row>
       </mat-toolbar>
-      <mat-card class="m-20 p-3"
-        *ngIf="(selectedProject?.status === 'GIA' || selectedProject?.status === 'Checklist to FIP') && loggedUser?.role === 'process owner'">
+      <mat-card class="m-20 p-3" *ngIf="(selectedProject?.status === 'GIA' || 
+        selectedProject?.status === 'Checklist to FIP') && 
+        loggedUser?.role === 'process owner' && selectedProject?.gia.processOwner.id === loggedUser?.id">
         <mat-card-content>
           <div class="input-box mt-3" *ngIf="selectedProject?.status === 'GIA'">
             <ul>
@@ -679,23 +682,8 @@
               </div>
             </div>
           </div>
-          <!-- <div class="project-details p-3" *ngIf="selectedProject?.govFip === true"> -->
           <div class="project-details p-3">
             <app-project-proposal-files></app-project-proposal-files>
-            <!-- <mat-list>
-              <mat-list-item class="govfip">
-                <mat-icon mat-list-icon>assignment</mat-icon>
-                <div mat-line>{{'PC1 Uploads'}}</div>
-              </mat-list-item>
-              <div *ngFor="let object of selectedProject?.files;" mat-line>
-                <span *ngIf="object.status === 'Upload PC1'">{{object.name}}</span>
-              </div>
-              <mat-list-item class="govfip">
-                <mat-icon mat-list-icon>assignment</mat-icon>
-                <div mat-line>{{'PDRMC Uploads'}}</div>
-                <div mat-line><a href="#">View PDRMC</a></div>
-              </mat-list-item>
-            </mat-list> -->
           </div>
           <div class="heading-contain m-20 d-flex align-items-center">
             <mat-icon>settings</mat-icon>
@@ -703,8 +691,9 @@
           </div>
         </mat-card-content>
 
+        <!-- PROCESS OWNER ACTION BUTTONS -->
         <mat-card-actions class="pr-3 pl-3 pt-0 pb-3 footer-btns"
-          *ngIf="viewType === 'po' && loggedUser.role !== 'sme'">
+          *ngIf="viewType === 'po' && loggedUser.role !== 'sme' && selectedProject?.owner">
           <div class="appraisals">
             <div class="pre-section">
               <div class="expiry-section mb-2">
@@ -864,7 +853,8 @@
 
               <div class="expiry-sections mt-2">
                 <button (click)="prepareGia()" *ngIf="selectedProject?.status === 'GIA' && 
-                selectedProject?.gia?.data === null" mat-button color="accent">
+                selectedProject?.gia?.data === null && selectedProject?.gia.processOwner.id === loggedUser?.id"
+                  mat-button color="accent">
                   <mat-icon class="mr-1">edit</mat-icon> {{'Prepare gia' | titlecase}}
                 </button>
               </div>
@@ -896,21 +886,28 @@
 
               <div class="expiry-sections mt-2">
                 <button (click)="setProjectStages()" [disabled]="selectedProject?.extendedAppraisal?.status === 'Pending' || 
-                  selectedProject?.gia.status === 'Pending'" *ngIf="(selectedProject?.status === 'Extended Appraisal' || 
-                  selectedProject?.status === 'TAC Meeting' || selectedProject?.status === 'BOD Meeting' || 
-                  selectedProject?.status === 'RMC Meeting' || selectedProject?.status === 'Offer Letter'
-                   || selectedProject?.status === 'GIA') && 
-                  (selectedProject?.extendedAppraisal  !== null)" mat-button color="accent">
+                selectedProject?.gia.status === 'Pending'" *ngIf="(selectedProject?.status === 'Extended Appraisal' || 
+                selectedProject?.status === 'TAC Meeting' || selectedProject?.status === 'BOD Meeting' || 
+                selectedProject?.status === 'RMC Meeting' || selectedProject?.status === 'Offer Letter'
+                || selectedProject?.status === 'GIA') && 
+                (selectedProject?.extendedAppraisal  !== null)" mat-button color="accent">
                   <mat-icon class="mr-1">sync_alt</mat-icon> {{'change Project stage' | titlecase}}
                 </button>
                 <button (click)="setProjectStages()" mat-button color="accent">
                   <mat-icon class="mr-1">sync_alt</mat-icon> {{'change Project stage' | titlecase}}
                 </button>
               </div>
+
+              <div class="expiry-sections mt-2">
+                <button (click)="commenceGrantDisbursment()" class="m-1" mat-button color="basic">
+                  <mat-icon class="mr-1">table_chart</mat-icon> {{'Inititate Grant Disbursment' | titlecase}}
+                </button>
+              </div>
             </div>
           </div>
         </mat-card-actions>
 
+        <!-- DM PAM ACTION BUTTONS -->
         <mat-card-actions class="pl-3 pr-3 pb-3 pt-0 footer-btns"
           *ngIf="viewType === 'propapp' && loggedUser.role !== 'sme'">
           <div class="expiry-sections mb-2">
@@ -977,6 +974,7 @@
           </button>
         </mat-card-actions>
 
+        <!-- GM ACTION BUTTONS -->
         <mat-card-actions class="p-3 footer-btns" *ngIf="loggedUser.role === 'gm'">
           <div class="expiry-sections mb-2">
             <button *ngIf="selectedProject?.preAppraisal !== null" mat-button color="primary"
@@ -1020,7 +1018,7 @@
           </div>
         </mat-card-actions>
 
-
+        <!-- CEO ACTION BUTTONS -->
         <mat-card-actions class="p-3 footer-btns" *ngIf="loggedUser.role === 'ceo'">
           <div class="expiry-sections mb-2">
             <button *ngIf="selectedProject?.preAppraisal !== null" mat-button color="primary"
@@ -1048,13 +1046,7 @@
           </div>
         </mat-card-actions>
 
-        <mat-card-actions class="p-3 footer-btns">
-
-          <button (click)="commenceGrantDisbursment()" class="m-1" mat-button color="basic">
-            <mat-icon class="mr-1">table_chart</mat-icon> {{'Inititate Grant Disbursment' | titlecase}}
-          </button>
-
-        </mat-card-actions>
+        <!-- VIEW COMMENT AND REMARKS SCROLLERS -->
         <mat-card-actions class="p-3 footer-btns" *ngIf="loggedUser.role !== 'sme'">
 
           <button (click)="viewCommentsMatrix()" class="m-1" mat-button color="basic">
@@ -1067,6 +1059,7 @@
           </button>
         </mat-card-actions>
 
+        <!-- SME ACTION BUTTONS -->
         <mat-card-actions class="p-3 footer-btns" *ngIf="loggedUser.role === 'sme'">
 
           <button (click)="fillProposalReports()" class="m-1" mat-button color="basic">
@@ -1074,7 +1067,6 @@
           </button>
 
         </mat-card-actions>
-
 
       </mat-card>
     </div>
@@ -1357,33 +1349,10 @@
             </div>
           </div>
         </mat-card-content>
-
       </mat-card>
-
-      <!-- PROJECT PLAN AND IMPLEMENTATION -->
-      <!-- <span id="myTopElement4" #myTopElement4></span>
-      <mat-card class="m-20 p-0">
-        <mat-card-content>
-          <app-project-work-plan [proMonths]="proMonths"></app-project-work-plan>
-        </mat-card-content>
-      </mat-card> -->
-
-
-
     </div>
   </div>
   <span id="myTopElement3" #myTopElement3></span>
-  <!-- <mat-card class="m-20 mt-0 pt-1" *ngIf="sectionStats.pendingCount === 0 && selectedProject?.govFip === false"> -->
-  <!-- <mat-card-content> -->
-  <!-- <div class="display-flex-row pt-3 mb-3"> -->
-  <!-- <mat-button-toggle-group [(ngModel)]="costTabsType" #group="matButtonToggleGroup">
-          <mat-button-toggle (change)="costTabChanged(item)" *ngFor="let item of costSections; let i = index;"
-            [value]="item.name">
-            <span>{{item.name}}</span>
-          </mat-button-toggle>
-        </mat-button-toggle-group> -->
-  <!-- </div> -->
-  <!-- <app-project-plan [proMonths]="proMonths" [show]="show"></app-project-plan> -->
   <div *ngIf="sectionStats.pendingCount === 0 && 
     (selectedProject?.status !== 'Upload PC1' && selectedProject?.status !== 'Upload PDRMC Mins') 
     && loggedUser?.role === 'fip'">
@@ -1392,9 +1361,7 @@
   <div *ngIf="sectionStats.pendingCount === 0 && loggedUser?.role !== 'fip'">
     <app-project-imp-plan [proMonths]="proMonths" [show]="show"></app-project-imp-plan>
   </div>
-  <!-- </mat-card-content> -->
-  <!-- </mat-card> -->
-  <!-- <app-pip></app-pip> -->
+
   <ng-container>
     <mat-toolbar style="padding: 15px 0px;" color="primary">
       <mat-toolbar-row>

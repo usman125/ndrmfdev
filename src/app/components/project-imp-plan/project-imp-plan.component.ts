@@ -165,9 +165,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         this.quarters = [];
         this.months = data.auth.proMonths;
         console.log("****MONTHS IN PROJECT IMPLEMENTATION PLAN*****\n", data);
-        setTimeout(() => {
-          this.getQuarters('personal');
-        });
+        this.getQuarters('personal');
       })
     );
     this.Subscription.add(

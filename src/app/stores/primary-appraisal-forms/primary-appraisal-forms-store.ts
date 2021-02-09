@@ -319,7 +319,7 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
         gia: {
           ...this.state.selectedProject.gia,
           reviews: reviews,
-          subStatus: 'Pending Reviews',
+          subStatus: 'Review Pending',
         }
       }
     });
