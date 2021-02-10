@@ -479,7 +479,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
   }
 
   getPoComments() {
-    if (this.selectedProject.gia !== null) {
+    if (this.selectedProject && this.selectedProject.gia !== null) {
       if (this.selectedProject.gia.reviews !== null ||
         this.selectedProject.gia.reviews.length !== 0) {
         for (let i = 0; i < this.selectedProject.gia.reviews.length; i++) {

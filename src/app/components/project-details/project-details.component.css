@@ -37,19 +37,22 @@
   display: flex;
   justify-content: space-between;
   padding: 8px;
-  background: #f8f8f8;
+  background: #f9f9f9;
   margin: 5px 0px;
 }
 .project-details .field .value {
   text-transform: capitalize;
   width: 68%;
   text-align: right;
+  color: #919191;
+  font-weight: 300;
 }
 
 .project-details .field .title {
   font-weight: 500;
   text-transform: uppercase;
   width: 42%;
+  color: #919191;
 }
 
 .gia-link {
@@ -84,7 +87,8 @@ mat-button-toggle-group {
   align-items: center;
   width: 50%;
 }
-.review-box .info small#comment, .review-box .info small.info-comment {
+.review-box .info small#comment,
+.review-box .info small.info-comment {
   width: 50%;
 }
 .review-box .info {
@@ -99,9 +103,15 @@ mat-button-toggle-group {
 .mat-list-item {
   background: rgba(235, 235, 235, 0.5);
   margin-bottom: 5px;
-  height: 60px !important;
-  width: 49%;
+  height: 80px !important;
+  width: 100%;
   font-size: 13px;
+}
+
+.mat-list-item.giachecklist {
+  height: 110px !important;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .top-info-bar {
@@ -162,9 +172,8 @@ mat-button-toggle-group .mat-button-toggle-checked .mat-button-toggle-label-cont
   width: 100% !important;
 }
 
-
 .info-box {
-    background: #f4f4f4;
-    padding: 10px;
-    color: #4f4f4f;
+  background: #f4f4f4;
+  padding: 10px;
+  color: #4f4f4f;
 }

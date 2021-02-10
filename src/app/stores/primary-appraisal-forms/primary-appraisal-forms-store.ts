@@ -246,6 +246,36 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     })
   }
 
+  setGiaChecklistExpiry(days) {
+    console.log("CALLED:--")
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        giaChecklist: {
+          ...this.state.selectedProject.giaChecklist,
+          status: 'Expired',
+          expiryDays: days
+        }
+      }
+    })
+  }
+
+  extendGiaChecklistTimeline(days) {
+    console.log("CALLED:--")
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        giaChecklist: {
+          ...this.state.selectedProject.giaChecklist,
+          status: 'Pending',
+          expiryDays: days
+        }
+      }
+    })
+  }
+
   setExtAppraisalExpiryDays(days) {
     console.log("CALLED:--")
     this.setState({
