@@ -73,6 +73,8 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   heads: any = [];
   options: any = [];
 
+  disableOptions: boolean = false;
+
   // targetType: any = ['Beneficiary', 'Land']
 
   @Output() costUpdated: EventEmitter<any> = new EventEmitter();
@@ -160,10 +162,19 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
         this.clubbed = result.cost.clubbed;
         this.clubData = result.cost.clubData;
 
+
         console.log("DATA IN COST DETAILS:--", result.cost, this.selectedQuarter);
 
         // EDIT CASE
         if (this.selectedQuarter !== null && this.updateFlag) {
+
+          // this.methods = methods.filter(c => {
+          //   if (c.h_id === (this.selectedQuarter.procurementHeads !== null &&
+          //     this.selectedQuarter.procurementHeads !== undefined && this.selectedQuarter.procurementHeads.h_id))
+          //     return c;
+          // });
+          if (this.clubData !== null)
+            this.clubData.procurementOptions = this.selectedQuarter.procurementOptions;
 
           this._form.patchValue({
             startDate: this.selectedQuarter.startDate,
@@ -176,7 +187,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             isProcurement: !result.cost.clubbed ? this.selectedQuarter.isProcurement : result.cost.clubData.isProcurement,
             procurementHeads: !result.cost.clubbed ? this.selectedQuarter.procurementHeads : result.cost.clubData.procurementHeads,
             procurementMethod: !result.cost.clubbed ? this.selectedQuarter.procurementMethod : result.cost.clubData.procurementMethod,
-            procurementOptions: !result.cost.clubbed ? this.selectedQuarter.procurementOptions : result.cost.clubData.procurementOptions,
+            procurementOptions: !result.cost.clubbed ? this.selectedQuarter.procurementOptions : this.clubData.procurementOptions,
             rfSubmitData: this.selectedQuarter.rfSubmitData,
             target: this.selectedQuarter.target ? this.selectedQuarter.target : this.clubbed ? this.clubData.numOfActivities : 1,
             targetType: this.selectedQuarter.targetType ? this.selectedQuarter.targetType : null,
@@ -190,7 +201,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             uc: this.selectedQuarter.uc,
           }, { onlySelf: true });
 
-
+          this._changeDetectorRef.detectChanges();
           this.division = DIVISION.filter((c) => {
             if (this.selectedQuarter.province && (c.P_ID === this.selectedQuarter.province.P_ID))
               return c;
@@ -223,10 +234,16 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             this.currentQuarter = data.auth.currentQuarter;
             if ((this.quarter < this.currentQuarter) && this.currentQuarter) {
               this._form.disable({ onlySelf: true });
+              this.disableOptions = true;
             } else {
+              this.disableOptions = false;
               this._form.enable({ onlySelf: true });
             }
           })
+
+
+
+          // this.clubData.procurementOptions = this.selectedQuarter.procurementOptions;
 
           result.cost.clubbed ? this._form.controls['ndrmfShare'].disable({ onlySelf: true }) : this._form.controls['ndrmfShare'].enable({ onlySelf: true });
           result.cost.clubbed ? this._form.controls['ndrmfShare'].clearValidators() : this._form.controls['ndrmfShare'].setValidators([Validators.required]);
@@ -262,7 +279,6 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             this._form.controls['maleTarget'].setValidators([Validators.required]);
             this._form.controls['femaleTarget'].setValidators([Validators.required]);
           } else {
-
             this._form.controls['hectare'].clearValidators();
             this._form.controls['maleTarget'].clearValidators();
             this._form.controls['femaleTarget'].clearValidators();
@@ -277,6 +293,8 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
               this.selectedQuarter.procurementHeads !== undefined && this.selectedQuarter.procurementHeads.h_id))
               return c;
           });
+          if (this.clubData !== null)
+            this.clubData.procurementOptions = this.selectedQuarter.procurementOptions;
         }
         // PROGRESS CASE
         if (!this.updateFlag) {
@@ -410,6 +428,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   }
 
   submit() {
+    this.clubData.procurementOptions = this._form.controls['procurementOptions'].value;
     this._costDetailsStore.setDefaults(
       this.costTitle,
       this.quarter,

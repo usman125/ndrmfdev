@@ -289,3 +289,7 @@ mat-tree-node.active + mat-tree-node.active {
   font-size: 11px;
   color: #474b56;
 }
+
+.mne-quarters {
+  margin-left: 100px;
+}

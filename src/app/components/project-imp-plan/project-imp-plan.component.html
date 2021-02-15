@@ -93,40 +93,6 @@
       </div>
       <div class="d-flex align-items-center mb-3">
         <div *ngIf="!editClubFlag && selectedClub !== null" style="width: 100%;">
-          <!-- <div class="club-info">
-            <div class="row">
-              <div class="details col-md-3">
-                <span style="font-weight: 500;">Title: </span>
-                <span style="font-weight: 300;">{{selectedClub.title}}</span>
-              </div>
-              <div class="details col-md-3">
-                <span style="font-weight: 500;">Ndrmf Share: </span>
-                <span style="font-weight: 300;">{{selectedClub.ndrmfShare}}</span>
-              </div>
-              <div class="details col-md-3">
-                <span style="font-weight: 500;">Fip Share: </span>
-                <span style="font-weight: 300;">{{selectedClub.fipShare}}</span>
-              </div>
-              <div class="details col-md-3">
-                <span style="font-weight: 500;">Activities: </span>
-                <span style="font-weight: 300;">{{selectedClub?.numOfActivities}}</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="details col-md-4">
-                <span style="font-weight: 500;">Is Procurement: </span>
-                <span style="font-weight: 300;">{{selectedClub?.isProcurement ? 'Yes' : 'No'}}</span>
-              </div>
-              <div class="details col-md-4" *ngIf="selectedClub?.isProcurement">
-                <span style="font-weight: 500;">Head: </span>
-                <span style="font-weight: 300;">{{selectedClub?.procurementHeads.label}}</span>
-              </div>
-              <div class="details col-md-4" *ngIf="selectedClub?.isProcurement">
-                <span style="font-weight: 500;">Method: </span>
-                <span style="font-weight: 300;">{{selectedClub?.procurementMethod.label}}</span>
-              </div>
-            </div>
-          </div> -->
           <div class="row mt-3">
             <div class="col-md-3">
               <div class="general-info">
@@ -339,7 +305,7 @@
       <div class="all-tree">
         <div class="top-head">
           <div class="title" [ngClass]="{'po': loggedUser?.role !== 'fip'}">Activities</div>
-          <div class="top-quarters">
+          <div class="top-quarters" [ngClass]="{'mne-quarters': filterType === 'M & E'}">
             <div [matTooltip]="'Q '+object.quarter" class="item" *ngFor="let object of quarters">
               <span>{{object.quarter}}</span>
             </div>
@@ -478,10 +444,11 @@
                   </div>
                 </div>
                 <div *ngIf="filterType === 'M & E'" class="quarters">
-                  <div class="mne-item" [ngClass]="{'active': object.value === true}"
-                    *ngFor="let object of item.quarters">
+                  <div class="mne-item mne-info" [ngClass]="{'active': object.value === true}"
+                    *ngFor="let object of item.quarters; let i = index;">
                     <div class="hasdata" *ngIf="object.data">
-                      <div class="rfdata" *ngIf="object.data.rfSubmitData">
+                      <div class="rfdata" *ngIf="object.data.rfSubmitData && i === 1">
+                        <small>{{i}}</small>
                         <small><strong>Type: </strong>{{object.data.rfSubmitData.type}}</small>
                         <small><strong>Targets: </strong>{{object.data.rfSubmitData.targets}}</small>
                         <small><strong>Indicator: </strong>{{object.data.rfSubmitData.indicator}}</small>
@@ -489,6 +456,14 @@
                         <small><strong>Method: </strong>{{object.data.rfSubmitData.dataCollectionMethod}}</small>
                         <small><strong>Frequency: </strong>{{object.data.rfSubmitData.dataCollectionMethod1}}</small>
                       </div>
+                    </div>
+                  </div>
+                  <div class="mne-item" [ngClass]="{'active': object.value === true}"
+                    *ngFor="let object of item.quarters">
+                    <div class="hasdata" *ngIf="object.data">
+                      <span *ngIf="object.data.rfSubmitData">
+                        {{"Yes"}}
+                      </span>
                       <span *ngIf="!object.data.rfSubmitData">
                         {{"No"}}
                       </span>

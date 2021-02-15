@@ -172,9 +172,17 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       this._costDetailsStore.state$.subscribe(data => {
         if (data.cost && this.selectedQuarter !== null) {
           if (data.cost.update) {
-            console.log("****UPDATE DATA*****\n", data);
             this.selectedQuarter.data = data.cost.costData;
+            if (data.cost.clubbed) {
+              this.selectedQuarter.data.fipShare = data.cost.clubData.fipShare;
+              this.selectedQuarter.data.ndrmfShare = data.cost.clubData.ndrmfShare;
+              this.selectedQuarter.data.isProcurement = data.cost.clubData.isProcurement;
+              this.selectedQuarter.data.procurementHeads = data.cost.clubData.procurementHeads;
+              this.selectedQuarter.data.procurementMethod = data.cost.clubData.procurementMethod;
+              this.selectedQuarter.data.procurementOptions = data.cost.clubData.procurementOptions;
+            }
             // this.calculateActivityTotal();
+            console.log("****UPDATE DATA*****\n", data, this.selectedQuarter);
           } else {
             console.log("****UPDATE PROGRESS*****\n", data);
             this.selectedQuarter.progress = data.cost.progress;
@@ -440,6 +448,13 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       if (item.clubbed) {
         club = this.getClub(item.clubId);
         club ? item.totalCost = (club.fipShare + club.ndrmfShare) : null;
+        let object2 = {
+          value: {
+            h_id: club && club.procurementHeads !== null ? club.procurementHeads.h_id : null,
+          }
+        }
+        this.headChanged(object2);
+        console.log("CLUB ENTRY**********8:--", club);
         item.quarters = item.quarters.map((c) => {
           if (c.quarter === object.quarter) {
             return {
@@ -457,7 +472,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
                 isProcurement: club ? club.isProcurement : false,
                 procurementHeads: club ? club.procurementHeads : null,
                 procurementMethod: club ? club.procurementMethod : null,
-                procurementOptions: club ? club.procurementOptions : null,
+                procurementOptions: club ? this.selectedHeadOptions : null,
                 rfSubmitData: item.addRf ? this.getRfSubmitData(item.quarters) : null,
                 province: null,
                 district: null,
@@ -482,12 +497,12 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
           description: null,
           latitude: null,
           longitude: null,
-          ndrmfShare: null,
-          fipShare: null,
-          isProcurement: false,
-          procurementHeads: null,
-          procurementMethod: null,
-          procurementOptions: null,
+          ndrmfShare: club ? club.ndrmfShare : null,
+          fipShare: club ? club.fipShare : null,
+          isProcurement: club ? club.isProcurement : false,
+          procurementHeads: club ? club.procurementHeads : null,
+          procurementMethod: club ? club.procurementMethod : null,
+          procurementOptions: club ? this.selectedHeadOptions : null,
           rfSubmitData: item.addRf ? this.getRfSubmitData(item.quarters) : null,
           province: null,
           district: null,
@@ -501,7 +516,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
           hectare: null,
         }
       }
-      // this.clearCostDetails();
+      this.clearCostDetails();
     }
   }
 
@@ -997,6 +1012,10 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     });
     this.methods = headMethods;
     console.log("HEAD CHANGED:---", $event, headMethods);
+    this.selectedHeadOptions = this.options.filter(element => {
+      if (element.h_id.indexOf($event.value.h_id) >= 0)
+        return element;
+    });
   }
 
   methodChanged($event) {

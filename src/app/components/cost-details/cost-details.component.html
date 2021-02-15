@@ -452,43 +452,43 @@
             </span>
           </div>
           <div class="row mb-3" *ngIf="loggedUser?.role === 'fip'">
-            <div class="col-md-3">
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Progress</mat-label>
                 <input formControlName="financialProgress" matInput type="number" min="0" max="100">
               </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>{{'expenditure Ndrmf' | titlecase}}</mat-label>
                 <input formControlName="expenditureNdrmf" matInput type="number" min="0" max="100">
               </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>{{'expenditure Fip' | titlecase}}</mat-label>
                 <input formControlName="expenditureFip" matInput type="number" min="0" max="100">
               </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>{{'disbursed Ndrmf' | titlecase}}</mat-label>
                 <input formControlName="disbursedNdrmf" matInput type="number" min="0" max="100">
               </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>{{'contributed Fip' | titlecase}}</mat-label>
                 <input formControlName="contributedFip" matInput type="number" min="0" max="100">
               </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Amount</mat-label>
                 <input formControlName="financialProgressAmount" type="number" matInput>
               </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="financialProgressStatus">
@@ -543,18 +543,6 @@
                 <input formControlName="procProgress" matInput type="number" min="0" max="100">
               </mat-form-field>
             </div>
-            <div class="row mt-3" *ngIf="_form.controls['isProcurement'].value">
-              <div class="col-md-4"
-                *ngFor="let item of progressForm.controls['procProgressOptions'].value; let i = index;">
-                <span style="height:50px;display: block;width: 100%;">{{item.label}}</span>
-                <mat-form-field appearance="outline" class="mb-3">
-                  <input matInput placeholder="Choose A Date" [matDatepicker]="i" [(ngModel)]="item.planned"
-                    [ngModelOptions]="{standalone: true}">
-                  <mat-datepicker-toggle matSuffix [for]="i"></mat-datepicker-toggle>
-                  <mat-datepicker #i></mat-datepicker>
-                </mat-form-field>
-              </div>
-            </div>
             <div class="col-md-3">
               <mat-form-field appearance="outline">
                 <mat-label>Status</mat-label>
@@ -566,6 +554,17 @@
                 </mat-select>
               </mat-form-field>
             </div>
+            <div class="row mt-3" *ngIf="_form.controls['isProcurement'].value">
+              <div class="col-md-4" *ngFor="let item of _form.controls['procurementOptions'].value; let i = index;">
+                <span style="height:50px;display: block;width: 100%;">{{item.label}}</span>
+                <mat-form-field appearance="outline" class="mb-3">
+                  <input [disabled]="disableOptions" matInput placeholder="Choose A Date" [matDatepicker]="i"
+                    [(ngModel)]="item.actual" [ngModelOptions]="{standalone: true}">
+                  <mat-datepicker-toggle matSuffix [for]="i"></mat-datepicker-toggle>
+                  <mat-datepicker #i></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
         </div>
         <!-- SUBMITTED DETAILS -->
@@ -576,17 +575,6 @@
         </div>
         <form [formGroup]="_form">
           <div class="m-3">
-            <!-- <mat-checkbox labelPosition="'before'" formControlName="isProcurement">Is Procurement
-            </mat-checkbox> -->
-            <!-- <mat-form-field appearance="fill">
-              <mat-label>Procurement Heads</mat-label>
-              <mat-select multiple formControlName="procurementHeads">
-                <mat-option value="1">Head 1</mat-option>
-                <mat-option value="2">Head 2</mat-option>
-                <mat-option value="3">Head 3</mat-option>
-                <mat-option value="4">Head 4</mat-option>
-              </mat-select>
-            </mat-form-field> -->
             <div class="row">
               <div class="col-md-12 mb-3">
                 <mat-checkbox (change)="procurementChanged($event)" labelPosition="'before'"
@@ -621,7 +609,7 @@
               <div class="col-md-4" *ngFor="let item of _form.controls['procurementOptions'].value; let i = index;">
                 <span style="height:50px;display: block;width: 100%;">{{item.label}}</span>
                 <mat-form-field appearance="outline" class="mb-3">
-                  <input matInput placeholder="Choose A Date" [matDatepicker]="i" [(ngModel)]="item.planned"
+                  <input disabled matInput placeholder="Choose A Date" [matDatepicker]="i" [(ngModel)]="item.planned"
                     [ngModelOptions]="{standalone: true}">
                   <mat-datepicker-toggle matSuffix [for]="i"></mat-datepicker-toggle>
                   <mat-datepicker #i></mat-datepicker>
