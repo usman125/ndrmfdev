@@ -268,20 +268,18 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             this._form.controls['procurementOptions'].clearValidators();
           }
 
+          this._form.controls['hectare'].clearValidators();
+          this._form.controls['maleTarget'].clearValidators();
+          this._form.controls['femaleTarget'].clearValidators();
+
           if (this.selectedQuarter.targetType === 'land') {
             this._form.controls['hectare'].setValidators([Validators.required]);
-            this._form.controls['maleTarget'].clearValidators();
             this._form.controls['femaleTarget'].clearValidators();
-          }
-
-          else if (this.selectedQuarter.targetType === 'beneficiary') {
+            this._form.controls['maleTarget'].clearValidators();
+          } else if (this.selectedQuarter.targetType === 'beneficiary') {
             this._form.controls['hectare'].clearValidators();
             this._form.controls['maleTarget'].setValidators([Validators.required]);
             this._form.controls['femaleTarget'].setValidators([Validators.required]);
-          } else {
-            this._form.controls['hectare'].clearValidators();
-            this._form.controls['maleTarget'].clearValidators();
-            this._form.controls['femaleTarget'].clearValidators();
           }
 
 

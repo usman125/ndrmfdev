@@ -7,6 +7,7 @@ import { setCurrentProject } from "../../stores/projects/project-replay";
 // import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ProjectService } from "../../services/project.service";
 // import { DataFilterPipe } from "../../pipes/data-filter.pipe";
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-projects',
@@ -75,7 +76,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this._projectService.getAllProjects().subscribe(
       (result: any) => {
         console.log("RESULT ALL PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        let newResults = _.uniqBy(result, 'id');
+        this._projectsStore.addAllProjects(newResults);
       },
       error => {
         console.log("ERROR ALL PROJECT:---", error);
@@ -86,8 +88,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   getGiaProjects() {
     this._projectService.getGiaProjects().subscribe(
       (result: any) => {
-        console.log("RESULT ALL GIA PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        let newResults = _.uniqWith(result, _.isEqual);
+        console.log("RESULT ALL GIA PROJECT:---", result, newResults);
+        this._projectsStore.addAllProjects(newResults);
       },
       error => {
         console.log("ERROR ALL GIA PROJECT:---", error);
@@ -99,7 +102,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this._projectService.getExtAppraisalProjects().subscribe(
       (result: any) => {
         console.log("RESULT EXTENDED APPRAISAL PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        let newResults = _.uniqBy(result, 'id');
+        this._projectsStore.addAllProjects(newResults);
       },
       error => {
         console.log("ERROR EXTENDED APPRAISAL PROJECT:---", error);
@@ -111,7 +115,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this._projectService.getPoProjects().subscribe(
       (result: any) => {
         console.log("RESULT ALL PO PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        let newResults = _.uniqBy(result, 'id');
+        this._projectsStore.addAllProjects(newResults);
         // this.getExtAppraisalProjects();
       },
       error => {
@@ -124,7 +129,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this._projectService.getGmProjects().subscribe(
       (result: any) => {
         console.log("RESULT ALL GM PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        let newResults = _.uniqBy(result, 'id');
+        this._projectsStore.addAllProjects(newResults);
         // this.getExtAppraisalProjects();
       },
       error => {
@@ -137,7 +143,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this._projectService.getCeoProjects().subscribe(
       (result: any) => {
         console.log("RESULT ALL CEO PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        let newResults = _.uniqBy(result, 'id');
+        this._projectsStore.addAllProjects(newResults);
         // this.getExtAppraisalProjects();
       },
       error => {
@@ -150,7 +157,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this._projectService.getDmPamProjects().subscribe(
       (result: any) => {
         console.log("RESULT ALL DM PAM PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        let newResults = _.uniqBy(result, 'id');
+        this._projectsStore.addAllProjects(newResults);
       },
       error => {
         console.log("ERROR ALL DM PAM PROJECT:---", error);
