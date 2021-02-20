@@ -59,12 +59,12 @@ export class FillQprComponent implements OnInit {
         console.log("RESULT SINGLE REQUEST:---", result);
         this.selectedRequest = result;
         this.quarter = this.selectedRequest.quarter;
+        this._authStore.setCurrentQuarter(this.quarter);
         this._qprSectionsStore.addAllSections(result.sections);
         this._primaryAppraisalFormsStore.addSelectedProject({
           id: result.proposalRef,
           implementationPlan: JSON.parse(result.implementationPlan)
         });
-        this._authStore.setCurrentQuarter(result.quarter);
       },
       error => {
         console.log("RESULT SINGLE REQUEST:---", error);

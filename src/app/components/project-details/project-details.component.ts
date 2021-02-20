@@ -872,20 +872,6 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           gmResponse: null,
           fipResponse: null,
         }
-        // this._projectService.updateProposalOfferLetterStatus(
-        //   this.selectedProjectId,
-        //   'OFFER_LETTER',
-        //   'PENDING',
-        //   body
-        // ).subscribe(
-        //   (result: any) => {
-        //     console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", result);
-        //     this.files = [];
-        //   },
-        //   error => {
-        //     console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", error);
-        //   }
-        // );
         const fd = new FormData();
         fd.append(this.param, this.files[0].data);
         this._projectService.uploadFiles(
@@ -894,7 +880,21 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           fd
         ).subscribe(
           (result: any) => {
-            this.files = [];
+            this._projectService.updateProposalOfferLetterStatus(
+              this.selectedProjectId,
+              'OFFER_LETTER',
+              'PENDING',
+              body
+            ).subscribe(
+              (result: any) => {
+                console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", result);
+                this.files = [];
+              },
+              error => {
+                console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", error);
+              }
+            );
+            // this.files = [];
           },
           error => {
             console.log("ERROR AFTER OFFER LETTER FILE UPLOAD:--", error);

@@ -408,6 +408,38 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
         implementationPlan: object
       }
     });
+  }
 
+  addDelayedQuarter(costId, data, indexToAdd) {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        implementationPlan: {
+          ...this.state.selectedProject.implementationPlan,
+          costs: this.state.selectedProject.implementationPlan.costs.map((c, i) => {
+            if (c._id === costId) {
+              return {
+                ...c,
+                quarters: c.quarters.map((d, j) => {
+                  if (j === indexToAdd) {
+                    return {
+                      ...d,
+                      data: {
+                        ...data,
+                        delayed: true,
+                      },
+                      value: true,
+                    }
+                  }
+                  return d;
+                }),
+              }
+            }
+            return c;
+          })
+        }
+      }
+    });
   }
 }

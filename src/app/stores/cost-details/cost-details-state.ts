@@ -1,4 +1,5 @@
 const QPR = {
+  _id: null,
   title: null,
   quarter: null,
   costData: null,
@@ -7,10 +8,12 @@ const QPR = {
   clubbed: false,
   clubId: null,
   clubData: null,
+  progressSubmitted: null,
 }
 
 export class CostDetailsState {
   cost: {
+    _id: string,
     title: string,
     quarter: number,
     costData: any
@@ -19,5 +22,6 @@ export class CostDetailsState {
     clubbed: boolean,
     clubId: string,
     clubData: any,
+    progressSubmitted: boolean,
   } = QPR;
 }

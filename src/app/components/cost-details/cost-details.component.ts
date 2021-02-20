@@ -74,6 +74,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   options: any = [];
 
   disableOptions: boolean = false;
+  costId: any = null;
 
   // targetType: any = ['Beneficiary', 'Land']
 
@@ -155,6 +156,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
         this.progressForm.reset();
         this.rfSubmitData = null;
         this.selectedQuarter = result.cost.costData;
+        this.costId = result.cost._id;
         this.quarter = result.cost.quarter;
         this.costTitle = result.cost.title;
         this.updateFlag = result.cost.update;
@@ -201,7 +203,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
             uc: this.selectedQuarter.uc,
           }, { onlySelf: true });
 
-          this._changeDetectorRef.detectChanges();
+          // this._changeDetectorRef.detectChanges();
           this.division = DIVISION.filter((c) => {
             if (this.selectedQuarter.province && (c.P_ID === this.selectedQuarter.province.P_ID))
               return c;
@@ -232,7 +234,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
           this._authStore.state$.subscribe(data => {
             console.log("CURRENT QUARTER:--", data.auth.currentQuarter);
             this.currentQuarter = data.auth.currentQuarter;
-            if ((this.quarter < this.currentQuarter) && this.currentQuarter) {
+            if ((this.quarter !== this.currentQuarter) && this.currentQuarter) {
               this._form.disable({ onlySelf: true });
               this.disableOptions = true;
             } else {
@@ -347,7 +349,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
           this._authStore.state$.subscribe(data => {
             console.log("CURRENT QUARTER:--", data.auth.currentQuarter);
             this.currentQuarter = data.auth.currentQuarter;
-            if ((this.quarter > this.currentQuarter) && this.currentQuarter) {
+            if ((this.quarter !== this.currentQuarter) && this.currentQuarter) {
               this.progressForm.disable({ onlySelf: true });
             } else {
               this.progressForm.enable({ onlySelf: true });
@@ -375,18 +377,27 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
                 this.progressForm.controls['mneProgress'].enable({ onlySelf: true });
                 this.progressForm.controls['mneProgressStatus'].enable({ onlySelf: true });
               }
-              if (this.selectedQuarter.targetType === 'land') {
+              if (this.selectedQuarter.targetType !== null &&
+                this.selectedQuarter.targetType === 'land') {
                 this.progressForm.controls['generalMaleAchieved'].clearValidators();
                 this.progressForm.controls['generalFemaleAchieved'].clearValidators();
-                this.progressForm.controls['generalTotalAchieved'].clearValidators();
+                // this.progressForm.controls['generalTotalAchieved'].clearValidators();
                 // this.progressForm.controls['heactareAchieved'].setValidators([Validators.required]);
               }
-              if (this.selectedQuarter.targetType === 'beneficiary') {
+              if (this.selectedQuarter.targetType !== null &&
+                this.selectedQuarter.targetType === 'beneficiary') {
                 this.progressForm.controls['heactareAchieved'].clearValidators();
                 // this.progressForm.controls['generalMaleAchieved'].setValidators([Validators.required]);
                 // this.progressForm.controls['generalFemaleAchieved'].setValidators([Validators.required]);
                 // this.progressForm.controls['generalTotalAchieved'].setValidators([Validators.required]);
               }
+              // if (this.selectedQuarter.targetType !== 'beneficiary' &&
+              //   this.selectedQuarter.targetType !== 'land') {
+              //   this.progressForm.controls['generalMaleAchieved'].clearValidators();
+              //   this.progressForm.controls['generalFemaleAchieved'].clearValidators();
+              //   this.progressForm.controls['generalTotalAchieved'].clearValidators();
+              //   this.progressForm.controls['heactareAchieved'].clearValidators();
+              // }
             }
           });
         }
@@ -426,8 +437,11 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    this.clubData.procurementOptions = this._form.controls['procurementOptions'].value;
+    if (this.clubData) {
+      this.clubData.procurementOptions = this._form.controls['procurementOptions'].value;
+    }
     this._costDetailsStore.setDefaults(
+      this.costId,
       this.costTitle,
       this.quarter,
       this._form.value,
@@ -436,6 +450,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
       this.clubbed,
       this.clubData ? this.clubData._id : null,
       this.clubData,
+      false
     );
     this.costUpdated.emit({ 'costUpdated': true });
     // this.rfSubmitData = null;
@@ -444,6 +459,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   submitProgress() {
     console.log("PROGRESS SUBMITTED:---", this.progressForm.value);
     this._costDetailsStore.setDefaults(
+      this.costId,
       this.costTitle,
       this.quarter,
       this.selectedQuarter,
@@ -452,6 +468,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
       false,
       null,
       null,
+      true
     );
   }
 

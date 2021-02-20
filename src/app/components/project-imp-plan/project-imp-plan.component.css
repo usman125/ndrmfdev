@@ -121,6 +121,22 @@ mat-tree-node.active + mat-tree-node.active {
   margin: 0px 5px;
 }
 
+.quarters .item.active.delayed span,
+.quarters .finance-item.active.delayed span,
+.quarters .mne-item.active.delayed span,
+.quarters .proc-item.active.delayed span {
+  background-color: #f44336;
+  /* display: block; */
+}
+
+.quarters .item.active.font-small span,
+.quarters .finance-item.active.font-small span,
+.quarters .mne-item.active.font-small span,
+.quarters .proc-item.active.font-small span {
+  /* background-color: #f44336; */
+  /* display: block; */
+  font-size: 10px;
+}
 .quarters .item.active span,
 .quarters .finance-item.active span,
 .quarters .mne-item.active span,
@@ -130,6 +146,7 @@ mat-tree-node.active + mat-tree-node.active {
   border: 1px solid #e2e2e2;
   font-weight: 400;
   /* display: block; */
+  text-align: center;
 }
 
 .rfdata {
@@ -177,6 +194,11 @@ mat-tree-node.active + mat-tree-node.active {
   max-height: 400px;
   /* overflow: auto; */
   padding-top: 5px;
+}
+.mat-tree.heightAuto {
+  height: auto;
+  /* overflow: auto; */
+  /* padding-top: 5px; */
 }
 .mat-tree-node:nth-child(1) .form-group {
   border-top: 1px solid #ddd;
@@ -292,4 +314,22 @@ mat-tree-node.active + mat-tree-node.active {
 
 .mne-quarters {
   margin-left: 100px;
+}
+
+.rfData {
+  display: flex;
+}
+
+.rfData > span {
+  padding: 0px 10px;
+  margin: 0px 5px;
+  background: #f9f9f9;
+  color: #919191;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.rfData.font-small > span {
+  font-size: 10px;
 }

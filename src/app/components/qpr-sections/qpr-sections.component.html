@@ -4,8 +4,7 @@
       <mat-card class="m-20 mr-0">
         <mat-card-content>
           <div class="qpr-sections">
-            <div *ngFor="let item of qprSections; let i=index;"
-              [ngClass]="{'mt-5':i > 0}">
+            <div *ngFor="let item of qprSections; let i=index;" [ngClass]="{'mt-5':i > 0}">
               <!-- TOP SECTION INFO -->
               <div class="d-flex align-items-center justify-content-between mb-3">
                 <span class="d-flex align-items-center">
@@ -93,6 +92,15 @@
           <button *ngIf="loggedUser?.role === 'sme'" [disabled]="allLoading" mat-raised-button color="primary">
             Filter Current Task
           </button>
+          <div class="d-flex flex-column" *ngIf="loggedUser?.role === 'fip'">
+            <p>Before submitting please make sure to fill the selected Quarter progress and cross check the correct data
+              in follwoing report.
+              Selected Quarter is {{currentQuarter}}.
+            </p>
+            <button (click)="submitQpr()" [disabled]="allLoading" mat-raised-button color="primary">
+              Submit Qpr
+            </button>
+          </div>
         </mat-card-content>
       </mat-card>
 
@@ -102,109 +110,448 @@
 
 <mat-card class="m-20">
   <mat-card-content>
-    <table>
-      <thead>
-        <tr>
-          <th>Period</th>
-          <th colpan="3">
-        <tr>Allocations</tr>
-        <tr>Projected</tr>
-        <tr>C1</tr>
-        </th>
-        <th colpan="3">
-          <tr>Disbursment</tr>
-          <tr>Actual</tr>
-          <tr>C2</tr>
-        </th>
-        <th colpan="3">
-          <tr>Achieved</tr>
-          <tr>%</tr>
-          <tr>C3=C2/C1*100</tr>
-        </th>
-        <th colpan="3">
-          <tr>Expenditure</tr>
-          <tr>Actual</tr>
-          <tr>C4</tr>
-        </th>
-        <th colpan="3">
-          <tr>Achieved</tr>
-          <tr>%</tr>
-          <tr>C5=C4/C2*100</tr>
-        </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Q-{{qprSectionStats?.quarter}}</td>
-          <td>{{qprSectionStats?.ndrmfShare}}</td>
-          <td>
-            <mat-form-field appearance="outline">
-              <input [disabled]="loggedUser?.role !== 'fip'" placeholder="amount" type="number" matInput
-                [(ngModel)]="ndrmfDisbursment">
-            </mat-form-field>
-          </td>
-          <td></td>
-          <td>
-            <mat-form-field appearance="outline">
-              <input [disabled]="loggedUser?.role !== 'fip'" placeholder="amount" type="number" matInput
-                [(ngModel)]="ndrmfActual">
-            </mat-form-field>
-          </td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
-    <table>
-      <thead>
-        <tr>
-          <th>Period</th>
-          <th colpan="3">
-        <tr>Allocations</tr>
-        <tr>Projected</tr>
-        <tr>C1</tr>
-        </th>
-        <th colpan="3">
-          <tr>Contributions</tr>
-          <tr>Actual</tr>
-          <tr>C2</tr>
-        </th>
-        <th colpan="3">
-          <tr>Achieved</tr>
-          <tr>%</tr>
-          <tr>C3=C2/C1*100</tr>
-        </th>
-        <th colpan="3">
-          <tr>Expenditure</tr>
-          <tr>Actual</tr>
-          <tr>C4</tr>
-        </th>
-        <th colpan="3">
-          <tr>Achieved</tr>
-          <tr>%</tr>
-          <tr>C5=C4/C2*100</tr>
-        </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Q-{{qprSectionStats?.quarter}}</td>
-          <td>{{qprSectionStats?.fipShare}}</td>
-          <td>
-            <mat-form-field appearance="outline">
-              <input [disabled]="loggedUser?.role !== 'fip'" placeholder="amount" type="number" matInput
-                [(ngModel)]="fipContribution">
-            </mat-form-field>
-          </td>
-          <td></td>
-          <td>
-            <mat-form-field appearance="outline">
-              <input [disabled]="loggedUser?.role !== 'fip'" placeholder="amount" type="number" matInput
-                [(ngModel)]="fipActual">
-            </mat-form-field>
-          </td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
+    <p id="answer" class="p-2">2 Section – II: Quarterly Progress</p>
+    <div class="d-flex align-items-center rag-div table-header">
+      <span>Activity</span>
+      <span>
+        Deviation from Plan (if any)
+      </span>
+      <span>
+        Overall Conclusion
+      </span>
+    </div>
+    <div class="d-flex align-items-center rag-div table-row" *ngFor="let item of quarterCosts; let j = index;">
+      <span>{{item.title}}</span>
+      <span>
+        <mat-form-field appearance="outline">
+          <mat-label>Your Comments</mat-label>
+          <textarea [disabled]="loggedUser?.role !== 'fip'" rows="5" cols="30" placeholder="Write Here..." type="text" matInput
+            [(ngModel)]="item?.quarters[currentQuarter - 1].data.planDeviation"></textarea>
+        </mat-form-field>
+      </span>
+      <span>
+        <mat-form-field appearance="outline">
+          <mat-label>Your Comments</mat-label>
+          <textarea [disabled]="loggedUser?.role !== 'fip'" rows="5" cols="30" placeholder="Write Here..." type="text" matInput
+            [(ngModel)]="item?.quarters[currentQuarter - 1].data.overallConclusion"></textarea>
+        </mat-form-field>
+      </span>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="m-20">
+  <mat-card-content>
+    <p id="answer" class="p-2">3 Section – III: Financial progress</p>
+    <div class="mt-3 mb-3 d-flex align-items-center border-heading">
+      <span class="pl-2">
+        3.1 Project Expenditure
+      </span>
+    </div>
+    <p style="text-align: justify;" class="p-2">{{"The Project’s financial performance at the end of the quarter
+      under report, This includes:" +
+      ndrmfExpenditure + " million from NDRMF Share & " + fipExpenditure + " million from FIP share. Annex 2
+      provides a summary and detailed project expenditure."}}</p>
+    <div class="mt-3 mb-3 d-flex align-items-center border-heading">
+      <span class="pl-2">
+        3.2 Disbursement Performance
+      </span>
+    </div>
+    <p id="answer" class="p-2">NDRMF Share</p>
+    <div class="d-flex align-items-center rag-div table-header">
+      <span>Period</span>
+      <span>
+        Allocations Projected (C1)
+      </span>
+      <span>
+        Disbursment Actual (C2)
+      </span>
+      <span>
+        Achieved % (C3=C2/C1*100)
+      </span>
+      <span>
+        Expenditure Actual (C4)
+      </span>
+      <span>
+        Achieved % (C5=C4/C2*100)
+      </span>
+    </div>
+    <div class="d-flex align-items-center rag-div table-row">
+      <span>Q-{{currentQuarter}}</span>
+      <span>{{ndrmfAllocation}}</span>
+      <span>
+        {{ndrmfDisbursment}}
+      </span>
+      <span>
+        {{(ndrmfDisbursment/ndrmfAllocation) | percent}}
+      </span>
+      <span>
+        {{ndrmfExpenditure}}
+      </span>
+      <span>
+        {{(ndrmfExpenditure/ndrmfDisbursment) | percent}}
+      </span>
+    </div>
+    <p id="answer" class="p-2">FIP Share</p>
+    <div class="d-flex align-items-center rag-div table-header">
+      <span>Period</span>
+      <span>
+        Allocations Projected (C1)
+      </span>
+      <span>
+        Contributions Actual (C2)
+      </span>
+      <span>
+        Achieved % (C3=C2/C1*100)
+      </span>
+      <span>
+        Expenditure Actual (C4)
+      </span>
+      <span>
+        Achieved % (C5=C4/C2*100)
+      </span>
+    </div>
+    <div class="d-flex align-items-center rag-div table-row">
+      <span>Q-{{currentQuarter}}</span>
+      <span>{{fipAllocation}}</span>
+      <span>
+        {{fipContributed}}
+      </span>
+      <span>
+        {{(fipContributed/fipAllocation) | percent}}
+      </span>
+      <span>
+        {{fipExpenditure}}
+      </span>
+      <span>
+        {{(fipExpenditure/fipContributed) | percent}}
+      </span>
+    </div>
+    <small><small class="warn-comment">*</small> The contribution reported here should be coherent with financial
+      figures
+      reported in Table 2 of Annexure 2
+      viz. Financial Reports. Putting here total figure.</small>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="m-20" *ngIf="rfCosts">
+  <mat-card-content>
+    <p id="answer" class="p-2">5 Section – V: Tracking Table for Key Performance Indicators</p>
+    <div class="table-header rag-div justify-content-between d-flex align-items-center">
+      <span>Activity Name</span>
+      <span>
+        Outputs
+      </span>
+      <span>
+        Key Performance Indicator
+      </span>
+      <span>
+        Previous
+      </span>
+      <span>
+        Current
+      </span>
+      <span>Total</span>
+    </div>
+
+    <div class="d-flex rag-div justify-content-between align-items-center table-row"
+      *ngFor="let item of rfCosts; let j = index;">
+      <span>{{item.title}}</span>
+      <span>{{item.rfSubmitData.type}}</span>
+      <span>{{item.indicatorValue}}</span>
+      <span>{{getFipLastQuarter(item, 'RF')}}
+      </span>
+      <span>{{item?.quarters[currentQuarter - 1]?.progress?.generalTotalAchieved}}</span>
+      <span>{{(getFipLastQuarter(item, 'RF') + item?.quarters[currentQuarter -
+        1]?.progress?.generalTotalAchieved)}}</span>
+    </div>
+
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="m-20" *ngIf="procCosts">
+  <mat-card-content>
+    <p id="answer" class="p-2">6 Section – VI: Administration & Management</p>
+    <div class="mt-3 mb-3 d-flex align-items-center border-heading">
+      <span class="pl-2">
+        6.2 Summary of procurements
+      </span>
+    </div>
+    <div class="d-flex rag-div justify-content-between align-items-center table-header">
+
+      <span>Activity Name</span>
+      <span>
+        Estimated Amount (PKR)
+      </span>
+      <span>
+        Actual Contract Amount (PKR)
+      </span>
+      <span>
+        Estimated Award Date
+      </span>
+      <span>
+        Actual Award Date
+      </span>
+      <span>Payment Made</span>
+      <span>Remarks</span>
+    </div>
+
+    <div *ngFor="let obj of procCosts; let i = index;">
+      <span style="font-weight: 500; padding: 5px;display:block;" id="comment">{{getProcLabel(obj)}}</span>
+      <div class="d-flex rag-div justify-content-between align-items-center table-row"
+        *ngFor="let item of obj.children; let j = index;">
+        <span>{{item.title}}</span>
+        <span>{{item.ndrmfShare + item.fipShare}}</span>
+        <span>{{item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf + item?.quarters[currentQuarter -
+          1]?.progress?.expenditureFip}}</span>
+        <span>{{item.ndrmfShare + item.fipShare}}</span>
+        <span>{{item.ndrmfShare + item.fipShare}}</span>
+        <span>&nbsp;</span>
+        <span>&nbsp;</span>
+      </div>
+    </div>
+    <small><small class="warn-comment">*</small> Please fill the Quarter procurement Estimated & Actual Contract Award
+      Date
+      to view here.</small>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="m-20" *ngIf="allProjectCosts">
+  <mat-card-content>
+    <p id="answer" class="p-2">Annex – 1: Implementation Plan Tracking Sheet (RAG Status)</p>
+    <div class="mt-3 mb-3 d-flex align-items-center border-heading">
+      <span class="pl-2">
+        RAG REPORTING
+      </span>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <div class="general-info">
+          <span id="title">FIP</span>
+          <span id="value">
+            &nbsp;
+          </span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="general-info">
+          <span id="title">Reporting Period</span>
+          <span id="value" *ngIf="currentQuarter">
+            Quarter {{currentQuarter}}
+          </span>
+          <span id="value" *ngIf="!currentQuarter">
+            &nbsp;
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center rag-div table-header">
+      <span>Activity Name</span>
+      <span>
+        Start Date
+      </span>
+      <span>
+        End Date
+      </span>
+      <span>
+        Progress Update
+      </span>
+      <span>
+        Rag Status
+      </span>
+      <span>
+        % Completion
+      </span>
+      <span>
+        Comments
+      </span>
+    </div>
+
+
+    <div class="d-flex align-items-center rag-div table-row" *ngFor="let item of allProjectCosts; let j = index;">
+      <span>{{item.title}}</span>
+      <span>{{item?.quarters[currentQuarter - 1]?.data?.startDate | date:'shortDate'}}</span>
+      <span>{{item?.quarters[currentQuarter - 1]?.data?.endDate | date:'shortDate'}}</span>
+      <span>{{item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'inProgress' ?
+        'In Progress' : item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'onTime' ?
+        'Achieved' : item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'notAchieved' ?
+        'Delayed' : item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'delayed' ?
+        'Delayed' : 'Not Initiated'}}</span>
+      <span [ngClass]="{'inProgress': item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'inProgress',
+        'onTime': item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'onTime',
+        'notAchieved': item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'notAchieved',
+        'delayed': item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'delayed',
+        'notstart': item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === null}">
+        <!-- {{item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'inProgress' ?
+        'In Progress' : item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'onTime' ?
+        'Achieved On Time' : item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'notAchieved' ?
+        'Not Achieved' : item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'delayed' ?
+        'Delayed Achievement' : 'Activity Not Started Yet'}} -->
+        <!-- <small id="inProgress"
+          *ngIf="item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'inProgress'">
+          In Progress
+        </small>
+        <small id="onTime" *ngIf="item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'onTime'">
+          Achieved On Time
+        </small>
+        <small id="notAchieved"
+          *ngIf="item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'notAchieved'">
+          Not Achieved
+        </small>
+        <small id="delayed" *ngIf="item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === 'delayed'">
+          Delayed Achievement
+        </small>
+        <small id="notstart" *ngIf="item?.quarters[currentQuarter - 1]?.progress?.generalProgressStatus === null">
+          Activity Not Started Yet
+        </small> -->
+        &nbsp;
+      </span>
+      <span>{{item?.quarters[currentQuarter - 1]?.progress?.generalProgress}}</span>
+      <span>&nbsp;</span>
+    </div>
+    <div class="d-flex align-items-center mt-3" style="width: 100%;">
+      <span class="p-2" style="width:33%;color: #919191;font-weight: 600;">Key to Rag Rating</span>
+      <div class="d-flex flex-column" style="width:33%;">
+        <span class="p-2 delayed">Red</span>
+        <span class="p-2 inProgress">Amber</span>
+        <span class="p-2 onTime">Green</span>
+        <span class="p-2 notstart">Blue</span>
+      </div>
+      <div class="d-flex flex-column" style="width:33%;">
+        <span style="border-bottom: 1px solid #ddd;color: #919191;" class="p-2">Delayed / Not Achieved</span>
+        <span style="border-bottom: 1px solid #ddd;color: #919191;" class="p-2">In Progress</span>
+        <span style="border-bottom: 1px solid #ddd;color: #919191;" class="p-2">Achieved</span>
+        <span class="p-2" style="color: #919191;">Work Not Yet Initiated</span>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="m-20">
+  <mat-card-content>
+    <p id="answer" class="p-2">Annex 2: Financial reports: Table 1</p>
+    <div class="mt-3 mb-3 d-flex align-items-center border-heading">
+      <span class="pl-2">
+        Expenditure made from NDRMF share
+      </span>
+    </div>
+    <div class="d-flex align-items-center rag-div table-header">
+      <span>
+        Expenditure by Components
+      </span>
+      <span>
+        Total Budget Allocated
+      </span>
+      <span>
+        Expenditure upto Last Quarter
+      </span>
+      <span>
+        Expenditure during the Quarter
+      </span>
+      <span>
+        Cumulative Expenditure
+      </span>
+      <span>
+        Percentages
+        %
+      </span>
+      <span>
+        Closing Balance of NDRMF Account
+      </span>
+    </div>
+
+    <div *ngFor="let item of quarterCosts; let i = index;">
+      <div class="d-flex rag-div justify-content-between align-items-center table-row">
+        <span>{{item.title}}</span>
+        <span>{{item.quarters[currentQuarter - 1]?.data.ndrmfShare + item.quarters[currentQuarter -
+          1]?.data.fipShare}}</span>
+        <span>{{getFipLastQuarter(item, 'NDRMF')}}</span>
+        <span>{{item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf}}</span>
+        <span>{{getFipLastQuarter(item, 'NDRMF') +
+          item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf}}</span>
+        <span>{{(getFipLastQuarter(item, 'NDRMF') +
+          item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf)/(item.quarters[currentQuarter -
+          1]?.data.ndrmfShare + item.quarters[currentQuarter -
+          1]?.data.fipShare) | percent}}</span>
+        <span>{{(item.quarters[currentQuarter - 1]?.data.ndrmfShare + item.quarters[currentQuarter -
+          1]?.data.fipShare) - (getFipLastQuarter(item, 'NDRMF') +
+          item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf)}}</span>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center rag-div table-header">
+      <span>
+        Total
+      </span>
+      <span>
+        {{ndrmfExpenditure}}
+      </span>
+    </div>
+    <small> <small class="warn-comment">*</small> Includes categories to be financed by NDRMF Share</small>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="m-20">
+  <mat-card-content>
+    <p id="answer" class="p-2">Annex 2: Financial reports: Table 2</p>
+    <div class="mt-3 mb-3 d-flex align-items-center border-heading">
+      <span class="pl-2">
+        Expenditure made from FIP share
+      </span>
+    </div>
+
+    <div class="d-flex align-items-center rag-div table-header">
+      <span>
+        Expenditure by Components
+      </span>
+      <span>
+        Total Budget Allocated
+      </span>
+      <span>
+        Expenditure upto Last Quarter
+      </span>
+      <span>
+        Expenditure during the Quarter
+      </span>
+      <span>
+        Cumulative Expenditure
+      </span>
+      <span>
+        Percentages
+        %
+      </span>
+      <span>
+        Closing Balance of FIP Account
+      </span>
+    </div>
+    <div *ngFor="let item of quarterCosts; let i = index;">
+      <div class="d-flex rag-div justify-content-between align-items-center table-row">
+        <span>{{item.title}}</span>
+        <span>{{item.quarters[currentQuarter - 1]?.data.ndrmfShare + item.quarters[currentQuarter -
+          1]?.data.fipShare}}</span>
+        <span>{{getFipLastQuarter(item, 'FIP')}}</span>
+        <span>{{item?.quarters[currentQuarter - 1]?.progress?.expenditureFip}}</span>
+        <span>{{item?.quarters[currentQuarter - 1]?.progress?.expenditureFip +
+          getFipLastQuarter(item, 'FIP')}}</span>
+        <span>{{((item?.quarters[currentQuarter - 1]?.progress?.expenditureFip +
+          getFipLastQuarter(item, 'FIP'))/(item.quarters[currentQuarter - 1]?.data.ndrmfShare +
+          item.quarters[currentQuarter -
+          1]?.data.fipShare)) | percent}}</span>
+        <span>{{(item.quarters[currentQuarter - 1]?.data.ndrmfShare + item.quarters[currentQuarter -
+          1]?.data.fipShare) - (item?.quarters[currentQuarter - 1]?.progress?.expenditureFip +
+          getFipLastQuarter(item, 'FIP'))}}</span>
+      </div>
+    </div>
+    <div class="d-flex align-items-center rag-div table-header">
+      <span>
+        Total
+      </span>
+      <span>
+        {{fipExpenditure}}
+      </span>
+    </div>
+    <small> <small class="warn-comment">*</small> Includes categories to be financed by FIP Share</small>
   </mat-card-content>
 </mat-card>

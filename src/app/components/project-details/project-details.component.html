@@ -164,13 +164,13 @@
                                 || selectedProject?.offerLetter?.gmStatus === 'Pending'" color="accent" selected>
               Marked To GM
             </mat-chip>
-            <mat-chip *ngIf="selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
-                        || selectedProject?.offerLetter?.gmStatus === 'Pending' && 
+            <mat-chip *ngIf="(selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
+                        || selectedProject?.offerLetter?.gmStatus === 'Pending') && 
                         selectedProject?.offerLetter?.status !== 'Expired'" color="primary" selected>
               Pending: {{selectedProject?.offerLetter?.offerLetterDays}} Days Remaining
             </mat-chip>
-            <mat-chip *ngIf="selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
-                        || selectedProject?.offerLetter?.gmStatus === 'Pending' && 
+            <mat-chip *ngIf="(selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
+                        || selectedProject?.offerLetter?.gmStatus === 'Pending') && 
                         selectedProject?.offerLetter?.status === 'Expired'" color="primary" selected>
               Expired: {{selectedProject?.offerLetter?.offerLetterDays}} Days Ago
             </mat-chip>
@@ -201,21 +201,26 @@
             </ul>
             <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple"
               accept="{{accept}}" style="display: none;" />
-            <button mat-raised-button color="warn" (click)="uploadFile()">
+            <button [disabled]="(selectedProject?.offerLetter?.gmResponse === 'Approved' && 
+          selectedProject?.offerLetter?.fipResponse === 'Approved')" mat-raised-button color="warn"
+              (click)="uploadFile()">
               <mat-icon>file_upload</mat-icon>
               {{'Select Offer Letter File(s)'}}
             </button>
           </div>
         </mat-card-content>
         <mat-card-actions>
-          <button [disabled]="files.length === 0" mat-button color="accent" (click)="uploadOfferLetter()">
+          <button [disabled]="files.length === 0 || (selectedProject?.offerLetter?.gmResponse === 'Approved' && 
+          selectedProject?.offerLetter?.fipResponse === 'Approved')" mat-button color="accent"
+            (click)="uploadOfferLetter()">
             {{'assign for signing' | uppercase}}
             <mat-icon class="ml-2">gesture</mat-icon>
           </button>
           <button mat-button color="warn" (click)="markOfferLetterToFip()" *ngIf="selectedProject?.offerLetter"
             [disabled]="selectedProject?.offerLetter?.gmResponse === null || 
             selectedProject?.offerLetter?.fipStatus === 'Pending' || 
-            selectedProject?.offerLetter?.fipMarkingStatus === 'Pending'">
+            selectedProject?.offerLetter?.fipMarkingStatus === 'Pending' || (selectedProject?.offerLetter?.gmResponse === 'Approved' && 
+          selectedProject?.offerLetter?.fipResponse === 'Approved')">
             {{'MARK TO FIP' | uppercase}}
           </button>
         </mat-card-actions>
@@ -239,13 +244,13 @@
             || selectedProject?.offerLetter?.gmStatus === 'Pending'" color="primary" selected>
               Marked To GM
             </mat-chip>
-            <mat-chip *ngIf="selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
-                                    || selectedProject?.offerLetter?.gmStatus === 'Pending' && 
+            <mat-chip *ngIf="(selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
+                                    || selectedProject?.offerLetter?.gmStatus === 'Pending') && 
                                     selectedProject?.offerLetter?.status !== 'Expired'" color="primary" selected>
               Pending: {{selectedProject?.offerLetter?.offerLetterDays}} Days Remaining
             </mat-chip>
-            <mat-chip *ngIf="selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
-                                    || selectedProject?.offerLetter?.gmStatus === 'Pending' && 
+            <mat-chip *ngIf="(selectedProject?.offerLetter?.gmMarkingStatus === 'Pending'
+                                    || selectedProject?.offerLetter?.gmStatus === 'Pending') && 
                                     selectedProject?.offerLetter?.status === 'Expired'" color="primary" selected>
               Expired: {{selectedProject?.offerLetter?.offerLetterDays}} Days Ago
             </mat-chip>
@@ -268,14 +273,14 @@
           <div *ngIf="selectedProject?.offerLetter">
             <button mat-button color="accent" (click)="approveOfferLetter()" [disabled]="selectedProject?.offerLetter?.gmMarkingStatus === null || 
               selectedProject?.offerLetter?.gmMarkingStatus === 'Completed' || selectedProject?.offerLetter?.gmStatus === null || 
-              selectedProject?.offerLetter?.gmStatus === 'Completed'
-              ">
+              selectedProject?.offerLetter?.gmStatus === 'Completed' || (selectedProject?.offerLetter?.gmResponse === 'Approved' && 
+          selectedProject?.offerLetter?.fipResponse === 'Approved')">
               {{'Approve Offer Letter' | uppercase}}
             </button>
             <button mat-button color="warn" (click)="disApproveOfferLetter()" [disabled]="selectedProject?.offerLetter?.gmMarkingStatus === null || 
               selectedProject?.offerLetter?.gmMarkingStatus === 'Completed' || selectedProject?.offerLetter?.gmStatus === null || 
-              selectedProject?.offerLetter?.gmStatus === 'Completed'
-              ">
+              selectedProject?.offerLetter?.gmStatus === 'Completed' || (selectedProject?.offerLetter?.gmResponse === 'Approved' && 
+          selectedProject?.offerLetter?.fipResponse === 'Approved')">
               {{'Disapprove Offer Letter' | uppercase}}
             </button>
           </div>
@@ -1215,13 +1220,15 @@
               <button mat-button color="accent" (click)="fipApproveOfferLetter()" [disabled]="selectedProject?.offerLetter?.fipMarkingStatus === null || 
                       selectedProject?.offerLetter?.fipMarkingStatus === 'Completed' || selectedProject?.offerLetter?.fipStatus === null || 
                       selectedProject?.offerLetter?.fipStatus === 'Completed' || 
-                      selectedProject?.offerLetter?.status === 'Expired'">
+                      selectedProject?.offerLetter?.status === 'Expired' || (selectedProject?.offerLetter?.gmResponse === 'Approved' && 
+          selectedProject?.offerLetter?.fipResponse === 'Approved')">
                 {{'Approve Offer Letter' | uppercase}}
               </button>
               <button mat-button color="warn" (click)="fipDisApproveOfferLetter()" [disabled]="selectedProject?.offerLetter?.fipMarkingStatus === null || 
                       selectedProject?.offerLetter?.fipMarkingStatus === 'Completed' || selectedProject?.offerLetter?.fipStatus === null || 
                       selectedProject?.offerLetter?.fipStatus === 'Completed' || 
-                      selectedProject?.offerLetter?.status === 'Expired'">
+                      selectedProject?.offerLetter?.status === 'Expired' || (selectedProject?.offerLetter?.gmResponse === 'Approved' && 
+          selectedProject?.offerLetter?.fipResponse === 'Approved')">
                 {{'Disapprove Offer Letter' | uppercase}}
               </button>
             </div>

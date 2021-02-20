@@ -92,7 +92,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   @Input() show: any;
   @Input() detailBtn: any;
   @Input() proMonths: any = null;
-  // @Input() giaFilter: any = null;
+  @Input() giaView: any;
   @Input()
   giaProcFilter: Observable<any>;
 
@@ -667,6 +667,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     }
     // this.set
     this._costDetailsStore.setDefaults(
+      item._id,
       item.title,
       object.quarter,
       object.data,
@@ -675,6 +676,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       item.clubbed || false,
       item.clubId || null,
       this.getClubData(item.clubId) || null,
+      false
     );
     document.querySelector('#myTopElement5').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
@@ -705,6 +707,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     }
     this.selectedQuarter = object;
     this._costDetailsStore.setDefaults(
+      item._id,
       item.title,
       object.quarter,
       object.data,
@@ -713,6 +716,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       item.clubbed || false,
       item.clubId || null,
       this.getClubData(item.clubId) || null,
+      false
     );
     document.querySelector('#myTopElement5').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
@@ -761,10 +765,12 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       null,
       null,
       null,
+      null,
       true,
       false,
       null,
-      null
+      null,
+      false,
     );
     this.Subscription.unsubscribe();
   }
@@ -775,10 +781,12 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       null,
       null,
       null,
+      null,
       true,
       false,
       null,
-      null
+      null,
+      false,
     );
   }
 
@@ -1090,10 +1098,12 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       null,
       null,
       null,
+      null,
       true,
       false,
       null,
-      null
+      null,
+      false,
     );
   }
 
@@ -1109,5 +1119,34 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       return o1.h_id === o2.h_id;
     }
     return false;
+  }
+
+  getCostRfInfo(item) {
+    for (let i = 0; i < item.quarters.length; i++) {
+      let x = item.quarters[i];
+      if (x.value && x.data) {
+        console.log("COST RF INFO IS:---", x.data);
+        if (x.data.rfSubmitData !== null) {
+          var output = null;
+          var subOutput = null;
+          var indicator = null;
+          var indicatorValue = null;
+          if (x.data.rfSubmitData.type === "output") {
+            output = x.data.rfSubmitData.selectOutput ? x.data.rfSubmitData.selectOutput.split('-')[1] : null;
+            subOutput = output ? x.data.rfSubmitData['subOutputs' + output] : null;
+            indicator = subOutput ? subOutput.split('-')[1] : null;
+            indicatorValue = indicator ? x.data.rfSubmitData['indicator' + indicator] : 'Unknown-Kpi';
+          }
+          return {
+            type: x.data.rfSubmitData.type,
+            target: x.data.target,
+            indicator: indicatorValue,
+            baseline: x.data.rfSubmitData.baseline,
+            dataCollectionMethod: x.data.rfSubmitData.dataCollectionMethod,
+            dataCollectionMethod1: x.data.rfSubmitData.dataCollectionMethod1,
+          }
+        }
+      }
+    }
   }
 }

@@ -335,7 +335,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
                 result => {
                   console.log("RESULT SAVING THEMATIC AREAS:--", result);
                   const options = {
-                    title: 'Thematic areas defined successfully!',
+                    title: 'Qualification request will be saved as Joint Venture!',
                     cancelText: 'CANCEL',
                     confirmText: 'OK',
                     add: true,

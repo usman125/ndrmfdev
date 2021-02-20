@@ -11,7 +11,7 @@
     </button>
   </mat-toolbar-row>
 </mat-toolbar>
-<div class="row">
+<div class="row" *ngIf="selectedProject?.gia?.processOwner.id !== loggedUser?.id">
   <div class="col-md-8 pr-0">
     <div *ngIf="viewType === 'add-gia'" class="m-20 mb-0" style="background-color: #fff;">
       <angular-editor [config]="config" [placeholder]="'Enter text here...'" [(ngModel)]="content"></angular-editor>
@@ -150,7 +150,7 @@
             </button>
           </h5>
           <div class="action-btns">
-            <button *ngIf="viewType==='add-gia'" (click)=" submitGia()" [disabled]="appraisalDoc.length === 0"
+            <button *ngIf="viewType==='add-gia' && selectedProject?.gia?.processOwner.id !== loggedUser?.id" (click)=" submitGia()" [disabled]="appraisalDoc.length === 0"
               color="primary" mat-raised-button>
               SAVE GIA
             </button>
@@ -186,19 +186,23 @@
                     && form.id !== 'pip-finance' && form.id !== 'pip-mne'" [form]="form.template"
                       [submission]="{data: form.data}" readOnly="true"></formio>
                     <div *ngIf="form.id === 'pip'">
-                      <app-project-imp-plan [detailBtn]="detailBtn" [proMonths]="proMonths" [show]="giaGeneralFilter">
+                      <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn"
+                        [proMonths]="proMonths" [show]="giaGeneralFilter">
                       </app-project-imp-plan>
                     </div>
                     <div *ngIf="form.id === 'pip-proc'">
-                      <app-project-imp-plan [detailBtn]="detailBtn" [proMonths]="proMonths" [show]="giaProcFilter">
+                      <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn"
+                        [proMonths]="proMonths" [show]="giaProcFilter">
                       </app-project-imp-plan>
                     </div>
                     <div *ngIf="form.id === 'pip-finance'">
-                      <app-project-imp-plan [detailBtn]="detailBtn" [proMonths]="proMonths" [show]="giaFinanceFilter">
+                      <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn"
+                        [proMonths]="proMonths" [show]="giaFinanceFilter">
                       </app-project-imp-plan>
                     </div>
                     <div *ngIf="form.id === 'pip-mne'">
-                      <app-project-imp-plan [detailBtn]="detailBtn" [proMonths]="proMonths" [show]="giaMneFilter">
+                      <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn"
+                        [proMonths]="proMonths" [show]="giaMneFilter">
                       </app-project-imp-plan>
                     </div>
                   </div>
@@ -208,7 +212,7 @@
           </div>
         </mat-card-content>
         <mat-card-actions style="padding: 6px;">
-          <button *ngIf="viewType === 'add-gia'" (click)="submitGia()" [disabled]="appraisalDoc.length === 0"
+          <button *ngIf="viewType === 'add-gia' && selectedProject?.gia?.processOwner.id !== loggedUser?.id" (click)="submitGia()" [disabled]="appraisalDoc.length === 0"
             color="primary" mat-raised-button>
             SAVE GIA
           </button>

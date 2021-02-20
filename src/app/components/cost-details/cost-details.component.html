@@ -9,6 +9,9 @@
       <mat-chip color="warn" selected>Clubbed Entry</mat-chip>
       <mat-chip color="accent" selected>{{clubData.title}}</mat-chip>
     </mat-chip-list>
+    <mat-chip-list aria-label="Club Info" *ngIf="selectedQuarter?.delayed">
+      <mat-chip color="warn" selected>Activity Delayed Quarter</mat-chip>
+    </mat-chip-list>
   </div>
   <form [formGroup]="_form" (ngSubmit)="submit()" *ngIf="_form && updateFlag">
     <mat-tab-group [(selectedIndex)]="selectedIndex" (selectedTabChange)="onTabChanged($event);">
@@ -244,9 +247,6 @@
         <div class="m-3">
           <!-- FIP FORM PROGRESS -->
           <div class="mt-3 mb-3 d-flex align-items-center border-heading">
-            <!-- <mat-icon>
-              settings_applications
-            </mat-icon> -->
             <span class="pl-2">
               Progress
             </span>
@@ -271,7 +271,7 @@
               </mat-form-field>
             </div>
             <div class="col-md-4">
-              <mat-form-field appearance="outline" *ngIf="selectedQuarter?.targetType === 'beneficiary'">
+              <mat-form-field appearance="outline">
                 <mat-label>Total Achieved</mat-label>
                 <input formControlName="generalTotalAchieved" matInput type="number" min="0" max="100">
               </mat-form-field>
@@ -665,4 +665,6 @@
       <button [disabled]="!progressForm.valid" mat-raised-button color="primary" type="submit">Submit</button>
     </div>
   </form>
+  <small><small class="warn-comment">*</small> Facing difficulty with Submit button please select Quarter again.
+    Further, you cannot submit if the quarter details are pending.</small>
 </div>

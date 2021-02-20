@@ -9,6 +9,7 @@ export class CostDetailsStore extends Store<CostDetailsState> {
   }
 
   setDefaults(
+    _id,
     title,
     quarter,
     costData,
@@ -17,11 +18,13 @@ export class CostDetailsStore extends Store<CostDetailsState> {
     clubbed,
     clubId,
     clubData,
+    progressSubmitted,
   ): void {
     this.setState({
       ...this.state,
       cost: {
         ...this.state.cost,
+        _id: _id,
         costData: costData,
         title: title,
         quarter: quarter,
@@ -30,6 +33,7 @@ export class CostDetailsStore extends Store<CostDetailsState> {
         clubId: clubId,
         progress: progress,
         clubData: clubData,
+        progressSubmitted: progressSubmitted,
       }
     });
   }
