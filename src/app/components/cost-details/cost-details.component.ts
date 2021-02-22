@@ -640,6 +640,17 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     // console.log("METHOD CHANGED:---", $event, this.options);
   }
 
+  calculateDaysDifference(item, actualDate, expectedDate) {
+    var date1 = new Date(actualDate);
+    var date2 = new Date(expectedDate);
+    // To calculate the time difference of two dates 
+    var Difference_In_Time = date1.getTime() - date2.getTime();
+    // To calculate the no. of days between two dates 
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    item.variance = Difference_In_Days;
+    console.log("ITEM VARIENCE IS:---", Math.trunc(Difference_In_Days), item)
+  }
+
   ngOnDestroy() {
     this.Subscription.unsubscribe();
   }

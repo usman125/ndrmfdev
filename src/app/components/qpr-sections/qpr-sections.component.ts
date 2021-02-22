@@ -444,6 +444,16 @@ export class QprSectionsComponent implements OnInit {
     return null;
   }
 
+  getProcEstimates(items, type) {
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].label === 'Contract Award') {
+        return type === 'planned' ?
+          { date: items[i].planned, reason: items[i].reason } :
+          { date: items[i].actual, reason: items[i].reason };
+      }
+    }
+  }
+
   submitQpr() {
     for (let i = 0; i < this.allProjectCosts.length; i++) {
       let x = this.allProjectCosts[i];

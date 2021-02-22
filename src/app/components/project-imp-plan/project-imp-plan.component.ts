@@ -180,6 +180,19 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
               this.selectedQuarter.data.procurementHeads = data.cost.clubData.procurementHeads;
               this.selectedQuarter.data.procurementMethod = data.cost.clubData.procurementMethod;
               this.selectedQuarter.data.procurementOptions = data.cost.clubData.procurementOptions;
+              if (this.selectedActivity !== null) {
+                let flag = false;
+                let firstIndex = null;
+                for (let i = 0; i < this.selectedActivity.quarters.length; i++) {
+                  let key = this.selectedActivity.quarters[i];
+                  if (key.data !== null && key.value && !flag) {
+                    firstIndex = i;
+                    flag = true;
+                  } else if (key.data !== null && key.value) {
+                    key.data.target = this.selectedActivity.quarters[firstIndex].data.target;
+                  }
+                }
+              }
             }
             // this.calculateActivityTotal();
             console.log("****UPDATE DATA*****\n", data, this.selectedQuarter);

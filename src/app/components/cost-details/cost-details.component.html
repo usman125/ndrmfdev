@@ -556,12 +556,29 @@
             </div>
             <div class="row mt-3" *ngIf="_form.controls['isProcurement'].value">
               <div class="col-md-4" *ngFor="let item of _form.controls['procurementOptions'].value; let i = index;">
-                <span style="height:50px;display: block;width: 100%;">{{item.label}}</span>
-                <mat-form-field appearance="outline" class="mb-3">
-                  <input [disabled]="disableOptions" matInput placeholder="Choose A Date" [matDatepicker]="i"
+                <span id="answer" style="height:50px;display: block;width: 100%;">{{item.label}}</span>
+                <mat-form-field appearance="outline">
+                  <input (dateChange)="calculateDaysDifference(item, item.actual, item.planned)"
+                    [disabled]="disableOptions" matInput placeholder="Choose A Date" [matDatepicker]="i"
                     [(ngModel)]="item.actual" [ngModelOptions]="{standalone: true}">
                   <mat-datepicker-toggle matSuffix [for]="i"></mat-datepicker-toggle>
                   <mat-datepicker #i></mat-datepicker>
+                </mat-form-field>
+                <div class="d-flex mt-2 mb-2">
+                  <div class="general-info">
+                    <span id="title">Variance</span>
+                    <span id="value" *ngIf="item.variance !== null">
+                      {{item.variance}} Day(s)
+                    </span>
+                    <span id="value" *ngIf="item.variance === null">
+                      &nbsp;
+                    </span>
+                  </div>
+                </div>
+                <mat-form-field class="mb-3" appearance="outline">
+                  <mat-label>Reason</mat-label>
+                  <textarea [ngModelOptions]="{standalone: true}" [(ngModel)]="item.reason" matInput
+                     rows="3" cols="5"></textarea>
                 </mat-form-field>
               </div>
             </div>

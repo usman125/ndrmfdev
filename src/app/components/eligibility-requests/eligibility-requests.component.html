@@ -100,7 +100,8 @@
         <div class="top-controls">
           <div class="fullbtn">
             <button *ngIf="!loadingApi" (click)="markEligibleFlag()" color="primary" class="control-btn"
-              mat-raised-button [disabled]="selectedRequest?.status === 'Approved'">
+              mat-raised-button [disabled]="(selectedRequest?.status === 'Rejected' || 
+              selectedRequest?.status === 'Approved')">
               {{"Mark Eligible"}}
             </button>
             <button [disabled]="selectedRequest?.status === 'Rejected'" *ngIf="!loadingApi" (click)="markUnEligible()"

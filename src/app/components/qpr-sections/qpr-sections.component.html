@@ -125,15 +125,15 @@
       <span>
         <mat-form-field appearance="outline">
           <mat-label>Your Comments</mat-label>
-          <textarea [disabled]="loggedUser?.role !== 'fip'" rows="5" cols="30" placeholder="Write Here..." type="text" matInput
-            [(ngModel)]="item?.quarters[currentQuarter - 1].data.planDeviation"></textarea>
+          <textarea [disabled]="loggedUser?.role !== 'fip'" rows="5" cols="30" placeholder="Write Here..." type="text"
+            matInput [(ngModel)]="item?.quarters[currentQuarter - 1].data.planDeviation"></textarea>
         </mat-form-field>
       </span>
       <span>
         <mat-form-field appearance="outline">
           <mat-label>Your Comments</mat-label>
-          <textarea [disabled]="loggedUser?.role !== 'fip'" rows="5" cols="30" placeholder="Write Here..." type="text" matInput
-            [(ngModel)]="item?.quarters[currentQuarter - 1].data.overallConclusion"></textarea>
+          <textarea [disabled]="loggedUser?.role !== 'fip'" rows="5" cols="30" placeholder="Write Here..." type="text"
+            matInput [(ngModel)]="item?.quarters[currentQuarter - 1].data.overallConclusion"></textarea>
         </mat-form-field>
       </span>
     </div>
@@ -292,7 +292,6 @@
       <span>
         Actual Award Date
       </span>
-      <span>Payment Made</span>
       <span>Remarks</span>
     </div>
 
@@ -304,10 +303,17 @@
         <span>{{item.ndrmfShare + item.fipShare}}</span>
         <span>{{item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf + item?.quarters[currentQuarter -
           1]?.progress?.expenditureFip}}</span>
-        <span>{{item.ndrmfShare + item.fipShare}}</span>
-        <span>{{item.ndrmfShare + item.fipShare}}</span>
-        <span>&nbsp;</span>
-        <span>&nbsp;</span>
+        <span>
+          {{getProcEstimates(item?.quarters[currentQuarter - 1]?.data.procurementOptions, 'planned').date |
+          date:'shortDate'}}
+        </span>
+        <span>
+          {{getProcEstimates(item?.quarters[currentQuarter - 1]?.data.procurementOptions, 'actual').date |
+          date:'shortDate'}}
+        </span>
+        <span>
+          {{getProcEstimates(item?.quarters[currentQuarter - 1]?.data.procurementOptions, 'planned').reason}}
+        </span>
       </div>
     </div>
     <small><small class="warn-comment">*</small> Please fill the Quarter procurement Estimated & Actual Contract Award

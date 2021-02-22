@@ -350,6 +350,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+
+
   getSelectedValues(item) {
     return item;
   }

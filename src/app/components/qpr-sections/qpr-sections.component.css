@@ -79,3 +79,11 @@ span.notAchieved {
 span.onTime {
   background: #01b050;
 }
+
+.rag-div span > .proc-estimates span {
+  display: none;
+}
+
+.rag-div span > .proc-estimates span.proc-active {
+  display: block !important;
+}

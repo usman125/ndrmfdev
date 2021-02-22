@@ -11,7 +11,7 @@
     </button>
   </mat-toolbar-row>
 </mat-toolbar>
-<div class="row" *ngIf="selectedProject?.gia?.processOwner.id !== loggedUser?.id">
+<div class="row" *ngIf="selectedProject?.gia?.processOwner.id === loggedUser?.id">
   <div class="col-md-8 pr-0">
     <div *ngIf="viewType === 'add-gia'" class="m-20 mb-0" style="background-color: #fff;">
       <angular-editor [config]="config" [placeholder]="'Enter text here...'" [(ngModel)]="content"></angular-editor>
@@ -150,8 +150,8 @@
             </button>
           </h5>
           <div class="action-btns">
-            <button *ngIf="viewType==='add-gia' && selectedProject?.gia?.processOwner.id !== loggedUser?.id" (click)=" submitGia()" [disabled]="appraisalDoc.length === 0"
-              color="primary" mat-raised-button>
+            <button *ngIf="viewType==='add-gia' && selectedProject?.gia?.processOwner.id === loggedUser?.id"
+              (click)=" submitGia()" [disabled]="appraisalDoc.length === 0" color="primary" mat-raised-button>
               SAVE GIA
             </button>
           </div>
@@ -173,7 +173,8 @@
             <div *ngFor="let item of appraisalDoc;let i = index;">
               <div class="appraisal-box">
                 <div class="remove-btn">
-                  <button *ngIf="viewType === 'add-gia'" (click)="removeEntry(i)" color="warn" mat-icon-button>
+                  <button [disabled]="loggedUser?.id !== selectedProject?.gia.processOwner.id"
+                    *ngIf="viewType === 'add-gia'" (click)="removeEntry(i)" color="warn" mat-icon-button>
                     <mat-icon>close</mat-icon>
                   </button>
                 </div>
@@ -212,8 +213,8 @@
           </div>
         </mat-card-content>
         <mat-card-actions style="padding: 6px;">
-          <button *ngIf="viewType === 'add-gia' && selectedProject?.gia?.processOwner.id !== loggedUser?.id" (click)="submitGia()" [disabled]="appraisalDoc.length === 0"
-            color="primary" mat-raised-button>
+          <button *ngIf="viewType === 'add-gia' && selectedProject?.gia?.processOwner.id === loggedUser?.id"
+            (click)="submitGia()" [disabled]="appraisalDoc.length === 0" color="primary" mat-raised-button>
             SAVE GIA
           </button>
         </mat-card-actions>
