@@ -56,6 +56,8 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   public loggedUser: any = null;
   public loadingApi: boolean = false;
 
+  selectedRequest: any = null;
+
   panelOpenState = false;
 
   @ViewChild('group') group;
@@ -318,6 +320,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
               let object = {
                 areas: [],
                 availableAsJv: null,
+                jvUserId: confirmed.jvUserId
               }
               let areasId = [];
               // if(confirmed)
@@ -335,7 +338,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
                 result => {
                   console.log("RESULT SAVING THEMATIC AREAS:--", result);
                   const options = {
-                    title: 'Qualification request will be saved as Joint Venture!',
+                    title: 'Qualification will be saved with provided prefrences!',
                     cancelText: 'CANCEL',
                     confirmText: 'OK',
                     add: true,
@@ -377,7 +380,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
                     }
                   );
                 }
-              )
+              );
             }
           });
         },

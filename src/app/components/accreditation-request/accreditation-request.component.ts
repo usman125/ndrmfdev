@@ -485,7 +485,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
                   );
                 }
               }
-              this.formReviewObjects.push(jsonObject);
+              if (this.formSubmission[jsonObject.key])
+                this.formReviewObjects.push(jsonObject);
             }
             // console.log("FORM REVIEW OBJECT:---", form, this.formSubmission, this.formReviewObjects, contentElements, formElements);
             if (c.review) {
@@ -501,7 +502,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
                 }
                 // }
               }
-              // console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects);
+              console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects, this.formSubmission);
               // this.generalComments = c.review.comments;
             }
           }
@@ -528,7 +529,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
           }
         })
         this.totalFormScore = count;
-        // console.log("RESULT QUALIFICATION SME:--", this.userReviewRequests);
+        // console.log("RESULT QUALIFICATION SME:--", this.userReviewRequests, this.formReviewObjects, this.formSubmission);
         this.apiLoading = false;
         this._singleAccreditationRequestStore.addAllRequest(this.userReviewRequests);
       },
@@ -586,18 +587,18 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
       "rating": (count1 / count2),
       "status": requestStatus
     }
-    console.log(
-      "REVIEW TO ADD FOR ITEM:--\n", item,
-      "\nACTUAL REVIEW:--\n", item.formReviewObjects,
-      "\nTOAL RATING :--\n", rating,
-      "\nCOUNT 1 :--\n", count1,
-      "\nCOUNT 2 :--\n", count2,
-      "\nRATING RAW:--\n", count1 / count2,
-      "\nRATING :--\n", Math.ceil(count1 / count2),
-      "\nGENERAL COMMENTS :--\n", item.review.comments,
-      "\nEQUEST STATUS :--\n", requestStatus,
-      "\nAPI VALUES :--\n", apiValues,
-    );
+    // console.log(
+    //   "REVIEW TO ADD FOR ITEM:--\n", item,
+    //   "\nACTUAL REVIEW:--\n", item.formReviewObjects,
+    //   "\nTOAL RATING :--\n", rating,
+    //   "\nCOUNT 1 :--\n", count1,
+    //   "\nCOUNT 2 :--\n", count2,
+    //   "\nRATING RAW:--\n", count1 / count2,
+    //   "\nRATING :--\n", Math.ceil(count1 / count2),
+    //   "\nGENERAL COMMENTS :--\n", item.review.comments,
+    //   "\nEQUEST STATUS :--\n", requestStatus,
+    //   "\nAPI VALUES :--\n", apiValues,
+    // );
     this._accreditationReviewsService.addReview(item.id, apiValues).subscribe(
       result => {
         // console.log("RESULT FROM ADDING REVIEW:--", result);
@@ -661,12 +662,12 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
           var number = ~~item[i].review.rating;
           var float = parseFloat((item[i].review.rating % 1).toFixed(3)) * (10);
           float = ~~float;
-          console.log(
-            "REVMIEW RATE:---\n", item[i].review.rating,
-            "\nFLOAT DIGIT:---\n", parseFloat((item[i].review.rating % 1).toFixed(3)) * (10),
-            "\nACTUAL DIGIT:---\n", number, typeof (number),
-            "\nFLOAT DIGIT:---\n", float, typeof (float),
-          );
+          // console.log(
+          //   "REVMIEW RATE:---\n", item[i].review.rating,
+          //   "\nFLOAT DIGIT:---\n", parseFloat((item[i].review.rating % 1).toFixed(3)) * (10),
+          //   "\nACTUAL DIGIT:---\n", number, typeof (number),
+          //   "\nFLOAT DIGIT:---\n", float, typeof (float),
+          // );
           // if (float > 5) {
 
           //   if ((number + 1) === j) {

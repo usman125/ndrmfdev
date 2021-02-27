@@ -188,6 +188,13 @@ export class UserService {
     );
   }
 
+  getAllJvUsers() {
+    const url = `${AppConfig.apiUrl}/user/get-jv-users`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
   saveThemticAreas(areas) {
     const url = `${AppConfig.apiUrl}/user/thematic-area`;
     return this._httpClient.post(

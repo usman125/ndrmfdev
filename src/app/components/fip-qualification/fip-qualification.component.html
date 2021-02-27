@@ -125,6 +125,23 @@
     </mat-card>
   </div>
   <div class="intimation-block" id="get-intimation-block">
+    <mat-card>
+      <mat-card-content>
+        <div mat-card-title style="margin-bottom: 15px;">Preffered Settings</div>
+        <mat-list>
+          <mat-list-item>
+            <mat-icon mat-list-icon>accessibility</mat-icon>
+            <div mat-line id="answer">{{'Available As JV'}}</div>
+            <div mat-line>{{allSections?.availableAsJv ? 'Yes' : 'No'}}</div>
+          </mat-list-item>
+          <mat-list-item *ngIf="allSections?.availableAsJv">
+            <mat-icon mat-list-icon>assignment_ind</mat-icon>
+            <div mat-line id="answer">{{'JV User'}}</div>
+            <div mat-line>{{allSections?.jvUser?.name}}</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
 
     <mat-card>
       <mat-card-content>

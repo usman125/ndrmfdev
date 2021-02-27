@@ -150,17 +150,17 @@
             </button>
           </h5>
           <div class="action-btns">
-            <button *ngIf="viewType==='add-gia' && selectedProject?.gia?.processOwner.id === loggedUser?.id"
+            <button *ngIf="viewType === 'add-gia' && selectedProject?.gia?.processOwner.id === loggedUser?.id"
               (click)=" submitGia()" [disabled]="appraisalDoc.length === 0" color="primary" mat-raised-button>
               SAVE GIA
             </button>
           </div>
           <mat-chip-list
-            *ngIf="viewType==='view-gia' && assignedSection?.comments !== null && loggedUser?.role !== 'fip'">
+            *ngIf="viewType === 'view-gia' && assignedSection?.comments !== null && loggedUser?.role !== 'fip'">
             <mat-chip color="accent" selected>Review Submitted</mat-chip>
           </mat-chip-list>
           <mat-chip-list
-            *ngIf="viewType==='view-gia' && assignedSection?.comments === null && loggedUser?.role !== 'fip'">
+            *ngIf="viewType === 'view-gia' && assignedSection?.comments === null && loggedUser?.role !== 'fip'">
             <mat-chip color="warn" selected>Review Pending</mat-chip>
           </mat-chip-list>
           <mat-chip-list *ngIf="viewType==='view-gia' && loggedUser?.role === 'fip'">

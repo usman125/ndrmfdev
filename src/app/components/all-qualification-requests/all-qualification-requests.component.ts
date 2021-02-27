@@ -52,7 +52,13 @@ export class AllQualificationRequestsComponent implements OnInit, OnDestroy {
       (result: any) => {
         this.apiLoading = false;
         // console.log("RESULT AFETR GETTING ALL QUALIFICATION:--", result);
-        this.dataSource2 = new MatTableDataSource(result);
+        let newArray = [];
+        for (let i = 0; i < result.length; i++) {
+          if (result[i].status !== 'Draft') {
+            newArray.push(result[i]);
+          }
+        }
+        this.dataSource2 = new MatTableDataSource(newArray);
         this.dataSource2.sortingDataAccessor = (item, property) => {
           if (property === 'user') {
             return item.initiatorFullName;
@@ -74,7 +80,7 @@ export class AllQualificationRequestsComponent implements OnInit, OnDestroy {
     this._accreditationRequestService.getSmeTasks().subscribe(
       (result: any) => {
         console.log("RESULT SME TASKS:--", result);
-        const array: any = result.qualification.map(c => {
+        let array: any = result.qualification.map(c => {
           const date1: any = new Date();
           const date2: any = new Date(c.endDate);
           const diffTime = Math.abs(date2 - date1);
@@ -86,6 +92,7 @@ export class AllQualificationRequestsComponent implements OnInit, OnDestroy {
             expiry: diffDays
           }
         });
+
         this.dataSource = new MatTableDataSource(array);
         this.dataSource.sortingDataAccessor = (item, property) => {
           if (property === 'section') {
@@ -127,9 +134,9 @@ export class AllQualificationRequestsComponent implements OnInit, OnDestroy {
 
   goToRequest(request) {
     // console.log("REQUEST ELECTED:--", request);
-    if (this.currentUser.role === 'sme'){
+    if (this.currentUser.role === 'sme') {
       this._router.navigate(['/accreditation-requests', request.requestId, request.sectionId]);
-    }else{
+    } else {
       this._router.navigate(['/accreditation-requests', request.id, 'view']);
     }
   }

@@ -208,33 +208,43 @@
         <mat-card-content>
           <mat-list>
             <mat-list-item>
+              <mat-icon mat-list-icon>accessibility</mat-icon>
+              <div mat-line id="answer">{{'Available As JV'}}</div>
+              <div mat-line>{{selectedRequest?.availableAsJv ? 'Yes' : 'No'}}</div>
+            </mat-list-item>
+            <mat-list-item *ngIf="selectedRequest?.availableAsJv">
+              <mat-icon mat-list-icon>assignment_ind</mat-icon>
+              <div mat-line id="answer">{{'JV User'}}</div>
+              <div mat-line>{{selectedRequest?.jvUser?.name}}</div>
+            </mat-list-item>
+            <mat-list-item>
               <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
-              <div mat-line>{{'Assigned Tasks'}}</div>
+              <div mat-line id="answer">{{'Assigned Tasks'}}</div>
               <div mat-line>{{sectionStats?.pendingCount}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>assignment_late</mat-icon>
-              <div mat-line>{{'Unassigned Tasks'}}</div>
+              <div mat-line id="answer">{{'Unassigned Tasks'}}</div>
               <div mat-line>{{sectionStats?.unassignCount}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>assignment_returned</mat-icon>
-              <div mat-line>{{'Reviews Submitted'}}</div>
+              <div mat-line id="answer">{{'Reviews Submitted'}}</div>
               <div mat-line>{{sectionStats?.reviewsCount}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>folder</mat-icon>
-              <div mat-line>{{'Total Sections'}}</div>
+              <div mat-line id="answer">{{'Total Sections'}}</div>
               <div mat-line>{{userReviewRequests.length}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>folder</mat-icon>
-              <div mat-line>{{'Pending FIP Tasks'}}</div>
+              <div mat-line id="answer">{{'Pending FIP Tasks'}}</div>
               <div mat-line>{{reAssignedTasks.length}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>alarm_on</mat-icon>
-              <div mat-line>{{'Expiry Date'}}</div>
+              <div mat-line id="answer">{{'Expiry Date'}}</div>
               <div mat-line>{{selectedRequest?.expiryDate | date:'fullDate'}}</div>
             </mat-list-item>
           </mat-list>
@@ -245,17 +255,17 @@
           <mat-list>
             <mat-list-item>
               <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
-              <div mat-line>{{'Total Sections'}}</div>
+              <div mat-line id="answer">{{'Total Sections'}}</div>
               <div mat-line>{{userReviewRequests?.length}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
-              <div mat-line>{{'Assigned Sections'}}</div>
+              <div mat-line id="answer">{{'Assigned Sections'}}</div>
               <div mat-line>{{sectionStats?.mySectionsCount}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>assignment_returned</mat-icon>
-              <div mat-line>{{'Selected Task'}}</div>
+              <div mat-line id="answer">{{'Selected Task'}}</div>
               <div mat-line>{{selectedSectionData?.name}}</div>
               <div style="cursor: pointer;" mat-line id="answer" (click)="goToReviews()">view task</div>
             </mat-list-item>

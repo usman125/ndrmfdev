@@ -6,7 +6,7 @@ mat-card {
   display: flex;
 }
 
-.example-spacer{
+.example-spacer {
   flex: 1 1 auto;
 }
 
@@ -65,44 +65,47 @@ mat-button-toggle-group {
   font-weight: 500;
 }
 
-
 .mat-menu-item .mat-icon {
   margin-right: 5px;
   vertical-align: middle;
 }
 
-
 .quali-details {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.5;
-    font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+  font-size: 18px;
 }
 
 .quali-details .mat-cation {
-    font-size: 14px;
-    font-weight: 400;
-    /* color: gray; */
+  font-size: 14px;
+  font-weight: 400;
+  /* color: gray; */
 }
 
-span#comment{
+span#comment {
   font-weight: 700;
 }
 
-mat-progress-bar{
+mat-progress-bar {
   margin: 8px 0px;
 }
 
-.info .block{
-    display: flex;
-    justify-content: flex-start;
-    padding: 0px 5px;
+.info .block {
+  display: flex;
+  justify-content: flex-start;
+  padding: 0px 5px;
 }
 
 .submitted_now {
-    background: #4caf50;
-    color: #fff;
-    font-weight: bold;
+  background: #4caf50;
+  color: #fff;
+  font-weight: bold;
+}
+
+.mat-list-item {
+  background: rgba(235, 235, 235, 0.5);
+  margin-bottom: 5px;
 }
 
 mat-button-toggle-group {
@@ -110,4 +113,3 @@ mat-button-toggle-group {
   flex-wrap: nowrap;
   overflow-x: auto;
 }
-

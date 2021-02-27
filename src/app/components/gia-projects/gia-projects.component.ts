@@ -1,13 +1,9 @@
 import { Component, OnInit, OnDestroy, Output, Input, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, Subscription } from "rxjs";
-// import { ProposalSectionsStore } from "../../stores/proposal-sections/proposal-sections-store";
-// import { ProjectsStore } from "../../stores/projects/projects-store";
-// import { ProposalFormsStore } from "../../stores/proposal-forms/proposal-forms-store";
 import { FormControl } from "@angular/forms";
 import { PrimaryAppraisalFormsStore } from 'src/app/stores/primary-appraisal-forms/primary-appraisal-forms-store';
 import { ProjectService } from 'src/app/services/project.service';
-// import { UsersStore } from 'src/app/stores/users/users-store';
 import { UserService } from 'src/app/services/user.service';
 import { AuthStore } from 'src/app/stores/auth/auth-store';
 import { ConfirmModelService } from 'src/app/services/confirm-model.service';
@@ -205,11 +201,6 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
             }
           }
           this.reviewUsers.patchValue(assignedUsers, { onlySelf: true });
-          // if (this.selectedProject.gia.subStatus === 'Review Pending') {
-          //   this.reviewUsers.disable({ onlySelf: true });
-          // } else {
-          //   this.reviewUsers.enable({ onlySelf: true });
-          // }
           this.sectionStats = {
             reviewsCount,
             pendingCount: assignedUsers.length - reviewsCount

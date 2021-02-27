@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
+import { UserService } from 'src/app/services/user.service';
 
 export interface ConfirmData {
   cancelText: string;
@@ -36,10 +37,14 @@ export class ConfirmDialogComponent implements OnInit {
   areas = new FormControl();
   proposalSections = new FormControl();
   applyAsJv = new FormControl();
+  jvUsers = new FormControl();
+  allJvUsers: any = [];
+  showJvUsers: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmData) {
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmData,
+    private _userService: UserService) {
     this.data.startDate = new Date().toISOString();
   }
 
@@ -95,7 +100,8 @@ export class ConfirmDialogComponent implements OnInit {
     this.close({
       areas: this.areas.value || [],
       status: 'ok',
-      applyAsJv: this.applyAsJv.value
+      applyAsJv: this.applyAsJv.value,
+      jvUserId: this.jvUsers.value.id,
     })
   }
 
@@ -109,6 +115,31 @@ export class ConfirmDialogComponent implements OnInit {
     this.close({
       comments: this.data.markUnEligibleReason
     })
+  }
+
+  asvailableAsJvChanged($event) {
+    console.log("Available AS JV USERS CHANGED:--", $event);
+    if ($event.checked) {
+      this._userService.getAllJvUsers().subscribe(
+        (result: any) => {
+          console.log("ALL JV USERS:--", result);
+          this.allJvUsers = result;
+          this.showJvUsers = true;
+          this.jvUsers.setValidators([Validators.required]);
+        },
+        (error: any) => {
+          console.log("ALL JV USERS:--", error);
+        }
+      );
+    } else {
+      this.jvUsers.reset();
+      this.jvUsers.clearValidators();
+      this.showJvUsers = false;
+    }
+  }
+
+  jvUsersChanged($event) {
+    console.log("JV USERS CHANGED:--", $event);
   }
 
   @HostListener("keydown.esc")

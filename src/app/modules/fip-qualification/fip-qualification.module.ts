@@ -13,6 +13,7 @@ import { FormioModule } from "angular-formio";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     FipQualificationRoutingModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
+    MatListModule,
   ]
 })
 export class FipQualificationModule { }
