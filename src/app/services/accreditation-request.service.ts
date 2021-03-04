@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from "./config";
-// import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
-  HttpClient, HttpResponse, HttpRequest,
-  HttpEventType, HttpErrorResponse
+  HttpClient
 } from '@angular/common/http';
-
 import { AuthStore } from '../stores/auth/auth-store';
-
-import { of } from 'rxjs/observable/of';
-import { catchError, last, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -21,17 +15,8 @@ export class AccreditationRequestService {
 
   constructor(
     private _httpClient: HttpClient,
-    private _authStore: AuthStore,
   ) {
-    // this._authStore.state$.subscribe((data) => {
-    //   this.authToken = data.auth.authToken;
-    //   this.httpOptions = {
-    //     headers: new HttpHeaders({
-    //       'Content-Type': 'application/json',
-    //       'Authorization': this.authToken,
-    //     })
-    //   };
-    // });
+
   }
 
   getAllAccreditationRequests() {
@@ -39,7 +24,6 @@ export class AccreditationRequestService {
     console.log("VALUES FOR SME IN SERVICE:---", this.authToken);
     return this._httpClient.get(
       url,
-      // this.httpOptions
     );
   }
 
@@ -68,12 +52,6 @@ export class AccreditationRequestService {
   }
 
   updateAccreditationRequest(id, status) {
-    // const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}?status=${status.status}`;
-    // console.log("VALUES FOR SME IN SERVICE:---", status);
-    // return this._httpClient.put(
-    //   url,
-    //   null
-    // );
     const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}`;
     console.log("VALUES FOR SME IN SERVICE:---", status);
     return this._httpClient.put(
@@ -225,28 +203,6 @@ export class AccreditationRequestService {
       url,
       data
     );
-
-    // const req = new HttpRequest('POST', url, data, {
-    //   reportProgress: true
-    // });
-
-    // const sub = this._httpClient.request(req).pipe(
-    //   map(event => {
-    //     switch (event.type) {
-    //       case HttpEventType.UploadProgress:
-    //         let progress = Math.round(event.loaded * 100 / event.total);
-    //         return progress;
-    //       case HttpEventType.Response:
-    //         return event;
-    //     }
-    //   }),
-    //   tap(message => { }),
-    //   last(),
-    //   catchError((error: HttpErrorResponse) => {
-    //     return of(error);
-    //   })
-    // )
-    // return sub;
   }
 
   reassignFipSection(id, values) {
@@ -256,5 +212,13 @@ export class AccreditationRequestService {
       values
     );
 
+  }
+
+  addQualificationReviewUsers(id, values) {
+    const url = `${AppConfig.apiUrl}/accreditation/qualification/${id}/addReviewUsers`;
+    return this._httpClient.put(
+      url,
+      values
+    );
   }
 }

@@ -12,6 +12,7 @@ import { Router } from "@angular/router";
 import { UserService } from "../../services/user.service";
 import { UsersStore } from "../../stores/users/users-store";
 import { SettingsService } from 'src/app/services/settings.service';
+import { DesignationsStore } from 'src/app/stores/designations/designations-store';
 
 @Component({
   selector: 'app-add-user',
@@ -23,6 +24,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
 
   addUserForm: FormGroup;
   allDepartments: any = [];
+  allDesignations: any = [];
   Subscription: Subscription = new Subscription();
   allRoles: any = []
   allUserTypes: any = []
@@ -31,6 +33,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
   constructor(
     private _formBuilder: FormBuilder,
     private _departmentsStore: DepartmentsStore,
+    private _designationsStore: DesignationsStore,
     private _authStore: AuthStore,
     private _userService: UserService,
     private _settingsService: SettingsService,
@@ -41,13 +44,22 @@ export class AddUserComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this._authStore.setRouteName('Users');
     });
+
     this._buildAddUserForm();
     this.getRolesAndOrgs();
     this.getAllDepartments();
+    this.getAllDesignations();
+
     this.Subscription.add(
       this._departmentsStore.state$.subscribe((data) => {
         this.allDepartments = data.departments;
         console.log("ALL DEPARTMENTS:--", this.allDepartments);
+      })
+    );
+    this.Subscription.add(
+      this._designationsStore.state$.subscribe((data) => {
+        this.allDesignations = data.designations;
+        console.log("ALL DESIGNATIONS:--", this.allDesignations);
       })
     );
   }
@@ -60,6 +72,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
       username: [null, Validators.required],
       password: [null, Validators.required],
       department: [null],
+      designation: [null],
       role: [null, Validators.required],
       org: [null, Validators.required],
       active: [true],
@@ -90,6 +103,21 @@ export class AddUserComponent implements OnInit, OnDestroy {
       error => {
         // this.apiLoading = false;
         console.log("ERROR FROM DEPARTMENTS:--", error);
+      }
+    );
+  }
+
+  getAllDesignations() {
+    // this.apiLoading = true;
+    this._settingsService.getAllDesignations().subscribe(
+      (result: any) => {
+        console.log("RESULT FROM DEESIGNATIONS:--", result);
+        this._designationsStore.addAllDesignations(result);
+        // this.apiLoading = false;
+      },
+      error => {
+        // this.apiLoading = false;
+        console.log("ERROR FROM DEESIGNATIONS:--", error);
       }
     );
   }
@@ -146,6 +174,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
 
   goBack() {
     setCurrentUser(
+      null,
       null,
       null,
       null,

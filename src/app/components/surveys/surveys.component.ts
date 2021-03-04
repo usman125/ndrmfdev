@@ -348,7 +348,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     //   form: event.form
     // });
     this.formToSave = event.form;
-    console.log("CHANGED FORM:--", event, this.formToSave);
+    // console.log("CHANGED FORM:--", event, this.formToSave);
   }
 
 

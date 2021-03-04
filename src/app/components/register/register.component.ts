@@ -36,6 +36,14 @@ export class RegisterComponent implements OnInit {
       'lastName': ['', Validators.required],
       'email': ['', Validators.compose([Validators.required, Validators.email])],
       'password': ['', Validators.required],
+      'entityName': ['', Validators.required],
+      'entityNature': ['', Validators.required],
+      'entityType': ['', Validators.required],
+      'location': ['', Validators.required],
+      'province': ['', Validators.required],
+      'address': ['', Validators.required],
+      'otherAddress': [''],
+      'otherAccreditation': [''],
     })
   }
 

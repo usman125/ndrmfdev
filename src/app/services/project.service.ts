@@ -65,7 +65,8 @@ export class ProjectService {
     console.log("----FINAL API OBJECT:----", {
       name: values.name,
       thematicAreaId: values.thematicAreaId,
-      type: values.type
+      type: values.type,
+      jvUserID: values.jvUser !== null ? values.jvUser.id : null,
     })
     const url = `${AppConfig.apiUrl}/project-proposal/commence/`;
     return this._httpClient.post(
@@ -73,7 +74,8 @@ export class ProjectService {
       {
         name: values.name,
         thematicAreaId: values.thematicAreaId,
-        type: values.type
+        type: values.type,
+        jvUserID: values.jvUser !== null ? values.jvUser.id : null,
       }
     );
   }

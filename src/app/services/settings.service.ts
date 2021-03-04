@@ -162,5 +162,21 @@ export class SettingsService {
   }
 
 
+  addDesignations(values) {
+    const url = `${AppConfig.apiUrl}/setting/designation/add`;
+    return this._httpClient.post(
+      url,
+      values
+    );
+  }
+
+  getAllDesignations() {
+    const url = `${AppConfig.apiUrl}/setting/designation`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
+
 
 }

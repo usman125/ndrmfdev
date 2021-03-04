@@ -14,6 +14,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatListModule } from '@angular/material/list';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { MatListModule } from '@angular/material/list';
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatListModule,
+    MatChipsModule
   ]
 })
 export class FipQualificationModule { }

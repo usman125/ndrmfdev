@@ -17,6 +17,7 @@ import { ConfirmModelService } from "../../services/confirm-model.service";
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from "@angular/common";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 declare var $: any;
 
 export interface DialogData {
@@ -124,6 +125,9 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
   // @ViewChild('sort') sort: MatSort;
   // @ViewChild('sort2') sort2: MatSort;
 
+  addReportUsersForm: FormGroup;
+  reportReviewUsers: any = [];
+
 
   constructor(
     // private _accreditationRequestStore: AccreditationRequestStore,
@@ -143,9 +147,17 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
     public _domSanitizer: DomSanitizer,
     public _activatedRoute: ActivatedRoute,
     public _location: Location,
+    public _formBuilder: FormBuilder,
   ) {
+    this._buildReviewUserForm();
+  }
 
-
+  _buildReviewUserForm() {
+    this.addReportUsersForm = this._formBuilder.group({
+      name: [null, Validators.required],
+      designation: [null, Validators.required],
+      group: [null, Validators.required],
+    })
   }
 
   ngOnInit() {
@@ -366,6 +378,15 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
           // this.selectedRequest = result;
           this.selectedRequest = result.qualItem;
           this.selectedRequest.eligibility = result.eligItem[0];
+          this.selectedRequest.eligibility.data = typeof (this.selectedRequest.eligibility.data) === 'string' ?
+            JSON.parse(this.selectedRequest.eligibility.data) :
+            this.selectedRequest.eligibility.data;
+          this.selectedRequest.thematicAreas = result.thematicAreasListItems;
+          this.selectedRequest.userInfo = result.userInfo;
+          if (this.selectedRequest.reviewUsers && this.selectedRequest.reviewUsers !== null) {
+            this.reportReviewUsers = typeof (this.selectedRequest.reviewUsers) === 'string' ?
+              JSON.parse(this.selectedRequest.reviewUsers) : this.selectedRequest.reviewUsers;
+          }
           console.log("REQUEST TO CHECK:--", this.selectedRequest);
           let count = 0;
           // let passCount = 0;
@@ -421,6 +442,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
         // this.selectedRequest = result;
         this.selectedRequest = result.qualItem;
         this.selectedRequest.eligibility = result.eligItem[0];
+        this.selectedRequest.thematicAreas = result.thematicAreasListItems;
+        this.selectedRequest.userInfo = result.userInfo;
         console.log("RESULT QUALIFICATION SME:--", this.selectedRequest);
         let count = 0;
         let smeComponent: any = null;
@@ -530,8 +553,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
         })
         this.totalFormScore = count;
         // console.log("RESULT QUALIFICATION SME:--", this.userReviewRequests, this.formReviewObjects, this.formSubmission);
-        this.apiLoading = false;
         this._singleAccreditationRequestStore.addAllRequest(this.userReviewRequests);
+        this.apiLoading = false;
       },
       error => {
         this.apiLoading = false;
@@ -1005,6 +1028,47 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
   hideExportReport() {
     console.log("EXPORT REPORT BUTTON CLICKED");
     this.viewReport = false;
+  }
+
+  getThematicAreaExp() {
+    let count = 0;
+    if (this.selectedRequest.thematicAreas) {
+      for (let i = 0; i < this.selectedRequest.thematicAreas.length; i++) {
+        let key = this.selectedRequest.thematicAreas[i];
+        count = count + key.experience;
+      }
+      return count;
+    }
+  }
+
+  getRegDate(object) {
+    let date = new Date(object);
+    return date;
+  }
+
+  addNewReviewUser(values) {
+    this.reportReviewUsers.push(values);
+    this.addReportUsersForm.reset();
+  }
+
+  saveReviewUsers() {
+    const options = {
+      title: 'Users Saved!',
+      message: 'OK to exit',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      endDate: null,
+      startDate: new Date(),
+      add: true,
+    };
+    this._accreditationRequestService.addQualificationReviewUsers(
+      this.selectedRequestId,
+      { reviewUsers: JSON.stringify(this.reportReviewUsers) }
+    ).subscribe((result: any) => {
+      console.log("RESULT SACONG REVIEW USERS:--", result);
+      // this.selectedRequest.review
+      this._confirmModelService.open(options);
+    })
   }
 
 }

@@ -17,14 +17,14 @@
 
 
     <mat-card class="m-20">
-      <div class="toggle-btns" *ngIf="!apiLoading">
+      <!-- <div class="toggle-btns" *ngIf="!apiLoading">
         <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup">
           <mat-button-toggle *ngFor="let item of allSections" MatButtonToggleAppearance="standard" color="primary"
             (change)="onValChange()" [value]="item">
             {{item.sectionName}}
           </mat-button-toggle>
         </mat-button-toggle-group>
-      </div>
+      </div> -->
       <mat-card-content>
         <!-- <div *ngFor="let item of allSections"> -->
         <!-- <h5 style="padding: 10px;"> {{item.sectionName}}</h5> -->
@@ -46,13 +46,28 @@
   </div>
   <div class="col-md-3" style="padding-left: 0px;">
     <mat-card style="margin: 20px 20px 20px 0px">
-      <div mat-card-title>Comments</div>
+      <h6>Preffered Thematic Areas</h6>
       <mat-card-content>
-        <!-- <div *ngIf="currentComment.length !== 0" @pageAnimations class="comments">
-          <div class="heroes" *ngFor="let item of currentComment?.comments">
-            <span class="hero-title">{{item}}</span>
-          </div>
-        </div> -->
+        <section class="mb-3 mt-3">
+          <mat-chip-list>
+            <mat-chip *ngFor="let area of userThematicAreas">
+              {{area.thematicAreaItem.name}}
+            </mat-chip>
+          </mat-chip-list>
+        </section>
+
+        <mat-list>
+          <mat-list-item>
+            <mat-icon mat-list-icon>emoji_events</mat-icon>
+            <div mat-line id="answer">{{'Experience'}}</div>
+            <div mat-line>{{getThematicAreaExp()}} Years</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+    <mat-card style="margin: 20px 20px 20px 0px">
+      <h6>Comments</h6>
+      <mat-card-content>
         <div class="heroes">
           <div id="answer">{{selectedRequest?.comment}}</div>
         </div>

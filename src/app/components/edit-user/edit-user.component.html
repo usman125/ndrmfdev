@@ -45,10 +45,22 @@
 
           <mat-form-field>
             <mat-label>Select Department</mat-label>
-            <select matNativeControl [formControl]="editUserForm.controls['department']" formControlName="department">
+            <select [compareWith]="compareMethods" matNativeControl [formControl]="editUserForm.controls['department']"
+              formControlName="department">
               <option value="" selected></option>
               <option *ngFor="let department of allDepartments" [value]="department.id">
                 {{department.name}}
+              </option>
+            </select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Select Designation</mat-label>
+            <select [compareWith]="compareMethods" matNativeControl [formControl]="editUserForm.controls['designation']"
+              formControlName="designation">
+              <option value="" selected></option>
+              <option *ngFor="let designation of allDesignations" [value]="designation.id">
+                {{designation.name}}
               </option>
             </select>
           </mat-form-field>

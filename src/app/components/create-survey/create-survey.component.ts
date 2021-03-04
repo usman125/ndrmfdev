@@ -79,7 +79,7 @@ export class CreateSurveyComponent implements OnInit {
       form: event.form
     });
     this.formForDisplay = event.form;
-    console.log("FORM CHANGES:---", event.form);
+    // console.log("FORM CHANGES:---", event.form);
   }
 
   ngOnInit() {

@@ -69,3 +69,8 @@ mat-form-field {
 .mobile-class.view-block .activity-items {
   width: auto;
 }
+
+.mat-list-item {
+  background: rgba(235, 235, 235, 0.5);
+  margin-bottom: 5px;
+}

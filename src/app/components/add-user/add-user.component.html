@@ -53,6 +53,16 @@
             </select>
           </mat-form-field>
 
+          <mat-form-field>
+            <mat-label>Select Designation</mat-label>
+            <select matNativeControl [formControl]="addUserForm.controls['designation']" formControlName="designation">
+              <option value="" selected></option>
+              <option *ngFor="let designation of allDesignations" [value]="designation.id">
+                {{designation.name}}
+              </option>
+            </select>
+          </mat-form-field>
+
           <div class="row">
             <div class="col-md-6">
               <mat-card style="width: 90%;">

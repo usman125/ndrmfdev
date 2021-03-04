@@ -73,6 +73,8 @@ import { ActivityDetailsComponent } from './components/activity-details/activity
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { SingleGrantDisbursmentsStore } from './stores/single-grant-disbursment/single-grant-disbursment-store';
+import { DesignationsStore } from './stores/designations/designations-store';
+// import { DesignationsComponent } from './components/designations/designations.component';
 // import { SmeQprRequestsComponent } from './components/sme-qpr-requests/sme-qpr-requests.component';
 // import { KpiProjectStatsComponent } from './components/kpi-project-stats/kpi-project-stats.component';
 // import { GrantDisbursmentsComponent } from './components/grant-disbursments/grant-disbursments.component';
@@ -95,6 +97,7 @@ export function tokenGetter() {
     NoHeaderLayoutComponent,
     AddProjectComponent,
     ActivityDetailsComponent,
+    // DesignationsComponent,
     // SmeQprRequestsComponent,
     // KpiProjectStatsComponent,
     // ViewGrantDisbursmentComponent,
@@ -171,6 +174,7 @@ export function tokenGetter() {
     CoffeeElectionStore,
     SmeStore,
     DepartmentsStore,
+    DesignationsStore,
     AccreditationReviewStore,
     AccreditationCommentsMatrixStore,
     fipIntimationsStore,

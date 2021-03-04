@@ -13,7 +13,7 @@
       </mat-icon>
     </button> -->
     <button (click)="goBack()" mat-icon-button>
-      <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
+      <mat-icon color="warn" class="example-icon" aria-hidden="false" aria-label="Close">close
       </mat-icon>
     </button>
   </mat-toolbar-row>
@@ -206,6 +206,22 @@
     <div [ngClass]="{'for-sme': currentUser?.role === 'sme'}" class="right-layout">
       <mat-card *ngIf="currentUser?.role !== 'sme'">
         <mat-card-content>
+          <small id="answer">Thematic Areas</small>
+          <section class="mb-3 mt-3">
+            <mat-chip-list>
+              <mat-chip *ngFor="let area of selectedRequest?.thematicAreas">
+                {{area.thematicAreaItem.name}}
+              </mat-chip>
+            </mat-chip-list>
+          </section>
+
+          <mat-list>
+            <mat-list-item>
+              <mat-icon mat-list-icon>emoji_events</mat-icon>
+              <div mat-line id="answer">{{'Experience'}}</div>
+              <div mat-line>{{getThematicAreaExp()}} Years</div>
+            </mat-list-item>
+          </mat-list>
           <mat-list>
             <mat-list-item>
               <mat-icon mat-list-icon>accessibility</mat-icon>
@@ -365,6 +381,9 @@
       <span class="example-spacer"></span>
       <span>{{selectedRequest?.initiatedBy.name}}</span>
       <span class="example-spacer"></span>
+      <button [useExistingCss]="true" printSectionId="print-comments-matrix" ngxPrint color="primary" mat-icon-button>
+        <mat-icon>print</mat-icon>
+      </button>
       <button (click)="hideComments()" mat-icon-button>
         <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
         </mat-icon>
@@ -380,7 +399,7 @@
       <small>Mitigations</small>
     </mat-toolbar-row>
   </mat-toolbar>
-  <mat-card style="padding: 0px;margin: 20px;">
+  <mat-card style="padding: 0px;margin: 20px;" id="print-comments-matrix">
     <div *ngIf="!commentsHistoryFlag">
       <div class="comments-matrix" *ngFor="let item of commentsData">
         <div class="title-details">
@@ -481,6 +500,9 @@
       <span class="example-spacer"></span>
       <span>{{selectedRequest?.initiatedBy.name}}</span>
       <span class="example-spacer"></span>
+      <button [useExistingCss]="true" printSectionId="print-mitigation-report" ngxPrint color="primary" mat-icon-button>
+        <mat-icon>print</mat-icon>
+      </button>
       <button (click)="hideMitigationsFlag()" mat-icon-button>
         <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
         </mat-icon>
@@ -496,7 +518,8 @@
       <small>Mitigations</small>
     </mat-toolbar-row>
   </mat-toolbar>
-  <mat-card style="padding: 0px;margin: 20px;">
+  <mat-card style="padding: 0px;margin: 20px;" id="print-mitigation-report">
+
     <div *ngFor="let item of userReviewRequests">
       <div *ngIf="item.review?.mitigationArray.length">
         <div class="comments-matrix">
@@ -550,19 +573,63 @@
 <div *ngIf="viewReport">
   <mat-toolbar style="margin-bottom: 25px;" color="primary">
     <mat-toolbar-row>
-      <span>{{"Detailed Accreditation Evaluation"}}</span>
+      <span class="d-flex flex-column justify-content-start">
+        {{"Detailed Accreditation Evaluation"}}
+        <small id="answer">{{selectedRequest?.initiatedBy.name || '&nbsp;'}}</small>
+      </span>
       <span class="example-spacer"></span>
-      <span>{{selectedRequest?.initiatedBy.name}}</span>
-      <span class="example-spacer"></span>
-      <button (click)="hideExportReport()" mat-icon-button>
+      <button color="accent" class="ml-2" matTooltip="Add Internal Review User!" mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button [useExistingCss]="true" printSectionId="print-accredit-report" ngxPrint color="primary" mat-icon-button>
+        <mat-icon>print</mat-icon>
+      </button>
+      <button color="warn" (click)="hideExportReport()" mat-icon-button>
         <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
         </mat-icon>
       </button>
+      <mat-menu #menu="matMenu" class="p-2">
+        <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+          <h5>Add Internal Review User</h5>
+          <form [formGroup]="addReportUsersForm" (ngSubmit)="addNewReviewUser(addReportUsersForm.value)">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input type="text" formControlName="name" [formControl]="addReportUsersForm.controls['name']" matInput
+                placeholder="Enter Name Here...">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Group</mat-label>
+              <input type="text" formControlName="group" [formControl]="addReportUsersForm.controls['group']" matInput
+                placeholder="Enter Group Here...">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Designation</mat-label>
+              <input type="text" formControlName="designation"
+                [formControl]="addReportUsersForm.controls['designation']" matInput
+                placeholder="Enter Designation Here...">
+            </mat-form-field>
+
+            <button class="pull-right" [disabled]="!addReportUsersForm.valid" mat-raised-button type="submit"
+              color="primary">
+              <mat-icon>add</mat-icon> Add User
+            </button>
+          </form>
+
+        </div>
+      </mat-menu>
     </mat-toolbar-row>
   </mat-toolbar>
-  <mat-card style="padding: 15px;margin: 20px;">
+  <mat-card style="padding: 15px;margin: 20px;" id="print-accredit-report">
     <mat-card-content>
 
+      <div class="row mb-3" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-12" style="padding: 0px;">
+          <img style="width: 100%;" src="../../../assets/accredit.png" class="img img-responsive" alt="">
+        </div>
+      </div>
       <div class="row" style="padding: 0px;margin: 0px 0px;">
         <div class="col-md-4 overall">
           <span class="head">{{'Name of the entity'}}</span>
@@ -577,38 +644,282 @@
           <span class="head">{{'Submitted at'}}</span>
         </div>
         <div class="col-md-8 overall">
-          <span class="value">{{selectedRequest?.submittedAt | date:'shortDate'}}</span>
+          <span class="value">{{selectedRequest?.submittedAt | date:'fullDate'}}</span>
         </div>
       </div>
 
       <div class="row" style="padding: 0px;margin: 0px 0px;">
         <div class="col-md-6" style="padding: 0px;">
           <div class="overall">
-            <span class="head">{{'Applicant"s Eligibility'}}</span>
+            <span class="head">{{'Type'}}</span>
           </div>
           <div class="overall">
-            <span class="value">{{selectedRequest?.eligibility.status}}</span>
+            <span class="value">{{selectedRequest?.availableAsJv ? 'Joint Venture' : 'Individual Entity'}}</span>
           </div>
         </div>
         <div class="col-md-6" style="padding: 0px;">
           <div class="overall">
-            <span class="head">{{'Eligibility submitted at'}}</span>
+            <span class="head">{{'Name(s) of associate(s):'}}</span>
           </div>
           <div class="overall">
-            <span class="value">{{selectedRequest?.eligibility.submittedAt | date:'shortDate'}}</span>
+            <span class="value">{{selectedRequest?.jvUser?.name || '&nbsp;'}}</span>
           </div>
         </div>
       </div>
 
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-6" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{"Applicant's Eligibility"}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">{{selectedRequest?.eligibility.status || '&nbsp;'}}</span>
+          </div>
+        </div>
+        <div class="col-md-6" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Appraisal Date'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">{{selectedRequest?.lastModified | date:'fullDate'}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- THEMATIC AREAS -->
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-8" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Thematic Areas'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              <span *ngFor="let area of selectedRequest?.thematicAreas; let i = index;">
+                {{area.thematicAreaItem.name}}{{(i !== selectedRequest?.thematicAreas.length - 1) ? ','
+                : ''}}</span>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Experience'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">{{getThematicAreaExp()}} Years</span>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- ENTITY INFO -->
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Name of Entity'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              {{selectedRequest?.userInfo.entityName || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Nature of Entity'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              {{selectedRequest?.userInfo.entityNature || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Type of Entity'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">{{selectedRequest?.userInfo?.entityType || '&nbsp;'}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- COUNTER PART/COCEPT NOTE -->
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'Counterpart Availability'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{(selectedRequest?.thematicAreas[0]?.counterpart | titlecase) || '&nbsp;'}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'Concept Note'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{selectedRequest?.eligibility?.data?.conceptnotefile ?
+            ('available' | titlecase) : ('Not Available' | titlecase) || '&nbsp;'}}</span>
+        </div>
+      </div>
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'Project Proposal Submission'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{selectedRequest?.eligibility?.data?.projectproposal || '&nbsp;'}}</span>
+        </div>
+      </div>
+
+      <!-- REGISTRATIONS UNDER ACT -->
+      <div class="team" style="padding: 15px;padding-bottom: 0px;margin: 0px 0px;">
+        <div class="header row">
+          <div class="col-md-12 item">Registration(s)</div>
+        </div>
+      </div>
+
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div *ngFor="let item of selectedRequest?.eligibility.data.registartions" class="col-md-6"
+          style="padding: 2px;margin: 0px;">
+          <div class="row accred" style="padding: 0px;margin: 0px 0px;">
+            <div class="col-md-12 title">MOU: {{item}}</div>
+          </div>
+          <div class="team" style="padding: 15px;padding-top:0px;margin: 0px 0px;">
+            <div class="box row">
+              <div class="col-md-4 name">{{'Reg. No.'}}</div>
+              <div class="col-md-8 sme">{{selectedRequest?.eligibility.data[item+'regno']}}</div>
+            </div>
+            <div class="box row">
+              <div class="col-md-4 name">{{'Date'}}</div>
+              <div class="col-md-8 sme">{{selectedRequest?.eligibility.data[item+'regdate'] | date:'fullDate'}}</div>
+            </div>
+            <div class="box row" *ngIf="item === 'secp'">
+              <div class="col-md-4 name">{{'Status'}}</div>
+              <div class="col-md-8 sme">{{selectedRequest?.eligibility.data[item+'status']}}</div>
+            </div>
+            <div class="box row" *ngIf="item === 'secp'">
+              <div class="col-md-4 name">{{'Nature'}}</div>
+              <div class="col-md-8 sme">{{selectedRequest?.eligibility.data[item+'nature']}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- ADDRESSES OFFICE REGISTERED -->
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'registered Office Address'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{selectedRequest?.userInfo.address || '&nbsp;'}}</span>
+        </div>
+      </div>
+
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'Other Office Address (if any)'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{selectedRequest?.userInfo.otherAddress || '&nbsp;'}}</span>
+        </div>
+      </div>
+
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'Other Accrediation(s)'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{selectedRequest?.userInfo.otherAccreditation || '&nbsp;'}}</span>
+        </div>
+      </div>
+
+
+      <!-- NTN INFO -->
+      <div class="team" style="padding: 15px;padding-bottom: 0px;margin: 0px 0px;">
+        <div class="header row">
+          <div class="col-md-12 item">Tax Registration</div>
+        </div>
+      </div>
+
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'NTN'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              {{selectedRequest?.eligibility?.data['ntnno'] || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Status'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              {{selectedRequest?.eligibility?.data['ntnstatus'] || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'MOU'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              {{selectedRequest?.userInfo.entityName || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUDIT FIRM INFO -->
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Audit Firm (AF)'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              {{selectedRequest?.eligibility?.data['auditFirm'] || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Audit Firm Name'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              {{selectedRequest?.eligibility?.data['auditFirmName'] || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'SBP Ranking'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">{{selectedRequest?.eligibility?.data['auditFirmRanking'] || '&nbsp;'}}</span>
+          </div>
+        </div>
+      </div>
+
+
       <div class="team" style="padding: 15px;margin: 0px 0px;">
         <div class="header row">
-          <div class="col-md-6 item">Areas</div>
-          <div class="col-md-6 item">Names</div>
+          <div class="col-md-4 item">Internal Review Members</div>
+          <div class="col-md-4 item">Areas</div>
+          <div class="col-md-4 item">Names</div>
         </div>
         <div *ngFor="let item of userReviewRequests">
           <div class="box row">
-            <div class="col-md-6 name">{{item.name}}</div>
-            <div class="col-md-6 sme">{{item.sme.name}}</div>
+            <div class="col-md-4 sme">{{item.reportSme.designation || '&nbsp;'}}</div>
+            <div class="col-md-4 name">{{item.name || '&nbsp;'}}</div>
+            <div class="col-md-4 sme">{{item.reportSme.name || '&nbsp;'}}</div>
           </div>
         </div>
       </div>
@@ -618,8 +929,8 @@
       </div>
       <div class="scores row" style="padding: 0px;margin: 0px 0px;">
         <div class="col-md-4 d-flex flex-column box" *ngFor="let item of userReviewRequests">
-          <span class="name">{{item.name}}</span>
-          <span class="sme">{{item.review.rating}}</span>
+          <span class="name">{{item.name || '&nbsp;'}}</span>
+          <span class="sme">{{item.review.rating || '&nbsp;'}}</span>
         </div>
       </div>
       <div class="row" style="padding: 0px;margin: 0px 0px;">
@@ -627,15 +938,7 @@
           <span class="head">{{'Overall Score'}}</span>
         </div>
         <div class="col-md-8 overall">
-          <span class="value">{{userAllScore}}</span>
-        </div>
-      </div>
-      <div class="row" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-4 overall">
-          <span class="head">{{'System Status'}}</span>
-        </div>
-        <div class="col-md-8 overall">
-          <span class="value">{{userSystemStatus}}</span>
+          <span class="value">{{userAllScore || '&nbsp;'}}</span>
         </div>
       </div>
       <div class="row" style="padding: 0px;margin: 0px 0px;">
@@ -644,9 +947,27 @@
         </div>
 
         <div class="col-md-8 overall">
-          <span class="value">{{selectedRequest?.status}}</span>
+          <span class="value">{{selectedRequest?.status || '&nbsp;'}}</span>
         </div>
       </div>
+
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head" style="height: 70px;">{{'Reasons'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value" style="height: 70px;">{{selectedRequest?.eligibility?.comment || '&nbsp;'}}</span>
+        </div>
+      </div>
+
+      <!-- <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'System Status'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{userSystemStatus || '&nbsp;'}}</span>
+        </div>
+      </div> -->
 
       <div class="row accred" style="padding: 0px;margin: 0px 0px;">
         <div class="col-md-12 title">
@@ -659,12 +980,41 @@
         <div class="col-md-4" style="background-color: #E7E6E6;padding: 5px;">
           <span>{{item.name}}</span>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8" style="background-color: #f9f9f9;padding: 5px;">
           <div class="controls-wise" *ngFor="let obj of item.review.controlWiseComments">
             <span *ngIf="obj.status === 'un-satisfy'">-{{obj.comments}}</span>
+            <span style="display: none;" *ngIf="obj.status === 'satisfy'">{{'&nbsp;'}}</span>
           </div>
         </div>
       </div>
+
+      <!-- MAIN REVIEWERS ARRAY -->
+      <div class="team" style="padding: 15px;padding-bottom: 0px;margin: 0px 0px;">
+        <div class="header row">
+          <div class="col-md-12 item d-flex align-items-center justify-content-between">
+            Review Endorsed by Internal Review Committee
+            <button mat-flat-button (click)="saveReviewUsers()">Save Users</button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="reportReviewUsers.length" class="team" style="padding: 15px;margin: 0px 0px;">
+        <div class="header row">
+          <div class="col-md-3 item">Designation</div>
+          <div class="col-md-3 item">Group</div>
+          <div class="col-md-3 item">Name</div>
+          <div class="col-md-3 item">Signature</div>
+        </div>
+        <div *ngFor="let item of reportReviewUsers">
+          <div class="box row">
+            <div class="col-md-3 sme">{{item.designation || '&nbsp;'}}</div>
+            <div class="col-md-3 name">{{item.group || '&nbsp;'}}</div>
+            <div class="col-md-3 sme">{{item.name || '&nbsp;'}}</div>
+            <div class="col-md-3 sme">{{'&nbsp;'}}</div>
+          </div>
+        </div>
+      </div>
+
     </mat-card-content>
   </mat-card>
 </div>

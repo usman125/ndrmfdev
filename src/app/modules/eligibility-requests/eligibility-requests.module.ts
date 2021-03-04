@@ -12,6 +12,8 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { EligibilityRequestsComponent } from "../../components/component-index";
 import { EligibilityRequestsRoutingModule } from "./eligibility-requests-routing.module";
 import { FormioModule } from "angular-formio";
+import { MatListModule } from '@angular/material/list';
+import { MatChipsModule } from '@angular/material/chips';
 // import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
@@ -32,6 +34,9 @@ import { FormioModule } from "angular-formio";
     // MatSortModule,
     MatProgressSpinnerModule,
     EligibilityRequestsRoutingModule,
+    MatListModule,
+    MatIconModule,
+    MatChipsModule
   ]
 })
 export class EligibilityRequestsModule { }

@@ -35,6 +35,7 @@ export class ConfirmModelService {
         areas: options.areas,
         markUnEligible: options.markUnEligible,
         markUnEligibleReason: options.markUnEligibleReason,
+        taSelectionType: options.taSelectionType,
       };
       this.dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     } else {
@@ -59,6 +60,7 @@ export class ConfirmModelService {
           proposal_initmation: options.proposal_initmation,
           markUnEligible: options.markUnEligible,
           markUnEligibleReason: options.markUnEligibleReason,
+          taSelectionType: options.taSelectionType,
         }
       });
     }

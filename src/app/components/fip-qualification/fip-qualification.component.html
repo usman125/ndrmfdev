@@ -128,6 +128,25 @@
     <mat-card>
       <mat-card-content>
         <div mat-card-title style="margin-bottom: 15px;">Preffered Settings</div>
+
+        <small id="answer">Thematic Areas</small>
+        <section class="mb-3 mt-3">
+          <mat-chip-list>
+            <mat-chip *ngFor="let area of allSections?.thematicAreas">
+              {{area.thematicAreaItem.name}}
+            </mat-chip>
+          </mat-chip-list>
+        </section>
+
+        <mat-list>
+          <mat-list-item>
+            <mat-icon mat-list-icon>emoji_events</mat-icon>
+            <div mat-line id="answer">{{'Experience'}}</div>
+            <div mat-line>{{getThematicAreaExp()}} Years</div>
+          </mat-list-item>
+        </mat-list>
+
+
         <mat-list>
           <mat-list-item>
             <mat-icon mat-list-icon>accessibility</mat-icon>

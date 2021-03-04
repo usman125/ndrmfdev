@@ -19,3 +19,8 @@ mat-button-toggle-group {
   background: rgba(102,103,103,0.1);
   padding: 10px;
 }
+
+.mat-list-item {
+  background: rgba(235, 235, 235, 0.5);
+  margin-bottom: 5px;
+}

@@ -7,6 +7,7 @@ import { AccreditationRequestService } from "../../services/accreditation-reques
 import { SettingsService } from "../../services/settings.service";
 import { Router } from '@angular/router';
 import { ConfirmModelService } from '../../services/confirm-model.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-fip-eligibility',
@@ -36,10 +37,14 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
 
   @ViewChild('group') group;
 
+  loadingApi: boolean = false;
+  userThematicAreas: any = [];
+
   constructor(
     private _accreditationRequestService: AccreditationRequestService,
     private _authStore: AuthStore,
     private _settingsService: SettingsService,
+    private _userService: UserService,
     private _confirmModelService: ConfirmModelService,
     private _router: Router,
   ) { }
@@ -88,20 +93,33 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
 
   getEligibilityRequest() {
     this._accreditationRequestService.getEligibilityRequest().subscribe(
-      (result: any) => {
-        console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", result);
-        if (result[0]) {
-          this._accreditationRequestService.getSingleEligibilityRequest(result[result.length-1].id).subscribe(
-            (result: any) => {
-              console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", result);
-              this.selectedRequest = result;
-              this._authStore.setEligibleFlag(result.status);
-              if (result) {
-                this.form.exists = true;
-                this.secondForm = JSON.parse(result.data);
-              }
-              console.log(this.form, this.secondForm);
-              this.apiLoading = false;
+      (allResult: any) => {
+        console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", allResult);
+        if (allResult[0]) {
+          this._accreditationRequestService.getSingleEligibilityRequest(allResult[allResult.length - 1].id).subscribe(
+            (singleResult: any) => {
+              console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", singleResult);
+              this._userService.getUserThemticAreas().subscribe(
+                (result: any) => {
+                  console.log("User all thematoc areas", result);
+                  this.userThematicAreas = result;
+                  if (result.length) {
+                    this.selectedRequest = singleResult;
+                    this._authStore.setEligibleFlag(singleResult.status);
+                    if (singleResult) {
+                      this.form.exists = true;
+                      this.secondForm = JSON.parse(singleResult.data);
+                    }
+                    console.log(this.form, this.secondForm);
+                    this.apiLoading = false;
+                  } else {
+                    this.openThematicModel();
+                  }
+                },
+                error => {
+                  console.log("User all thematoc areas", error);
+                }
+              );
             },
             error => {
               this.apiLoading = false;
@@ -109,7 +127,21 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
             }
           );
         } else {
-          this.apiLoading = false;
+          this._userService.getUserThemticAreas().subscribe(
+            (result: any) => {
+              console.log("User all thematoc areas", result);
+              if (result.length) {
+                this.userThematicAreas = result;
+                this.apiLoading = false;
+              } else {
+                this.openThematicModel();
+              }
+            },
+            error => {
+              console.log("User all thematoc areas", error);
+            }
+          );
+          // this.apiLoading = false;
         }
       },
       error => {
@@ -154,6 +186,115 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
         console.log("ERROR AFTER ADDING ELIGIBLITY:--", error);
       }
     );
+  }
+
+  openThematicModel() {
+    const options = {
+      title: 'Select Thematic Areas!',
+      message: 'Select one or more areas to get Accredit for!',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: false,
+      disableClose: true,
+      selectThematic: true,
+      areas: null,
+      taSelectionType: 'eligibility',
+    };
+    this._settingsService.getAllThematicAreas().subscribe(
+      (result: any) => {
+        options.areas = result;
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          console.log("CONFIRMED FROM MODEL", confirmed);
+          if (confirmed === false) {
+            this._router.navigate(['fip-home']);
+          } else {
+            let object = {
+              areas: [],
+              availableAsJv: null,
+              jvUserId: confirmed.jvUserId
+            }
+            let areasId = [];
+            for (let i = 0; i < confirmed.areas.length; i++) {
+              let object2 = {
+                areaId: confirmed.areas[i].id,
+                experience: confirmed.areas[i].experience,
+                counterpart: confirmed.areas[i].counterpart,
+              }
+              areasId.push(object2);
+            }
+            object.areas = areasId;
+            if (confirmed.applyAsJv === null) {
+              object.availableAsJv = false;
+            } else {
+              object.availableAsJv = confirmed.applyAsJv;
+            }
+            console.log("SAVE THEMATIC AREA:--", object);
+            this._userService.saveThemticAreas(object, "eligibility").subscribe(
+              result => {
+                console.log("RESULT SAVING THEMATIC AREAS:--", result);
+                const options = {
+                  title: 'Preffered thematic areas saved succefully!',
+                  cancelText: 'CANCEL',
+                  confirmText: 'OK',
+                  add: true,
+                  confirm: false,
+                };
+                this._confirmModelService.open(options);
+                this._confirmModelService.confirmed().subscribe(
+                  confirmed => {
+                    console.log("CONFIRMED AFTER SAVING:--", confirmed);
+                    this.loadingApi = true;
+                    this.getEligibilityRequest();
+                  }
+                );
+              },
+              error => {
+                console.log("RESULT SAVING THEMATIC AREAS:--", error);
+                const options = {
+                  title: 'Thematic areas saved successfully!',
+                  cancelText: 'CANCEL',
+                  confirmText: 'OK',
+                  add: true,
+                  confirm: false,
+                };
+                options.title = error.error.message;
+                this._confirmModelService.open(options);
+                this._confirmModelService.confirmed().subscribe(
+                  confirmed => {
+                    console.log("CONFIRMED AFTER FAILING SAVE:--", confirmed);
+                    this.openThematicModel();
+                  }
+                );
+              }
+            );
+          }
+        });
+      },
+      error => {
+        options.areas = [];
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          console.log("CONFIRMED FROM MODEL", confirmed);
+          if (confirmed === false) {
+            this._router.navigate(['fip-home']);
+          }
+        });
+        console.log("ERROR THEMATIC AREAS:--", error);
+      }
+    );
+  }
+
+  getThematicAreaExp() {
+    let count = 0;
+    for (let i = 0; i < this.userThematicAreas.length; i++) {
+      let key = this.userThematicAreas[i];
+      count = count + key.experience;
+    }
+    return count;
   }
 
   ngOnDestroy() {

@@ -24,6 +24,7 @@ export interface ConfirmData {
   proposal_initmation: any;
   markUnEligible: any;
   markUnEligibleReason: any;
+  taSelectionType: any;
 }
 
 @Component({
@@ -101,7 +102,7 @@ export class ConfirmDialogComponent implements OnInit {
       areas: this.areas.value || [],
       status: 'ok',
       applyAsJv: this.applyAsJv.value,
-      jvUserId: this.jvUsers.value.id,
+      jvUserId: this.jvUsers.value ? this.jvUsers.value.id : null,
     })
   }
 
@@ -140,6 +141,21 @@ export class ConfirmDialogComponent implements OnInit {
 
   jvUsersChanged($event) {
     console.log("JV USERS CHANGED:--", $event);
+  }
+
+  checkAreasInfo() {
+    for (let i = 0; i < this.areas.value.length; i++) {
+      let key = this.areas.value[i];
+      if ((!key.counterpart && !key.experience) || (key.counterpart === null &&
+        key.experience === null) || (key.counterpart !== null &&
+          key.experience === null) || (key.counterpart === null &&
+            key.experience !== null) || (!key.counterpart &&
+              key.experience === null) || (key.counterpart === null &&
+                !key.experience)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @HostListener("keydown.esc")

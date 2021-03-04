@@ -91,7 +91,7 @@
 
     <div class="controls" *ngIf="data?.selectThematic">
 
-      <mat-form-field>
+      <mat-form-field *ngIf="data?.taSelectionType === 'eligibility'">
         <mat-select (selectionChange)="areaChanged($event)" placeholder="Select Areas" [formControl]="areas" multiple>
           <mat-select-trigger>
             <span *ngFor="let item of areas.value; let i=index">
@@ -105,17 +105,34 @@
         </mat-select>
       </mat-form-field>
 
-      <section>
-        <mat-checkbox (change)="asvailableAsJvChanged($event)" [formControl]="applyAsJv">Available as JV!</mat-checkbox>
+      <section *ngIf="areas?.value?.length">
+
+        <div *ngFor="let area of areas.value">
+          <mat-form-field appearance="outline">
+            <mat-label>Experience</mat-label>
+            <input type="number" matInput placeholder="Enter years" [(ngModel)]="area.experience">
+          </mat-form-field>
+          <section class="example-section">
+            <label class="example-margin">Availability of counterpart Financing:</label>
+            <mat-radio-group [(ngModel)]="area.counterpart">
+              <mat-radio-button class="example-margin" value="yes">Yes</mat-radio-button>
+              <mat-radio-button class="example-margin" value="no">No</mat-radio-button>
+            </mat-radio-group>
+          </section>
+        </div>
       </section>
 
-      <mat-form-field *ngIf="showJvUsers">
-        <mat-select (selectionChange)="jvUsersChanged($event)" placeholder="Select User" [formControl]="jvUsers">
-          <mat-option *ngFor="let object of allJvUsers;" [value]="object">
-            {{object.firstName}}&nbsp;{{object.lastName}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <section *ngIf="data?.taSelectionType !== 'eligibility'">
+        <mat-checkbox (change)="asvailableAsJvChanged($event)" [formControl]="applyAsJv">Available as JV!</mat-checkbox>
+
+        <mat-form-field *ngIf="showJvUsers">
+          <mat-select (selectionChange)="jvUsersChanged($event)" placeholder="Select User" [formControl]="jvUsers">
+            <mat-option *ngFor="let object of allJvUsers;" [value]="object">
+              {{object.firstName}}&nbsp;{{object.lastName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </section>
 
     </div>
 
@@ -165,12 +182,24 @@
       uppercase}}</button>
 
 
-    <button *ngIf="data?.selectThematic"
-      [disabled]="(applyAsJv.value && !jvUsers.valid) || (!areas.value || areas.value?.length === 0)" mat-raised-button
+    <button *ngIf="data?.selectThematic && data?.taSelectionType !== 'eligibility'"
+      [disabled]="!applyAsJv.value || (applyAsJv.value && !jvUsers.valid)" mat-raised-button
       (click)="addThematicAreas()" color="primary" class="m-2">{{data.confirmText |
       uppercase}}</button>
-    <button *ngIf="data?.selectThematic" mat-raised-button (click)="cancel()" color="warn" class="m-2">{{data.cancelText
-      | uppercase}}</button>
+      
+    <button *ngIf="data?.selectThematic && data?.taSelectionType === 'eligibility'"
+      [disabled]="(!areas.value || areas.value?.length === 0) || checkAreasInfo()" mat-raised-button
+      (click)="addThematicAreas()" color="primary" class="m-2">{{data.confirmText |
+      uppercase}}</button>
+
+    <button [disabled]="applyAsJv.value" *ngIf="data?.selectThematic && data?.taSelectionType !== 'eligibility'"
+      mat-raised-button (click)="addThematicAreas()" color="warn" class="m-2">
+      {{data.cancelText | uppercase}}
+    </button>
+
+    <button *ngIf="data?.selectThematic" mat-raised-button (click)="cancel()" color="warn" class="m-2">
+      {{'Cancel' | uppercase}}
+    </button>
 
     <button mat-raised-button *ngIf="data?.proposal_initmation" (click)="cancel()" color="warn">
       {{data.cancelText | uppercase}}

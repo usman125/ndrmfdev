@@ -20,6 +20,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
 import { MatSortModule } from '@angular/material/sort';
+import { MatChipsModule } from '@angular/material/chips';
+import { NgxPrintModule } from 'ngx-print';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,10 @@ import { MatSortModule } from '@angular/material/sort';
     MatProgressSpinnerModule,
     MatTooltipModule,
     AccreditationRequestRoutingModule,
-    MatSortModule
+    MatSortModule,
+    MatChipsModule,
+    NgxPrintModule,
+    MatMenuModule,
   ],
   entryComponents: [AssignTask]
 })

@@ -22,7 +22,7 @@ export class UserService {
       url,
       {
         "departmentId": values.department,
-        "designationId": null,
+        "designationId": values.designation,
         "email": values.email,
         "firstName": values.firstName,
         "lastName": values.lastName,
@@ -41,7 +41,7 @@ export class UserService {
       url,
       {
         "departmentId": values.department,
-        "designationId": null,
+        "designationId": values.designation,
         "email": values.email,
         "firstName": values.firstName,
         "lastName": values.lastName,
@@ -96,7 +96,7 @@ export class UserService {
     return this._httpClient.post(
       url,
       {
-        comment: comment  
+        comment: comment
       }
     );
   }
@@ -195,11 +195,18 @@ export class UserService {
     );
   }
 
-  saveThemticAreas(areas) {
-    const url = `${AppConfig.apiUrl}/user/thematic-area`;
+  saveThemticAreas(areas, type) {
+    const url = `${AppConfig.apiUrl}/user/thematic-area?type=${type}`;
     return this._httpClient.post(
       url,
       areas
+    );
+  }
+
+  getUserThemticAreas() {
+    const url = `${AppConfig.apiUrl}/user/thematic-area`;
+    return this._httpClient.get(
+      url,
     );
   }
 

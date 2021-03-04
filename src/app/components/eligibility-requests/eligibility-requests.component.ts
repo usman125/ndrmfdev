@@ -39,6 +39,7 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
   toggleBtn: boolean = false;
   secondForm: any = null;
   selectedRequestId: any = null;
+  userThematicAreas: any = [];
   addMobileClasses: boolean = false;
   loadingApi: boolean = false;
 
@@ -123,6 +124,7 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
           submittedAt: result.submittedAt,
           template: JSON.parse(result.template),
         }
+        this.userThematicAreas = result.fipThematicAreasListItem;
         this.selectedRequestItems = object;
 
         console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", this.selectedRequestItems);
@@ -226,6 +228,15 @@ export class EligibilityRequestsComponent implements OnInit, OnDestroy {
       }
     })
 
+  }
+
+  getThematicAreaExp() {
+    let count = 0;
+    for (let i = 0; i < this.userThematicAreas.length; i++) {
+      let key = this.userThematicAreas[i];
+      count = count + key.experience;
+    }
+    return count;
   }
 
   ngOnDestroy() {

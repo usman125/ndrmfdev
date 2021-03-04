@@ -157,13 +157,16 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     this._authStore.setQualificationFlag(user.qualificationFlag);
     this._accreditationRequestService.getSingleQualificationRequest(commenceId).subscribe(
       (result: any) => {
-        console.log("USER TO SET QUALIFICATION FLAG:--", user, result);
         // this.loadingApi = false;
         // this.allSections = result.sections;
-        this.allSections = result.qualItem.sections;
         // result = result.
+        // this.allSections = result.qualItem.sections;
         let dummyResult = result.qualItem;
         dummyResult.eligibility = result.eligItem[0];
+        dummyResult.thematicAreas = result.thematicAreasListItems;
+        dummyResult.userInfo = result.userInfo;
+        this.allSections = dummyResult;
+        console.log("USER TO SET QUALIFICATION FLAG:--", user, dummyResult);
         let allInitimations = [];
         var count1 = 0;
         var count2 = 0;
@@ -216,6 +219,8 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
               // result = result.
               let dummyResult = result.qualItem;
               dummyResult.eligibility = result.eligItem[0];
+              dummyResult.thematicAreas = result.thematicAreasListItems;
+              dummyResult.userInfo = result.userInfo;
               this.allSections = dummyResult;
               console.log("GET QUALIFICATION REQUESTS WITH ID:--", result, dummyResult);
               let allInitimations = [];
@@ -295,9 +300,9 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
 
   openThematicModel() {
     const options = {
-      title: 'Select Thematic Areas!',
-      message: 'Select one or more areas to get Accredit for!',
-      cancelText: 'CANCEL',
+      title: 'Save your prefference for Qualification!',
+      message: 'You can apply as Joint Venture or Single Entity!',
+      cancelText: 'Proceed As Single Entity',
       confirmText: 'OK',
       add: false,
       confirm: false,
@@ -306,6 +311,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       disableClose: true,
       selectThematic: true,
       areas: null,
+      taSelectionType: 'qualification',
     };
     if (this.accredited === false && this.canInitiate === true) {
       this._settingsService.getAllThematicAreas().subscribe(
@@ -319,68 +325,27 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
             } else {
               let object = {
                 areas: [],
-                availableAsJv: null,
+                availableAsJv: confirmed.applyAsJv,
                 jvUserId: confirmed.jvUserId
               }
               let areasId = [];
-              // if(confirmed)
               for (let i = 0; i < confirmed.areas.length; i++) {
-                areasId.push(confirmed.areas[i].id);
+                let object2 = {
+                  areaId: confirmed.areas[i].id,
+                  experience: confirmed.areas[i].experience,
+                  counterpart: confirmed.areas[i].counterpart,
+                }
+                areasId.push(object2);
               }
               object.areas = areasId;
-              if (confirmed.applyAsJv === null) {
-                object.availableAsJv = false;
-              } else {
+              if (object.availableAsJv !== null) {
+                console.log("PROCEED AS JV:--", object);
                 object.availableAsJv = confirmed.applyAsJv;
+                this.saveQualificationPrefrences(object);
+              } else {
+                console.log("PROCEED AS SINGLE ENTITY:--", object);
+                this.startQualificationProcess();
               }
-              console.log("SAVE THEMATIC AREA:--", object);
-              this._userService.saveThemticAreas(object).subscribe(
-                result => {
-                  console.log("RESULT SAVING THEMATIC AREAS:--", result);
-                  const options = {
-                    title: 'Qualification will be saved with provided prefrences!',
-                    cancelText: 'CANCEL',
-                    confirmText: 'OK',
-                    add: true,
-                    confirm: false,
-                  };
-                  this._confirmModelService.open(options);
-                  this._confirmModelService.confirmed().subscribe(
-                    confirmed => {
-                      console.log("CONFIRMED AFTER SAVING:--", confirmed);
-                      this.loadingApi = true;
-                      this._settingsService.getAccrediattionCommence().subscribe(
-                        (result: any) => {
-                          console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
-                          this.getCommenceFromApi(result.id);
-                        },
-                        error => {
-                          this.loadingApi = false;
-                          console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
-                        }
-                      );
-                    }
-                  );
-                },
-                error => {
-                  console.log("RESULT SAVING THEMATIC AREAS:--", error);
-                  const options = {
-                    title: 'Thematic areas saved successfully!',
-                    cancelText: 'CANCEL',
-                    confirmText: 'OK',
-                    add: true,
-                    confirm: false,
-                  };
-                  options.title = error.error.message;
-                  this._confirmModelService.open(options);
-                  this._confirmModelService.confirmed().subscribe(
-                    confirmed => {
-                      console.log("CONFIRMED AFTER FAILING SAVE:--", confirmed);
-                      this.openThematicModel();
-                    }
-                  );
-                }
-              );
             }
           });
         },
@@ -398,6 +363,61 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       );
     }
   }
+
+  saveQualificationPrefrences(object) {
+    this._userService.saveThemticAreas(object, 'qualification').subscribe(
+      result => {
+        console.log("RESULT SAVING THEMATIC AREAS:--", result);
+        const options = {
+          title: 'Qualification will be saved with provided prefrences!',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+          confirm: false,
+        };
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(
+          confirmed => {
+            console.log("CONFIRMED AFTER SAVING:--", confirmed);
+            this.loadingApi = true;
+            this.startQualificationProcess();
+          }
+        );
+      },
+      error => {
+        console.log("RESULT SAVING THEMATIC AREAS:--", error);
+        const options = {
+          title: 'Thematic areas saved successfully!',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+          confirm: false,
+        };
+        options.title = error.error.message;
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(
+          confirmed => {
+            console.log("CONFIRMED AFTER FAILING SAVE:--", confirmed);
+            this.openThematicModel();
+          }
+        );
+      }
+    );
+  }
+
+  startQualificationProcess() {
+    this._settingsService.getAccrediattionCommence().subscribe(
+      (result: any) => {
+        console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
+        this.getCommenceFromApi(result.id);
+      },
+      error => {
+        this.loadingApi = false;
+        console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
+      }
+    );
+  }
+
 
   onSubmit($event) {
     // console.log("FORM AFTER SUBMIT:---", $event.data, $event, this.form.formIdentity);
@@ -486,6 +506,17 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
         console.log("ERROR AFTER ADDING QUALIFICATION:--", error);
       }
     );
+  }
+
+  getThematicAreaExp() {
+    let count = 0;
+    if (this.allSections.thematicAreas) {
+      for (let i = 0; i < this.allSections.thematicAreas.length; i++) {
+        let key = this.allSections.thematicAreas[i];
+        count = count + key.experience;
+      }
+      return count;
+    }
   }
 
   // @HostListener('window:resize', ['$event'])
