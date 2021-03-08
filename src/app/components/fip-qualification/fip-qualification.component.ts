@@ -510,12 +510,15 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
 
   getThematicAreaExp() {
     let count = 0;
-    if (this.allSections.thematicAreas) {
-      for (let i = 0; i < this.allSections.thematicAreas.length; i++) {
-        let key = this.allSections.thematicAreas[i];
-        count = count + key.experience;
+    if (this.allSections && this.allSections.thematicAreas) {
+
+      if (this.allSections.thematicAreas) {
+        for (let i = 0; i < this.allSections.thematicAreas.length; i++) {
+          let key = this.allSections.thematicAreas[i];
+          count = count + key.experience;
+        }
+        return count;
       }
-      return count;
     }
   }
 

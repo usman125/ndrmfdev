@@ -1032,12 +1032,15 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
 
   getThematicAreaExp() {
     let count = 0;
-    if (this.selectedRequest.thematicAreas) {
-      for (let i = 0; i < this.selectedRequest.thematicAreas.length; i++) {
-        let key = this.selectedRequest.thematicAreas[i];
-        count = count + key.experience;
+    if (this.selectedRequest && this.selectedRequest.thematicAreas) {
+
+      if (this.selectedRequest.thematicAreas) {
+        for (let i = 0; i < this.selectedRequest.thematicAreas.length; i++) {
+          let key = this.selectedRequest.thematicAreas[i];
+          count = count + key.experience;
+        }
+        return count;
       }
-      return count;
     }
   }
 
