@@ -23,6 +23,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatChipsModule } from '@angular/material/chips';
 import { NgxPrintModule } from 'ngx-print';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatChipsModule,
     NgxPrintModule,
     MatMenuModule,
+    MatRadioModule,
   ],
   entryComponents: [AssignTask]
 })

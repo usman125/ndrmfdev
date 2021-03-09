@@ -119,6 +119,12 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
 
   sectionStats: any = null;
   selectedSection: any = null;
+  chairmanName: any = null;
+
+  dceoapprove: any = null;
+  dceodeffered: any = null;
+  dceorejected: any = null;
+  dceo: any = null;
 
 
   // @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -409,11 +415,11 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
                 rating: c.review.rating,
                 controlWiseComments: JSON.parse(c.review.controlWiseComments),
               } : {
-                  comments: null,
-                  status: null,
-                  rating: null,
-                  controlWiseComments: null,
-                }
+                comments: null,
+                status: null,
+                rating: null,
+                controlWiseComments: null,
+              }
             }
           });
           console.log("SELECTED REQUEST FORMS:---", this.userReviewRequests, tasksFlag);
@@ -541,11 +547,11 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
               rating: c.review.rating,
               controlWiseComments: c.review.controlWiseComments !== null ? JSON.parse(c.review.controlWiseComments) : c.review.controlWiseComments,
             } : {
-                comments: null,
-                status: null,
-                rating: null,
-                controlWiseComments: null
-              },
+              comments: null,
+              status: null,
+              rating: null,
+              controlWiseComments: null
+            },
             formReviewObjects: this.formReviewObjects,
             comments: c.review ? c.review.comments : null,
             toggleForm: false,
