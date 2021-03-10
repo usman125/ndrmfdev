@@ -412,7 +412,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
               review: c.review ? {
                 comments: c.review.comments,
                 status: c.review.status,
-                rating: c.review.rating,
+                rating: parseFloat(c.review.rating)/2,
                 controlWiseComments: JSON.parse(c.review.controlWiseComments),
               } : {
                 comments: null,
@@ -524,7 +524,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
                 // if (c.formReviewObjects) {
                 for (let j = 0; j < this.formReviewObjects.length; j++) {
                   if (this.formReviewObjects[j].key === JSON.parse(c.review.controlWiseComments)[i].key) {
-                    this.formReviewObjects[j].rating = JSON.parse(c.review.controlWiseComments)[i].rating;
+                    this.formReviewObjects[j].rating = parseFloat(JSON.parse(c.review.controlWiseComments)[i].rating)/2;
                     this.formReviewObjects[j].status = JSON.parse(c.review.controlWiseComments)[i].status;
                     this.formReviewObjects[j].comments = JSON.parse(c.review.controlWiseComments)[i].comments;
                   }
@@ -544,7 +544,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
             review: c.review !== null ? {
               comments: c.review.comments,
               status: c.review.status,
-              rating: c.review.rating,
+              rating: c.review.rating/2,
               controlWiseComments: c.review.controlWiseComments !== null ? JSON.parse(c.review.controlWiseComments) : c.review.controlWiseComments,
             } : {
               comments: null,
@@ -1078,6 +1078,10 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
       // this.selectedRequest.review
       this._confirmModelService.open(options);
     })
+  }
+
+  getRating(rating) {
+    return rating / 2;
   }
 
 }
