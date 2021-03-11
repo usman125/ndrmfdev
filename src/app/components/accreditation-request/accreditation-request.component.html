@@ -643,58 +643,58 @@
       </div>
 
       <div class="row" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-3 overall">
+        <div class="col-sm-3 col-xs-3 col-md-3 overall">
           <span class="head">{{'Submitted at'}}</span>
         </div>
-        <div class="col-md-3 overall">
-          <span class="value">{{selectedRequest?.submittedAt | date:'fullDate'}}</span>
+        <div class="col-sm-3 col-xs-3 col-md-3 overall">
+          <span class="value">{{(selectedRequest?.submittedAt | date:'fullDate') || '&nbsp;'}}</span>
         </div>
-        <div class="col-md-3 overall">
+        <div class="col-sm-3 col-xs-3 col-md-3 overall">
           <span class="head">{{'Appraisal Date'}}</span>
         </div>
-        <div class="col-md-3 overall">
-          <span class="value">{{selectedRequest?.lastModified | date:'fullDate'}}</span>
+        <div class="col-sm-3 col-xs-3 col-md-3 overall">
+          <span class="value">{{(selectedRequest?.lastModified | date:'fullDate') || '&nbsp;'}}</span>
         </div>
       </div>
 
       <div class="row" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-4 overall">
+        <div class="col-md-4 col-sm-4 col-xs-4 overall">
           <span class="head">{{'Name of the entity'}}</span>
         </div>
-        <div class="col-md-8 overall">
-          <span class="value">{{selectedRequest?.initiatedBy.name}}</span>
+        <div class="col-md-8 col-sm-8 col-xs-8 overall">
+          <span class="value">{{selectedRequest?.userInfo?.entityName || '&nbsp;'}}</span>
         </div>
       </div>
 
 
       <div class="row" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-sm-3 col-xs-3 overall">
           <span class="head">{{'Type'}}</span>
         </div>
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-sm-3 col-xs-3 overall">
           <span class="value">{{selectedRequest?.availableAsJv ? 'Joint Venture' : 'Individual Entity'}}</span>
         </div>
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-sm-3 col-xs-3 overall">
           <span class="head">{{'Name(s) of associate(s):'}}</span>
         </div>
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-sm-3 col-xs-3 overall">
           <span class="value">{{selectedRequest?.jvUser?.name || '&nbsp;'}}</span>
         </div>
       </div>
 
       <div class="row" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-sm-3 col-xs-3 overall">
           <span class="head">{{'Nature of Entity'}}</span>
         </div>
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-sm-3 col-xs-3 overall">
           <span class="value">
             {{selectedRequest?.userInfo.entityNature || '&nbsp;'}}
           </span>
         </div>
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-sm-3 col-xs-3 overall">
           <span class="head">{{'Other Accrediation(s)'}}</span>
         </div>
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-sm-3 col-xs-3 overall">
           <span class="value">{{selectedRequest?.userInfo.otherAccreditation || '&nbsp;'}}</span>
         </div>
       </div>
@@ -714,16 +714,17 @@
           </div>
           <div class="team" style="padding: 0px 15px 0px 15px;margin: 0px 0px;">
             <div class="box row">
-              <div class="col-md-3 name">{{'Reg. No.'}}</div>
-              <div class="col-md-3 sme">{{selectedRequest?.eligibility.data[item+'regno']}}</div>
-              <div class="col-md-3 name">{{'Date'}}</div>
-              <div class="col-md-3 sme">{{selectedRequest?.eligibility.data[item+'regdate'] | date:'fullDate'}}</div>
+              <div class="col-md-3 col-sm-3 col-xs-3 name">{{'Reg. No.'}}</div>
+              <div class="col-md-3 col-sm-3 col-xs-3 sme">{{selectedRequest?.eligibility.data[item+'regno'] || '&nbsp;'}}</div>
+              <div class="col-md-3 col-sm-3 col-xs-3 name">{{'Date'}}</div>
+              <div class="col-md-3 col-sm-3 col-xs-3 sme">{{(selectedRequest?.eligibility.data[item+'regdate'] |
+                date:'fullDate') || '&nbsp;'}}</div>
             </div>
             <div class="box row" *ngIf="item === 'secp'">
-              <div class="col-md-3 name">{{'Status'}}</div>
-              <div class="col-md-3 sme">{{selectedRequest?.eligibility.data[item+'status']}}</div>
-              <div class="col-md-3 name">{{'Nature'}}</div>
-              <div class="col-md-3 sme">{{selectedRequest?.eligibility.data[item+'nature']}}</div>
+              <div class="col-md-3 col-sm-3 col-xs-3 name">{{'Status'}}</div>
+              <div class="col-md-3 col-sm-3 col-xs-3 sme">{{selectedRequest?.eligibility.data[item+'status'] || '&nbsp;'}}</div>
+              <div class="col-md-3 col-sm-3 col-xs-3 name">{{'Nature'}}</div>
+              <div class="col-md-3 col-sm-3 col-xs-3 sme">{{selectedRequest?.eligibility.data[item+'nature'] || '&nbsp;'}}</div>
             </div>
           </div>
         </div>
@@ -737,11 +738,11 @@
       </div> -->
 
       <div class="header row" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-3 item" style="margin-top: 2px;
+        <div class="col-md-3 col-sm-3 col-xs-3 item" style="margin-top: 2px;
     height: 82px;
     display: table;
     width: 98.2%;">Tax Registration</div>
-        <div class="col-md-3" style="padding: 0px;">
+        <div class="col-md-3 col-sm-3 col-xs-3" style="padding: 0px;">
           <div class="overall">
             <span class="head">{{'NTN'}}</span>
           </div>
@@ -751,7 +752,7 @@
             </span>
           </div>
         </div>
-        <div class="col-md-3" style="padding: 0px;">
+        <div class="col-md-3 col-sm-3 col-xs-3" style="padding: 0px;">
           <div class="overall">
             <span class="head">{{'Status'}}</span>
           </div>
@@ -761,7 +762,7 @@
             </span>
           </div>
         </div>
-        <div class="col-md-3" style="padding: 0px;">
+        <div class="col-md-3 col-sm-3 col-xs-3" style="padding: 0px;">
           <div class="overall">
             <span class="head">{{'MOU'}}</span>
           </div>
@@ -778,26 +779,26 @@
 
       <!-- ADDRESSES OFFICE REGISTERED -->
       <div class="row" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-4 overall">
+        <div class="col-md-4 col-xs-4 col-sm-4 overall">
           <span class="head">{{'registered Office Address'}}</span>
         </div>
-        <div class="col-md-8 overall">
+        <div class="col-md-8 col-xs-8 col-sm-8 overall">
           <span class="value">{{selectedRequest?.userInfo.address || '&nbsp;'}}</span>
         </div>
       </div>
 
       <div class="row" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-4 overall">
+        <div class="col-md-4 col-xs-4 col-sm-4 overall">
           <span class="head">{{'Other Office Address (if any)'}}</span>
         </div>
-        <div class="col-md-8 overall">
+        <div class="col-md-8 col-xs-8 col-sm-8 overall">
           <span class="value">{{selectedRequest?.userInfo.otherAddress || '&nbsp;'}}</span>
         </div>
       </div>
 
       <!-- AUDIT FIRM INFO -->
       <div class="row" style="padding: 0px;margin: 0px 0px;">
-        <div class="header col-md-4" style="padding: 0px;">
+        <div class="header col-md-4 col-xs-4 col-sm-4" style="padding: 0px;">
           <!-- <div class="overall">
             <span class="head">{{'Audit Firm (AF)'}}</span>
           </div>
@@ -813,7 +814,7 @@
     width: 98.7%;">Audit firm on panel fo applicant</div>
           <!-- </div> -->
         </div>
-        <div class="col-md-4" style="padding: 0px;">
+        <div class="col-md-4 col-xs-4 col-sm-4" style="padding: 0px;">
           <div class="overall">
             <span class="head">{{'Audit Firm Name'}}</span>
           </div>
@@ -823,7 +824,7 @@
             </span>
           </div>
         </div>
-        <div class="col-md-4" style="padding: 0px;">
+        <div class="col-md-4 col-xs-4 col-sm-4" style="padding: 0px;">
           <div class="overall">
             <span class="head">{{'SBP Ranking'}}</span>
           </div>
@@ -840,61 +841,61 @@
         </div>
       </div>
       <div class="row" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span class="head">{{'Thematic Areas'}}</span>
         </div>
-        <div class="col-md-5 overall">
+        <div class="col-md-5 col-xs-5 col-sm-5 overall">
           <span class="value">
             <span *ngFor="let area of selectedRequest?.thematicAreas; let i = index;">
               {{area.thematicAreaItem.name}}{{(i !== selectedRequest?.thematicAreas.length - 1) ? ','
               : ''}}</span>
           </span>
         </div>
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
           <span class="head">{{'Experience'}}</span>
         </div>
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span class="value">{{getThematicAreaExp()}} Years</span>
         </div>
       </div>
 
       <!-- COUNTER PART/COCEPT NOTE -->
       <div class="row" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
           <span class="head">{{'Counterpart Availability'}}</span>
         </div>
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
           <span class="value">{{(selectedRequest?.thematicAreas[0]?.counterpart | titlecase) || '&nbsp;'}}</span>
         </div>
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
           <span class="head">{{'Concept Note'}}</span>
         </div>
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
           <span class="value">{{selectedRequest?.eligibility?.data?.conceptnotefile ?
             ('available' | titlecase) : ('Not Available' | titlecase) || '&nbsp;'}}</span>
         </div>
       </div>
       <div class="row" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-4 overall">
+        <div class="col-md-4 col-xs-4 col-sm-4 overall">
           <span class="head">{{'Project Proposal Submission'}}</span>
         </div>
-        <div class="col-md-8 overall">
+        <div class="col-md-8 col-xs-8 col-sm-8 overall">
           <span class="value">{{selectedRequest?.eligibility?.data?.projectproposal || '&nbsp;'}}</span>
         </div>
       </div>
 
 
       <div class="row" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
           <span class="head">{{"Applicant's Eligibility"}}</span>
         </div>
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span class="value">{{selectedRequest?.eligibility.status || '&nbsp;'}}</span>
         </div>
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span class="head">{{'Reasons'}}</span>
         </div>
-        <div class="col-md-5 overall">
+        <div class="col-md-5 col-xs-5 col-sm-5 overall">
           <span class="value">{{selectedRequest?.eligibility?.comment || '&nbsp;'}}</span>
         </div>
       </div>
@@ -985,17 +986,17 @@
       <!-- SECTION SMES LIST -->
       <div class="team" style="padding-top: 5px !important;padding: 15px;margin: 0px 0px;">
         <div class="header row">
-          <div class="col-md-3 item">Internal Review Members</div>
-          <div class="col-md-3 item">Areas</div>
-          <div class="col-md-3 item">Names</div>
-          <div class="col-md-3 item">Signatures</div>
+          <div class="col-md-3 col-xs-3 col-sm-3 item">Internal Review Members</div>
+          <div class="col-md-3 col-xs-3 col-sm-3 item">Areas</div>
+          <div class="col-md-3 col-xs-3 col-sm-3 item">Names</div>
+          <div class="col-md-3 col-xs-3 col-sm-3 item">Signatures</div>
         </div>
         <div *ngFor="let item of userReviewRequests">
           <div class="box row">
-            <div class="col-md-3 sme">{{item.reportSme.designation || '&nbsp;'}}</div>
-            <div class="col-md-3 name">{{item.name || '&nbsp;'}}</div>
-            <div class="col-md-3 sme">{{item.reportSme.name || '&nbsp;'}}</div>
-            <div class="col-md-3 sme">{{'&nbsp;'}}</div>
+            <div class="col-md-3 col-xs-3 col-sm-3 sme">{{item.reportSme.designation || '&nbsp;'}}</div>
+            <div class="col-md-3 col-xs-3 col-sm-3 name">{{item.name || '&nbsp;'}}</div>
+            <div class="col-md-3 col-xs-3 col-sm-3 sme">{{item.reportSme.name || '&nbsp;'}}</div>
+            <div class="col-md-3 col-xs-3 col-sm-3 sme">{{'&nbsp;'}}</div>
           </div>
         </div>
       </div>
@@ -1006,7 +1007,7 @@
         <div class="col-md-12 title">{{'Component wise score'}}</div>
       </div>
       <div class="scores row" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-4 d-flex flex-column box" *ngFor="let item of userReviewRequests">
+        <div class="col-md-4 col-xs-4 col-sm-4 d-flex flex-column box" *ngFor="let item of userReviewRequests">
           <span class="name">{{item.name || '&nbsp;'}}</span>
           <span class="sme">{{item.review.rating || '&nbsp;'}}</span>
         </div>
@@ -1019,20 +1020,20 @@
       </div> -->
 
       <div class="row header" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-2 item" style="padding: 8px 8px 0px !important;
+        <div class="col-md-2 col-xs-2 col-sm-2 item" style="padding: 8px 8px 0px !important;
     margin-top: 2px;
     height: 39px;">Accreditation</div>
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span class="head">{{'Overall Score'}}</span>
         </div>
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
           <span class="value">{{userAllScore/2 || '&nbsp;'}}</span>
         </div>
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span class="head">{{'Risk Ranking'}}</span>
         </div>
 
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
           <span class="value">{{userSystemStatus || '&nbsp;'}}</span>
         </div>
       </div>
@@ -1044,21 +1045,21 @@
       </div>
 
       <div class="row d-flex align-items-center" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
           <span style="height: 49px;" class="head">{{'Deputy General Manager (P&OG)'}}</span>
         </div>
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span style="height: 49px;" class="head">{{'Name' || '&nbsp;'}}</span>
         </div>
-        <div class="col-md-3 overall">
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
           <mat-form-field appearance="outline" style="margin: 0px;">
             <input placeholder="Enter Name Here..." type="text" matInput [ngModel]="chairmanName" />
           </mat-form-field>
         </div>
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span style="height: 49px;" class="head">{{'Signature' || '&nbsp;'}}</span>
         </div>
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span style="height: 49px;" class="value">{{'&nbsp;'}}</span>
         </div>
       </div>
@@ -1080,10 +1081,10 @@
 
       <div class="row d-flex flex-align-center miti" *ngFor="let item of userReviewRequests"
         style="padding: 0px;margin: 0px 0px 10px;">
-        <div class="col-md-4" style="background-color: #E7E6E6;padding: 5px;">
+        <div class="col-md-4 col-xs-4 col-sm-4" style="background-color: #E7E6E6;padding: 5px;">
           <span>{{item.name}}</span>
         </div>
-        <div class="col-md-8" style="background-color: #f9f9f9;padding: 5px;">
+        <div class="col-md-8 col-xs-8 col-sm-8" style="background-color: #f9f9f9;padding: 5px;">
           <div class="controls-wise" *ngFor="let obj of item.review.controlWiseComments">
             <span *ngIf="obj.status === 'un-satisfy'">-{{obj.comments}}</span>
             <span style="display: none;" *ngIf="obj.status === 'satisfy'">{{'&nbsp;'}}</span>
@@ -1102,17 +1103,17 @@
 
       <div *ngIf="reportReviewUsers.length" class="team" style="padding: 0px 15px;margin: 0px 0px;">
         <div class="header row">
-          <div class="col-md-3 item">Designation</div>
-          <div class="col-md-3 item">Group</div>
-          <div class="col-md-3 item">Name</div>
-          <div class="col-md-3 item">Signature</div>
+          <div class="col-md-3 col-xs-3 col-sm-3 item">Designation</div>
+          <div class="col-md-3 col-xs-3 col-sm-3 item">Group</div>
+          <div class="col-md-3 col-xs-3 col-sm-3 item">Name</div>
+          <div class="col-md-3 col-xs-3 col-sm-3 item">Signature</div>
         </div>
         <div *ngFor="let item of reportReviewUsers">
           <div class="box row">
-            <div class="col-md-3 sme">{{item.designation || '&nbsp;'}}</div>
-            <div class="col-md-3 name">{{item.group || '&nbsp;'}}</div>
-            <div class="col-md-3 sme">{{item.name || '&nbsp;'}}</div>
-            <div class="col-md-3 sme">{{'&nbsp;'}}</div>
+            <div class="col-md-3 col-xs-3 col-sm-3 sme">{{item.designation || '&nbsp;'}}</div>
+            <div class="col-md-3 col-xs-3 col-sm-3 name">{{item.group || '&nbsp;'}}</div>
+            <div class="col-md-3 col-xs-3 col-sm-3 sme">{{item.name || '&nbsp;'}}</div>
+            <div class="col-md-3 col-xs-3 col-sm-3 sme">{{'&nbsp;'}}</div>
           </div>
         </div>
       </div>
@@ -1169,29 +1170,29 @@
       </div>
 
       <div class="row d-flex align-items-center" style="padding: 0px;margin: 0px 0px;">
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span style="height: 49px;" class="head">{{'Name'}}</span>
         </div>
 
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <mat-form-field appearance="outline" style="margin: 0px;">
             <input type="text" matInput placeholder="Enter Name Here..">
           </mat-form-field>
         </div>
 
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span style="height: 49px;" class="head">{{'Signature'}}</span>
         </div>
 
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span style="height: 49px;" class="value">{{'&nbsp;'}}</span>
         </div>
 
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span style="height: 49px;" class="head">{{'Dated'}}</span>
         </div>
 
-        <div class="col-md-2 overall">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span style="height: 49px;" class="value">{{'&nbsp;'}}</span>
         </div>
       </div>
