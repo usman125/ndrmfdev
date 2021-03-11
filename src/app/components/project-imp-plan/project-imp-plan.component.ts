@@ -529,7 +529,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
           hectare: null,
         }
       }
-      this.clearCostDetails();
+      // this.clearCostDetails();
     }
   }
 
