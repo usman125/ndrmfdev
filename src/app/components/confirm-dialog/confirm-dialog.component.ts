@@ -1,7 +1,9 @@
-import { Component, OnInit, Inject, HostListener } from '@angular/core';
+import { Component, OnInit, Inject, HostListener, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
+import { Subscription } from 'rxjs';
+import { PrimaryAppraisalFormsStore } from 'src/app/stores/primary-appraisal-forms/primary-appraisal-forms-store';
 
 export interface ConfirmData {
   cancelText: string;
@@ -25,6 +27,7 @@ export interface ConfirmData {
   markUnEligible: any;
   markUnEligibleReason: any;
   taSelectionType: any;
+  enableGia: any;
 }
 
 @Component({
@@ -32,7 +35,7 @@ export interface ConfirmData {
   templateUrl: './confirm-dialog.component.html',
   styleUrls: ['./confirm-dialog.component.css']
 })
-export class ConfirmDialogComponent implements OnInit {
+export class ConfirmDialogComponent implements OnInit, OnDestroy {
 
   checked: boolean = false;
   areas = new FormControl();
@@ -42,9 +45,13 @@ export class ConfirmDialogComponent implements OnInit {
   allJvUsers: any = [];
   showJvUsers: boolean = false;
 
+  Subscription: Subscription = new Subscription();
+  selectedProject: any = null;
+
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmData,
+    private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
     private _userService: UserService) {
     this.data.startDate = new Date().toISOString();
   }
@@ -52,6 +59,9 @@ export class ConfirmDialogComponent implements OnInit {
   ngOnInit() {
     // console.log("ALL THEMATIC AREAS:--", this.data.areas);
     // this.areas.patchValue(this.data.areas, { onlySelf: true });
+    this._primaryAppraisalFormsStore.state$.subscribe((data) => {
+      this.selectedProject = data.selectedProject;
+    })
   }
 
   onNoClick(): void {
@@ -77,8 +87,19 @@ export class ConfirmDialogComponent implements OnInit {
   }
 
   setStatus(status) {
-    this.close({ status, endDate: this.data.endDate, comments: this.data.markUnEligibleReason });
+    this.close({
+      status,
+      endDate: this.data.endDate,
+      comments: this.data.markUnEligibleReason
+    });
 
+  }
+
+  enableGia(status) {
+    this.close({
+      status,
+      enableGia: true,
+    });
   }
 
   assignToGm(status) {
@@ -102,7 +123,7 @@ export class ConfirmDialogComponent implements OnInit {
       areas: this.areas.value || [],
       status: 'ok',
       applyAsJv: this.applyAsJv.value,
-      jvUserId: this.jvUsers.value ? this.jvUsers.value.id : null,
+      jvUser: this.jvUsers.value ? this.jvUsers.value : null,
     })
   }
 
@@ -121,17 +142,19 @@ export class ConfirmDialogComponent implements OnInit {
   asvailableAsJvChanged($event) {
     console.log("Available AS JV USERS CHANGED:--", $event);
     if ($event.checked) {
-      this._userService.getAllJvUsers().subscribe(
-        (result: any) => {
-          console.log("ALL JV USERS:--", result);
-          this.allJvUsers = result;
-          this.showJvUsers = true;
-          this.jvUsers.setValidators([Validators.required]);
-        },
-        (error: any) => {
-          console.log("ALL JV USERS:--", error);
-        }
-      );
+      this.jvUsers.setValidators([Validators.required]);
+      this.showJvUsers = true;
+      // this._userService.getAllJvUsers().subscribe(
+      //   (result: any) => {
+      //     console.log("ALL JV USERS:--", result);
+      //     this.allJvUsers = result;
+      //     this.showJvUsers = true;
+      //     this.jvUsers.setValidators([Validators.required]);
+      //   },
+      //   (error: any) => {
+      //     console.log("ALL JV USERS:--", error);
+      //   }
+      // );
     } else {
       this.jvUsers.reset();
       this.jvUsers.clearValidators();
@@ -163,5 +186,8 @@ export class ConfirmDialogComponent implements OnInit {
     this.close(false);
   }
 
+  ngOnDestroy() {
+    this.Subscription.unsubscribe();
+  }
 
 }

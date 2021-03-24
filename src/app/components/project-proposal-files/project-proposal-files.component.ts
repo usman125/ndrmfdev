@@ -7,6 +7,7 @@ import { AuthStore } from '../../stores/auth/auth-store';
 import * as _ from 'lodash';
 import { ProjectService } from 'src/app/services/project.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { saveAs } from "file-saver";
 /**
  * Food data with nested structure.
  * Each node has a name and an optional list of children.

@@ -710,7 +710,16 @@
         <div *ngFor="let item of selectedRequest?.eligibility.data.registartions" class="col-md-12"
           style="padding: 2px;margin: 0px;">
           <div class="row accred" style="padding: 0px;margin: 0px 0px;">
-            <div class="col-md-12 title" style="margin-top:0px;">{{item}}</div>
+            <div class="col-md-12 title" style="margin-top:0px;">{{
+              item === 'secp' ? 'Securities and Exchange Commission (SECP)' :
+              item === 'co84orca2017' ? 'Companies Ordinance 1984 or Companies Act 2017' :
+              item === 'sre1860' ? 'Societies Registration Act 1860' :
+              item === 'vswoo61' ? 'Voluntary Social Welfare Organizations Ordinance 1961' :
+              item === 'ta82' ? 'Trusts Act 1882' :
+              item === 'eadgop' ?   'Economic Affairs Division, Government of Pakistan'  :
+              item === 'unag' ? 'By means of treaty or other agreement that acts as a charter with Government of Pakistan [for UN Agencies]' :
+              '&nbsp;'
+            }}</div>
           </div>
           <div class="team" style="padding: 0px 15px 0px 15px;margin: 0px 0px;">
             <div class="box row">

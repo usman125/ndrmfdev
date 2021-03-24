@@ -168,7 +168,7 @@ export class ProjectService {
   }
 
   markToGm(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=MARKED_TO_GM`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=MARKED_TO_GM&subStatus=PENDING`;
     const status = 'MARKED_TO_GM';
     return this._httpClient.put(
       url,
@@ -177,7 +177,7 @@ export class ProjectService {
   }
 
   markToCeo(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=MARKED_TO_CEO`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=MARKED_TO_CEO&subStatus=PENDING`;
     const status = 'MARKED_TO_GM';
     return this._httpClient.put(
       url,
@@ -195,7 +195,7 @@ export class ProjectService {
   }
 
   approvePreApparisalByGm(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=APPROVED`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=APPROVED&subStatus=PENDING`;
     return this._httpClient.put(
       url,
       null
@@ -203,7 +203,7 @@ export class ProjectService {
   }
 
   disapprovePreApparisalByGm(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=REJECTED`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=REJECTED&subStatus=PENDING`;
     return this._httpClient.put(
       url,
       null
@@ -211,7 +211,7 @@ export class ProjectService {
   }
 
   approveExtApparisalByGm(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=APPROVED`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=APPROVED&subStatus=PENDING`;
     return this._httpClient.put(
       url,
       null
@@ -220,7 +220,7 @@ export class ProjectService {
 
 
   disapproveExtApparisalByGm(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=REJECTED`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=REJECTED&subStatus=PENDING`;
     return this._httpClient.put(
       url,
       null

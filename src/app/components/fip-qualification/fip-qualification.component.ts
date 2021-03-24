@@ -222,7 +222,6 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
               dummyResult.thematicAreas = result.thematicAreasListItems;
               dummyResult.userInfo = result.userInfo;
               this.allSections = dummyResult;
-              console.log("GET QUALIFICATION REQUESTS WITH ID:--", result, dummyResult);
               let allInitimations = [];
               var count1 = 0;
               var count2 = 0;
@@ -242,6 +241,8 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
                   data: c.data === null ? c.data : JSON.parse(c.data)
                 }
               })
+              console.log("GET QUALIFICATION REQUESTS WITH ID:--", result, dummyResult);
+              this.allSmes = _.orderBy(this.allSmes, ['orderNum'], ['asc']);
               this.pendingSectionsCount = count1;
               this.submitSectionsCount = count2;
               this.allSectionsCount = this.allSmes.length;
@@ -255,6 +256,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
                 "RESULT FROM ALL API REQUESTS:--\n", result,
                 '\nPENDING SECTION COUNT:--', this.pendingSectionsCount,
                 '\nALL SECTIONS COUNT:--', this.allSectionsCount,
+                '\nALL SMES:--', this.allSmes,
                 '\nSUBMIT SECTIONS COUNT:--', this.submitSectionsCount
               );
             },
@@ -326,7 +328,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
               let object = {
                 areas: [],
                 availableAsJv: confirmed.applyAsJv,
-                jvUserId: confirmed.jvUserId
+                jvUser: confirmed.jvUser
               }
               let areasId = [];
               for (let i = 0; i < confirmed.areas.length; i++) {

@@ -124,6 +124,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             this.proposalSections.push(key);
           }
         }
+        this.proposalSections = _.orderBy(this.proposalSections, ['orderNum'], ['asc']);
         let pendingCount = 0;
         let pendingReviewCount = 0;
         let submitCount = 0;
@@ -1122,27 +1123,68 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
     this._confirmModelService.confirmed().subscribe(confirmed => {
       if (confirmed) {
-        this._projectService.setProjectStage(this.selectedProjectId, confirmed.status).subscribe(
-          result => {
-            let stage = null;
-            if (confirmed.status === 'PRELIMINARY_APPRAISAL') stage = 'Preliminary Appraisal'
-            if (confirmed.status === 'EXTENDED_APPRAISAL') stage = 'Extended Appraisal'
-            if (confirmed.status === 'TAC_MEETING') stage = 'TAC Meeting'
-            if (confirmed.status === 'RMC_MEETING') stage = 'RMC Meeting'
-            if (confirmed.status === 'BOD_MEETING') stage = 'BOD Meeting'
-            if (confirmed.status === 'OFFER_LETTER') stage = 'Offer Letter'
-            if (confirmed.status === 'GIA') stage = 'GIA'
-            this._primaryAppraisalFormsStore.setProjectStage(stage);
-            options.setStages = false;
-            options.add = true;
-            options.title = 'Successfull!';
-            options.message = 'Project stage has been changed';
-            this._confirmModelService.open(options);
-          },
-          error => {
-            console.log("ERROR FROM MARK TO GM:--", error);
-          }
-        );
+        if (confirmed.status !== 'GIA') {
+          this._projectService.setProjectStage(this.selectedProjectId, confirmed.status).subscribe(
+            result => {
+              let stage = null;
+              if (confirmed.status === 'PRELIMINARY_APPRAISAL') stage = 'Preliminary Appraisal'
+              if (confirmed.status === 'EXTENDED_APPRAISAL') stage = 'Extended Appraisal'
+              if (confirmed.status === 'TAC_MEETING') stage = 'TAC Meeting'
+              if (confirmed.status === 'RMC_MEETING') stage = 'RMC Meeting'
+              if (confirmed.status === 'BOD_MEETING') stage = 'BOD Meeting'
+              if (confirmed.status === 'OFFER_LETTER') stage = 'Offer Letter'
+              if (confirmed.status === 'GIA') stage = 'GIA'
+              this._primaryAppraisalFormsStore.setProjectStage(stage);
+              options.setStages = false;
+              options.add = true;
+              options.title = 'Successfull!';
+              options.message = 'Project stage has been changed';
+              this._confirmModelService.open(options);
+            },
+            error => {
+              console.log("ERROR FROM MARK TO GM:--", error);
+            }
+          );
+        } else {
+          const options = {
+            title: 'Information regarding enabling GIA!',
+            message: 'Fill the following checklist!',
+            cancelText: 'CANCEL',
+            confirmText: 'ENABLE GIA',
+            add: false,
+            confirm: false,
+            setStatus: false,
+            assignToGm: false,
+            setStages: false,
+            enableGia: true,
+          };
+          this._confirmModelService.open(options);
+          this._confirmModelService.confirmed().subscribe(confirmed => {
+            if (confirmed) {
+              this._projectService.setProjectStage(this.selectedProjectId, confirmed.status).subscribe(
+                result => {
+                  let stage = null;
+                  if (confirmed.status === 'PRELIMINARY_APPRAISAL') stage = 'Preliminary Appraisal'
+                  if (confirmed.status === 'EXTENDED_APPRAISAL') stage = 'Extended Appraisal'
+                  if (confirmed.status === 'TAC_MEETING') stage = 'TAC Meeting'
+                  if (confirmed.status === 'RMC_MEETING') stage = 'RMC Meeting'
+                  if (confirmed.status === 'BOD_MEETING') stage = 'BOD Meeting'
+                  if (confirmed.status === 'OFFER_LETTER') stage = 'Offer Letter'
+                  if (confirmed.status === 'GIA') stage = 'GIA'
+                  this._primaryAppraisalFormsStore.setProjectStage(stage);
+                  options.setStages = false;
+                  options.add = true;
+                  options.title = 'Successfull!';
+                  options.message = 'Project stage has been changed';
+                  this._confirmModelService.open(options);
+                },
+                error => {
+                  console.log("ERROR FROM MARK TO GM:--", error);
+                }
+              );
+            }
+          })
+        }
       }
     });
 

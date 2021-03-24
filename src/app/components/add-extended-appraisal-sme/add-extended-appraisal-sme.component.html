@@ -58,6 +58,9 @@
           </span>
         </div>
       </div>
+      <div class="top-info-bar">
+        <span><span id="answer">Comments:</span> {{extendedAppraisal.comments}}</span>
+      </div>
       <div class="forms p-3">
         <formio *ngIf="(item.data === null || item.data !== null) && item.status === 'Pending'" [form]="item.template"
           [submission]="{data:item.data}" (submit)="onSubmit($event, item.id)"></formio>

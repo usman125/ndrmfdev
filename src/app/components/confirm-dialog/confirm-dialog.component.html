@@ -1,9 +1,9 @@
 <div class="dialog" appNoRightClick>
   <div class="header">
-    <h1 mat-dialog-title>{{ data.title }}</h1>
+    <h1 mat-dialog-title class="mb-0">{{ data.title }}</h1>
   </div>
   <div mat-dialog-content>
-    <p class="dialog-message">{{ data.message }}</p>
+    <p class="dialog-message mb-3">{{ data.message }}</p>
 
     <div class="controls" *ngIf="data?.confirm">
       <mat-form-field>
@@ -59,13 +59,16 @@
         <button mat-raised-button (click)="setStatus('RMC_MEETING')" color="accent" class="m-2">{{'Enable RMC' |
           uppercase}}
         </button>
-        <button mat-raised-button (click)="setStatus('OFFER_LETTER')" color="accent" class="m-2">{{'Enable Offer Letter'
-          | uppercase}}
-        </button>
         <button mat-raised-button (click)="setStatus('GIA')" color="accent" class="m-2">{{'Enable gia' | uppercase}}
         </button>
-        <button mat-raised-button (click)="setStatus('GIA_CHECKLIST')" color="accent" class="m-2">{{'Checklist to
+        <button [disabled]="selectedProject?.gia.status === 'Not Initiated'" mat-raised-button
+          (click)="setStatus('GIA_CHECKLIST')" color="accent" class="m-2">{{'Checklist to
           FIP' | uppercase}}
+        </button>
+        <button [disabled]="selectedProject?.gia?.status === 'Not Initiated' && 
+        selectedProject?.giaChecklist === null" mat-raised-button (click)="setStatus('OFFER_LETTER')" color="accent"
+          class="m-2">{{'Enable Offer Letter'
+          | uppercase}}
         </button>
         <!-- <button mat-raised-button (click)="setStatus('MARKED_TO_GM')" color="accent"
           class="m-2">{{'marked to gm' | uppercase}}
@@ -125,12 +128,16 @@
       <section *ngIf="data?.taSelectionType !== 'eligibility'">
         <mat-checkbox (change)="asvailableAsJvChanged($event)" [formControl]="applyAsJv">Available as JV!</mat-checkbox>
 
-        <mat-form-field *ngIf="showJvUsers">
+        <!-- <mat-form-field *ngIf="showJvUsers">
           <mat-select (selectionChange)="jvUsersChanged($event)" placeholder="Select User" [formControl]="jvUsers">
             <mat-option *ngFor="let object of allJvUsers;" [value]="object">
               {{object.firstName}}&nbsp;{{object.lastName}}
             </mat-option>
           </mat-select>
+        </mat-form-field> -->
+        <mat-form-field *ngIf="showJvUsers" appearance="outline">
+          <mat-label>Please enter preffered name</mat-label>
+          <input type="text" matInput placeholder="Enter Name Here..." [formControl]="jvUsers">
         </mat-form-field>
       </section>
 
@@ -157,6 +164,37 @@
       <mat-form-field appearance="outline">
         <textarea [(ngModel)]="data.markUnEligibleReason" matInput placeholder="Your comments..." rows="6"></textarea>
       </mat-form-field>
+    </div>
+
+    <div class="controls" *ngIf="data?.enableGia">
+      <section class="example-section d-flex flex-column">
+        <label id="answer" class="example-margin">Did FIP submit all documents:</label>
+        <mat-radio-group>
+          <mat-radio-button class="example-margin mr-3" value="yes">Yes</mat-radio-button>
+          <mat-radio-button class="example-margin" value="no">No</mat-radio-button>
+        </mat-radio-group>
+      </section>
+      <section class="example-section d-flex flex-column">
+        <label id="answer" class="example-margin">All appraisals done:</label>
+        <mat-radio-group>
+          <mat-radio-button class="example-margin mr-3" value="yes">Yes</mat-radio-button>
+          <mat-radio-button class="example-margin" value="no">No</mat-radio-button>
+        </mat-radio-group>
+      </section>
+      <section class="example-section d-flex flex-column">
+        <label id="answer" class="example-margin">Did FIP identify all schemes:</label>
+        <mat-radio-group>
+          <mat-radio-button class="example-margin mr-3" value="yes">Yes</mat-radio-button>
+          <mat-radio-button class="example-margin" value="no">No</mat-radio-button>
+        </mat-radio-group>
+      </section>
+      <section class="example-section d-flex flex-column">
+        <label id="answer" class="example-margin">Confirm Board decision:</label>
+        <mat-radio-group>
+          <mat-radio-button class="example-margin mr-3" value="approved">Approved</mat-radio-button>
+          <mat-radio-button class="example-margin" value="rejected">Rejected</mat-radio-button>
+        </mat-radio-group>
+      </section>
     </div>
 
   </div>
@@ -186,7 +224,7 @@
       [disabled]="!applyAsJv.value || (applyAsJv.value && !jvUsers.valid)" mat-raised-button
       (click)="addThematicAreas()" color="primary" class="m-2">{{data.confirmText |
       uppercase}}</button>
-      
+
     <button *ngIf="data?.selectThematic && data?.taSelectionType === 'eligibility'"
       [disabled]="(!areas.value || areas.value?.length === 0) || checkAreasInfo()" mat-raised-button
       (click)="addThematicAreas()" color="primary" class="m-2">{{data.confirmText |
@@ -215,6 +253,13 @@
     <button [disabled]="data.markUnEligibleReason === ''" mat-raised-button *ngIf="data?.markUnEligible"
       (click)="closeMarkUnEligible()" color="primary">
       {{'update' | uppercase}}
+    </button>
+
+    <button mat-raised-button *ngIf="data?.enableGia" (click)="enableGia('GIA')" color="accent">
+      {{data.confirmText | uppercase}}
+    </button>
+    <button mat-raised-button *ngIf="data?.enableGia" (click)="cancel()" color="warn">
+      {{data.cancelText | uppercase}}
     </button>
   </div>
 </div>

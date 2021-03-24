@@ -74,6 +74,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { SingleGrantDisbursmentsStore } from './stores/single-grant-disbursment/single-grant-disbursment-store';
 import { DesignationsStore } from './stores/designations/designations-store';
+import { MatRadioModule } from '@angular/material/radio';
 // import { DesignationsComponent } from './components/designations/designations.component';
 // import { SmeQprRequestsComponent } from './components/sme-qpr-requests/sme-qpr-requests.component';
 // import { KpiProjectStatsComponent } from './components/kpi-project-stats/kpi-project-stats.component';
@@ -135,6 +136,7 @@ export function tokenGetter() {
     MatCheckboxModule,
     MatTabsModule,
     MatDatepickerModule,
+    MatRadioModule,
 
     JwtModule.forRoot({
       config: {
