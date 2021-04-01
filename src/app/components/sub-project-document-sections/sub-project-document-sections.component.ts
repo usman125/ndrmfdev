@@ -34,6 +34,7 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
   dataSource: any = [];
 
   apiLoading: boolean = false;
+  commentsFlag: boolean = false;
   @Input() viewType: any = null;
 
   filterType: any = null;
@@ -206,6 +207,10 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
         )
       }
     });
+  }
+
+  toggleComments() {
+    this.commentsFlag = !this.commentsFlag;
   }
 
   ngOnDestroy() {

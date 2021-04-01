@@ -16,3 +16,50 @@
 button {
   outline: none;
 }
+
+.row.header-row,
+.row.data-row {
+  background: #eff2f7;
+  padding: 30px 15px;
+}
+.row.data-row {
+  background: #fff;
+}
+.row.data-row .item .mat-chip {
+  height: auto;
+}
+
+.row.data-row:nth-child(2n + 1) {
+  background: #eff2f7;
+}
+
+.matrix {
+  margin: 20px;
+}
+span.mobileheads {
+  display: none;
+  color: #346187;
+}
+@media only screen and (max-width: 768px) {
+  .row.data-row {
+    font-size: 12px;
+  }
+  .row.header-row {
+    display: none;
+  }
+  .item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  span.mobileheads {
+    display: flex;
+    min-width: 106px;
+    text-align: left;
+  }
+  .item span {
+    text-align: right;
+  }
+}
