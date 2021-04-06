@@ -34,7 +34,7 @@ export class GiaCommentsMatrixComponent implements OnInit {
 
     this.Subscription.add(
       this._accreditationCommentsMatrixStore.state$.subscribe(data => {
-        console.log("COMMENTS MATRIX FROM STORE IN COMPOENNT:--", data.comments);
+        // console.log("COMMENTS MATRIX FROM STORE IN COMPOENNT:--", data.comments);
         this.allComments = data.comments;
       })
     );
@@ -44,7 +44,7 @@ export class GiaCommentsMatrixComponent implements OnInit {
     this._projectService.getSingleProject(this.selectedProjectId).subscribe(
       (result: any) => {
         this.allComments = result.gia.reviewsHistory !== null ? result.gia.reviewsHistory : [];
-        console.log("PROJECT DETAILS FROM DATABASE:--", result, this.allComments);
+        // console.log("PROJECT DETAILS FROM DATABASE:--", result, this.allComments);
       },
       error => {
         console.log("ERROR DETAILS FROM DATABASE:--", error);

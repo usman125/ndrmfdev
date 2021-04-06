@@ -84,7 +84,7 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
           })
           .value();
         this.dataSource.data = array;
-        console.log("ALL FILES FROM PROJECT:---", data.selectedProject.files, array);
+        // console.log("ALL FILES FROM PROJECT:---", data.selectedProject.files, array);
       })
     )
   }
@@ -117,7 +117,7 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
   }
 
   downloadFile(file) {
-    console.log("FILE TO DOWNLOAD:---", file);
+    // console.log("FILE TO DOWNLOAD:---", file);
     // let el: HTMLElement = this.downloadLink.nativeElement;
     this.selectedFile = 'data:image/jpeg;base64,' + file.picBytes;
     // el.click();

@@ -108,13 +108,13 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
           this.dataSource = this.allSections;
         }
         this.apiLoading = false;
-        console.log("\nALL SECTIONS:--\n", this.allSections,
-          '\nASSIGNED SECTIONS:--\n', this.assignedSections,
-          '\nASSIGNED REVIEWS SECTIONS:--\n', this.assignedReviewsSections,
-          '\nUN-ASSIGNED SECTIONS:--\n', this.unAssignedSections,
-          '\nPENDING REVIEWS SECTIONS:--\n', this.pendingReviewsSections,
-          '\nCOMPLETED REVIEWS SECTIONS:--\n', this.completedReviewsSections,
-        );
+        // console.log("\nALL SECTIONS:--\n", this.allSections,
+        //   '\nASSIGNED SECTIONS:--\n', this.assignedSections,
+        //   '\nASSIGNED REVIEWS SECTIONS:--\n', this.assignedReviewsSections,
+        //   '\nUN-ASSIGNED SECTIONS:--\n', this.unAssignedSections,
+        //   '\nPENDING REVIEWS SECTIONS:--\n', this.pendingReviewsSections,
+        //   '\nCOMPLETED REVIEWS SECTIONS:--\n', this.completedReviewsSections,
+        // );
       })
     );
   }
@@ -123,10 +123,10 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
     var object = {
       comments: JSON.stringify(this.sectionComments)
     }
-    console.log("REVIEW TO ADD FOR SECTION:--", object, this.selectedSection);
+    // console.log("REVIEW TO ADD FOR SECTION:--", object, this.selectedSection);
     this._projectService.submitSubProjectDocReview(this.selectedSection, object).subscribe(
       result => {
-        console.log("RESULT ADDING REVIEW:--", result);
+        // console.log("RESULT ADDING REVIEW:--", result);
         this._subProjectDocSectionsStore.changeSectionReviewStatus(this.selectedSection, 'Review Completed');
         this.sectionComments = null;
         this._cdr.detectChanges();
@@ -163,7 +163,7 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
       object
     ).subscribe(
       result => {
-        console.log("RESULT ADDING SECTION DATA:--", result);
+        // console.log("RESULT ADDING SECTION DATA:--", result);
         this._subProjectDocSectionsStore.addSectionData(section, $event.data);
       },
       error => {
@@ -186,7 +186,7 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
 
     this._confirmModelService.confirmed().subscribe(confirmed => {
       if (confirmed) {
-        console.log("CONFIRMED FROM MARK GIA MODEL", confirmed, section);
+        // console.log("CONFIRMED FROM MARK GIA MODEL", confirmed, section);
         this._projectService.requestSubProjectDocReview(section.id).subscribe(
           (result: any) => {
             console.log("REUSLT REVIEW ADDED:--", result);

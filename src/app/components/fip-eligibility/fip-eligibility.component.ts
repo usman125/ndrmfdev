@@ -71,7 +71,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
     this.apiLoading = true;
     this._settingsService.getProcessTemplate('ELIGIBILITY').subscribe(
       (result: any) => {
-        console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
+        // console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
         this.allSections = result.sections.map((c) => {
           return {
             ...c,
@@ -94,14 +94,14 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
   getEligibilityRequest() {
     this._accreditationRequestService.getEligibilityRequest().subscribe(
       (allResult: any) => {
-        console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", allResult);
+        // console.log("RESULT AFTER GEETING ELIGIBILITY REQUESTS:---", allResult);
         if (allResult[0]) {
           this._accreditationRequestService.getSingleEligibilityRequest(allResult[allResult.length - 1].id).subscribe(
             (singleResult: any) => {
-              console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", singleResult);
+              // console.log("RESULT SINGLE ELIGIBILITY REQUEST:---", singleResult);
               this._userService.getUserThemticAreas().subscribe(
                 (result: any) => {
-                  console.log("User all thematoc areas", result);
+                  // console.log("User all thematoc areas", result);
                   this.userThematicAreas = result;
                   if (result.length) {
                     this.selectedRequest = singleResult;
@@ -129,7 +129,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
         } else {
           this._userService.getUserThemticAreas().subscribe(
             (result: any) => {
-              console.log("User all thematoc areas", result);
+              // console.log("User all thematoc areas", result);
               if (result.length) {
                 this.userThematicAreas = result;
                 this.apiLoading = false;
@@ -208,7 +208,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
         options.areas = result;
         this._confirmModelService.open(options);
         this._confirmModelService.confirmed().subscribe(confirmed => {
-          console.log("CONFIRMED FROM MODEL", confirmed);
+          // console.log("CONFIRMED FROM MODEL", confirmed);
           if (confirmed === false) {
             this._router.navigate(['fip-home']);
           } else {
@@ -232,10 +232,10 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
             } else {
               object.availableAsJv = confirmed.applyAsJv;
             }
-            console.log("SAVE THEMATIC AREA:--", object);
+            // console.log("SAVE THEMATIC AREA:--", object);
             this._userService.saveThemticAreas(object, "eligibility").subscribe(
               result => {
-                console.log("RESULT SAVING THEMATIC AREAS:--", result);
+                // console.log("RESULT SAVING THEMATIC AREAS:--", result);
                 const options = {
                   title: 'Preffered thematic areas saved succefully!',
                   cancelText: 'CANCEL',
@@ -246,7 +246,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
                 this._confirmModelService.open(options);
                 this._confirmModelService.confirmed().subscribe(
                   confirmed => {
-                    console.log("CONFIRMED AFTER SAVING:--", confirmed);
+                    // console.log("CONFIRMED AFTER SAVING:--", confirmed);
                     this.loadingApi = true;
                     this.getEligibilityRequest();
                   }
@@ -265,7 +265,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
                 this._confirmModelService.open(options);
                 this._confirmModelService.confirmed().subscribe(
                   confirmed => {
-                    console.log("CONFIRMED AFTER FAILING SAVE:--", confirmed);
+                    // console.log("CONFIRMED AFTER FAILING SAVE:--", confirmed);
                     this.openThematicModel();
                   }
                 );
@@ -278,7 +278,7 @@ export class FipEligibilityComponent implements OnInit, OnDestroy {
         options.areas = [];
         this._confirmModelService.open(options);
         this._confirmModelService.confirmed().subscribe(confirmed => {
-          console.log("CONFIRMED FROM MODEL", confirmed);
+          // console.log("CONFIRMED FROM MODEL", confirmed);
           if (confirmed === false) {
             this._router.navigate(['fip-home']);
           }

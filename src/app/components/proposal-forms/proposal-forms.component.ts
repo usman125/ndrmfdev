@@ -60,7 +60,7 @@ export class ProposalFormsComponent implements OnInit {
     this._settingsService.getAllThematicAreas().subscribe(
       (result: any) => {
         this._authStore.removeLoading();
-        console.log("RESULT FROM THEMATIC AREAS:--", result);
+        // console.log("RESULT FROM THEMATIC AREAS:--", result);
         this._proposalFormsStore.setAllForms(result);
       },
       error => {
@@ -73,7 +73,7 @@ export class ProposalFormsComponent implements OnInit {
         this.dataSource = new MatTableDataSource(data.forms);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        console.log("DATA FROM ALL THEMATIC AREA:--", data.forms);
+        // console.log("DATA FROM ALL THEMATIC AREA:--", data.forms);
       })
     );
 

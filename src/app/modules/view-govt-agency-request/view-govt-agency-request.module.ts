@@ -13,6 +13,10 @@ import { MatCardModule } from '@angular/material/card';
 import { FormioModule } from 'angular-formio';
 import { ViewGovtAgencyRequestRoutingModule } from './view-govt-agency-request-routing.module';
 import { ViewGovtAgencyRequestComponent } from '../../components/component-index';
+import { MatListModule } from '@angular/material/list';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -33,7 +37,11 @@ import { ViewGovtAgencyRequestComponent } from '../../components/component-index
     MatProgressSpinnerModule,
     FormsModule,
     ReactiveFormsModule,
-    FormioModule
+    FormioModule,
+    MatListModule,
+    MatChipsModule,
+    MatCheckboxModule,
+    MatInputModule
   ],
   exports: [ViewGovtAgencyRequestComponent]
 })

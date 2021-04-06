@@ -56,7 +56,7 @@ export class FillQprComponent implements OnInit {
   getSingleQprRequests() {
     this._qprService.getSingleQPR(this.selectedRequestId).subscribe(
       (result: any) => {
-        console.log("RESULT SINGLE REQUEST:---", result);
+        // console.log("RESULT SINGLE REQUEST:---", result);
         this.selectedRequest = result;
         this.quarter = this.selectedRequest.quarter;
         this._authStore.setCurrentQuarter(this.quarter);
@@ -113,16 +113,16 @@ export class FillQprComponent implements OnInit {
         this.ndrmfShare = ndrmfShare;
         this.fipShare = fipShare;
       }
-      console.log("FILETERED ARRAY:---", newFinancers, this.implementationPlan[i].title, ndrmfShare, fipShare);
+      // console.log("FILETERED ARRAY:---", newFinancers, this.implementationPlan[i].title, ndrmfShare, fipShare);
     }
     this._qprStore.setDefaults(this.quarter, this.ndrmfShare, this.fipShare);
-    console.log(
-      "FILETERED ARRAY FIP:---\n",
-      this.quarterFipArray,
-      "\nNDRMF ARRAY:--", this.quarterNdrmfArray,
-      this.ndrmfShare,
-      this.fipShare
-    );
+    // console.log(
+    //   "FILETERED ARRAY FIP:---\n",
+    //   this.quarterFipArray,
+    //   "\nNDRMF ARRAY:--", this.quarterNdrmfArray,
+    //   this.ndrmfShare,
+    //   this.fipShare
+    // );
   }
 
 }

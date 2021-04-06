@@ -164,7 +164,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       this._authStore.state$.subscribe(data => {
         this.quarters = [];
         this.months = data.auth.proMonths;
-        console.log("****MONTHS IN PROJECT IMPLEMENTATION PLAN*****\n", data);
+        // console.log("****MONTHS IN PROJECT IMPLEMENTATION PLAN*****\n", data);
         this.getQuarters('personal');
       })
     );
@@ -195,9 +195,9 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
               }
             }
             // this.calculateActivityTotal();
-            console.log("****UPDATE DATA*****\n", data, this.selectedQuarter);
+            // console.log("****UPDATE DATA*****\n", data, this.selectedQuarter);
           } else {
-            console.log("****UPDATE PROGRESS*****\n", data);
+            // console.log("****UPDATE PROGRESS*****\n", data);
             this.selectedQuarter.progress = data.cost.progress;
           }
         }
@@ -246,7 +246,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
             this.selectedActivity = null;
             this.prepareForm();
           }
-          console.log("DATA FROM PIP STORE MANIPULATION:--", data.selectedProject, this.allCosts, this.allSubCosts, this.clubs);
+          // console.log("DATA FROM PIP STORE MANIPULATION:--", data.selectedProject, this.allCosts, this.allSubCosts, this.clubs);
         }
       })
     );
@@ -264,13 +264,13 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         }
       }
     }
-    console.log("COUBS AFTER COUNT:--", this.clubs);
+    // console.log("COUBS AFTER COUNT:--", this.clubs);
   }
 
   getCostingHeads() {
     this._projectService.getCostingHeads().subscribe(
       (result: any) => {
-        console.log("DATA BASE RESULTS ALL COSTS:--", result);
+        // console.log("DATA BASE RESULTS ALL COSTS:--", result);
         this.allCosts = [];
         // this.allCosts = result;
         // let costs = JSON.parse(result.costs);
@@ -295,7 +295,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
           }
           this.allCosts.push(cost);
         }
-        console.log("RESULT AFTER COSTING HEADS:--", this.allCosts);
+        // console.log("RESULT AFTER COSTING HEADS:--", this.allCosts);
         this.prepareForm();
       },
       error => {
@@ -314,7 +314,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         }
         this.quarters.push(object);
       }
-      console.log("ALL QUARTERS PERSONAL:--", this.quarters);
+      // console.log("ALL QUARTERS PERSONAL:--", this.quarters);
     } else {
       for (let i = 0; i < this.allCosts[0].quarters.length; i++) {
         var object = {
@@ -324,7 +324,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         }
         this.quarters.push(object);
       }
-      console.log("ALL QUARTERS:--", this.quarters);
+      // console.log("ALL QUARTERS:--", this.quarters);
     }
   }
 
@@ -441,7 +441,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   }
 
   changeQuarterSelection(item, object) {
-    console.log("QUARTER CHANGED:--", item, object);
+    // console.log("QUARTER CHANGED:--", item, object);
     // this.selectedQuarter = object;
     const options = {
       title: 'This quarter is over!',
@@ -467,7 +467,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
           }
         }
         this.headChanged(object2);
-        console.log("CLUB ENTRY**********8:--", club);
+        // console.log("CLUB ENTRY**********8:--", club);
         item.quarters = item.quarters.map((c) => {
           if (c.quarter === object.quarter) {
             return {
@@ -607,7 +607,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       this._projectService.addCostingHeads(this.allCosts).subscribe(
         result => {
           this.apiLoading = false;
-          console.log("RESULT ADDING COSTING HEADS:--", result);
+          // console.log("RESULT ADDING COSTING HEADS:--", result);
         },
         error => {
           this.apiLoading = false;
@@ -622,7 +622,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       }
       this._projectService.submitPip(object, this.selectedProject.id).subscribe(
         result => {
-          console.log("RESULT ADDING PROJECT IMPLEMENTATION PLAN:--", result);
+          // console.log("RESULT ADDING PROJECT IMPLEMENTATION PLAN:--", result);
           const options = {
             title: 'Implementation Plan has been Sumitted!',
             message: 'click "OK" to close',
@@ -644,11 +644,11 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   }
 
   filterChanged(item) {
-    console.log("FILTER CHANGED:--", this.filterType);
+    // console.log("FILTER CHANGED:--", this.filterType);
   }
 
   openQuarterDetails(object, item) {
-    console.log("OPEN QUARTER DETAILS:--", object, item);
+    // console.log("OPEN QUARTER DETAILS:--", object, item);
     this.selectedQuarter = object;
     this.selectedActivity = item;
     if (object.data === null) {
@@ -695,7 +695,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   }
 
   openProgressDetails(object, item) {
-    console.log("OPEN QUARTER DETAILS:--", object, item);
+    // console.log("OPEN QUARTER DETAILS:--", object, item);
     // this.selectedQuarter = object;
     if (!object.progress) {
       object.progress = {
@@ -741,7 +741,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       for (let i = 0; i < this.selectedActivity.quarters.length; i++) {
         var key = this.selectedActivity.quarters[i];
         if (key.data) {
-          console.log("SHARES:---", key.data.fipShare, key.data.ndrmfShare);
+          // console.log("SHARES:---", key.data.fipShare, key.data.ndrmfShare);
           activityCount = activityCount + key.data.ndrmfShare + key.data.fipShare
         }
       }
@@ -765,7 +765,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   }
 
   quarterSelectionChange($event) {
-    console.log("QUARTER SELCTION CHANGED:---", parseInt($event.target.value));
+    // console.log("QUARTER SELCTION CHANGED:---", parseInt($event.target.value));
     setTimeout(() => {
       this._authStore.setCurrentQuarter(parseInt($event.target.value));
     });
@@ -817,7 +817,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       numOfActivities: 0,
     }
     this.clubs.push(object);
-    console.log("ALL CLUBS:--", this.clubs);
+    // console.log("ALL CLUBS:--", this.clubs);
     this.clubForm.reset();
   }
 
@@ -854,7 +854,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       }
     }
     this.clearCostDetails();
-    console.log("CLUB ENTRY:---", cost, clubItem);
+    // console.log("CLUB ENTRY:---", cost, clubItem);
   }
 
   unClubEntry(cost, clubItem) {
@@ -862,7 +862,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     let club = this.getClub(cost.clubId);
     club.numOfActivities = club.numOfActivities - 1;
     cost.clubId = null;
-    console.log("CLUB ENTRY:---", cost, clubItem, club);
+    // console.log("CLUB ENTRY:---", cost, clubItem, club);
     for (let i = 0; i < this.allCosts.length; i++) {
       let key = this.allCosts[i];
       if (key._id === cost._id) {
@@ -954,7 +954,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         clubsCount = clubsCount + (key.fipShare + key.ndrmfShare);
       }
     }
-    console.log("ALL CLUBS COUNT:--", clubsCount);
+    // console.log("ALL CLUBS COUNT:--", clubsCount);
     this.totalClubsCount = clubsCount;
   }
 
@@ -968,7 +968,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         unClubActivitiesCount = unClubActivitiesCount + key.totalCost;
       }
     }
-    console.log("ALL NON CLUBBED ENTRIES COUNT:--", unClubActivitiesCount, unClubEntries);
+    // console.log("ALL NON CLUBBED ENTRIES COUNT:--", unClubActivitiesCount, unClubEntries);
     this.totalUnClubbedEntriesCount = unClubActivitiesCount;
   }
 
@@ -983,7 +983,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         this.selectedClub = item;
       }
     }
-    console.log("SEELCTED CLUB:--", this.selectedClub);
+    // console.log("SEELCTED CLUB:--", this.selectedClub);
   }
 
   rfUpdated($event) {
@@ -995,7 +995,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     this.selectedActivity.addRf = true;
     let result = this.search(this.selectedActivity, this.allCosts);
     result.addRf = true;
-    console.log("RF UPDATED:--", $event, this.selectedActivity.quarters);
+    // console.log("RF UPDATED:--", $event, this.selectedActivity.quarters);
   }
 
   search(title, parent) {
@@ -1013,7 +1013,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   }
 
   procurementChanged($event) {
-    console.log("PROCUREMENT CHANGED:---", $event);
+    // console.log("PROCUREMENT CHANGED:---", $event);
     if ($event.checked) {
       this.clubForm.controls['procurementHeads'].setValidators([Validators.required])
       this.clubForm.controls['procurementMethod'].setValidators([Validators.required])
@@ -1032,7 +1032,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
         return c;
     });
     this.methods = headMethods;
-    console.log("HEAD CHANGED:---", $event, headMethods);
+    // console.log("HEAD CHANGED:---", $event, headMethods);
     this.selectedHeadOptions = this.options.filter(element => {
       if (element.h_id.indexOf($event.value.h_id) >= 0)
         return element;
@@ -1053,7 +1053,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   }
 
   openEditClubForm() {
-    console.log("OPEN EDIT FORM:---",);
+    // console.log("OPEN EDIT FORM:---",);
     let object = null;
     if (this.selectedClub.isProcurement) {
       object = {
@@ -1067,7 +1067,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   }
 
   closeEditClubForm() {
-    console.log("OPEN EDIT FORM:---",);
+    // console.log("OPEN EDIT FORM:---",);
     this.editClubFlag = true;
   }
 
@@ -1103,7 +1103,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
           }
           return c;
         })
-        console.log("MATCHED KEY:---", this.allCosts[i], this.selectedClub);
+        // console.log("MATCHED KEY:---", this.allCosts[i], this.selectedClub);
       }
     }
     this._costDetailsStore.setDefaults(
@@ -1138,7 +1138,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     for (let i = 0; i < item.quarters.length; i++) {
       let x = item.quarters[i];
       if (x.value && x.data) {
-        console.log("COST RF INFO IS:---", x.data);
+        // console.log("COST RF INFO IS:---", x.data);
         if (x.data.rfSubmitData !== null) {
           var output = null;
           var subOutput = null;

@@ -60,7 +60,7 @@ export class AddExtendedAppraisalSmeComponent implements OnInit {
               submitCount = submitCount + 1;
             }
           });
-          console.log("EXTENDED APPRAISAL IN SMES:---", data.extendedAppraisal, this.appraisalSections);
+          // console.log("EXTENDED APPRAISAL IN SMES:---", data.extendedAppraisal, this.appraisalSections);
           this.totalSections = data.extendedAppraisal.sections.length;
           this.sectionStats = {
             pendingCount,
@@ -77,10 +77,10 @@ export class AddExtendedAppraisalSmeComponent implements OnInit {
       data: JSON.stringify($event.data),
       id: id
     }
-    console.log("DATA SUBMITTED:--", $event.data, object, this.extendedAppraisal.id);
+    // console.log("DATA SUBMITTED:--", $event.data, object, this.extendedAppraisal.id);
     this._projectService.submitExtAppraisal(this.extendedAppraisal.id, object).subscribe(
       result => {
-        console.log("RESULT FROM adding EP:--", result);
+        // console.log("RESULT FROM adding EP:--", result);
         this._extendedAppraisalSmesStore.updateSectionData(id, $event.data);
       },
       error => {

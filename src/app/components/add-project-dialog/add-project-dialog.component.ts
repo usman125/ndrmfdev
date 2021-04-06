@@ -62,7 +62,7 @@ export class AddProjectDialogComponent implements OnInit {
     this.apiLoading = true;
     this._userService.getUserThemticAreas().subscribe(
       (result: any) => {
-        console.log("RESULT FROM THEMATIC:--", result);
+        // console.log("RESULT FROM THEMATIC:--", result);
         let newArray = [];
         for (let i = 0; i < result.length; i++) {
           newArray.push(result[i].thematicAreaItem);
@@ -107,11 +107,11 @@ export class AddProjectDialogComponent implements OnInit {
   }
 
   typeChanged($event) {
-    console.log("TYPE CHANGS:=--", $event);
+    // console.log("TYPE CHANGS:=--", $event);
     if ($event.value === 'jv') {
       this._userService.getAllJvUsers().subscribe(
         (result: any) => {
-          console.log("ALL JV USERS:--", result);
+          // console.log("ALL JV USERS:--", result);
           this.allJvUsers = result;
           this.showJvUsers = true;
           this.addProjectForm.controls['jvUser'].setValidators([Validators.required]);
@@ -127,11 +127,11 @@ export class AddProjectDialogComponent implements OnInit {
   }
 
   jvUsersChanged($event) {
-    console.log("JV USERS CHANGED:--", $event);
+    // console.log("JV USERS CHANGED:--", $event);
   }
 
   thematicChanged($event) {
-    console.log("THEMATIC CHANGS:=--", $event);
+    // console.log("THEMATIC CHANGS:=--", $event);
     this.selectedArea = $event.name;
   }
 

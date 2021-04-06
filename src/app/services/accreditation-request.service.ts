@@ -195,6 +195,13 @@ export class AccreditationRequestService {
     );
   }
 
+  getAllAccreditationQuestionnaire() {
+    const url = `${AppConfig.apiUrl}/accreditation/questionairre`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
 
 
   submitPendingAccreditation(id, data) {

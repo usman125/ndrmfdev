@@ -37,14 +37,14 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
 
     this._activatedRoute.paramMap.subscribe(params => {
       this.selectedProjectId = params.get("projectId");
-      console.log("SELECTED PROJECT ID IS:--", this.selectedProjectId);
+      // console.log("SELECTED PROJECT ID IS:--", this.selectedProjectId);
       this.getProjectComments();
     });
 
     this.Subscription.add(
       this._accreditationCommentsMatrixStore.state$.subscribe(data => {
         this.allComments = data.comments;
-        console.log("COMMENTS MATRIX FROM STORE IN COMPOENNT:--", this.allComments);
+        // console.log("COMMENTS MATRIX FROM STORE IN COMPOENNT:--", this.allComments);
       })
     );
   }
@@ -55,7 +55,7 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
         this.selectedProject = result;
         // this.selectedProject.id = this.selectedProjectId;
         result.id = this.selectedProjectId;
-        console.log("PROJECT DETAILS FROM DATABASE:--", result);
+        // console.log("PROJECT DETAILS FROM DATABASE:--", result);
         this._accreditationCommentsMatrixStore.addCommentsArray(result.commentsMatrix);
       },
       error => {
@@ -82,38 +82,38 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
     //     //   proposalSections.push(result.sections[j].id);
     //     // }
     //     proposalSections = result.sections;
-        console.log("PROPOSAL SECTIONS FOR FIP:--", proposalSections);
-        let options = {
-          title: 'Fip Intimation to update sections',
-          message: 'Please select section for FIP to update',
-          cancelText: 'CANCEL',
-          confirmText: 'YES',
-          confirm: false,
-          add: false,
-          proposal_sections: proposalSections,
-          proposal_initmation: true,
-        };
-        this._confirmModelService.open(options);
-        this._confirmModelService.confirmed().subscribe(confirmed => {
-          if (confirmed) {
-            let sectionIds = [];
-            confirmed.sections.forEach(c => {
-              sectionIds.push(c.id);
-            });
-            console.log("CONFIRMED DATA IS:---", sectionIds, confirmed);
-            let object = {
-              sectionIds: sectionIds
-            }
-            this._projectService.reassignProposalToFIP(this.selectedProjectId, object).subscribe(
-              (result: any) => {
-                console.log("RESULT AFTER RE-ASSIGN:--", result);
-              },
-              (error: any) => {
-                console.log("RESULT AFTER RE-ASSIGN:--", error);
-              }
-            );
-          }
+    // console.log("PROPOSAL SECTIONS FOR FIP:--", proposalSections);
+    let options = {
+      title: 'Fip Intimation to update sections',
+      message: 'Please select section for FIP to update',
+      cancelText: 'CANCEL',
+      confirmText: 'YES',
+      confirm: false,
+      add: false,
+      proposal_sections: proposalSections,
+      proposal_initmation: true,
+    };
+    this._confirmModelService.open(options);
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      if (confirmed) {
+        let sectionIds = [];
+        confirmed.sections.forEach(c => {
+          sectionIds.push(c.id);
         });
+        // console.log("CONFIRMED DATA IS:---", sectionIds, confirmed);
+        let object = {
+          sectionIds: sectionIds
+        }
+        this._projectService.reassignProposalToFIP(this.selectedProjectId, object).subscribe(
+          (result: any) => {
+            // console.log("RESULT AFTER RE-ASSIGN:--", result);
+          },
+          (error: any) => {
+            console.log("RESULT AFTER RE-ASSIGN:--", error);
+          }
+        );
+      }
+    });
     //   },
     //   error => {
     //     console.log("RESULT ALL PROCESS META:---", error);

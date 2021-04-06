@@ -203,8 +203,23 @@ export class UserService {
     );
   }
 
+  saveThemticAreasByPo(areas, type, userId) {
+    const url = `${AppConfig.apiUrl}/user/thematic-areas/${userId}?type=${type}`;
+    return this._httpClient.post(
+      url,
+      areas
+    );
+  }
+
   getUserThemticAreas() {
     const url = `${AppConfig.apiUrl}/user/thematic-area`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
+  getThemticAreasByUserId(userId) {
+    const url = `${AppConfig.apiUrl}/user/thematic-areas/${userId}`;
     return this._httpClient.get(
       url,
     );

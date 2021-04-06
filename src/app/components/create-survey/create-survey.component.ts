@@ -90,7 +90,7 @@ export class CreateSurveyComponent implements OnInit {
 
     this._settingsService.getProcesses().subscribe(
       result => {
-        console.log("ALL PROCESSES:---", result);
+        // console.log("ALL PROCESSES:---", result);
         this.allProcessTypes = result;
       },
       error => {
@@ -114,7 +114,7 @@ export class CreateSurveyComponent implements OnInit {
       this.allSmes = [];
       this._settingsService.getProcessMeta(item).subscribe(
         (result: any) => {
-          console.log("ALL PROCESSES:---", result);
+          // console.log("ALL PROCESSES:---", result);
           if (result.sections) {
             this.allSmes = result.sections;
           }
@@ -142,7 +142,7 @@ export class CreateSurveyComponent implements OnInit {
       this.allSmes = [];
       this._settingsService.getProcessMeta(item).subscribe(
         (result: any) => {
-          console.log("ALL SUB PROCESSES:---", result);
+          // console.log("ALL SUB PROCESSES:---", result);
           if (result.sections) {
             this.allSmes = result.sections;
           }
@@ -157,7 +157,7 @@ export class CreateSurveyComponent implements OnInit {
   getSubProcessTypes(item) {
     this._settingsService.getSubProcessTypes(item).subscribe(
       (result: any) => {
-        console.log("RESULT ALL SUB PROCESSES:--", result);
+        // console.log("RESULT ALL SUB PROCESSES:--", result);
         this.allSubProcessTypes = result;
       },
       error => {
@@ -167,7 +167,7 @@ export class CreateSurveyComponent implements OnInit {
   }
 
   subProcessTypeChanged($event) {
-    console.log("SUB PROCESS CHANGED:--", $event);
+    // console.log("SUB PROCESS CHANGED:--", $event);
     this.createProfileForm.patchValue({
       'passingScore': 0,
       'totalScore': 0,
@@ -182,7 +182,7 @@ export class CreateSurveyComponent implements OnInit {
   }
 
   typeChanged($event) {
-    console.log('Type changed:--', $event);
+    // console.log('Type changed:--', $event);
     this.formType = $event;
     if ($event === 'wizard') {
       this.form.display = 'wizard';
@@ -201,7 +201,7 @@ export class CreateSurveyComponent implements OnInit {
   smeChanged($event) {
     if ($event !== 'none') {
       this.selectedSme = $event;
-      console.log("SME CHANGED:--", this.selectedSme);
+      // console.log("SME CHANGED:--", this.selectedSme);
     }
   }
 
@@ -213,7 +213,7 @@ export class CreateSurveyComponent implements OnInit {
 
   onSubmit($event) {
     this.secondForm = $event.data;
-    console.log("EVENT FROM FORM:---", this.secondForm);
+    // console.log("EVENT FROM FORM:---", this.secondForm);
   }
 
   saveForm(values) {
@@ -221,10 +221,10 @@ export class CreateSurveyComponent implements OnInit {
     values.page = this.form.page;
     values.numOfPages = this.form.numPages;
     let smeId = this.selectedSme ? this.selectedSme.id : null;
-    console.log("FORM TO ADD:--", values, smeId);
+    // console.log("FORM TO ADD:--", values, smeId);
     this._settingsService.addSectionTemplate(smeId, values).subscribe(
       result => {
-        console.log("RESULT FROM ADD SURVEY:--", result);
+        // console.log("RESULT FROM ADD SURVEY:--", result);
         this.createProfileForm.reset();
         this.createProfileForm.patchValue({ type: 'form' }, { onlySelf: true });
         this.form = {

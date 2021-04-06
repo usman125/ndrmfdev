@@ -111,11 +111,11 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
   }
 
   areaChanged($event) {
-    console.log("AREA CHANGED:--", $event);
+    // console.log("AREA CHANGED:--", $event);
   }
 
   proposalSectionChanged($event) {
-    console.log("PROPOSAL SECTION CHANGED:--", $event);
+    // console.log("PROPOSAL SECTION CHANGED:--", $event);
   }
 
   addThematicAreas() {
@@ -140,7 +140,7 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
   }
 
   asvailableAsJvChanged($event) {
-    console.log("Available AS JV USERS CHANGED:--", $event);
+    // console.log("Available AS JV USERS CHANGED:--", $event);
     if ($event.checked) {
       this.jvUsers.setValidators([Validators.required]);
       this.showJvUsers = true;
@@ -163,7 +163,7 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
   }
 
   jvUsersChanged($event) {
-    console.log("JV USERS CHANGED:--", $event);
+    // console.log("JV USERS CHANGED:--", $event);
   }
 
   checkAreasInfo() {

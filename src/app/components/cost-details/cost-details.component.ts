@@ -165,7 +165,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
         this.clubData = result.cost.clubData;
 
 
-        console.log("DATA IN COST DETAILS:--", result.cost, this.selectedQuarter);
+        // console.log("DATA IN COST DETAILS:--", result.cost, this.selectedQuarter);
 
         // EDIT CASE
         if (this.selectedQuarter !== null && this.updateFlag) {
@@ -232,7 +232,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
           }
 
           this._authStore.state$.subscribe(data => {
-            console.log("CURRENT QUARTER:--", data.auth.currentQuarter);
+            // console.log("CURRENT QUARTER:--", data.auth.currentQuarter);
             this.currentQuarter = data.auth.currentQuarter;
             if ((this.quarter !== this.currentQuarter) && this.currentQuarter) {
               this._form.disable({ onlySelf: true });
@@ -347,7 +347,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
 
           }, { onlySelf: true });
           this._authStore.state$.subscribe(data => {
-            console.log("CURRENT QUARTER:--", data.auth.currentQuarter);
+            // console.log("CURRENT QUARTER:--", data.auth.currentQuarter);
             this.currentQuarter = data.auth.currentQuarter;
             if ((this.quarter !== this.currentQuarter) && this.currentQuarter) {
               this.progressForm.disable({ onlySelf: true });
@@ -411,7 +411,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
         result.sections.forEach(element => {
           if (element.sectionName === "Results Framework") {
             this.rfForm = JSON.parse(element.template);
-            console.log("RESULT FROM TEMPLATES:--", this.rfForm);
+            // console.log("RESULT FROM TEMPLATES:--", this.rfForm);
           }
         });
       },
@@ -422,14 +422,14 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   }
 
   onTabChanged($event) {
-    console.log("tab changed:--", $event);
+    // console.log("tab changed:--", $event);
     if ($event.index === 3) {
       this.getRfMeta();
     }
   }
 
   onSubmit($event) {
-    console.log("RESULT FRAMEWORK SUBMITTED:---", $event);
+    // console.log("RESULT FRAMEWORK SUBMITTED:---", $event);
     this.rfSubmitData = $event.data;
     this._form.patchValue({ rfSubmitData: $event.data }, { onlySelf: true });
     this.rfUpdated.emit({ 'rfUpdated': JSON.stringify($event.data) });
@@ -457,7 +457,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   }
 
   submitProgress() {
-    console.log("PROGRESS SUBMITTED:---", this.progressForm.value);
+    // console.log("PROGRESS SUBMITTED:---", this.progressForm.value);
     this._costDetailsStore.setDefaults(
       this.costId,
       this.costTitle,
@@ -524,7 +524,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   }
 
   provinceChanged($event) {
-    console.log("provinceChanged::---", $event);
+    // console.log("provinceChanged::---", $event);
     this.district = [];
     this.division = [];
     this.tehsil = [];
@@ -541,7 +541,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     })
   }
   divisionChanged($event) {
-    console.log("divisionChanged::---", $event);
+    // console.log("divisionChanged::---", $event);
     this.district = [];
     this.tehsil = [];
     this.uc = [];
@@ -556,7 +556,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     })
   }
   districtChanged($event) {
-    console.log("districtChanged::---", $event);
+    // console.log("districtChanged::---", $event);
     this.tehsil = [];
     this.uc = [];
     this.tehsil = DISTRICT.filter((c) => {
@@ -569,7 +569,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     })
   }
   tehsilChanged($event) {
-    console.log("tehsilChanged::---", $event);
+    // console.log("tehsilChanged::---", $event);
     this.uc = [];
     this.uc = UC.filter((c) => {
       if (c.T_ID === $event.value.T_ID)
@@ -581,7 +581,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   }
 
   targetTypeChanged(value) {
-    console.log("TARGET TYPE CHANGED:--", value);
+    // console.log("TARGET TYPE CHANGED:--", value);
     if (value === 'land') {
       this._form.controls['hectare'].setValidators([Validators.required]);
       this._form.controls['maleTarget'].clearValidators();
@@ -606,7 +606,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   }
 
   procurementChanged($event) {
-    console.log("PROCUREMENT CHANGED:---", $event);
+    // console.log("PROCUREMENT CHANGED:---", $event);
     if ($event.checked) {
       this._form.controls['procurementHeads'].setValidators([Validators.required])
       this._form.controls['procurementMethod'].setValidators([Validators.required])
@@ -648,7 +648,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     // To calculate the no. of days between two dates 
     var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
     item.variance = Difference_In_Days;
-    console.log("ITEM VARIENCE IS:---", Math.trunc(Difference_In_Days), item)
+    // console.log("ITEM VARIENCE IS:---", Math.trunc(Difference_In_Days), item)
   }
 
   ngOnDestroy() {

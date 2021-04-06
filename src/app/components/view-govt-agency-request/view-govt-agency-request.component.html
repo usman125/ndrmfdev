@@ -4,14 +4,77 @@
       Request</span>
     <span *ngIf="selectedRequest === null || selectedRequest?.id === null">Fill Request</span>
     <span class="example-spacer"></span>
+
   </mat-toolbar-row>
 </mat-toolbar>
 
 <mat-card class="m-20">
   <mat-card-content>
-    <formio (submit)="onSubmit($event)" *ngIf="selectedRequest && selectedRequest?.id !== null"
-      [form]="selectedRequest.template"></formio>
-    <div *ngIf="selectedRequest === null || selectedRequest?.id === null">
+
+    <section *ngIf="userThematicAreas !== null">
+
+
+      <h6 class="border-heading mb-2">Preffered Thematic Areas</h6>
+
+      <section class="mb-3 mt-3">
+        <mat-chip-list>
+          <mat-chip *ngFor="let area of userThematicAreas">
+            {{area?.thematicAreaItem?.name ? area?.thematicAreaItem?.name :
+            area.name ? area.name : '&nbsp;'}}
+          </mat-chip>
+        </mat-chip-list>
+      </section>
+
+      <mat-list>
+        <mat-list-item>
+          <mat-icon mat-list-icon>emoji_events</mat-icon>
+          <div mat-line id="answer">{{'Experience'}}</div>
+          <div mat-line>{{getThematicAreaExp()}} Years</div>
+        </mat-list-item>
+      </mat-list>
+    </section>
+
+    <section class="mt-3 mb-3" *ngIf="userThematicAreas !== null">
+      <div class="row d-flex align-items-center">
+        <div class="col-md-4">
+
+          <mat-checkbox *ngIf="(selectedRequest?.id !== null) && 
+          hasThematicAreas" [(ngModel)]="selectedRequest.isJv">Available as JV!
+          </mat-checkbox>
+        </div>
+        <div class="col-md-4">
+
+          <mat-form-field *ngIf="(selectedRequest?.id !== null)
+          && selectedRequest?.isJv && hasThematicAreas" appearance="outline">
+            <mat-label>Enter preffered name</mat-label>
+            <input type="text" matInput placeholder="Enter Name Here..." [(ngModel)]="selectedRequest.jvUser">
+          </mat-form-field>
+        </div>
+        <div class="col-md-2">
+
+
+
+          <button (click)="saveQualificationPrefrences()" mat-raised-button color="warn" *ngIf="(selectedRequest?.id !== null) && 
+          hasThematicAreas">
+            <!-- <span id="answer">Please select again to Fill thematic areas first</span> -->
+            Save JV Prefrences
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <h6 class="border-heading mb-2" *ngIf="selectedRequest && selectedRequest?.id !== null">Accreditation Questionnaire
+      Report</h6>
+
+    <formio (submit)="onSubmit($event)" *ngIf="selectedRequest && selectedRequest?.id !== null && 
+    hasThematicAreas && selectedRequest.data === null" [form]="selectedRequest.template"></formio>
+    <formio (submit)="onSubmit($event)" *ngIf="selectedRequest && selectedRequest?.id !== null && 
+    hasThematicAreas && selectedRequest.data !== null" [form]="selectedRequest.template"
+      [submission]="{data:selectedRequest.data}" readOnly="true"></formio>
+    <div *ngIf="(selectedRequest?.id !== null) && !hasThematicAreas">
+      <span id="answer">Please select again to Fill thematic areas first</span>
+    </div>
+    <div *ngIf="selectedRequest?.id === null">
       <span id="answer">No entry selected</span>
     </div>
   </mat-card-content>

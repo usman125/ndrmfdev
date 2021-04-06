@@ -97,5 +97,7 @@ export class AccreditationRequestState {
     assignee: any,
     assigned: any,
     pending: any,
+    status: any,
+    data: any,
   }[] = REQUESTS;
 }

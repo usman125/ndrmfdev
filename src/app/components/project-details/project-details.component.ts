@@ -250,7 +250,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this.selectedProject.extendedAppraisal !== null) {
           this._extendedAppraisalSmesStore.addAppraisal(this.selectedProject.extendedAppraisal);
         }
-        console.log("SELECTED PROJECT IN STORE:--", this.selectedProject, this.sectionStats);
+        // console.log("SELECTED PROJECT IN STORE:--", this.selectedProject, this.sectionStats);
       })
     );
   }
@@ -890,7 +890,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
               body
             ).subscribe(
               (result: any) => {
-                console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", result);
+                // console.log("RESULT AFTER OFFERLETTER STATUS CHANGE:---", result);
                 this.files = [];
               },
               error => {
@@ -972,11 +972,11 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this._confirmModelService.open(options);
 
     this._confirmModelService.confirmed().subscribe(confirmed => {
-      console.log("UPLOAD GIA DOCUMENT", confirmed);
+      // console.log("UPLOAD GIA DOCUMENT", confirmed);
       if (confirmed) {
         this._projectService.appriveGia(this.selectedProjectId, confirmed.endDate.toISOString()).subscribe(
           result => {
-            console.log("TIME LINE EXTENDED:--", result);
+            // console.log("TIME LINE EXTENDED:--", result);
             this._primaryAppraisalFormsStore.extendGiaChecklistTimeline(
               this.calculateDaysDifference(confirmed.endDate)
             );
@@ -1405,15 +1405,15 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   assignSectionsSelectStore($event) {
-    console.log("SELECT STORS:--", $event);
+    // console.log("SELECT STORS:--", $event);
   }
 
   unassignSectionsSelectStore($event) {
-    console.log("SELECT STORS:--", $event);
+    // console.log("SELECT STORS:--", $event);
   }
 
   sectionCommentsChanged($event) {
-    console.log("SECTIONS COMMENTS:--", $event.target.value);
+    // console.log("SECTIONS COMMENTS:--", $event.target.value);
   }
 
   viewCommentsMatrix() {
@@ -1427,7 +1427,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   commenceSubProjectDoc() {
     this._projectService.commenceSubProjectDoc(this.selectedProjectId).subscribe(
       result => {
-        console.log("RESULT AFTER COMMENCING:--", result);
+        // console.log("RESULT AFTER COMMENCING:--", result);
       },
       error => {
         console.log("ERROR AFTER COMMENCING:--", error);
@@ -1499,7 +1499,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   commenceGrantDisbursment() {
     this._projectService.commenceGrantDisbursment(this.selectedProjectId).subscribe(
       (result: any) => {
-        console.log("ERROR COMMENING GD:---", result);
+        // console.log("ERROR COMMENING GD:---", result);
       },
       error => {
         console.log("ERROR COMMENING GD:---", error);

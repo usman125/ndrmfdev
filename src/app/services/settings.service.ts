@@ -34,6 +34,13 @@ export class SettingsService {
     );
   }
 
+  getSubProcessMeta(type) {
+    const url = `${AppConfig.apiUrl}/setting/process/${type}/meta`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
   updateProcess(type, values) {
     console.log("VALUES IN API:---", values);
     const url = `${AppConfig.apiUrl}/setting/process/${type}/meta`;

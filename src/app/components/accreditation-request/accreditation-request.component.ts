@@ -393,7 +393,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
             this.reportReviewUsers = typeof (this.selectedRequest.reviewUsers) === 'string' ?
               JSON.parse(this.selectedRequest.reviewUsers) : this.selectedRequest.reviewUsers;
           }
-          console.log("REQUEST TO CHECK:--", this.selectedRequest);
+          // console.log("REQUEST TO CHECK:--", this.selectedRequest);
           let count = 0;
           // let passCount = 0;
           let tasksFlag = false;
@@ -422,7 +422,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
               }
             }
           });
-          console.log("SELECTED REQUEST FORMS:---", this.userReviewRequests, tasksFlag);
+          // console.log("SELECTED REQUEST FORMS:---", this.userReviewRequests, tasksFlag);
           this.totalFormScore = count;
           this._singleAccreditationRequestStore.addAllRequest(this.userReviewRequests);
 
@@ -450,7 +450,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
         this.selectedRequest.eligibility = result.eligItem[0];
         this.selectedRequest.thematicAreas = result.thematicAreasListItems;
         this.selectedRequest.userInfo = result.userInfo;
-        console.log("RESULT QUALIFICATION SME:--", this.selectedRequest);
+        // console.log("RESULT QUALIFICATION SME:--", this.selectedRequest);
         let count = 0;
         let smeComponent: any = null;
         // this.userReviewRequests = result.sections.map((c) => {
@@ -531,7 +531,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
                 }
                 // }
               }
-              console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects, this.formSubmission);
+              // console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects, this.formSubmission);
               // this.generalComments = c.review.comments;
             }
           }
@@ -570,7 +570,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
   }
 
   completeTask() {
-    console.log("REQUEST TO POST:--", this.selectedRequest);
+    // console.log("REQUEST TO POST:--", this.selectedRequest);
   }
 
   addRequestReview(item) {
@@ -757,7 +757,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
     this.userAllScore = 0;
     var requestStatus = null;
     Object.keys(rating).forEach((key) => {
-      console.log("DATA TYPE OF INDEX:--", parseFloat(rating[key]));
+      // console.log("DATA TYPE OF INDEX:--", parseFloat(rating[key]));
       count1 = count1 + parseInt(key) * parseFloat(rating[key]);
       count2 = count2 + parseFloat(rating[key]);
     })
@@ -779,12 +779,12 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
       this.userSystemStatus = requestStatus;
       this.userAllScore = (count1 / count2);
     }
-    console.log(
-      "ALL Request SCORES:--\n", rating,
-      "SYSTEM STATUS:--\n", requestStatus,
-      "USER SCORES:--\n", count1 / count2, this.userAllScore, count1, count2,
+    // console.log(
+    //   "ALL Request SCORES:--\n", rating,
+    //   "SYSTEM STATUS:--\n", requestStatus,
+    //   "USER SCORES:--\n", count1 / count2, this.userAllScore, count1, count2,
 
-    );
+    // );
 
   }
 
@@ -809,7 +809,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
         this.selectedRequest.comment = confirmed.comments;
         this.selectedRequest.expiryDate = confirmed.endDate;
         this.selectedRequest.status = confirmed.status;
-        console.log("CONFIRMED FROM MODEL", confirmed, this.selectedRequest);
+        // console.log("CONFIRMED FROM MODEL", confirmed, this.selectedRequest);
         this.apiLoading = true;
         this._accreditationRequestService.updateAccreditationRequest(this.selectedRequestId, this.selectedRequest).subscribe(
           result => {
@@ -863,7 +863,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
           startDate: result.startDate,
           endDate: result.endDate,
         }
-        console.log("RESULT:--", result, this.allSectionSelections, this.selectedRequest, values);
+        // console.log("RESULT:--", result, this.allSectionSelections, this.selectedRequest, values);
         this._accreditationRequestService.reassignFipSection(this.selectedRequestId, values).subscribe(
           result => {
             // console.log("RESULT FROM REASSIGN:--", result);
@@ -921,12 +921,12 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
   }
 
   inputChanged($event) {
-    console.log("SELECT BOX VALUE:--", $event);
+    // console.log("SELECT BOX VALUE:--", $event);
 
   }
 
   onValChange($event) {
-    console.log("ON STTATUS CHANGE:--", $event);
+    // console.log("ON STTATUS CHANGE:--", $event);
   }
 
 
@@ -960,7 +960,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
   }
 
   submitReview() {
-    console.log("REVIEW TO SUMBIT:--", this.formReviewObjects);
+    // console.log("REVIEW TO SUMBIT:--", this.formReviewObjects);
   }
 
   checkTypeString(value) {
@@ -998,7 +998,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
       }
       userReviewRequests[i].review.mitigationArray = mitigationArray;
     }
-    console.log("REQUEST TO VIEW MITIGATION FACTOR:--", userReviewRequests);
+    // console.log("REQUEST TO VIEW MITIGATION FACTOR:--", userReviewRequests);
   }
 
   hideMitigationsFlag() {
@@ -1006,13 +1006,13 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
   }
 
   markToGm() {
-    console.log("MARK REQUEST TO GM:--", this.selectedRequest);
+    // console.log("MARK REQUEST TO GM:--", this.selectedRequest);
     // this.selectedRequest.status = 'Approved';
     // this.selectedRequest.subStatus = 'Pending';
     // this.selectedRequest.markedTo = 'MARKED_TO_GM';
     this._accreditationRequestService.markToGm(this.selectedRequest, this.selectedRequestId).subscribe(
       result => {
-        console.log("RESULT DEOM QUERY:--", result);
+        // console.log("RESULT DEOM QUERY:--", result);
         this.selectedRequest.subStatus = 'Pending';
         this.selectedRequest.markedTo = 'Marked To GM';
       },
@@ -1023,16 +1023,16 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
   }
 
   viewEligibility() {
-    console.log("VIEW ELIGIBILITY");
+    // console.log("VIEW ELIGIBILITY");
   }
 
   exportReport() {
-    console.log("EXPORT REPORT BUTTON CLICKED");
+    // console.log("EXPORT REPORT BUTTON CLICKED");
     this.viewReport = true;
   }
 
   hideExportReport() {
-    console.log("EXPORT REPORT BUTTON CLICKED");
+    // console.log("EXPORT REPORT BUTTON CLICKED");
     this.viewReport = false;
   }
 
@@ -1074,7 +1074,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
       this.selectedRequestId,
       { reviewUsers: JSON.stringify(this.reportReviewUsers) }
     ).subscribe((result: any) => {
-      console.log("RESULT SACONG REVIEW USERS:--", result);
+      // console.log("RESULT SACONG REVIEW USERS:--", result);
       // this.selectedRequest.review
       this._confirmModelService.open(options);
     })

@@ -127,12 +127,12 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
                 this.reviewUsers.enable({ onlySelf: true });
             }
           }
-          console.log("RESULT SINGLE GRANT DISBURSMENT:---", this.selectedRequest,
-            this.costSelections,
-            this.loggedUser,
-            this.initialAdvanceStats,
-            this.controlReviewUserForm
-          );
+          // console.log("RESULT SINGLE GRANT DISBURSMENT:---", this.selectedRequest,
+          //   this.costSelections,
+          //   this.loggedUser,
+          //   this.initialAdvanceStats,
+          //   this.controlReviewUserForm
+          // );
         }
       )
     );
@@ -234,10 +234,10 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       data: JSON.stringify(this.apiCosts),
       amount: totalAmount,
     }
-    console.log("SUBMIT INITAL ADVANCE:---", body);
+    // console.log("SUBMIT INITAL ADVANCE:---", body);
     this._grantDisbursmentsService.submitInitialAdvance(this.selectedRequest.id, body).subscribe(
       (result: any) => {
-        console.log("RESULT AFTER SUBMITTEING:---", result);
+        // console.log("RESULT AFTER SUBMITTEING:---", result);
       },
       error => {
         const options = {
@@ -273,12 +273,12 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       amount: totalAmount,
       id: this.selectedRequest.quarterAdvanceList[this.step].id
     }
-    console.log("SUBMIT QUARTER ADVANCE:---", body, this.selectedRequest.quarterAdvanceList[this.step]);
+    // console.log("SUBMIT QUARTER ADVANCE:---", body, this.selectedRequest.quarterAdvanceList[this.step]);
     this._grantDisbursmentsService.submitQuarterAdvance(
       this.selectedRequest.id,
       body
     ).subscribe((result: any) => {
-      console.log("SUBMIT QUARTER ADVANCE QUERY RESULT:---", result);
+      // console.log("SUBMIT QUARTER ADVANCE QUERY RESULT:---", result);
       const options = {
         title: result.message,
         message: '"OK" to exit!',
@@ -298,7 +298,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   assignUsersForReviews(type) {
-    console.log("ASSIGN USERS FOR REVIEWS:---", this.reviewUsers.value);
+    // console.log("ASSIGN USERS FOR REVIEWS:---", this.reviewUsers.value);
     const options = {
       title: 'Assign Users For Reviews!',
       message: 'Select a due date and click "OK"',
@@ -313,7 +313,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
 
     this._confirmModelService.confirmed().subscribe(confirmed => {
       if (confirmed) {
-        console.log("CONFIRMED FROM ASSIGN REVIEWS MODEL", confirmed);
+        // console.log("CONFIRMED FROM ASSIGN REVIEWS MODEL", confirmed);
         let reviewersArray = [];
         let storeArray = [];
         if (this.reviewUsers.value) {
@@ -331,7 +331,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
           }
         }
         this.reviewersArray = reviewersArray;
-        console.log("REVIEW ARRAY:--", reviewersArray);
+        // console.log("REVIEW ARRAY:--", reviewersArray);
         if (type === 'initial') {
           let body = {
             reviewers: this.reviewersArray,
@@ -359,7 +359,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       body
     ).subscribe(
       (result: any) => {
-        console.log("RESULT ASSIGNING REVIEWS:---", result);
+        // console.log("RESULT ASSIGNING REVIEWS:---", result);
         this.reviewUsers.reset();
         this._singleGrantDisbursmentsStore.addToAdvanceReviewsList(storeArray);
         const options = {
@@ -384,7 +384,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       body
     ).subscribe(
       (result: any) => {
-        console.log("RESULT ASSIGNING REVIEWS:---", result);
+        // console.log("RESULT ASSIGNING REVIEWS:---", result);
         this._singleGrantDisbursmentsStore.addToQuarterAdvanceReviewsList(body.initialAdvanceId, storeArray);
         const options = {
           title: result.message,
@@ -406,7 +406,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   getAllUsers() {
     this._userService.getAllDepartmentUsers().subscribe(
       (result: any) => {
-        console.log("RESULT DEPARTMENT USERS:--", result);
+        // console.log("RESULT DEPARTMENT USERS:--", result);
         this.allUsers = [];
         for (var key of Object.keys(result)) {
           let object = {
@@ -420,7 +420,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
           }
           this.allUsers.push(object);
         }
-        console.log("USERS FOR DROP DOWN:---", this.allUsers);
+        // console.log("USERS FOR DROP DOWN:---", this.allUsers);
       },
       error => {
         // this._authStore.removeLoading();
@@ -462,7 +462,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   getReviewsList(reviewsList) {
-    console.log("GET REVIEWS LIST:----", reviewsList);
+    // console.log("GET REVIEWS LIST:----", reviewsList);
     this.currentReviewsList = reviewsList;
   }
 
@@ -481,7 +481,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   submitReview(item) {
-    console.log("REVIEW TO SUBMIT FOR ITEM:----", item);
+    // console.log("REVIEW TO SUBMIT FOR ITEM:----", item);
     this._grantDisbursmentsService.submitInitialAdvanceReview(
       this.selectedRequest.id,
       {
@@ -489,7 +489,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         comments: item.comments,
       }
     ).subscribe((result: any) => {
-      console.log("RESULT AFTER REVIEW SUBMIT:----", result);
+      // console.log("RESULT AFTER REVIEW SUBMIT:----", result);
       this._singleGrantDisbursmentsStore.submitInitialAdvanceReview(item.id);
     }, error => {
       console.log("RESULT AFTER REVIEW SUBMIT:----", error);
@@ -497,11 +497,11 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   approveInitialAdvance(type) {
-    console.log("APPROVE INTIAL ADVANCE********", type);
+    // console.log("APPROVE INTIAL ADVANCE********", type);
   }
 
   rejectInitialAdvance(type) {
-    console.log("REJECT INTIAL ADVANCE********", type);
+    // console.log("REJECT INTIAL ADVANCE********", type);
   }
 
   ngOnDestroy() {
@@ -510,7 +510,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   setStep(id, selectionType) {
-    console.log("CURRENT STEP:---", id);
+    // console.log("CURRENT STEP:---", id);
     // @setTimeout(() => {})
     this.step = id;
     if (this.step !== null) {
@@ -524,7 +524,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   nextStep(selectionType) {
-    console.log("CURRENT STEP:---", this.step);
+    // console.log("CURRENT STEP:---", this.step);
     this.step = this.step + 1;
     // if (selectionType === 'quarter') {
     this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: this.step })

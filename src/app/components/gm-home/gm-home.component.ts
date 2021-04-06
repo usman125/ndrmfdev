@@ -49,7 +49,7 @@ export class GmHomeComponent implements OnInit {
     this.apiLoading = true;
     this._projectService.getAllProjects().subscribe(
       (result: any) => {
-        console.log("DM PM ALL PROJECTS:--", result);
+        // console.log("DM PM ALL PROJECTS:--", result);
         this.allProjects = result;
         var preCount = 0;
         var extCount = 0;
@@ -84,13 +84,13 @@ export class GmHomeComponent implements OnInit {
         });
         this.allProjects.forEach(element => {
           let key = this.thematicAreaLabels.indexOf(element.thematicAreaName);
-          console.log("Key:----", key);
+          // console.log("Key:----", key);
           this.thematicAreaData[key] = this.thematicAreaData[key] + 1;
         });
-        console.log("RESULT THEMATIC AREAS:---", result,
-          '\nThematic Labels:--', this.thematicAreaLabels,
-          '\nThematic Data:--', this.thematicAreaData
-        );
+        // console.log("RESULT THEMATIC AREAS:---", result,
+        //   '\nThematic Labels:--', this.thematicAreaLabels,
+        //   '\nThematic Data:--', this.thematicAreaData
+        // );
       },
       error => {
         console.log("RESULT THEMATIC AREAS:---", error);

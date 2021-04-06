@@ -45,7 +45,7 @@ export class AssignSectionsProcessComponent implements OnInit {
     this._settingsService.getProcesses().subscribe(
       (result: any) => {
         this.apiProcessLoading = false;
-        console.log("ALL PROCESS RESULT:---", result);
+        // console.log("ALL PROCESS RESULT:---", result);
         this.allProcess = result;
       },
       error => {
@@ -56,14 +56,14 @@ export class AssignSectionsProcessComponent implements OnInit {
   }
 
   processChanged($event) {
-    console.log("PROCESS CHANGED:---", $event);
+    // console.log("PROCESS CHANGED:---", $event);
     // this.apiLoading = true;
     if ($event !== 'DISBURSEMENT') {
 
       this._settingsService.getProcessMeta($event).subscribe(
         (result: any) => {
           // this.apiLoading = false;
-          console.log("RESULT FETCHING TYPE:---", result);
+          // console.log("RESULT FETCHING TYPE:---", result);
           this.allProcessType = result;
           // var object = {
           //   processOwner: null,
@@ -102,7 +102,7 @@ export class AssignSectionsProcessComponent implements OnInit {
     this._userService.withRoleprocessOwner().subscribe(
       (result: any) => {
         // this.apiLoading = false;
-        console.log("RESULT FROM PROCEsS OWNER:---", result);
+        // console.log("RESULT FROM PROCEsS OWNER:---", result);
         this.poUsers = result;
       },
       error => {
@@ -134,7 +134,7 @@ export class AssignSectionsProcessComponent implements OnInit {
     // this.apiLoading = true;
     this._userService.withRoleSME().subscribe(
       (result: any) => {
-        console.log("RESULT FROM SMES:---", result);
+        // console.log("RESULT FROM SMES:---", result);
         this.smeUsers = result;
         this.apiLoading = false;
       },
@@ -146,11 +146,11 @@ export class AssignSectionsProcessComponent implements OnInit {
   }
 
   poChanged($event) {
-    console.log("PO CHANGED:---", $event);
+    // console.log("PO CHANGED:---", $event);
   }
 
   smeChanged($event) {
-    console.log("SME CHANGED:---", $event);
+    // console.log("SME CHANGED:---", $event);
   }
 
   updateProcessMeta() {
@@ -175,7 +175,7 @@ export class AssignSectionsProcessComponent implements OnInit {
     this._settingsService.updateProcess(this.process, object).subscribe(
       result => {
         this.apiLoading = false;
-        console.log("RESULT FROM UPDATING:---", result);
+        // console.log("RESULT FROM UPDATING:---", result);
         const options = {
           title: 'Success!',
           message: 'Succefully Saved.',
@@ -189,7 +189,7 @@ export class AssignSectionsProcessComponent implements OnInit {
 
         this._confirmModelService.confirmed().subscribe(confirmed => {
           if (confirmed) {
-            console.log("CONFIRMED FROM MODEL", confirmed);
+            // console.log("CONFIRMED FROM MODEL", confirmed);
           }
         });
       },
@@ -231,7 +231,7 @@ export class AssignSectionsProcessComponent implements OnInit {
   }
 
   setArrayStep(i, item) {
-    console.log("ITEM TO FETCH USERS:--", i, item);
+    // console.log("ITEM TO FETCH USERS:--", i, item);
     setTimeout(() => {
       this.allProcessType = [];
       this.process = item;

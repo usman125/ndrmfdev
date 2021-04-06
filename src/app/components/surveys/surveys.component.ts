@@ -134,7 +134,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     // );
     this._settingsService.getProcesses().subscribe(
       result => {
-        console.log("RESULT FROM PROCESS:--", result);
+        // console.log("RESULT FROM PROCESS:--", result);
         this.allProcessTypes = result;
       },
       error => {
@@ -144,7 +144,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   fetchTemplates(item) {
-    console.log("PROCESS TO FECT TEMPLATES:--", item);
+    // console.log("PROCESS TO FECT TEMPLATES:--", item);
     this.listItem = item;
     this.loadingSection = true;
     this.toggle = false;
@@ -153,7 +153,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     this._settingsService.getProcessTemplate(item).subscribe(
       (result: any) => {
         this.loadingSection = false;
-        console.log("RESULT FROM ALL TEMPLATES:--", result);
+        // console.log("RESULT FROM ALL TEMPLATES:--", result);
         // this.allSmes = result.sections;
         this.fetchSectons(item);
         if (result.sectons !== null) {
@@ -180,7 +180,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
       add: true,
       confirm: false,
     };
-    console.log("PROCESS TO FECT TEMPLATES:--", item);
+    // console.log("PROCESS TO FECT TEMPLATES:--", item);
     this.listItem = item;
     this.loadingSection = true;
     this.toggle = false;
@@ -189,7 +189,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     this._settingsService.getProcessTemplate(item).subscribe(
       (result: any) => {
         this.loadingSection = false;
-        console.log("RESULT FROM ALL TEMPLATES:--", result);
+        // console.log("RESULT FROM ALL TEMPLATES:--", result);
         // this.allSmes = result.sections;
         this.fetchSectons(item);
         if (result.sectons !== null) {
@@ -214,7 +214,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     this._settingsService.getSubProcessTypes(item).subscribe(
       (result: any) => {
         // this.loadingSubSection = false;
-        console.log("Rsult all sub process types:--", result);
+        // console.log("Rsult all sub process types:--", result);
         this.allSubProcessTypes = result;
       },
       error => {
@@ -235,7 +235,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   toogleForm(form) {
-    console.log("FORM TO SHOW:--", form)
+    // console.log("FORM TO SHOW:--", form)
     this.selctedRequest = form;
     this.toggle = !this.toggle;
     this.secondForm = JSON.parse(form.template);
@@ -250,12 +250,12 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     this.editFormFlag = !this.editFormFlag;
     this.secondForm = JSON.parse(form.template);
     this.formToSave = JSON.parse(form.template);
-    console.log("FORM TO EDIT:--", this.secondForm, this.selctedRequest);
+    // console.log("FORM TO EDIT:--", this.secondForm, this.selctedRequest);
     let macthedEntry = null;
     // this.fetchSectons(this.selctedRequest.processType);
     for (let i = 0; i < this.allSmes.length; i++) {
       if (this.allSmes[i].id === this.selctedRequest.id) {
-        console.log("THIS ENTRY MATCHED:--", this.allSmes[i]);
+        // console.log("THIS ENTRY MATCHED:--", this.allSmes[i]);
         macthedEntry = this.allSmes[i];
         break;
       }
@@ -291,7 +291,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
       this.allSmes = [];
       this._settingsService.getProcessMeta(item).subscribe(
         (result: any) => {
-          console.log("ALL PROCESSES:---", result);
+          // console.log("ALL PROCESSES:---", result);
           if (result.sections) {
             this.allSmes = result.sections;
           }
@@ -304,7 +304,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   applyFilter(event: Event) {
-    console.log("APPLY FIKTER:--", event);
+    // console.log("APPLY FIKTER:--", event);
     const filterValue = (event.target as HTMLInputElement).value;
 
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -355,11 +355,11 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
   // FORM BUILDER
   smeChanged($event) {
     this.selectedSme = $event;
-    console.log("SME CHANGED:--", this.selectedSme);
+    // console.log("SME CHANGED:--", this.selectedSme);
   }
 
   typeChanged($event) {
-    console.log('Type changed:--', $event);
+    // console.log('Type changed:--', $event);
     this.formType = $event;
     if ($event === 'wizard') {
       this.secondForm.display = 'wizard';
@@ -379,7 +379,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     values.components = this.formToSave.components
     values.page = this.formToSave.page;
     values.numOfPages = this.formToSave.numPages;
-    console.log("UPADTED FORM VALUES:--", values, this.secondForm);
+    // console.log("UPADTED FORM VALUES:--", values, this.secondForm);
     const options = {
       title: 'Success!',
       message: 'Form has been updated',
@@ -390,7 +390,7 @@ export class SurveysComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     this._settingsService.addSectionTemplate(this.selectedSme.id, values).subscribe(
       result => {
-        console.log("RESULT FROM UPDATE SURVEY FORM:--", result);
+        // console.log("RESULT FROM UPDATE SURVEY FORM:--", result);
         this.refreshForm.emit({
           form: this.formToSave
         });
