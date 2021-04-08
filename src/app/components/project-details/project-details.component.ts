@@ -85,6 +85,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   giaDoc: any = [];
   pc1Files: any = [];
+  printSections: any = [];
 
 
   constructor(
@@ -125,6 +126,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           }
         }
         this.proposalSections = _.orderBy(this.proposalSections, ['orderNum'], ['asc']);
+        // this.printSections = _.orderBy(this.proposalSections, ['orderNum'], ['asc']);
+        // console.log("ALL PROPOSAL SECTIONS:--", this.proposalSections);
         let pendingCount = 0;
         let pendingReviewCount = 0;
         let submitCount = 0;
@@ -250,7 +253,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this.selectedProject.extendedAppraisal !== null) {
           this._extendedAppraisalSmesStore.addAppraisal(this.selectedProject.extendedAppraisal);
         }
-        // console.log("SELECTED PROJECT IN STORE:--", this.selectedProject, this.sectionStats);
+        console.log("SELECTED PROJECT IN STORE:--", this.selectedProject, this.sectionStats);
       })
     );
   }
@@ -1483,7 +1486,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     ).subscribe(
       (result: any) => {
         this.pc1Files = [];
-        this.updateStageMoms('DRAFT', 'Draft');
+        this.updateStageMoms('UNDER_REVIEW', 'Under Review');
       },
       error => {
         console.log("RESULT UPLOADING PDRMC MINS:--", error);

@@ -143,6 +143,22 @@ export class ProjectService {
     );
   }
 
+  assignExtAppraisal(id, data) {
+    const url = `${AppConfig.apiUrl}/project-proposal/ext-appraisal/${id}/section/assign`;
+    return this._httpClient.post(
+      url,
+      data
+    );
+  }
+
+  extendedAppraisalDecisionByDm(id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/ext-appraisal/${id}/decisionbydm`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
   assignProposalSectionTasks(sectionId, data) {
     const url = `${AppConfig.apiUrl}/project-proposal/section/${sectionId}/task/add`;
     return this._httpClient.post(

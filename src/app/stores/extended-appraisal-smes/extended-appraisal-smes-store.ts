@@ -34,6 +34,34 @@ export class ExtendedAppraisalSmesStore extends Store<ExtendedAppraisalSmesState
     })
   }
 
+  updateSectionStatus(id) {
+    this.setState({
+      ...this.state,
+      extendedAppraisal: {
+        ...this.state.extendedAppraisal,
+        sections: this.state.extendedAppraisal.sections.map(c => {
+          if (c.id === id) {
+            return {
+              ...c,
+              status: 'Pending',
+            }
+          }
+          return c;
+        })
+      }
+    })
+  }
+
+  extendedAppraisalDecisionByDm() {
+    this.setState({
+      ...this.state,
+      extendedAppraisal: {
+        ...this.state.extendedAppraisal,
+        decisionByDm: 'Approved',
+      }
+    })
+  }
+
   // addSection(
   //   name: string,
   //   key: string,

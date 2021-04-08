@@ -130,6 +130,7 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
   proposalIntimation() {
     this.close({
       sections: this.proposalSections.value,
+      comments: this.data.comments
     })
   }
 

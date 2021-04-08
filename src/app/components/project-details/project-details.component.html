@@ -771,7 +771,8 @@
               <!-- <mat-card-actions class="p-3 footer-btns" *ngIf="viewType === 'po' && loggedUser.role !== 'sme'"> -->
               <div class="expiry-section mb-2">
                 <button class="mt-1 mb-1" *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button
-                  color="primary" [disabled]="(selectedProject?.extendedAppraisal !== null && 
+                  color="primary"
+                  [disabled]="(selectedProject?.extendedAppraisal !== null && 
                   selectedProject?.extendedAppraisal?.status === 'Pending') ||
                   (selectedProject?.preAppraisal?.isMarkedTo === 'Marked to GM' && 
                   selectedProject?.preAppraisal?.subStatus === 'Pending') || 
@@ -780,7 +781,8 @@
                   (selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to GM' && 
                   selectedProject?.extendedAppraisal?.subStatus === 'Pending') || 
                 (selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to CEO' && 
-                selectedProject?.extendedAppraisal?.subStatus === 'Pending')" (click)="prepareExtAppraisal()">
+                selectedProject?.extendedAppraisal?.subStatus === 'Pending') || (selectedProject?.extendedAppraisal?.decisionByDm === null)"
+                  (click)="prepareExtAppraisal()">
                   <mat-icon class="mr-1">description</mat-icon> {{selectedProject?.extendedAppraisal &&
                   selectedProject?.extendedAppraisal.status === 'Expired' ?
                   'EXTEND EXT-APPRAISAL' : selectedProject?.extendedAppraisal &&
@@ -810,8 +812,8 @@
               </div>
               <div class="expiry-sections">
                 <button class="mt-1 mb-1" *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed' || 
-                  selectedProject?.status === 'Extended Appraisal'" mat-button color="primary"
-                  (click)="viewExtAppraisal()">
+                  selectedProject?.status === 'Extended Appraisal'" mat-button color="primary" [disabled]="(selectedProject?.extendedAppraisal?.decisionByDm === null || 
+                  selectedProject?.extendedAppraisal?.status === 'Pending')" (click)="viewExtAppraisal()">
                   <mat-icon class="mr-1">description</mat-icon> {{'View ext-appraisal' | titlecase}}
                 </button>
               </div>
@@ -822,8 +824,8 @@
                   (selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to GM'
                                 && selectedProject?.extendedAppraisal?.subStatus === 'Pending') ||
                                 (selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to CEO'
-                                && selectedProject?.extendedAppraisal?.subStatus === 'Pending')"
-                  (click)="markExtToGm()">
+                                && selectedProject?.extendedAppraisal?.subStatus === 'Pending') || 
+                                (selectedProject?.extendedAppraisal?.decisionByDm === null)" (click)="markExtToGm()">
                   <mat-icon class="mr-1">description</mat-icon> {{'Mark ext-appraisal to gm' | titlecase}}
                 </button>
               </div>
@@ -1181,8 +1183,11 @@
       <div *ngIf="loggedUser?.role === 'fip' && viewType === 'user' && selectedProject?.status !== 'Draft'">
         <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
           <mat-toolbar-row>
-            <span>{{selectedProject.status}} Actions</span>
+            <span>{{selectedProject.proposalName | titlecase}}</span>
             <div class="example-spacer"></div>
+            <small>{{selectedProject.submittedAt | date:'fullDate'}}</small>
+            <div class="example-spacer"></div>
+            <small>{{selectedProject.status}} Actions</small>
           </mat-toolbar-row>
         </mat-toolbar>
         <mat-card class="m-20 mb-0">
@@ -1270,7 +1275,7 @@
             </button>
             <button color="primary" *ngIf="selectedProject?.status === 'Upload PDRMC Mins'"
               [disabled]="pc1Files.length === 0" mat-button (click)="goToDraft()">
-              {{'Activate DRAFT' | uppercase}}
+              {{'Activate Proposal Submission' | uppercase}}
             </button>
           </mat-card-actions>
         </mat-card>
@@ -1347,6 +1352,10 @@
         <mat-toolbar-row>
           <span>Submitted Details</span>
           <div class="example-spacer"></div>
+          <button [useExistingCss]="true" printSectionId="print-proposal-sections" ngxPrint color="primary"
+            mat-icon-button>
+            <mat-icon>print</mat-icon>
+          </button>
         </mat-toolbar-row>
       </mat-toolbar>
       <mat-toolbar class="mat-elevation-z8 custom-height-toolbar" style="padding: 15px 0px;" color="primary" *ngIf="viewType === 'user' && 
@@ -1391,7 +1400,7 @@
         <p *ngIf="loggedUser?.role !== 'fip'">Details submitted by FIP for this project proposal</p>
         <mat-card-content>
           <div class="tabs-top-container">
-            <div class="top-tabs pb-0" style="position: sticky;top: 65px;">
+            <div class="top-tabs pb-0 pt-0" style="position: sticky;top: 65px;">
               <mat-button-toggle-group [(ngModel)]="groupType" #group="matButtonToggleGroup" vertical="true">
                 <mat-button-toggle (change)="tabChanged(item)" *ngFor="let item of proposalSections; let i = index;"
                   [value]="item">
@@ -1434,7 +1443,7 @@
               </mat-card-actions>
             </div>
             <div class="proposaldisplay">
-              <div class="top-info-bar" *ngIf="loggedUser?.role !== 'fip'">
+              <div class="top-info-bar mt-0" *ngIf="loggedUser?.role !== 'fip'">
                 <span style="display: flex;align-items:center;font-weight: bold;">
                   <mat-icon class="mr-2"
                     [style.color]="groupType?.reviewStatus === null || groupType?.reviewStatus === 'Pending' ? '#F57F17' : null"
@@ -1460,7 +1469,12 @@
                   </small>
                 </div>
               </div>
-              <div class="top-form pb-0">
+              <div class="top-form pb-0 pr-0 pl-0">
+                <div *ngIf="groupType?.reassignmentComments !== null" class="general-info">
+                  <span id="value">
+                    <span style="text-decoration: underline;" id="answer">Comments by NDRMF:</span>&nbsp;{{groupType?.reassignmentComments}}
+                  </span>
+                </div>
                 <formio *ngIf="form.id !== 'pip' && form && !formSubmitData && loggedUser.role === 'fip'" [form]="form"
                   (submit)="onSubmit($event)"></formio>
                 <formio *ngIf="form.id !== 'pip' && form && 
@@ -1470,15 +1484,21 @@
                 <formio
                   *ngIf="form.id !== 'pip' && form && (formSubmitData && groupType.reassignmentStatus === 'Pending') && loggedUser.role === 'fip'"
                   [submission]="{data: formSubmitData}" (submit)="onSubmit($event)" [form]="form"></formio>
-                <formio *ngIf="form.id !== 'pip' && form && loggedUser.role !== 'fip'" readOnly="true"
-                  [submission]="{data: formSubmitData}" [form]="form"></formio>
+                <div class="margin-5">
+                  <formio *ngIf="form.id !== 'pip' && form && loggedUser.role !== 'fip'" readOnly="true"
+                    [submission]="{data: formSubmitData}" [form]="form"></formio>
+                </div>
               </div>
             </div>
           </div>
         </mat-card-content>
       </mat-card>
     </div>
+
   </div>
+
+
+
   <span id="myTopElement3" #myTopElement3></span>
   <div *ngIf="sectionStats.pendingCount === 0 && 
     (selectedProject?.status !== 'Upload PC1' && selectedProject?.status !== 'Upload PDRMC Mins') 
@@ -1510,4 +1530,14 @@
       <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
     </mat-card-content>
   </mat-card>
+</ng-container>
+
+<!-- PRINT PROPOSAL SECTIONS -->
+<ng-container>
+  <div id="print-proposal-sections" style="display: none;">
+    <div class="margin-5" *ngFor="let item of proposalSections">
+      <div class="border-heading">{{item.name}}</div>
+      <formio [id]="item.id" readOnly="true" [submission]="{data: item.data}" [form]="item.template"></formio>
+    </div>
+  </div>
 </ng-container>

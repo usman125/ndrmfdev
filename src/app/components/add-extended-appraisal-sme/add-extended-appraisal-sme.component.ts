@@ -3,11 +3,13 @@ import { Location } from '@angular/common';
 import { ExtendedAppraisalSmesStore } from "../../stores/extended-appraisal-smes/extended-appraisal-smes-store";
 import { Subscription } from 'rxjs';
 import { ProjectService } from "../../services/project.service";
+import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 
 @Component({
   selector: 'app-add-extended-appraisal-sme',
   templateUrl: './add-extended-appraisal-sme.component.html',
-  styleUrls: ['./add-extended-appraisal-sme.component.css']
+  styleUrls: ['./add-extended-appraisal-sme.component.css'],
+  providers: [ConfirmModelService]
 })
 export class AddExtendedAppraisalSmeComponent implements OnInit {
 
@@ -22,9 +24,12 @@ export class AddExtendedAppraisalSmeComponent implements OnInit {
     readOnly: false
   }
 
+  loggedUser = JSON.parse(localStorage.getItem('user'));
+
   constructor(
     private _extendedAppraisalSmesStore: ExtendedAppraisalSmesStore,
     private _projectService: ProjectService,
+    private _confirmModelService: ConfirmModelService,
     private _location: Location,
   ) { }
 
@@ -50,12 +55,13 @@ export class AddExtendedAppraisalSmeComponent implements OnInit {
             } else {
               this.unassignedSections.push(c);
             }
-            if (c.data === null && c.status === 'Pending') {
+            if ((c.data === null && c.status === 'Pending') ||
+              (c.data !== null && c.status === 'Pending')) {
               pendingCount = pendingCount + 1;
             }
-            if (c.data !== null && c.status === 'Pending') {
-              pendingCount = pendingCount + 1;
-            }
+            // if (c.data !== null && c.status === 'Pending') {
+            //   pendingCount = pendingCount + 1;
+            // }
             if (c.data !== null && c.status === 'Completed') {
               submitCount = submitCount + 1;
             }
@@ -82,6 +88,54 @@ export class AddExtendedAppraisalSmeComponent implements OnInit {
       result => {
         // console.log("RESULT FROM adding EP:--", result);
         this._extendedAppraisalSmesStore.updateSectionData(id, $event.data);
+      },
+      error => {
+        console.log("ERROR FROM adding EP:--", error);
+      },
+    );
+  }
+
+  assignExtendedAppraisalSection(id) {
+    var object = {
+      data: null,
+      id: id
+    }
+    const options = {
+      title: '',
+      message: '',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
+    };
+    // console.log("DATA SUBMITTED:--", $event.data, object, this.extendedAppraisal.id);
+    this._projectService.assignExtAppraisal(this.extendedAppraisal.id, object).subscribe(
+      (result: any) => {
+        this._extendedAppraisalSmesStore.updateSectionStatus(id);
+        options.title = result.message;
+        this._confirmModelService.open(options);
+      },
+      error => {
+        console.log("ERROR FROM adding EP:--", error);
+      },
+    );
+  }
+
+  extendedAppraisalDecisionByDm() {
+    const options = {
+      title: '',
+      message: '',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
+    };
+    // console.log("DATA SUBMITTED:--", $event.data, object, this.extendedAppraisal.id);
+    this._projectService.extendedAppraisalDecisionByDm(this.extendedAppraisal.id).subscribe(
+      (result: any) => {
+        this._extendedAppraisalSmesStore.extendedAppraisalDecisionByDm();
+        options.title = result.message;
+        this._confirmModelService.open(options);
       },
       error => {
         console.log("ERROR FROM adding EP:--", error);

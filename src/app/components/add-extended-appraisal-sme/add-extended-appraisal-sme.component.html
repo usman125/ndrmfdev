@@ -31,8 +31,13 @@
 </ng-container>
 <mat-toolbar class="mat-elevation-z8" [hidden]="!sectionStats" color="primary">
   <mat-toolbar-row>
-    <span>{{'Tasks'}}</span>
+    <small>{{'Fill(ed) Report Task(s)'}}</small>
     <div class="example-spacer"></div>
+    <button [disabled]="sectionStats?.pendingCount !== 0 ||
+    extendedAppraisal?.decisionByDm !== null" matTooltip="Approve Appraisal!" mat-mini-fab
+      (click)="extendedAppraisalDecisionByDm()" color="primary" *ngIf="loggedUser?.role === 'dm pam'">
+      <mat-icon>thumb_up_alt</mat-icon>
+    </button>
   </mat-toolbar-row>
 </mat-toolbar>
 <ng-container>
@@ -47,12 +52,12 @@
           SME:
           <span id="answer" class="ml-2">{{item.sme.name}}</span>
         </span>
-        <div class="dates">
-          <span *ngIf="extendedAppraisal.status === 'Pending'" style="display: block;font-weight: bold;">
+        <div class="dates d-flex flex-column justify-content-start">
+          <span *ngIf="item.status === 'Pending'" style="display: block;font-weight: bold;">
             PENDING:
             <span class="warn-comment ml-1">{{extendedAppraisal.endDate | date:'fullDate' | uppercase}}</span>
           </span>
-          <span *ngIf="extendedAppraisal.status === 'Completed'" style="display: block;font-weight: bold;">
+          <span *ngIf="item.status === 'Completed'" style="display: block;font-weight: bold;">
             COMPLETED:
             <span id="answer" class="ml-1">{{extendedAppraisal.completedDate | date:'fullDate' | uppercase}}</span>
           </span>
@@ -69,7 +74,7 @@
       </div>
     </div>
     <mat-divider *ngIf="appraisalSections.length"></mat-divider>
-    <div class="mt-5 mb-4 no-submit margin-5" *ngFor="let item of unassignedSections">
+    <div class="mt-4 mb-4 no-submit margin-5" *ngFor="let item of unassignedSections">
       <div class="top-info-bar">
         <span style="display: flex;align-items:center;font-weight: bold;">
           <mat-icon class="mr-2" [style.color]="item.status === 'Pending' ? '#F57F17' : null"
@@ -78,15 +83,18 @@
           SME:
           <span id="answer" class="ml-2">{{item.sme.name}}</span>
         </span>
-        <div class="dates">
-          <small *ngIf="extendedAppraisal.status === 'Pending'" style="display: block;font-weight: bold;">
+        <div class="dates d-flex flex-column justify-content-start">
+          <small *ngIf="item.status === 'Pending'" style="display: block;font-weight: bold;">
             PENDING:
             <span class="info-comment ml-1">{{extendedAppraisal.endDate | date:'fullDate' | uppercase}}</span>
           </small>
-          <small *ngIf="extendedAppraisal.status === 'Completed'" style="display: block;font-weight: bold;">
+          <small *ngIf="item.status === 'Completed'" style="display: block;font-weight: bold;">
             COMPLETED:
             <span class="ml-1" id="answer">{{extendedAppraisal.completedDate | date:'fullDate' | uppercase}}</span>
           </small>
+          <button *ngIf="loggedUser?.role === 'dm pam'" matTooltip="Re-Evaluate!"
+            (click)="assignExtendedAppraisalSection(item.id)" [disabled]="item.status === 'Pending' || 
+          extendedAppraisal?.decisionByDm !== null" mat-button color="primary">Assign Task</button>
         </div>
       </div>
       <div class="form p-3">

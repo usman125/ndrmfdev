@@ -26,6 +26,7 @@ import { PipModule } from '../pip/pip.module';
 import { ProjectImpPlanModule } from '../project-imp-plan/project-imp-plan.module';
 import { ProjectProposalFilesModule } from '../project-proposal-files/project-proposal-files.module';
 import { ResultFrameworkReportModule } from '../result-framework-report/result-framework-report.module';
+import { NgxPrintModule } from 'ngx-print';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { ResultFrameworkReportModule } from '../result-framework-report/result-f
     MatSelectModule,
     MatTooltipModule,
     MatProgressBarModule,
+    NgxPrintModule,
   ],
   exports: [ProjectDetailsComponent]
 })

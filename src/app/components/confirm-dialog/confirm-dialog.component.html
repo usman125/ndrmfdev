@@ -158,6 +158,10 @@
           <mat-option *ngFor="let object of data?.proposal_sections;" [value]="object">{{object.name}}</mat-option>
         </mat-select>
       </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Your comments</mat-label>
+        <textarea [(ngModel)]="data.comments" matInput placeholder="Enter here..." cols="30" rows="10"></textarea>
+      </mat-form-field>
     </div>
 
     <div class="controls" *ngIf="data?.markUnEligible">
@@ -243,7 +247,7 @@
       {{data.cancelText | uppercase}}
     </button>
     <button mat-raised-button *ngIf="data?.proposal_initmation" color="primary" [disabled]="proposalSections.value?.length === 0
-    || !proposalSections.value" (click)="proposalIntimation()">
+    || !proposalSections.value || !data?.comments" (click)="proposalIntimation()">
       {{data.confirmText | uppercase}}
     </button>
 

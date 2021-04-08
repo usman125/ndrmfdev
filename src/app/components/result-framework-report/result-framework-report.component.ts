@@ -252,7 +252,7 @@ export class ResultFrameworkReportComponent implements OnInit, OnDestroy {
           //   type: this.getRfType(c.quarters),
           // };
           let mneType = this.getRfType(c.quarters);
-          console.log("GET RF CALLED:--", mneType);
+          // console.log("GET RF CALLED:--", mneType);
           c.mneType = mneType.mneType;
           c.mneData = mneType.mneData;
           return {
@@ -270,12 +270,12 @@ export class ResultFrameworkReportComponent implements OnInit, OnDestroy {
           }
         })
         .value();
-      console.log("********SELECTED FRAMEWORK DATA*********", data.selectedProject,
-        this.pip,
-        this.allCosts,
-        this.rfCosts,
-        this.resultsChain
-      );
+      // console.log("********SELECTED FRAMEWORK DATA*********", data.selectedProject,
+      //   this.pip,
+      //   this.allCosts,
+      //   this.rfCosts,
+      //   this.resultsChain
+      // );
       this.prepareChartData();
 
     })
@@ -334,7 +334,7 @@ export class ResultFrameworkReportComponent implements OnInit, OnDestroy {
                 }
               }
             });
-            console.log("****RESULT FRAME WORK REPORT TEMPLATE***:--", this.rfForm, this.formElements, contentElements);
+            // console.log("****RESULT FRAME WORK REPORT TEMPLATE***:--", this.rfForm, this.formElements, contentElements);
           }
         });
       },
@@ -449,27 +449,27 @@ export class ResultFrameworkReportComponent implements OnInit, OnDestroy {
         this.indicatorChartData[0].data.push(childrenTarget);
         this.indicatorChartData[1].data.push(childrenAchieved);
 
-        console.log(
-          "KPI:---", x._id,
-          "\nCHILD:---", j,
-          '\nCHILD DATA:---', y,
-          '\nTARGET COUNT:---', targetCount,
-          '\nACHIEVED COUNT:---', achievedCount,
-        );
+        // console.log(
+        //   "KPI:---", x._id,
+        //   "\nCHILD:---", j,
+        //   '\nCHILD DATA:---', y,
+        //   '\nTARGET COUNT:---', targetCount,
+        //   '\nACHIEVED COUNT:---', achievedCount,
+        // );
       }
-      console.log(
-        "KPI:---", x._id,
-      );
+      // console.log(
+      //   "KPI:---", x._id,
+      // );
       this.kpiChartLabels.push(x._id);
       this.kpiChartData[0].data.push(targetCount);
       this.kpiChartData[1].data.push(achievedCount);
       this.kpiChartData[2].data.push(x.children.length);
     }
-    console.log(
-      "CHART LABELS:---", this.kpiChartLabels,
-      '\nKPI CHART DATA:---', this.kpiChartData,
-      '\nKPI PROVINCES ARRAY:---', this.kpiProvinceArray,
-    );
+    // console.log(
+    //   "CHART LABELS:---", this.kpiChartLabels,
+    //   '\nKPI CHART DATA:---', this.kpiChartData,
+    //   '\nKPI PROVINCES ARRAY:---', this.kpiProvinceArray,
+    // );
   }
 
   getChainTitle(object, subObject) {

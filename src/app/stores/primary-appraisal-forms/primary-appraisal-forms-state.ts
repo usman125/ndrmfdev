@@ -345,6 +345,7 @@ export class PrimaryAppraisalFormsState {
     giaChecklist: any,
     files: any,
     offerLetter: any;
+    proposalName: any;
   } = null;
 }
 

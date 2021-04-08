@@ -3,10 +3,11 @@
   <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
     <mat-toolbar-row>
       <!-- <span>{{preAppViewType === 'fill' ? 'Submit Primary Appresial' : 'View Primary Appraisal'}}</span> -->
-      <span>{{selectedProject?.preAppraisal?.data === null ? 'Submit Primary Appresial' : 'View Primary Appraisal'}}</span>
+      <span>{{selectedProject?.preAppraisal?.data === null ? 'Submit Primary Appresial' : 'View Primary
+        Appraisal'}}</span>
       <div class="example-spacer"></div>
-      <button class="mr-2" (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })"
-        mat-button color="accent">
+      <button class="mr-2" (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })" mat-button
+        color="accent">
         <mat-icon class="mr-1">table_chart</mat-icon> Proposal Details
       </button>
       <button mat-button color="primary" (click)="goBack()">
@@ -30,6 +31,7 @@
   <mat-card class="m-20 p-4">
     <ng-container *ngIf="!apiLoading">
       <mat-card-title>
+        
         <button disabled (click)="completeTask()" mat-raised-button color="accent"
           *ngIf="selectedProject?.preAppraisal.data === null">PENDING TASK -
           {{pendingAppraisalDays ? pendingAppraisalDays+' DAYS REMAINING' : '0' | uppercase}}</button>
@@ -45,6 +47,9 @@
         </mat-chip-list>
       </mat-card-title>
       <mat-card-content>
+        <p class="heading-contain">
+          <span id="answer">Comments:</span>&nbsp;{{selectedProject?.preAppraisal.commentsByPo}}
+        </p>
         <formio *ngIf="(loggedUser?.role === 'dm pam' || loggedUser?.role === 'process owner') && 
         selectedProject !== null && selectedProject?.preAppraisal.status === 'Pending'"
           [form]="selectedProject.preAppraisal.template" [submission]="{data:selectedProject.preAppraisal.data}"
