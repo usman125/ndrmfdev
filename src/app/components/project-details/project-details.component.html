@@ -1330,14 +1330,14 @@
                       selectedProject?.offerLetter?.fipStatus === 'Completed' || 
                       selectedProject?.offerLetter?.status === 'Expired' || (selectedProject?.offerLetter?.gmResponse === 'Approved' && 
           selectedProject?.offerLetter?.fipResponse === 'Approved')">
-                {{'Approve Offer Letter' | uppercase}}
+                {{'Accept Offer Letter' | uppercase}}
               </button>
               <button mat-button color="warn" (click)="fipDisApproveOfferLetter()" [disabled]="selectedProject?.offerLetter?.fipMarkingStatus === null || 
                       selectedProject?.offerLetter?.fipMarkingStatus === 'Completed' || selectedProject?.offerLetter?.fipStatus === null || 
                       selectedProject?.offerLetter?.fipStatus === 'Completed' || 
                       selectedProject?.offerLetter?.status === 'Expired' || (selectedProject?.offerLetter?.gmResponse === 'Approved' && 
           selectedProject?.offerLetter?.fipResponse === 'Approved')">
-                {{'Disapprove Offer Letter' | uppercase}}
+                {{'Reject Offer Letter' | uppercase}}
               </button>
             </div>
           </mat-card-actions>

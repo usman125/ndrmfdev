@@ -12,6 +12,9 @@
       <mat-icon class="example-icon" *ngIf="allReviewsFlag">view_quilt
       </mat-icon>
     </button> -->
+    <button [useExistingCss]="true" printSectionId="print-proposal-sections" ngxPrint color="primary" mat-icon-button>
+      <mat-icon>print</mat-icon>
+    </button>
     <button (click)="goBack()" mat-icon-button>
       <mat-icon color="warn" class="example-icon" aria-hidden="false" aria-label="Close">close
       </mat-icon>
@@ -1209,3 +1212,13 @@
     </mat-card-content>
   </mat-card>
 </div>
+
+<!-- PRINT QUALIFICATION SECTIONS -->
+<ng-container>
+  <div id="print-proposal-sections" style="display: none;">
+    <div class="margin-5" *ngFor="let item of userReviewRequests">
+      <div class="border-heading">{{item.name}}</div>
+      <formio readOnly="true" [submission]="{data: item.data}" [form]="item.template"></formio>
+    </div>
+  </div>
+</ng-container>

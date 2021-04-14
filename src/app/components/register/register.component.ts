@@ -33,9 +33,10 @@ export class RegisterComponent implements OnInit {
   _buildRegisterForm() {
     this.registerForm = this._formBuilder.group({
       'firstName': ['', Validators.required],
-      'lastName': ['', Validators.required],
+      'lastName': [''],
       'email': ['', Validators.compose([Validators.required, Validators.email])],
       'password': ['', Validators.required],
+      'repassword': ['', Validators.required],
       'entityName': ['', Validators.required],
       'entityNature': ['', Validators.required],
       'entityType': ['', Validators.required],
@@ -43,6 +44,7 @@ export class RegisterComponent implements OnInit {
       'province': ['', Validators.required],
       'address': ['', Validators.required],
       'otherAddress': [''],
+      'phoneNumber': [''],
       'otherAccreditation': [''],
     })
   }

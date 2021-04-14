@@ -195,7 +195,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
     this.Subscription.add(
       this._singleAccreditationRequestStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
         this.userReviewRequests = data.requests;
-        // console.log("OVER ALL REQUEST IN SUBSCRIPTION:--", this.userReviewRequests);
+        this.userReviewRequests = _.orderBy(this.userReviewRequests, ['orderNum'], ['asc']);
+        console.log("OVER ALL REQUEST IN SUBSCRIPTION:--", this.userReviewRequests);
         if (this.userReviewRequests) {
           this.checkScores(this.userReviewRequests);
           this.checkAllReviews(this.userReviewRequests);
