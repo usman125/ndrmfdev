@@ -193,3 +193,38 @@ mat-button-toggle-group .mat-button-toggle-checked .mat-button-toggle-label-cont
   font-size: 12px;
   color: #474b56;
 }
+/*Form Sections*/
+.table td, .table th {
+  vertical-align: middle;
+}
+.table td, .table th, .no-top-border-table>.table>tbody>tr:first-child>td {
+  padding: .75rem !important;
+  vertical-align: middle !important;
+  border-top: 1px solid #dee2e6 !important;
+}
+.form-control{font-size: 12px !important;}
+.form-control:disabled, .form-control[readonly], .choices.is-disabled .choices__item {
+  font-size: 13px !important;
+}
+.col-form-label {
+  font-weight: 500 !important;
+}
+.formio-component-projectAtAGlance .form-control:disabled, .form-control[readonly] {text-align: center;    background-color: #e9ecef;}
+ 
+/*Action Box*/
+.pre-section{
+  border: 1px solid #ccc;
+    padding: 13px 0px;
+}
+.expiry-section, .expiry-sections {
+  display: flex;
+  justify-content: space-between;
+}
+.appraisals mat-chip-list {
+  margin-left: auto;
+  margin-right: 25px;
+}
+.appraisals .mat-chip.mat-standard-chip.mat-chip-selected.mat-warn, .mat-chip.mat-standard-chip.mat-chip-selected.mat-accent{
+  font-size: 10px !important;
+}
+
