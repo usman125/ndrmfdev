@@ -561,3 +561,25 @@ h6 {
   font-size: 11px;
   color: #474b56;
 }
+/*Proposal Templates Styles*/
+
+.proposaldisplay .table td, .proposaldisplay .table th {
+  vertical-align: middle;
+}
+.proposaldisplay .table td, .proposaldisplay .table th, .proposaldisplay .no-top-border-table>.table>tbody>tr:first-child>td {
+  padding: .75rem;
+  vertical-align: middle !important;
+}
+.proposaldisplay .form-control:disabled, .proposaldisplay .form-control[readonly], .choices.is-disabled .choices__item {
+  font-size: 13px !important;
+}
+.proposaldisplay .col-form-label {
+  font-weight: 500 !important;
+}
+.table-responsive>.table-bordered{border:initial;}
+.formio-component-textfield input{
+  width: 100%;
+  width: -moz-available;          /* WebKit-based browsers will ignore this. */
+  width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+  width: fill-available;
+}
