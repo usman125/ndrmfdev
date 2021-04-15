@@ -772,8 +772,7 @@
               <!-- <mat-card-actions class="p-3 footer-btns" *ngIf="viewType === 'po' && loggedUser.role !== 'sme'"> -->
               <div class="expiry-section mb-2">
                 <button class="mt-1 mb-1" *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button
-                  color="primary"
-                  [disabled]="(selectedProject?.extendedAppraisal !== null && 
+                  color="primary" [disabled]="(selectedProject?.extendedAppraisal !== null && 
                   selectedProject?.extendedAppraisal?.status === 'Pending') ||
                   (selectedProject?.preAppraisal?.isMarkedTo === 'Marked to GM' && 
                   selectedProject?.preAppraisal?.subStatus === 'Pending') || 
@@ -782,8 +781,7 @@
                   (selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to GM' && 
                   selectedProject?.extendedAppraisal?.subStatus === 'Pending') || 
                 (selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to CEO' && 
-                selectedProject?.extendedAppraisal?.subStatus === 'Pending')"
-                  (click)="prepareExtAppraisal()">
+                selectedProject?.extendedAppraisal?.subStatus === 'Pending')" (click)="prepareExtAppraisal()">
                   <mat-icon class="mr-1">description</mat-icon> {{selectedProject?.extendedAppraisal &&
                   selectedProject?.extendedAppraisal.status === 'Expired' ?
                   'EXTEND EXT-APPRAISAL' : selectedProject?.extendedAppraisal &&
@@ -832,10 +830,12 @@
                 </button>
                 <mat-chip-list>
                   <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to GM'
-                                  && selectedProject?.extendedAppraisal?.subStatus === 'Pending'" color="warn" selected>
+                                  && selectedProject?.extendedAppraisal?.subStatus === 'Pending'" color="warn"
+                    selected>
                     {{'marked to gm - pending' | titlecase}}</mat-chip>
                   <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to CEO'
-                                  && selectedProject?.extendedAppraisal?.subStatus === 'Pending'" color="warn" selected>
+                                  && selectedProject?.extendedAppraisal?.subStatus === 'Pending'" color="warn"
+                    selected>
                     {{'marked to ceo - pending' | titlecase}}</mat-chip>
                   <mat-chip class="ml-3 mt-2" *ngIf="selectedProject?.extendedAppraisal?.subStatus === 'Approved' &&
                                   selectedProject?.extendedAppraisal?.isMarkedTo === 'Marked to GM'" color="warn"
@@ -1475,7 +1475,8 @@
               <div class="top-form pb-0 pr-0 pl-0">
                 <div *ngIf="groupType?.reassignmentComments !== null" class="general-info">
                   <span id="value">
-                    <span style="text-decoration: underline;" id="answer">Comments by NDRMF:</span>&nbsp;{{groupType?.reassignmentComments}}
+                    <span style="text-decoration: underline;" id="answer">Comments by
+                      NDRMF:</span>&nbsp;{{groupType?.reassignmentComments}}
                   </span>
                 </div>
                 <formio *ngIf="form.id !== 'pip' && form && !formSubmitData && loggedUser.role === 'fip'" [form]="form"
@@ -1537,9 +1538,30 @@
 
 <!-- PRINT PROPOSAL SECTIONS -->
 <ng-container>
-  <div id="print-proposal-sections">
+  <div id="print-proposal-sections" style="display: none;">
     <div class="margin-5" *ngFor="let item of proposalSections">
       <formio [id]="item.id" readOnly="true" [submission]="{data: item.data}" [form]="item.template"></formio>
     </div>
+
+    <!-- <div *ngIf="form.id === 'pip'"> -->
+    <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths"
+      [show]="giaGeneralFilter">
+    </app-project-imp-plan>
+    <!-- </div> -->
+    <!-- <div *ngIf="form.id === 'pip-proc'"> -->
+    <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths"
+      [show]="giaProcFilter">
+    </app-project-imp-plan>
+    <!-- </div> -->
+    <!-- <div *ngIf="form.id === 'pip-finance'"> -->
+    <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths"
+      [show]="giaFinanceFilter">
+    </app-project-imp-plan>
+    <!-- </div> -->
+    <!-- <div *ngIf="form.id === 'pip-mne'"> -->
+    <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths"
+      [show]="giaMneFilter">
+    </app-project-imp-plan>
+    <!-- </div> -->
   </div>
 </ng-container>

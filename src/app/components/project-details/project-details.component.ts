@@ -87,6 +87,13 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   pc1Files: any = [];
   printSections: any = [];
 
+  giaProcFilter: any = 'Procurement';
+  giaGeneralFilter: any = 'General';
+  giaMneFilter: any = 'M & E';
+  giaFinanceFilter: any = 'Financial';
+
+  detailBtn: any = 'gia-projects';
+
 
   constructor(
     private _proposalSectionsStore: ProposalSectionsStore,
