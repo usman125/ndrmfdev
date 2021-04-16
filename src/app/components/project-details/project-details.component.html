@@ -652,15 +652,15 @@
             *ngIf="selectedProject?.status !== 'Upload PC1' && selectedProject?.status !== 'Upload PDRMC Mins'">
             <div class="field">
               <div class="title">Name</div>
-              <div class="value">{{selectedProjectInfo?.projectName}}</div>
+              <div class="value">{{selectedProject.proposalName | titlecase}}</div>
             </div>
             <div class="field">
               <div class="title">Company</div>
-              <div class="value">{{selectedProjectInfo?.nameOfAgency}}</div>
+              <div class="value">{{selectedProjectInfo?.nameOfExecutingLeadAgencyOrganisation}}</div>
             </div>
             <div class="field">
               <div class="title">Time of submission</div>
-              <div class="value">{{selectedProjectInfo?.timeOfSubmission | date:'fullDate'}}</div>
+              <div class="value">{{selectedProject.submittedAt | date:'fullDate'}}</div>
             </div>
             <div class="field">
               <div class="title">Duration</div>
@@ -672,17 +672,17 @@
             </div>
             <div class="field">
               <div class="title">End Date</div>
-              <div class="value">{{selectedProjectInfo?.endDate | date:'fullDate'}}</div>
+              <div class="value">{{selectedProjectInfo?.startDate1 | date:'fullDate'}}</div>
             </div>
             <div class="field">
               <div class="title">Geographic Coverage</div>
               <div class="value">{{selectedProjectInfo?.geographicCoverage}}</div>
             </div>
-            <div class="field">
+            <!-- <div class="field">
               <div class="title">Male Benificiaries</div>
               <div class="value">{{selectedProjectInfo?.pb ? selectedProjectInfo?.pb["benefeceries"][0]["male"] : null}}
               </div>
-            </div>
+            </div> -->
           </div>
           <div class="project-details p-3">
             <app-project-proposal-files></app-project-proposal-files>
