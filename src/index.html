@@ -9,43 +9,61 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <style type = "text/css">
-  @media print {
-    body{font-family:verdana, arial, sans-serif;}
-   table{border-collapse: collapse;}
-  .form-control:disabled, .form-control[readonly] {
-    background-color:transparent;
-    border: 1px solid #ced4da;
-    padding: .375rem .75rem;
-}
-.border {
-    border: 1px solid #dee2e6!important;
-    margin-bottom: .5rem!important;
-}
-.table td, .table th, .no-top-border-table>.table>tbody>tr:first-child>td {
-  padding: .75rem;
-  vertical-align: middle;
-}
-.col-form-label {
-    padding-top: calc(.375rem + 1px);
-    padding-bottom: calc(.375rem + 1px);
-    margin-bottom: 0;
-    font-size: 12px;
-    line-height: 1.5;
-    display: inline-block;
-}
-.choices.is-disabled .choices__inner, .choices.is-disabled .choices__input{display: none;}
-.form-check-inline {
-    display: inline-flex;
-    align-items: center;
-    padding-left: 0;
-    margin-right: .75rem;
-}
-/* .form-check {
+  <style type="text/css">
+    @media print {
+      body {
+        font-family: verdana, arial, sans-serif;
+      }
+
+      table {
+        border-collapse: collapse;
+      }
+
+      .form-control:disabled,
+      .form-control[readonly] {
+        background-color: transparent;
+        border: 1px solid #ced4da;
+        padding: .375rem .75rem;
+      }
+
+      .border {
+        border: 1px solid #dee2e6 !important;
+        margin-bottom: .5rem !important;
+      }
+
+      .table td,
+      .table th,
+      .no-top-border-table>.table>tbody>tr:first-child>td {
+        padding: .75rem;
+        vertical-align: middle;
+      }
+
+      .col-form-label {
+        padding-top: calc(.375rem + 1px);
+        padding-bottom: calc(.375rem + 1px);
+        margin-bottom: 0;
+        font-size: 12px;
+        line-height: 1.5;
+        display: inline-block;
+      }
+
+      .choices.is-disabled .choices__inner,
+      .choices.is-disabled .choices__input {
+        display: none;
+      }
+
+      .form-check-inline {
+        display: inline-flex;
+        align-items: center;
+        padding-left: 0;
+        margin-right: .75rem;
+      }
+
+      /* .form-check {
     position: relative;
     display: block;
 } */
-/* .form-check-inline .form-check-input {
+      /* .form-check-inline .form-check-input {
     position: static;
     margin-top: 0;
     margin-right: .3125rem;
@@ -56,63 +74,90 @@
     margin-top: .3rem;
     margin-left: -1.25rem;
 } */
-/* input:disabled {
+      /* input:disabled {
     color: -internal-light-dark(rgb(84, 84, 84), rgb(170, 170, 170));
     cursor: default;
 } */
-/* input[type="radio" i] {
+      /* input[type="radio" i] {
     appearance: auto;
     box-sizing: border-box;
 }
 input[type="radio" i]:disabled {
     background-color: initial;
 } */
-.bg-info {
-  background-color: #17a2b8 !important;
-}
-.table-bordered td, .table-bordered th {
-  border: 1px solid #dee2e6;
-}
-.card-body {
-  flex: 1 1 auto;
-  min-height: 1px;
-  padding: 1.25rem;
-}
-.card-header {
-    padding: .75rem 1.25rem;
-    margin-bottom: 0;
-    background-color: rgba(0,0,0,.03);
-    border-bottom: 1px solid rgba(0,0,0,.125);
-}
-.margin-5 .formio-component .formio-form .formio-component-submit button {
-    display: none;
-}
-.text-light {
-    color: #f8f9fa!important;
-}
-.form-control{font-size: 12px;}
-.form-control{border: 1px solid #ced4da; padding: .375rem .75rem;}
-.formio-component-projectAtAGlance .form-control:disabled, .form-control[readonly] {text-align: center;}
-table, td, row, .header, .formio-component-panel {
-      page-break-inside:avoid;
-      page-break-inside:avoid; 
-      page-break-after:auto;
-  }
-  tr    
-{ 
-  page-break-inside:avoid; 
-  page-break-after:auto;
-}
-.formio-component-textfield input{
-  width: 100%;
-  width: -moz-available;          /* WebKit-based browsers will ignore this. */
-  width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
-  width: fill-available;
-}
-  }
-  .proposaldisplay .form-control:disabled, .proposaldisplay .form-control[readonly] {
-  font-size: 13px !important;
-}
+      .bg-info {
+        background-color: #17a2b8 !important;
+      }
+
+      .table-bordered td,
+      .table-bordered th {
+        border: 1px solid #dee2e6;
+      }
+
+      .card-body {
+        flex: 1 1 auto;
+        min-height: 1px;
+        padding: 1.25rem;
+      }
+
+      .card-header {
+        padding: .75rem 1.25rem;
+        margin-bottom: 0;
+        background-color: rgba(0, 0, 0, .03);
+        border-bottom: 1px solid rgba(0, 0, 0, .125);
+      }
+
+      .margin-5 .formio-component .formio-form .formio-component-submit button {
+        display: none;
+      }
+
+      .text-light {
+        color: #f8f9fa !important;
+      }
+
+      .form-control {
+        font-size: 12px;
+      }
+
+      .form-control {
+        border: 1px solid #ced4da;
+        padding: .375rem .75rem;
+      }
+
+      .formio-component-projectAtAGlance .form-control:disabled,
+      .form-control[readonly] {
+        text-align: center;
+      }
+
+      table,
+      td,
+      row,
+      .header,
+      .formio-component-panel {
+        page-break-inside: avoid;
+        page-break-inside: avoid;
+        page-break-after: auto;
+      }
+
+      tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+      }
+
+      .formio-component-textfield input {
+        width: 100%;
+        width: -moz-available;
+        /* WebKit-based browsers will ignore this. */
+        width: -webkit-fill-available;
+        /* Mozilla-based browsers will ignore this. */
+        width: stretch;
+      }
+    }
+
+    .proposaldisplay .form-control:disabled,
+    .proposaldisplay .form-control[readonly] {
+      font-size: 13px !important;
+    }
   </style>
 </head>
 
