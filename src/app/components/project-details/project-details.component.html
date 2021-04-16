@@ -1538,27 +1538,31 @@
 
 <!-- PRINT PROPOSAL SECTIONS -->
 <ng-container>
-  <div id="print-proposal-sections" style="display: none;">
+  <div id="print-proposal-sections">
     <div class="margin-5" *ngFor="let item of proposalSections">
       <formio [id]="item.id" readOnly="true" [submission]="{data: item.data}" [form]="item.template"></formio>
     </div>
 
+    <div class="border-heading">Project Physical Plan</div>
     <!-- <div *ngIf="form.id === 'pip'"> -->
     <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths"
       [show]="giaGeneralFilter">
     </app-project-imp-plan>
     <!-- </div> -->
     <!-- <div *ngIf="form.id === 'pip-proc'"> -->
-    <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths"
-      [show]="giaProcFilter">
-    </app-project-imp-plan>
-    <!-- </div> -->
-    <!-- <div *ngIf="form.id === 'pip-finance'"> -->
-    <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths"
+          <div class="border-heading">Project Procurement Plan</div>
+          <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths"
+          [show]="giaProcFilter">
+        </app-project-imp-plan>
+        <!-- </div> -->
+        <!-- <div *ngIf="form.id === 'pip-finance'"> -->
+      <div class="border-heading">Project Financial Plan</div>
+      <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths"
       [show]="giaFinanceFilter">
     </app-project-imp-plan>
     <!-- </div> -->
     <!-- <div *ngIf="form.id === 'pip-mne'"> -->
+      <div class="border-heading">Project M & E Plan</div>
     <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths"
       [show]="giaMneFilter">
     </app-project-imp-plan>
