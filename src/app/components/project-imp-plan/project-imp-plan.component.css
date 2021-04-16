@@ -170,10 +170,11 @@ mat-tree-node.active + mat-tree-node.active {
 
 .toggle-clubs {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   /* justify-content: space-evenly; */
   /* margin-bottom: 25px; */
   margin: 15px 8px;
+  flex-direction: column;
 }
 
 /* .quarters .finance.active span {
