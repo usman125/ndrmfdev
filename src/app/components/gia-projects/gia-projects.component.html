@@ -187,23 +187,23 @@
                     && form.id !== 'pip-finance' && form.id !== 'pip-mne'" [form]="form.template"
                       [submission]="{data: form.data}" readOnly="true"></formio>
                     <div *ngIf="form.id === 'pip'">
-                      <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn"
-                        [proMonths]="proMonths" [show]="giaGeneralFilter">
+                      <app-project-imp-plan [printHeading]="printProcHeading" [printView]="true" [giaView]="true"
+                        [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths" [show]="giaGeneralFilter">
                       </app-project-imp-plan>
                     </div>
                     <div *ngIf="form.id === 'pip-proc'">
-                      <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn"
-                        [proMonths]="proMonths" [show]="giaProcFilter">
+                      <app-project-imp-plan [printHeading]="printGeneralHeading" [printView]="true" [giaView]="true"
+                        [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths" [show]="giaProcFilter">
                       </app-project-imp-plan>
                     </div>
                     <div *ngIf="form.id === 'pip-finance'">
-                      <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn"
-                        [proMonths]="proMonths" [show]="giaFinanceFilter">
+                      <app-project-imp-plan [printHeading]="printFinanceHeading" [printView]="true" [giaView]="true"
+                        [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths" [show]="giaFinanceFilter">
                       </app-project-imp-plan>
                     </div>
                     <div *ngIf="form.id === 'pip-mne'">
-                      <app-project-imp-plan [giaView]="true" [qprView]="true" [detailBtn]="detailBtn"
-                        [proMonths]="proMonths" [show]="giaMneFilter">
+                      <app-project-imp-plan [printHeading]="printMneHeading" [printView]="true" [giaView]="true"
+                        [qprView]="true" [detailBtn]="detailBtn" [proMonths]="proMonths" [show]="giaMneFilter">
                       </app-project-imp-plan>
                     </div>
                   </div>

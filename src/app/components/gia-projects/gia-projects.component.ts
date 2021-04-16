@@ -83,6 +83,11 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
     ]
   };
 
+  printProcHeading: any = "Project Physical Plan";
+  printGeneralHeading: any = "Project Procurement Plan";
+  printFinanceHeading: any = "Project Financial Plan";
+  printMneHeading: any = "Project M& E Plan";
+
 
   constructor(
     private _userService: UserService,
