@@ -150,10 +150,15 @@
             </button>
           </h5>
           <div class="action-btns">
-            <button *ngIf="viewType === 'add-gia' && selectedProject?.gia?.processOwner.id === loggedUser?.id"
-              (click)=" submitGia()" [disabled]="appraisalDoc.length === 0" color="primary" mat-raised-button>
-              SAVE GIA
+            <button *ngIf="viewType === 'add-gia' && 
+            selectedProject?.gia?.processOwner.id === loggedUser?.id && !saveGiaLoading" (click)=" submitGia()"
+              [disabled]="appraisalDoc.length === 0 || saveGiaLoading" color="primary" mat-raised-button>
+              <span> SAVE GIA</span>
             </button>
+            <span *ngIf="saveGiaLoading">
+              <mat-progress-spinner mode="indeterminate" [diameter]="25">
+              </mat-progress-spinner>
+            </span>
           </div>
           <mat-chip-list
             *ngIf="viewType === 'view-gia' && assignedSection?.comments !== null && loggedUser?.role !== 'fip'">
@@ -173,7 +178,7 @@
             <div *ngFor="let item of appraisalDoc;let i = index;">
               <div class="appraisal-box">
                 <div class="remove-btn">
-                  <button [disabled]="loggedUser?.id !== selectedProject?.gia.processOwner.id"
+                  <button [disabled]="loggedUser?.id !== selectedProject?.gia.processOwner.id || saveGiaLoading"
                     *ngIf="viewType === 'add-gia'" (click)="removeEntry(i)" color="warn" mat-icon-button>
                     <mat-icon>close</mat-icon>
                   </button>
@@ -213,10 +218,15 @@
           </div>
         </mat-card-content>
         <mat-card-actions style="padding: 6px;">
-          <button *ngIf="viewType === 'add-gia' && selectedProject?.gia?.processOwner.id === loggedUser?.id"
-            (click)="submitGia()" [disabled]="appraisalDoc.length === 0" color="primary" mat-raised-button>
-            SAVE GIA
+          <button *ngIf="viewType === 'add-gia' && 
+          selectedProject?.gia?.processOwner.id === loggedUser?.id && !saveGiaLoading" (click)="submitGia()"
+            [disabled]="appraisalDoc.length === 0 || saveGiaLoading" color="primary" mat-raised-button>
+            <span> SAVE GIA</span>
           </button>
+          <span *ngIf="saveGiaLoading">
+            <mat-progress-spinner mode="indeterminate" [diameter]="25">
+            </mat-progress-spinner>
+          </span>
         </mat-card-actions>
       </mat-card>
     </div>

@@ -43,6 +43,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
   reviewUsers = new FormControl();
 
   apiLoading: boolean = false;
+  saveGiaLoading: boolean = false;
 
   appraisalDoc: any = [];
   reviewersArray: any = [];
@@ -267,7 +268,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
             name: null,
             users: []
           }
-          console.log(key + " -> " + result[key])
+          // console.log(key + " -> " + result[key])
           object.name = key;
           for (let i = 0; i < result[key].length; i++) {
             object.users.push(result[key][i]);
@@ -327,6 +328,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
 
     let reviewersArray = [];
     let storeArray = [];
+    this.saveGiaLoading = true;
     if (this.reviewUsers.value) {
       for (let i = 0; i < this.reviewUsers.value.length; i++) {
         var object = {
@@ -357,6 +359,8 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
           this._primaryAppraisalFormsStore.addGiaReviewers(storeArray);
         }
         this._confirmModelService.open(options);
+        // this.saveGiaLoading = false;
+        window.location.reload();
         // this.reviewUsers.disable({ onlySelf: true });
       },
       error => {
