@@ -8,7 +8,7 @@
     <!-- use a disabled button to provide padding for tree leaf -->
     <!-- <button mat-icon-button disabled></button> -->
     <!-- {{node.name}} -->
-    <div class="node-title child-node d-flex justify-content-between flex-fill flex-wrap">
+    <div class="node-title child-node d-flex justify-content-between flex-fill flex-wrap p-2">
       <div class="d-flex flex-column">
         <span style="word-break: break-all;">{{node.name}}</span>
         <small>added by: <small id="comment">{{node.created_by}}</small></small>
@@ -33,4 +33,4 @@
   </mat-tree-node>
 </mat-tree>
 
-<img [src]="'data:image/jpeg;base64,'+selectedFile?.picBytes" alt="">
+<!-- <img [src]="'data:image/jpeg;base64,'+selectedFile?.picBytes" alt=""> -->

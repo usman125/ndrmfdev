@@ -152,7 +152,7 @@ export class PoHomeComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
         this.selectedProject = data.selectedProject;
-        console.log("SELECTED PROJECT ON PO HOME***********", this.selectedProject);
+        // console.log("SELECTED PROJECT ON PO HOME***********", this.selectedProject);
       })
     )
   }
@@ -203,7 +203,7 @@ export class PoHomeComponent implements OnInit, OnDestroy {
         this.polarAreaChartLabels = this.allProcesses;
         this.polarAreaChartData = this.allProcessesData;
 
-        console.log("RESULT ALL ORICESESS:--", this.allProcesses, this.allProcessesData, this.doughnutChartData, this.doughnutChartLabels);
+        // console.log("RESULT ALL ORICESESS:--", this.allProcesses, this.allProcessesData, this.doughnutChartData, this.doughnutChartLabels);
 
       },
       error => {
@@ -233,7 +233,7 @@ export class PoHomeComponent implements OnInit, OnDestroy {
           totalCount: result.length
         }
         this.apiLoading = false;
-        console.log("PROCESS OWNER ALL PROJECTS:--", result);
+        // console.log("PROCESS OWNER ALL PROJECTS:--", result);
       },
       error => {
         this.apiLoading = false;
@@ -248,15 +248,15 @@ export class PoHomeComponent implements OnInit, OnDestroy {
     this._authStore.setLoading();
     this._accreditationRequestService.getUnderReviewEligibilityRequest().subscribe(
       (result: any) => {
-        console.log("RESULT APPROVED ELIGI:---", result);
+        // console.log("RESULT APPROVED ELIGI:---", result);
         this.eligiUnderReviewCount = result.length;
         this._accreditationRequestService.getApprovedEligibilityRequest().subscribe(
           (result: any) => {
-            console.log("RESULT APPROVED ELIGI:---", result);
+            // console.log("RESULT APPROVED ELIGI:---", result);
             this.eligiApprovedCount = result.length;
             this._accreditationRequestService.getEligiRejectedRequests().subscribe(
               (result: any) => {
-                console.log("RESULT REJECTED ELIGIBILITY:---", result);
+                // console.log("RESULT REJECTED ELIGIBILITY:---", result);
                 this.eligiRejectedCount = result.length;
                 this.eligiChartData = [
                   this.eligiUnderReviewCount,
@@ -290,17 +290,17 @@ export class PoHomeComponent implements OnInit, OnDestroy {
     this._accreditationRequestService.getUnderReviewQulificationRequests().subscribe(
       (result: any) => {
         this._authStore.removeLoading();
-        console.log("ERROR FECTING APPROVED:--", result);
+        // console.log("ERROR FECTING APPROVED:--", result);
         this.qualiUnderReviewCount = result.length;
         this._accreditationRequestService.getApprovedQulificationRequests().subscribe(
           (result: any) => {
             this._authStore.removeLoading();
-            console.log("ERROR FECTING APPROVED:--", result);
+            // console.log("ERROR FECTING APPROVED:--", result);
             this.qualiApprovedCount = result.length;
             this._accreditationRequestService.getRejectedQulificationRequests().subscribe(
               (result: any) => {
                 this._authStore.removeLoading();
-                console.log("ERROR QUALIFICATION REJECTED:--", result);
+                // console.log("ERROR QUALIFICATION REJECTED:--", result);
                 this.qualiRejectedCount = result.length;
                 this.pieChartData = [
                   this.qualiUnderReviewCount,
@@ -385,7 +385,7 @@ export class PoHomeComponent implements OnInit, OnDestroy {
   // }
 
   toggleChanged($event) {
-    console.log("TOGGLE CHNAGED:--", $event);
+    // console.log("TOGGLE CHNAGED:--", $event);
     if ($event.value === 'rfr')
       this.getProjectTabs();
   }
@@ -395,20 +395,20 @@ export class PoHomeComponent implements OnInit, OnDestroy {
       if (element.status !== 'Draft')
         return element;
     })
-    console.log("PROCESS OWNER ALL PROJECTS:--", this.projectTabs);
+    // console.log("PROCESS OWNER ALL PROJECTS:--", this.projectTabs);
     this.setProjectData(this.projectTabs[0].id);
   }
 
   onTabChanged($event) {
     this._primaryAppraisalFormsStore.addSelectedProject(null);
-    console.log("TAB CHANGED:---", $event);
+    // console.log("TAB CHANGED:---", $event);
     this.setProjectData(this.projectTabs[$event.index].id);
   }
 
   setProjectData(id) {
     this._projectService.getSingleProject(id).subscribe(
       (result: any) => {
-        console.log("RESULT FROM SINGLE PROJECT:----", result);
+        // console.log("RESULT FROM SINGLE PROJECT:----", result);
         this._primaryAppraisalFormsStore.addSelectedProject(result);
       }
     );

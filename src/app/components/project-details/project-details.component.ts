@@ -299,7 +299,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         }
         if (result && result.giaChecklist !== null &&
           result.giaChecklist) {
-          if (this.calculateDaysDifference(result.giaChecklist.deadline) < parseInt('0')) {
+          if (this.calculateDaysDifference(result.giaChecklist.deadline) < parseInt('0')
+            && result.giaChecklist.data === null) {
             this._primaryAppraisalFormsStore.setGiaChecklistExpiry(
               this.calculateDaysDifference(result.giaChecklist.deadline)
             );

@@ -89,7 +89,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this._authStore.setLoading();
     this._loginService.loginUser(values).subscribe(
       (result: any) => {
-        console.log("RESULT AFTER CALIING LOGIN API:---", result);
+        // console.log("RESULT AFTER CALIING LOGIN API:---", result);
         this.user = {
           id: result['user']['id'],
           firstName: result['user']['firstName'],
@@ -125,7 +125,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (this.user.roles.indexOf('FIP') > -1) {
           this.user.role = 'fip';
         }
-        console.log("USER:---", this.user);
+        // console.log("USER:---", this.user);
         this._authStore.setUserInfo(this.user);
         this._authStore.setAuthToken(this.user.authToken);
         this._authStore.setUserRole(this.user.role);
@@ -138,7 +138,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           this._authStore.setLoginState(true);
           this._authStore.openSideNav();
           var newUser = JSON.stringify(this.user);
-          console.log(newUser);
+          // console.log(newUser);
           localStorage.setItem('user', newUser);
           this._authStore.removeLoading();
           if (this.user.role === 'admin') {
@@ -159,7 +159,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           }
         } else {
           var newUser = JSON.stringify(this.user);
-          console.log(newUser);
+          // console.log(newUser);
           localStorage.setItem('user', newUser);
           this.checkAccrediatedStatus();
         }
@@ -179,7 +179,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     console.log(this.user);
     this._loginService.checkAccreditationStatus().subscribe(
       (result: any) => {
-        console.log("RESULT FROM ACCREDIATED SATUS:--", result);
+        // console.log("RESULT FROM ACCREDIATED SATUS:--", result);
         this.user.eligibileFlag = result.eligibilityStatus;
         this.user.qualificationFlag = result.qualificationStatus;
         this.user.canInitiate = result.canInitiate;
@@ -192,7 +192,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this._authStore.setLoginState(true);
         this._authStore.openSideNav();
         var newUser = JSON.stringify(this.user);
-        console.log(newUser);
+        // console.log(newUser);
         localStorage.setItem('user', newUser);
         this._authStore.removeLoading();
         this._router.navigate(['fip-home']);
