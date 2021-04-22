@@ -163,6 +163,28 @@
       .appraisal-box table td {
         padding: 10px !important;
       }
+      .form-check input:disabled, .form-check input[type="radio" i]:disabled, input:disabled, input[type="radio" i]:disabled{
+        background-color: rgba(27, 205, 236, 0.9, rgba(211, 146, 84, 0.9)) !important;
+
+        color:rgb(194, 21, 21), rgb(38, 10, 199) !important;
+
+      }
+      input[type="radio"][disabled] + label 
+{
+    color: purple;
+}
+
+input[type="radio"][disabled] 
+{
+    border-color: purple;
+}
+input[type="radio"]{
+  border: 1px solid #2b2b2b;
+  border-radius: 8px;
+  height: 16px;
+  width: 16px;
+  -webkit-appearance: none;
+}
 
       * {
         color-adjust: exact;
