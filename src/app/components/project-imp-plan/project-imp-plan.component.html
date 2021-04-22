@@ -72,8 +72,11 @@
   </mat-toolbar>
   <mat-card>
     <mat-card-content>
+      <!-- PRINT HEADING -->
+
       <!-- CLUBS TOP BOXES -->
       <div class="toggle-clubs">
+        <div class="border-heading flex-fill" *ngIf="printView === true">{{printHeading}}</div>
         <div *ngFor="let item of clubs;" class="clubs">
           <div class="d-flex justify-content-between align-items-center">
             <div (click)="selectClub(item);"

@@ -93,6 +93,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   @Input() detailBtn: any;
   @Input() proMonths: any = null;
   @Input() giaView: any;
+  @Input() printView: any;
+  @Input() printHeading: any;
   @Input()
   giaProcFilter: Observable<any>;
 
@@ -140,7 +142,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   ngOnInit(): void {
-    console.log("SHOW FOR PIP:----", this.show);
+    console.log("SHOW FOR PIP:----", this.show, this.printHeading, this.printView);
     this.heads = heads;
     this.options = options;
     if (this.show) {

@@ -47,7 +47,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     this.loading = true;
     this.currentUser = JSON.parse(localStorage.getItem('user'));
-    console.log("APP COMPONENT USER:--", this.currentUser);
+    // console.log("APP COMPONENT USER:--", this.currentUser);
     // if (this.currentUser) {
     //   this._authStore.setEligibleFlag(this.currentUser.eligibileFlag);
     //   this._authStore.setAuthToken(this.currentUser.authToken);
@@ -137,11 +137,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           this._authStore.openSiteLayoutSideNav();
         }
         if (state.breakpoints['(max-width: 699px)'] === true) {
-          console.log("LESS THAN 699:--");
+          // console.log("LESS THAN 699:--");
           this._authStore.addMobileClass();
         }
         if (state.breakpoints['(min-width: 700px)'] === true) {
-          console.log("> THAN 699:--");
+          // console.log("> THAN 699:--");
           this._authStore.removeMobileClass();
         }
       });

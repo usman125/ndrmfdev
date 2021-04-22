@@ -1,9 +1,10 @@
 import { Component, OnInit, Inject, HostListener, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
-import { UserService } from 'src/app/services/user.service';
 import { Subscription } from 'rxjs';
 import { PrimaryAppraisalFormsStore } from 'src/app/stores/primary-appraisal-forms/primary-appraisal-forms-store';
+import { ProposalSectionsStore } from 'src/app/stores/proposal-sections/proposal-sections-store';
+import * as _ from 'lodash';
 
 export interface ConfirmData {
   cancelText: string;
@@ -43,6 +44,7 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
   applyAsJv = new FormControl();
   jvUsers = new FormControl();
   allJvUsers: any = [];
+  projectProposalSections: any = [];
   showJvUsers: boolean = false;
 
   Subscription: Subscription = new Subscription();
@@ -52,16 +54,31 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmData,
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
-    private _userService: UserService) {
+    private _proposalSectionsStore: ProposalSectionsStore) {
     this.data.startDate = new Date().toISOString();
   }
 
   ngOnInit() {
     // console.log("ALL THEMATIC AREAS:--", this.data.areas);
     // this.areas.patchValue(this.data.areas, { onlySelf: true });
-    this._primaryAppraisalFormsStore.state$.subscribe((data) => {
-      this.selectedProject = data.selectedProject;
-    })
+    this.Subscription.add(
+      this._primaryAppraisalFormsStore.state$.subscribe((data) => {
+        this.selectedProject = data.selectedProject;
+      })
+    );
+    this.Subscription.add(
+      this._proposalSectionsStore.state$.subscribe((data) => {
+        this.projectProposalSections = [];
+        for (let i = 0; i < data.sections.length; i++) {
+          var key = data.sections[i];
+          let result = key.name.match(/Framework/g);
+          if (result === null) {
+            this.projectProposalSections.push(key);
+          }
+        }
+        this.projectProposalSections = _.orderBy(this.proposalSections, ['orderNum'], ['asc']);
+      })
+    );
   }
 
   onNoClick(): void {

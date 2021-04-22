@@ -94,6 +94,11 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   detailBtn: any = 'gia-projects';
 
+  printProcHeading: any = "Project Physical Plan";
+  printGeneralHeading: any = "Project Procurement Plan";
+  printFinanceHeading: any = "Project Financial Plan";
+  printMneHeading: any = "Project M& E Plan";
+
 
   constructor(
     private _proposalSectionsStore: ProposalSectionsStore,
@@ -294,7 +299,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         }
         if (result && result.giaChecklist !== null &&
           result.giaChecklist) {
-          if (this.calculateDaysDifference(result.giaChecklist.deadline) < parseInt('0')) {
+          if (this.calculateDaysDifference(result.giaChecklist.deadline) < parseInt('0')
+            && result.giaChecklist.data === null) {
             this._primaryAppraisalFormsStore.setGiaChecklistExpiry(
               this.calculateDaysDifference(result.giaChecklist.deadline)
             );
