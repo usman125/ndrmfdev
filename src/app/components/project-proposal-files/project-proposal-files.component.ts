@@ -14,7 +14,7 @@ import { saveAs } from "file-saver";
  */
 interface FoodNode {
   status: string;
-  picBytes: any;
+  picByte: any;
   name: string;
   path: string;
   created_by: string;
@@ -28,7 +28,7 @@ interface ExampleFlatNode {
   path: string;
   status: string;
   created_by: string;
-  picBytes: any;
+  picByte: any;
 }
 
 @Component({
@@ -53,7 +53,7 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
       path: node.path,
       status: node.status,
       created_by: node.created_by,
-      picBytes: node.picBytes
+      picByte: node.picByte
     };
   }
   treeControl = new FlatTreeControl<ExampleFlatNode>(
@@ -119,7 +119,12 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
   downloadFile(file) {
     // console.log("FILE TO DOWNLOAD:---", file);
     // let el: HTMLElement = this.downloadLink.nativeElement;
-    this.selectedFile = 'data:image/jpeg;base64,' + file.picBytes;
+    this.selectedFile = 'data:image/jpeg;base64,' + file.picByte;
+    // var url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+
+    fetch(this.selectedFile)
+      .then(res => res.blob())
+      .then(console.log)
     // el.click();
     // this.selectedFile = null;
     // this._projectService.downloadAttachments(file.name, file.path).subscribe(

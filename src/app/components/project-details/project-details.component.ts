@@ -318,6 +318,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this._proposalSectionsStore.addAllSections(proposalSections);
           this._projectService.getProposalAttachments(this.selectedProjectId).subscribe(
             (result: any) => {
+              console.log("ALL ATTACHMENTS:--", result);
               this._primaryAppraisalFormsStore.addSelectedProjectFiles(result);
               if (this.selectedProject.status === 'Offer Letter') {
                 this._projectService.getOfferLetter(this.selectedProjectId).subscribe(

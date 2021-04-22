@@ -1346,7 +1346,7 @@
 
       </div>
       <!-- UPLOADED FILES FOR PROJECT -->
-      <div class="m-20 mb-0" *ngIf="loggedUser?.role === 'fip' && selectedProject?.files.length">
+      <div class="m-20 mb-0" *ngIf="loggedUser?.role === 'fip' && selectedProject?.files?.length">
         <app-project-proposal-files></app-project-proposal-files>
       </div>
       <span id="myTopElement" #myTopElement>
