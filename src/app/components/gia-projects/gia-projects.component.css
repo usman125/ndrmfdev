@@ -66,4 +66,6 @@
 .appraisal-box table td {
   padding: 10px !important;
 }
+
+.form-check input:disabled, .form-check input[type="radio" i]:disabled{color: red; background-color: blue;}
 }
