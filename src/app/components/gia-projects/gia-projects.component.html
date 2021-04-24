@@ -3,7 +3,7 @@
     <span>{{viewType === 'add-gia' ? 'Prepare Project GIA' : 'Review Project GIA'}}</span>
     <div class="example-spacer"></div>
     <div style="display: flex;flex-direction: column;">
-      <small>{{selectedProject?.initiatedBy.name}}</small>
+      <small>{{selectedProject?.initiatedBy.name | titlecase}}</small>
     </div>
     <div class="example-spacer"></div>
     <button mat-button color="primary" (click)="goBack()">
@@ -139,7 +139,8 @@
     <div class="col-md-12" [ngClass]="{'mt-4': viewType === 'view-gia'}">
       <mat-card class="m-20">
         <div class="card-header">
-          <h5> Created GIA
+          <div class="d-flex align-items-center justify-content-between flex-fill">
+            <span style="font-weight: 500;font-size: 16px;">Created GIA</span>
             <button styleSheetFile="gia-projects.component.css" [useExistingCss]="true" printSectionId="print-section"
               ngxPrint *ngIf="viewType==='view-gia' && loggedUser?.role === 'fip'" color="primary" mat-icon-button>
               <mat-icon>print</mat-icon>
@@ -148,7 +149,7 @@
               color="primary" mat-icon-button>
               <mat-icon>print</mat-icon>
             </button>
-          </h5>
+          </div>
           <div class="action-btns">
             <button *ngIf="viewType === 'add-gia' && 
             selectedProject?.gia?.processOwner.id === loggedUser?.id && !saveGiaLoading" (click)=" submitGia()"

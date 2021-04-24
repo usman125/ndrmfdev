@@ -2,9 +2,11 @@ import { Component, OnInit, Inject, HostListener, OnDestroy } from '@angular/cor
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { PrimaryAppraisalFormsStore } from 'src/app/stores/primary-appraisal-forms/primary-appraisal-forms-store';
 import { ProposalSectionsStore } from 'src/app/stores/proposal-sections/proposal-sections-store';
 import * as _ from 'lodash';
+import { Router, RouterEvent, NavigationStart } from '@angular/router';
 
 export interface ConfirmData {
   cancelText: string;
@@ -29,6 +31,7 @@ export interface ConfirmData {
   markUnEligibleReason: any;
   taSelectionType: any;
   enableGia: any;
+  enableLoading: any;
 }
 
 @Component({
@@ -49,11 +52,13 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
 
   Subscription: Subscription = new Subscription();
   selectedProject: any = null;
+  _routerSubscription: any = null;
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmData,
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
+    private _router: Router,
     private _proposalSectionsStore: ProposalSectionsStore) {
     this.data.startDate = new Date().toISOString();
   }
@@ -61,6 +66,14 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // console.log("ALL THEMATIC AREAS:--", this.data.areas);
     // this.areas.patchValue(this.data.areas, { onlySelf: true });
+    this._routerSubscription = this._router.events
+      .pipe(
+        filter((event: RouterEvent) => event instanceof NavigationStart),
+        filter(() => !!this.dialogRef)
+      )
+      .subscribe(() => {
+        this.dialogRef.close();
+      });
     this.Subscription.add(
       this._primaryAppraisalFormsStore.state$.subscribe((data) => {
         this.selectedProject = data.selectedProject;
@@ -206,6 +219,7 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.Subscription.unsubscribe();
+    this._routerSubscription.unsubscribe();
   }
 
 }

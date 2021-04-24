@@ -120,6 +120,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // this._confirmModelService.dialogRef.close;
+    // this._confirmModelService.close();
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
     this.apiLoading = true;
     this._activatedRoute.paramMap.subscribe(params => {
@@ -265,7 +267,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
           this.selectedProject.extendedAppraisal !== null) {
           this._extendedAppraisalSmesStore.addAppraisal(this.selectedProject.extendedAppraisal);
         }
-        console.log("SELECTED PROJECT IN STORE:--", this.selectedProject, this.sectionStats);
+        // console.log("SELECTED PROJECT IN STORE:--", this.selectedProject, this.sectionStats);
       })
     );
   }
