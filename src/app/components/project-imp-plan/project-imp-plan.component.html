@@ -77,22 +77,24 @@
       <!-- CLUBS TOP BOXES -->
       <div class="toggle-clubs">
         <div class="border-heading flex-fill" *ngIf="printView === true">{{printHeading}}</div>
-        <div *ngFor="let item of clubs;" class="clubs">
-          <div class="d-flex justify-content-between align-items-center">
-            <div (click)="selectClub(item);"
-              [matTooltip]="'Fip:'+' '+(item.fipShare) +' '+ 'NDRMF:'+' '+(item.ndrmfShare)"
-              class="d-flex justify-content-between align-items-center"
-              [ngClass]="{'club-item': item._id === selectedClub?._id}">
-              <span class="mr-2"
-                [ngStyle]="{'background-color': item.randomColor, 'width.px':20, 'height.px': 20}">&nbsp;</span>
-              <span class="mr-4">{{item.title}}</span>
-            </div>
-            <mat-icon [ngStyle]="{'color': 
+        <div class="d-flex align-items-center">
+          <div *ngFor="let item of clubs;" class="clubs">
+            <div class="d-flex justify-content-between align-items-center">
+              <div (click)="selectClub(item);"
+                [matTooltip]="'Fip:'+' '+(item.fipShare) +' '+ 'NDRMF:'+' '+(item.ndrmfShare)"
+                class="d-flex justify-content-between align-items-center"
+                [ngClass]="{'club-item': item._id === selectedClub?._id}">
+                <span class="mr-2"
+                  [ngStyle]="{'background-color': item.randomColor, 'width.px':20, 'height.px': 20}">&nbsp;</span>
+                <span class="mr-4">{{item.title}}</span>
+              </div>
+              <mat-icon [ngStyle]="{'color': 
             !editClubFlag ? selectedClub.randomColor : 'red'}" class="mr-2"
-              *ngIf="item._id === selectedClub?._id && !qprView && loggedUser?.role === 'fip'"
-              (click)="!editClubFlag ? openEditClubForm() : editClubFlag = !editClubFlag">
-              {{editClubFlag ? 'close' : 'edit'}}
-            </mat-icon>
+                *ngIf="item._id === selectedClub?._id && !qprView && loggedUser?.role === 'fip'"
+                (click)="!editClubFlag ? openEditClubForm() : editClubFlag = !editClubFlag">
+                {{editClubFlag ? 'close' : 'edit'}}
+              </mat-icon>
+            </div>
           </div>
         </div>
       </div>
