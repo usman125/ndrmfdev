@@ -25,7 +25,9 @@
   padding-right: 0 !important;
   padding-left: 15px !important;
 } */
-
+.appraisal-box > table tr td {
+  padding: 10px !important;
+}
 .top-form {
   padding: 0 30px;
   padding: 0 30px 30px;

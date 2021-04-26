@@ -173,12 +173,18 @@
 {
     color: purple;
 } */
-
-input[type="radio"][checked] 
+.form-check-inline .form-check-input {
+    position: static;
+    margin-top: 0;
+    margin-right: .3125rem;
+    margin-left: 0;
+}
+input[type="radio"][checked], .radio-selected input[type="radio"][checked] 
 {
     border-color:#555;
     background-color: #17a2b8;
 }
+
 input[type="radio"]{
   border: 1px solid #2b2b2b;
   border-radius: 8px;
@@ -196,9 +202,10 @@ input[type="radio"]{
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
       }
-
-    }
-
+}
+      .appraisal-box table td {
+        padding: 10px !important;
+      }
   </style>
 </head>
 

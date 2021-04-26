@@ -587,3 +587,6 @@ h6 {
   display: inherit;
   margin: 0 auto;
 }
+.appraisal-box table tr td {
+  padding: 10px !important;
+}
