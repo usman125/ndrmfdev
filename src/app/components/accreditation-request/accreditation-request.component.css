@@ -357,6 +357,7 @@ button {
   margin-bottom: 5px;
 }
 @media print {
+  table{width:100%;}
   /* avoid cutting tr's in half */
   table, td, row, .header {
       page-break-inside:avoid;

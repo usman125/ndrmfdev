@@ -102,7 +102,7 @@
       .form-control[readonly] {
         text-align: center;
       }
-
+      .ext-print .no-submit{page-break-after: auto;}
       table,
       td,
       .row,
@@ -111,7 +111,7 @@
         page-break-inside: avoid;
         page-break-after: auto;
       }
-
+      .formio-component-submit{display: none;}
       tr {
         page-break-inside: avoid;
         page-break-after: auto;
@@ -169,14 +169,15 @@
         color:rgb(194, 21, 21), rgb(38, 10, 199) !important;
 
       }
-      input[type="radio"][disabled] + label 
+      /* input[type="radio"][disabled] + label 
 {
     color: purple;
-}
+} */
 
-input[type="radio"][disabled] 
+input[type="radio"][checked] 
 {
-    border-color: purple;
+    border-color:#555;
+    background-color: #17a2b8;
 }
 input[type="radio"]{
   border: 1px solid #2b2b2b;
@@ -186,6 +187,10 @@ input[type="radio"]{
   -webkit-appearance: none;
 }
 
+.image-style-align-center img{
+  display: inherit;
+  margin: 0 auto;
+}
       * {
         color-adjust: exact;
         -webkit-print-color-adjust: exact;
@@ -193,6 +198,7 @@ input[type="radio"]{
       }
 
     }
+
   </style>
 </head>
 
