@@ -234,6 +234,7 @@ mat-tree-node.active + mat-tree-node.active {
   align-items: center;
   flex: 1;
   height: 30px;
+  margin-left: 50px;
 }
 
 .top-quarters .item span {
@@ -362,6 +363,7 @@ mat-tree-node.active + mat-tree-node.active {
   .top-quarters {
     /* display: none; */
     font-size: 10px;
+    margin-left: 22px;
   }
   .mat-tree-node {
     min-height: unset;
