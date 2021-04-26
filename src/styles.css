@@ -583,3 +583,7 @@ h6 {
   width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
   width: stretch;
 }
+.image-style-align-center img{
+  display: inherit;
+  margin: 0 auto;
+}

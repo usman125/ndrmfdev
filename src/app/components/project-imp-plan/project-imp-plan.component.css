@@ -222,6 +222,7 @@ mat-tree-node.active + mat-tree-node.active {
   min-width: 200px;
   border: 1px solid #e2e2e2;
   padding: 4px 10px;
+  width:250px;
 }
 
 .notUser {
@@ -358,9 +359,9 @@ mat-tree-node.active + mat-tree-node.active {
   .all-tree {
     overflow: visible;
   }
-  .top-quarters {
+  /* .top-quarters {
     display: none;
-  }
+  } */
   .mat-tree-node {
     min-height: unset;
   }
