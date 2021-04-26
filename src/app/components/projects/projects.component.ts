@@ -8,12 +8,13 @@ import { setCurrentProject } from "../../stores/projects/project-replay";
 import { ProjectService } from "../../services/project.service";
 // import { DataFilterPipe } from "../../pipes/data-filter.pipe";
 import * as _ from 'lodash';
+import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css'],
-  providers: [AddProjectModelService],
+  providers: [AddProjectModelService, ConfirmModelService]
   // animations: [
   //   trigger('changeDivSize', [
   //     state('initial', style({
@@ -45,6 +46,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   constructor(
     private _projectsStore: ProjectsStore,
     private _AddProjectModelService: AddProjectModelService,
+    private _confirmModelService: ConfirmModelService,
     private _projectService: ProjectService,
     private _router: Router,
   ) { }
@@ -238,6 +240,16 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   addProject(values) {
+
+    const options = {
+      title: '',
+      message: '',
+      cancelText: 'CANCEL',
+      confirmText: 'ADD PROJECT',
+      enableLoading: true,
+      disableClose: true,
+    };
+    this._confirmModelService.open(options);
     this._projectService.commenceNewProjects(values).subscribe(
       (result: any) => {
         // console.log("RESULT ADDING PROJECT:---", result);
@@ -260,7 +272,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
             new Date().toISOString(),
             values.thematicAreaName
           );
+          this._confirmModelService.dialogRef.close();
           this._router.navigate(['/project-details', result.id]);
+          // window.location.href = '/project-details/' + result.id;
         }
       },
       error => {

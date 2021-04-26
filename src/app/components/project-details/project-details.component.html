@@ -620,7 +620,7 @@
       <mat-card class="m-20 ml-0" style="padding: 0px;position: sticky;top: 60px;" *ngIf="loggedUser.role !== 'fip'">
         <mat-toolbar class="mat-elevation-z8 no-margin" style="padding: 15px 0px;" color="primary">
           <mat-toolbar-row>
-            <span>{{selectedProject?.proposalName}} Summary</span>
+            <span>{{selectedProject?.proposalName | titlecase}} Summary</span>
             <div class="example-spacer"></div>
             <div class="expiry-sections mb-2" *ngIf="loggedUser.role !== 'fip'">
               <mat-chip-list>
@@ -1346,7 +1346,7 @@
 
       </div>
       <!-- UPLOADED FILES FOR PROJECT -->
-      <div class="m-20 mb-0" *ngIf="loggedUser?.role === 'fip' && selectedProject?.files.length">
+      <div class="m-20 mb-0" *ngIf="loggedUser?.role === 'fip' && selectedProject?.files?.length">
         <app-project-proposal-files></app-project-proposal-files>
       </div>
       <span id="myTopElement" #myTopElement>

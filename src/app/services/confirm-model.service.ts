@@ -37,6 +37,7 @@ export class ConfirmModelService {
         markUnEligibleReason: options.markUnEligibleReason,
         taSelectionType: options.taSelectionType,
         enableGia: options.enableGia,
+        enableLoading: options.enableLoading,
       };
       this.dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     } else {
@@ -63,6 +64,7 @@ export class ConfirmModelService {
           markUnEligibleReason: options.markUnEligibleReason,
           taSelectionType: options.taSelectionType,
           enableGia: options.enableGia,
+          enableLoading: options.enableLoading,
         }
       });
     }
@@ -76,5 +78,10 @@ export class ConfirmModelService {
           }
         )
       );
+  }
+
+  public close() {
+    this.dialog.closeAll();
+    this.dialogRef.close();
   }
 }

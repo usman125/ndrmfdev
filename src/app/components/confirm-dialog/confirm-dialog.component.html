@@ -170,6 +170,11 @@
       </mat-form-field>
     </div>
 
+    <div class="controls" *ngIf="data?.enableLoading">
+      
+      <mat-progress-spinner diameter="35" mode="indeterminate"></mat-progress-spinner>
+    </div>
+
     <div class="controls" *ngIf="data?.enableGia">
       <section class="example-section d-flex flex-column">
         <label id="answer" class="example-margin">Did FIP submit all documents:</label>

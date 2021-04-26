@@ -142,7 +142,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   ngOnInit(): void {
-    console.log("SHOW FOR PIP:----", this.show, this.printHeading, this.printView);
+    // console.log("SHOW FOR PIP:----", this.show, this.printHeading, this.printView);
     this.heads = heads;
     this.options = options;
     if (this.show) {

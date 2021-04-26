@@ -245,7 +245,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
     this._projectService.getSingleProject(this.selectedProjectId).subscribe(
       (result: any) => {
         this._primaryAppraisalFormsStore.addSelectedProject(result);
-        // console.log("PROJECT DETAILS FROM DATABASE:--", this.selectedProject);
+        console.log("PROJECT DETAILS FROM DATABASE:--", this.selectedProject);
         this.apiLoading = false;
       },
       error => {
@@ -326,7 +326,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
       confirm: false,
     };
 
-    let reviewersArray = [];
+    let reviewersArray: any = [];
     let storeArray = [];
     this.saveGiaLoading = true;
     if (this.reviewUsers.value) {
@@ -348,7 +348,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
       this.selectedProjectId,
       {
         data: JSON.stringify(this.appraisalDoc),
-        reviewers: this.reviewersArray
+        reviewers: this.reviewersArray.length ? this.reviewersArray : null
       }
     ).subscribe(
       (result: any) => {
