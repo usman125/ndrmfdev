@@ -872,10 +872,11 @@
                 <button (click)="prepareGia()" mat-button color="primary">
                   <mat-icon class="mr-1">edit</mat-icon> {{'View gia' | titlecase}}
                 </button>
-                <mat-chip-list>
+                <mat-chip-list *ngIf="sectionStats?.giaPendingCount > 0">
                   <mat-chip class="ml-3 mt-1" color="accent" selected>
-                    <span *ngIf="sectionStats?.giaPendingCount > 0">{{sectionStats?.giaPendingCount}}</span>
-                    {{selectedProject?.gia?.subStatus}}
+                    <span>
+                      {{sectionStats?.giaPendingCount}} - {{selectedProject?.gia?.subStatus}}
+                    </span>
                   </mat-chip>
                 </mat-chip-list>
               </div>
