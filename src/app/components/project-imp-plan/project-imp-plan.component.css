@@ -363,7 +363,7 @@ mat-tree-node.active + mat-tree-node.active {
   .top-quarters {
     /* display: none; */
     font-size: 10px;
-    margin-left: 22px;
+    margin-left: 30px;
   }
   .mat-tree-node {
     min-height: unset;
