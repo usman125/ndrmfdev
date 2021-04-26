@@ -245,7 +245,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
     this._projectService.getSingleProject(this.selectedProjectId).subscribe(
       (result: any) => {
         this._primaryAppraisalFormsStore.addSelectedProject(result);
-        console.log("PROJECT DETAILS FROM DATABASE:--", this.selectedProject);
+        // console.log("PROJECT DETAILS FROM DATABASE:--", this.selectedProject);
         this.apiLoading = false;
       },
       error => {
