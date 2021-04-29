@@ -13,7 +13,7 @@ export class PendingSignupsComponent implements OnInit {
 
   dataSource: any = null;
   allRequests: any = null;
-  displayedColumns = ['firstName', 'lastName', 'email', 'actions'];
+  displayedColumns = ['firstName', 'lastName', 'email', 'entityType', 'location', 'address', 'actions'];
   Subscription: Subscription = new Subscription();
   loading: boolean = false;
 

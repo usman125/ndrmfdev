@@ -638,142 +638,153 @@
           <img style="width: 100%;" src="../../../assets/accredit.png" class="img img-responsive" alt="">
         </div>
       </div>
-    <table style="width:100%">
-      <tr>
-        <td colspan="4">
-          <div class="team">
-            <div class="header">
-              <div class=" item">Accreditation Application</div>
-            </div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-        <div class=" overall">
-          <span class="head">{{'Submitted at'}}</span>
-        </div>
-        </td>
-        <td>
-        <div class="overall">
-          <span class="value">{{(selectedRequest?.submittedAt | date:'fullDate') || '&nbsp;'}}</span>
-        </div>
-        </td>
-        <td>
-        <div class="overall">
-          <span class="head">{{'Appraisal Date'}}</span>
-        </div>
-        </td>
-        <td>
-        <div class=" overall">
-          <span class="value">{{(selectedRequest?.lastModified | date:'fullDate') || '&nbsp;'}}</span>
-        </div>
-        </td>      
-      </tr>
-   </table>
-   <table style="width:100%; margin-bottom: 5px;">
-    <tr>
-      <td colspan="2">
-        <div class="overall">
-          <span class="head">{{'Name of the entity'}}</span>
-        </div>
-      </td>
-      <td colspan="2">
-        <div class="overall">
-          <span class="value">{{selectedRequest?.userInfo?.entityName || '&nbsp;'}}</span>
-        </div>
-      </td>
-    </tr>
-
-    <tr><td>
-        <div class="overall">
-          <span class="head">{{'Type'}}</span>
-        </div>
-        </td><td>
-        <div class="overall">
-          <span class="value">{{selectedRequest?.availableAsJv ? 'Joint Venture' : 'Individual Entity'}}</span>
-        </div>
-        </td><td>
-        <div class="overall">
-          <span class="head">{{'Name(s) of associate(s):'}}</span>
-        </div>
-        </td><td>
-        <div class="overall">
-          <span class="value">{{selectedRequest?.jvUser?.name || '&nbsp;'}}</span>
-        </div>
-        </td>
-      </tr>
-
-      <tr><td>
-        <div class="overall">
-          <span class="head">{{'Nature of Entity'}}</span>
-        </div>
-        </td><td>
-        <div class="overall">
-          <span class="value">
-            {{selectedRequest?.userInfo.entityNature || '&nbsp;'}}
-          </span>
-        </div>
-        </td><td>
-        <div class="overall">
-          <span class="head">{{'Other Accrediation(s)'}}</span>
-        </div>
-      </td><td>
-        <div class="overall">
-          <span class="value">{{selectedRequest?.userInfo.otherAccreditation || '&nbsp;'}}</span>
-        </div>
-      </td>
-      </tr>
-    </table>  
-    <table style="width:100%">
-      <tr>
-        <td colspan="4">
-      <!-- REGISTRATIONS UNDER ACT -->
-      
-        <div class="header">
-          <div class="item">Registration(s)</div>
-        </div>
-        </td>
-        </tr>
-        </table>
-
-      
-        <div *ngFor="let item of selectedRequest?.eligibility.data.registartions" 
-          style="padding: 0 2px;margin: 0px;">
-          <table style="width:100%; margin-bottom: 5px;">
-          <tr>
+      <table style="width:100%">
+        <tr>
           <td colspan="4">
-          <div class="accred" style="padding: 0px;margin: 0px 0px;">
-            <div class="title" style="margin-top:0px;">{{
-              item === 'secp' ? 'Securities and Exchange Commission (SECP)' :
-              item === 'co84orca2017' ? 'Companies Ordinance 1984 or Companies Act 2017' :
-              item === 'sre1860' ? 'Societies Registration Act 1860' :
-              item === 'vswoo61' ? 'Voluntary Social Welfare Organizations Ordinance 1961' :
-              item === 'ta82' ? 'Trusts Act 1882' :
-              item === 'eadgop' ?   'Economic Affairs Division, Government of Pakistan'  :
-              item === 'unag' ? 'By means of treaty or other agreement that acts as a charter with Government of Pakistan [for UN Agencies]' :
-              '&nbsp;'
-            }}</div>
-          </div>
-          </td></tr>
-          
-            <tr class="box team ">
-              <td class="name">{{'Reg. No.'}}</td>
-              <td class=" sme">{{selectedRequest?.eligibility.data[item+'regno'] || '&nbsp;'}}</td>
-              <td class="name">{{'Date'}}</td>
-              <td class="sme">{{(selectedRequest?.eligibility.data[item+'regdate'] |
-                date:'fullDate') || '&nbsp;'}}</td>
-              </tr>
-            <tr class="box" *ngIf="item === 'secp'">
-              <td class="name">{{'Status'}}</td>
-              <td class="sme">{{selectedRequest?.eligibility.data[item+'status'] || '&nbsp;'}}</td>
-              <td class="name">{{'Nature'}}</td>
-              <td class="sme">{{selectedRequest?.eligibility.data[item+'nature'] || '&nbsp;'}}</td>
-            </tr>
+            <div class="team">
+              <div class="header">
+                <div class=" item">Accreditation Application</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class=" overall">
+              <span class="head">{{'Submitted at'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{(selectedRequest?.submittedAt | date:'fullDate') || '&nbsp;'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Appraisal Date'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class=" overall">
+              <span class="value">{{(selectedRequest?.lastModified | date:'fullDate') || '&nbsp;'}}</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <table style="width:100%; margin-bottom: 5px;">
+        <tr>
+          <td colspan="2">
+            <div class="overall">
+              <span class="head">{{'Name of the entity'}}</span>
+            </div>
+          </td>
+          <td colspan="2">
+            <div class="overall">
+              <span class="value">{{selectedRequest?.userInfo?.entityName || '&nbsp;'}}</span>
+            </div>
+          </td>
+        </tr>
 
-          </table>
-        </div>
-     
+        <tr>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Type'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.availableAsJv ? 'Joint Venture' : 'Individual Entity'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Name(s) of associate(s):'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.jvUser?.name ?
+                selectedRequest?.jvUser?.name :
+                selectedRequest?.jvUser}}</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Nature of Entity'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">
+                {{selectedRequest?.userInfo.entityNature || '&nbsp;'}}
+              </span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Other Accrediation(s)'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.userInfo.otherAccreditation || '&nbsp;'}}</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <table style="width:100%">
+        <tr>
+          <td colspan="4">
+            <!-- REGISTRATIONS UNDER ACT -->
+
+            <div class="header">
+              <div class="item">Registration(s)</div>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+
+      <div *ngFor="let item of selectedRequest?.eligibility.data.registartions" style="padding: 0 2px;margin: 0px;">
+        <table style="width:100%; margin-bottom: 5px;">
+          <tr>
+            <td colspan="4">
+              <div class="accred" style="padding: 0px;margin: 0px 0px;">
+                <div class="title" style="margin-top:0px;">{{
+                  item === 'secp' ? 'Securities and Exchange Commission (SECP)' :
+                  item === 'co84orca2017' ? 'Companies Ordinance 1984 or Companies Act 2017' :
+                  item === 'sre1860' ? 'Societies Registration Act 1860' :
+                  item === 'vswoo61' ? 'Voluntary Social Welfare Organizations Ordinance 1961' :
+                  item === 'ta82' ? 'Trusts Act 1882' :
+                  item === 'eadgop' ? 'Economic Affairs Division, Government of Pakistan' :
+                  item === 'unag' ? 'By means of treaty or other agreement that acts as a charter with Government of
+                  Pakistan [for UN Agencies]' :
+                  '&nbsp;'
+                  }}</div>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="box team ">
+            <td class="name">{{'Reg. No.'}}</td>
+            <td class=" sme">{{selectedRequest?.eligibility.data[item+'regno'] || '&nbsp;'}}</td>
+            <td class="name">{{'Date'}}</td>
+            <td class="sme">{{(selectedRequest?.eligibility.data[item+'regdate'] |
+              date:'fullDate') || '&nbsp;'}}</td>
+          </tr>
+          <tr class="box" *ngIf="item === 'secp'">
+            <td class="name">{{'Status'}}</td>
+            <td class="sme">{{selectedRequest?.eligibility.data[item+'status'] || '&nbsp;'}}</td>
+            <td class="name">{{'Nature'}}</td>
+            <td class="sme">{{selectedRequest?.eligibility.data[item+'nature'] || '&nbsp;'}}</td>
+          </tr>
+
+        </table>
+      </div>
+
 
       <!-- NTN INFO -->
       <!-- <div class="team" style="padding: 15px;padding-bottom: 0px;margin: 0px 0px;">
@@ -828,7 +839,7 @@
             </div>
           </td>
         </tr>
-        </table>
+      </table>
       <!-- <div class="header row" style="padding: 0px;margin: 0px 0px;">
         <div class="col-md-3 col-sm-3 col-xs-3 item" style="margin-top: 2px;
     height: 82px;
@@ -872,27 +883,27 @@
       <!-- ADDRESSES OFFICE REGISTERED -->
       <table style="width:100%; margin-bottom: 5px;">
         <tr>
-          <td>  
-        <div class="overall">
-          <span class="head">{{'Registered Office Address'}}</span>
-        </div>
-        </td>
-        <td>
-        <div class="overall">
-          <span class="value">{{selectedRequest?.userInfo.address || '&nbsp;'}}</span>
-        </div>
-        </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Registered Office Address'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.userInfo.address || '&nbsp;'}}</span>
+            </div>
+          </td>
         <tr>
           <td>
-        <div class="overall">
-          <span class="head">{{'Other Office Address (if any)'}}</span>
-        </div>
-        </td>
-        <td>
-        <div class="overall">
-          <span class="value">{{selectedRequest?.userInfo.otherAddress || '&nbsp;'}}</span>
-        </div>
-        </td>
+            <div class="overall">
+              <span class="head">{{'Other Office Address (if any)'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.userInfo.otherAddress || '&nbsp;'}}</span>
+            </div>
+          </td>
         </tr>
       </table>
 
@@ -902,18 +913,18 @@
           <td rowspan="2" style="padding: 0; background-color: #a8d08d;">
             <div class="item" style="padding-left:10px;">Audit firm on panel fo applicant</div>
           </td>
-        <td>
-          <div class="overall">
-            <span class="head">{{'Audit Firm Name'}}</span>
-          </div>
-        </td>
-        <td>
-          <div class="overall">
-            <span class="value">
-              {{selectedRequest?.eligibility?.data['auditFirmName'] || '&nbsp;'}}
-            </span>
-          </div>
-        </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Audit Firm Name'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">
+                {{selectedRequest?.eligibility?.data['auditFirmName'] || '&nbsp;'}}
+              </span>
+            </div>
+          </td>
         <tr>
           <td>
             <div class="overall">
@@ -926,8 +937,8 @@
             </div>
           </td>
         </tr>
-        </table>
-          <!-- <div class="overall">
+      </table>
+      <!-- <div class="overall">
             <span class="head">{{'Audit Firm (AF)'}}</span>
           </div>
           <div class="overall">
@@ -935,11 +946,11 @@
               {{selectedRequest?.eligibility?.data['auditFirm'] || '&nbsp;'}}
             </span>
           </div> -->
-          <!-- <div class="header row"> -->
-          
-          <!-- </div> -->
-  
-        <!-- <div class="col-md-4 col-xs-4 col-sm-4" style="padding: 0px;">
+      <!-- <div class="header row"> -->
+
+      <!-- </div> -->
+
+      <!-- <div class="col-md-4 col-xs-4 col-sm-4" style="padding: 0px;">
           <div class="overall">
             <span class="head">{{'Audit Firm Name'}}</span>
           </div>
@@ -957,7 +968,7 @@
             <span class="value">{{selectedRequest?.eligibility?.data['auditFirmRanking'] || '&nbsp;'}}</span>
           </div>
         </div> -->
- 
+
 
       <!-- THEMATIC AREAS -->
       <table style="width:100%; margin-bottom: 5px;">
@@ -969,84 +980,91 @@
           </td>
         </tr>
         <tr>
-        <td>
-        <div class="overall">
-          <span class="head">{{'Thematic Areas'}}</span>
-        </div>
-        </td>
-        <td>
-        <div class="overall">
-          <span class="value">
-            <span *ngFor="let area of selectedRequest?.thematicAreas; let i = index;">
-              {{area.thematicAreaItem.name}}{{(i !== selectedRequest?.thematicAreas.length - 1) ? ','
-              : ''}}</span>
-          </span>
-        </div>
-        </td>
-        <td>
-        <div class="overall">
-          <span class="head">{{'Experience'}}</span>
-        </div>
-        </td>
-        <td>
-        <div class="overall">
-          <span class="value">{{getThematicAreaExp()}} Years</span>
-        </div>
-        </td>  
+          <td>
+            <div class="overall">
+              <span class="head">{{'Thematic Areas'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">
+                <span *ngFor="let area of selectedRequest?.thematicAreas; let i = index;">
+                  {{area.thematicAreaItem.name}}{{(i !== selectedRequest?.thematicAreas.length - 1) ? ','
+                  : ''}}</span>
+              </span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Experience'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{getThematicAreaExp()}} Years</span>
+            </div>
+          </td>
         </tr>
-      <!-- COUNTER PART/COCEPT NOTE -->
+        <!-- COUNTER PART/COCEPT NOTE -->
         <tr>
-         <td> 
-        <div class="overall">
-          <span class="head">{{'Counterpart Availability'}}</span>
-        </div>
-        </td><td>
-        <div class="overall">
-          <span class="value">{{(selectedRequest?.thematicAreas[0]?.counterpart | titlecase) || '&nbsp;'}}</span>
-        </div>
-      </td><td>
-        <div class="overall">
-          <span class="head">{{'Concept Note'}}</span>
-        </div>
-      </td><td>
-        <div class="overall">
-          <span class="value">{{selectedRequest?.eligibility?.data?.conceptnotefile ?
-            ('available' | titlecase) : ('Not Available' | titlecase) || '&nbsp;'}}</span>
-        </div>
-      </td>
-      </tr>
-      <tr>
-        <td colspan="2">
-        <div class="overall">
-          <span class="head">{{'Project Proposal Submission'}}</span>
-        </div>
-        </td>
-        <td colspan="2">
-        <div class="overall">
-          <span class="value">{{selectedRequest?.eligibility?.data?.projectproposal || '&nbsp;'}}</span>
-        </div>
-        </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Counterpart Availability'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{(selectedRequest?.thematicAreas[0]?.counterpart | titlecase) || '&nbsp;'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Concept Note'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.eligibility?.data?.conceptnotefile ?
+                ('available' | titlecase) : ('Not Available' | titlecase) || '&nbsp;'}}</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="overall">
+              <span class="head">{{'Project Proposal Submission'}}</span>
+            </div>
+          </td>
+          <td colspan="2">
+            <div class="overall">
+              <span class="value">{{selectedRequest?.eligibility?.data?.projectproposal || '&nbsp;'}}</span>
+            </div>
+          </td>
         </tr>
 
-      <tr>
-        <td>
-        <div class="overall">
-          <span class="head">{{"Applicant's Eligibility"}}</span>
-        </div>
-        </td><td>
-        <div class="overall">
-          <span class="value">{{selectedRequest?.eligibility.status || '&nbsp;'}}</span>
-        </div>
-      </td><td>
-        <div class="overall">
-          <span class="head">{{'Reasons'}}</span>
-        </div>
-      </td><td>
-        <div class="overall">
-          <span class="value">{{selectedRequest?.eligibility?.comment || '&nbsp;'}}</span>
-        </div>
-      </td></tr>
-        </table>
+        <tr>
+          <td>
+            <div class="overall">
+              <span class="head">{{"Applicant's Eligibility"}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.eligibility.status || '&nbsp;'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Reasons'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.eligibility?.comment || '&nbsp;'}}</span>
+            </div>
+          </td>
+        </tr>
+      </table>
 
 
       <!-- <div class="row" style="padding: 0px;margin: 0px 0px;">
@@ -1135,21 +1153,30 @@
       <!-- SECTION SMES LIST -->
       <table style="width:100%; margin-bottom: 5px;">
         <tr class="header">
-        <td>
-          <div class=" item">Internal Review Members</div>
-          </td><td>
-          <div class=" item">Areas</div>
-        </td><td>
-          <div class=" item">Names</div>
-        </td><td style="width:25%; height:60px;">
-          <div class=" item">Signatures</div>
+          <td>
+            <div class=" item">Internal Review Members</div>
+          </td>
+          <td>
+            <div class=" item">Areas</div>
+          </td>
+          <td>
+            <div class=" item">Names</div>
+          </td>
+          <td style="width:25%; height:60px;">
+            <div class=" item">Signatures</div>
           </td>
         </tr>
         <tr *ngFor="let item of userReviewRequests" class="header box">
-        <td>
-            <div class="sme">{{item.reportSme.designation || '&nbsp;'}}</div> </td><td>
-            <div class="name">{{item.name || '&nbsp;'}}</div> </td><td>
-            <div class="sme">{{item.reportSme.name || '&nbsp;'}}</div> </td><td>
+          <td>
+            <div class="sme">{{item.reportSme.designation || '&nbsp;'}}</div>
+          </td>
+          <td>
+            <div class="name">{{item.name || '&nbsp;'}}</div>
+          </td>
+          <td>
+            <div class="sme">{{item.reportSme.name || '&nbsp;'}}</div>
+          </td>
+          <td>
             <div class="sme">{{'&nbsp;'}}</div>
           </td>
         </tr>
