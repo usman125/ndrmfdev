@@ -207,5 +207,4 @@ export class LoginComponent implements OnInit, OnDestroy {
   registerUser() {
     this._router.navigate(['/register']);
   }
-
 }

@@ -1,0 +1,70 @@
+<mat-toolbar style="margin-bottom:15px;padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>View Complaint</span>
+      <span class="example-spacer"></span>
+      <button  (click)="goBack()" mat-icon-button aria-label="Login Page">
+        <mat-icon>keyboard_backspace</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div style="padding: 1rem;">
+    <div>
+      <mat-form-field class="col col-md-12">
+      <textarea matInput placeholder="Complaint Id" [(ngModel)]="complaintId"></textarea>
+      </mat-form-field>
+    </div>
+    <div>
+      <button  mat-flat-button color="primary" (click)="updateComplaint()">View </button>
+    </div>
+  </div>
+  <div *ngIf = "responseResults">
+  <div style="position: relative;" >
+    <mat-card class="m-20" >
+      <mat-card-content >
+        <p>Complaint Name: &nbsp; {{responseResults.complainantName}}  </p>
+        <p>Address: &nbsp; {{responseResults.address}} </p>
+        <p>Email: &nbsp; {{responseResults.email}}</p>
+        <p>CNIC: &nbsp; {{responseResults.cnic}}</p>
+        <p>Against Person: &nbsp; {{responseResults.complaintAgainstPersonOrDepartment}}</p>
+        <p>Category: &nbsp; {{responseResults.complaintCategory}}</p>
+        <p>Location: &nbsp; {{responseResults.complaintLocation}}</p>
+        <p>Sub-Location: &nbsp; {{responseResults.complaintSubLocation}}</p>
+        <p>Internal Status &nbsp; {{responseResults.internalStatus}}</p>
+        <p>Sequence Number: &nbsp; {{responseResults.seqNo}}</p>
+        <p>Status: &nbsp; {{responseResults.status}}</p>
+        <p>Consultant Name: &nbsp; {{responseResults.consultantName}}</p>
+        <p>Factor Causing Problem: &nbsp; {{responseResults.shortDescFectorCausingProblem}}</p>
+        <p>Short Description: &nbsp; {{responseResults.shortDescription}}</p>
+        <div >
+          <h6><strong>Assignee</strong> </h6>
+          <p *ngFor = "let asiignee of responseResults.assignees">{{asiignee.assignedPersonName}}</p>
+        </div>
+        <div >
+          <h6><strong>Reviews</strong></h6>
+          <p *ngFor = "let review of responseResults.reviews"> {{review.comments}}</p>
+        </div>
+        <div >
+          <h6><strong>Complainant Feedback</strong></h6>
+          <p *ngFor = "let feedback of responseResults.complainantReviews"> {{feedback.feedback}}</p>
+        </div>
+        <div *ngIf = "responseResults.status != 'Closed'">
+          <mat-form-field class="col col-md-12">
+          <textarea  matInput  placeholder="Feedback"  [(ngModel)]="feedback"></textarea>
+          </mat-form-field>
+        </div>
+        <div *ngIf = "responseResults.status == 'Closed'" >
+          <mat-form-field class="col col-md-12">
+          <textarea matInput  placeholder="Remarks" [(ngModel)]="remarks"></textarea>
+          </mat-form-field>
+        </div>
+    </mat-card-content>
+    <div style="padding: 1rem;">
+      <button  *ngIf="!loading && responseResults.status != 'Closed'" mat-flat-button color="primary" (click)="submitFeedback()">Submit feedback </button>
+      <button  *ngIf="!loading && responseResults.status == 'Closed'  " style="margin-left: 3rem;"  mat-flat-button color="primary" (click)="UserAppeal()">Appeal </button>
+      <mat-progress-spinner   *ngIf="loading" class="spinner p-3" diameter="35" mode="indeterminate"></mat-progress-spinner>
+    </div>
+  
+    </mat-card>
+  
+  </div>
+</div>

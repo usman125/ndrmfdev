@@ -67,6 +67,13 @@ export class LoginService {
 
   }
 
+reggisterComplaint(params){
+  const url = `${AppConfig.apiUrl}/complaint/add`
+  return this._httpClient.post(
+    url,
+    params,
+  );
+}
 
   checkAccreditationStatus() {
     const url = `${AppConfig.apiUrl}/accreditation/status`;

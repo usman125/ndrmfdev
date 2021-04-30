@@ -44,7 +44,6 @@ export class GmHomeComponent implements OnInit {
     this.getAllProject();
   }
 
-
   getAllProject() {
     this.apiLoading = true;
     this._projectService.getAllProjects().subscribe(

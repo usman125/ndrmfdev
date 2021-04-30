@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
+import { SignaturePadModule } from 'angular2-signaturepad';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginService } from './services/login.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -76,6 +78,8 @@ import { SingleGrantDisbursmentsStore } from './stores/single-grant-disbursment/
 import { DesignationsStore } from './stores/designations/designations-store';
 import { MatRadioModule } from '@angular/material/radio';
 import { AccreditationRequestReplayStore } from './stores/accreditation-requests/AccreditationRequestReplayStore';
+import { GrievanceRegistrationComponent } from './grievance-registration/grievance-registration.component';
+import { ConcernedPersonDialogComponent } from './components/concerned-person-dialog/concerned-person-dialog.component';
 
 
 export function tokenGetter() {
@@ -93,11 +97,14 @@ export function tokenGetter() {
     NoHeaderLayoutComponent,
     AddProjectComponent,
     ActivityDetailsComponent,
+    GrievanceRegistrationComponent,
+    ConcernedPersonDialogComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    SignaturePadModule,
     ReactiveFormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -188,11 +195,12 @@ export function tokenGetter() {
     AccreditationRequestReplayStore
   ],
   bootstrap: [AppComponent],
-  exports: [],
+  exports: [FlexLayoutModule],
   entryComponents: [
     IntimateFip,
     AssignTask,
-    ActivityDetailsComponent
+    ActivityDetailsComponent,
+    ConcernedPersonDialogComponent,
   ]
 })
 export class AppModule { }

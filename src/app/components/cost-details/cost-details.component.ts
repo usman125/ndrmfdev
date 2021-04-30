@@ -121,7 +121,6 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
 
   _buildProgressForm() {
     this.progressForm = this.fb.group({
-
       generalProgress: [null, Validators.required],
       generalProgressStatus: [null, Validators.required],
       financialProgress: [null, Validators.required],
