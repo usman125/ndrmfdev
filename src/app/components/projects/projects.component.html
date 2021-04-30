@@ -22,9 +22,9 @@
         *ngFor="let item of allProjects | dataFilter:filterQuery">
         <div class="inner-content mat-elevation-z8" (click)="goToDetails(item)">
           <div class="content">
-            <h6>{{item?.name}}</h6>
-            <span id="comment">{{item?.initiatorFullName}}</span>
-            <span>{{item?.thematicAreaName}}</span>
+            <h6>{{item?.name | titlecase}}</h6>
+            <span id="comment">{{item?.initiatorFullName | titlecase}}</span>
+            <span>{{item?.thematicAreaName | titlecase}}</span>
           </div>
           <div class="bottom-content">
             <span class="mb-1" id="answer"> - {{item.status}}</span>

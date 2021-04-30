@@ -362,7 +362,7 @@ export class ProjectPlanComponent implements OnInit, OnDestroy, AfterViewInit {
           };
           this.apiLoading = false;
           this._confirmModelService.open(options);
-          this._primaryAppraisalFormsStore.addPipToProject(this.allCosts);
+          this._primaryAppraisalFormsStore.addPipToProject(this.allCosts, []);
         },
         error => {
           this.apiLoading = false;

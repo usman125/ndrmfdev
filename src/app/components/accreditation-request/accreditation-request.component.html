@@ -1,103 +1,22 @@
-<mat-toolbar *ngIf="!toggle && !commentsFlag" style="margin-bottom:15px;padding: 10px 0px;" color="primary">
+<mat-toolbar *ngIf="toggle && !commentsFlag && !mitigationsFlag && !viewReport"
+  style="margin-top:0px;padding: 10px 0px;" color="primary">
   <mat-toolbar-row>
-    <span>Qualificatin Requests</span>
-    <span class="example-spacer"></span>
-  </mat-toolbar-row>
-</mat-toolbar>
-<div class="mr-4 ml-4" *ngIf="!toggle && !commentsFlag">
-  <mat-form-field>
-    <mat-label>Filter</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
-  </mat-form-field>
-</div>
-<div *ngIf="!toggle && !commentsFlag && !apiLoading && currentUser?.role === 'process owner'"
-  class="margin-5 example-container mat-elevation-z4">
-  <table mat-table [dataSource]="dataSource">
-
-    <ng-container matColumnDef="user">
-      <th mat-header-cell *matHeaderCellDef> User </th>
-      <td mat-cell *matCellDef="let element">
-        {{element.initiatorFullName}}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef> Status </th>
-      <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions </th>
-      <td mat-cell *matCellDef="let element">
-        <button (click)="getRequest(element)" mat-icon-button aria-label="Example icon-button with a heart icon">
-          <mat-icon>play_arrow</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</div>
-<div *ngIf="!toggle && !commentsFlag && !apiLoading && currentUser?.role === 'sme'"
-  class="margin-5 example-container mat-elevation-z4">
-  <table mat-table [dataSource]="dataSource">
-
-    <ng-container matColumnDef="section">
-      <th mat-header-cell *matHeaderCellDef> Section </th>
-      <td mat-cell *matCellDef="let element">
-        {{element.sectionName}}
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="startDate">
-      <th mat-header-cell *matHeaderCellDef> Start Date </th>
-      <td mat-cell *matCellDef="let element">
-        {{element.startDate | date:'shortDate'}}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="endDate">
-      <th mat-header-cell *matHeaderCellDef> End Date </th>
-      <td mat-cell *matCellDef="let element"> {{element.endDate | date:'shortDate'}} </td>
-    </ng-container>
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef> Status </th>
-      <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-    </ng-container>
-    <ng-container matColumnDef="expiry">
-      <th mat-header-cell *matHeaderCellDef> Expiry </th>
-      <td mat-cell *matCellDef="let element"> {{element.expiry}} Days </td>
-    </ng-container>
-    <ng-container matColumnDef="comments">
-      <th mat-header-cell *matHeaderCellDef> Comments </th>
-      <td mat-cell *matCellDef="let element"> {{element.comments}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions </th>
-      <td mat-cell *matCellDef="let element">
-        <button (click)="getSmeRequest(element)" mat-icon-button aria-label="Example icon-button with a heart icon">
-          <mat-icon>play_arrow</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns2; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
-  </table>
-</div>
-
-
-<mat-toolbar *ngIf="toggle && !commentsFlag" style="margin-top:0px;padding: 10px 0px;" color="primary">
-  <mat-toolbar-row>
-    <span
-      *ngIf="currentUser?.role === 'process owner'">{{selectedRequest?.initiatorFullName ? selectedRequest?.initiatorFullName : selectedRequest?.initiatedBy.name}}</span>
+    <span *ngIf="currentUser?.role === 'process owner'">{{selectedRequest?.initiatorFullName ?
+      selectedRequest?.initiatorFullName : selectedRequest?.initiatedBy.name}}</span>
     <span *ngIf="currentUser?.role === 'sme'">{{selectedRequest?.initiatedBy.name}}</span>
     <span class="example-spacer"></span>
     <span *ngIf="currentUser?.role === 'process owner'">{{selectedRequest?.submittedAt | date:'fullDate'}}</span>
     <span class="example-spacer"></span>
+
+    <!-- <button mat-icon-button>
+      <mat-icon class="example-icon" *ngIf="allReviewsFlag">view_quilt
+      </mat-icon>
+    </button> -->
+    <button [useExistingCss]="true" printSectionId="print-proposal-sections" ngxPrint color="primary" mat-icon-button>
+      <mat-icon>print</mat-icon>
+    </button>
     <button (click)="goBack()" mat-icon-button>
-      <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
+      <mat-icon color="warn" class="example-icon" aria-hidden="false" aria-label="Close">close
       </mat-icon>
     </button>
   </mat-toolbar-row>
@@ -111,7 +30,8 @@
   </mat-card>
 </div>
 
-<div [ngClass]="{'mobile-class': addMobileClasses}" class="view-block" *ngIf="toggle && !commentsFlag && !apiLoading">
+<div [ngClass]="{'mobile-class': addMobileClasses}" class="view-block" *ngIf="toggle && !commentsFlag && !apiLoading
+ && !mitigationsFlag  && !viewReport">
   <div class="margin-5 form-items">
 
     <div *ngFor="let item of userReviewRequests">
@@ -126,7 +46,7 @@
               <span id="date" class="request-status" *ngIf="item.review.rating === null">Pending:
                 {{item.endDate | date:'shortDate'}}</span>
               <span id="stars" *ngIf="item.review.rating !== null">
-                <bar-rating [(rate)]="item?.review.rating" [max]="max"></bar-rating>
+                <bar-rating [theme]="'fontawesome-o'" [(rate)]="item?.review.rating" [max]="max"></bar-rating>
               </span>
             </div>
           </div>
@@ -168,33 +88,38 @@
             </span>
             <span class="mb-3" style="display: block;font-weight: bold;" *ngIf="item.review.rating !== null">
               SCORED WEITAGE:
-              <span id="comment">{{(item.review.rating/5) * 100}}%</span>
+              <span id="comment">{{(item.review.rating) | number:'1.0-4'}}</span>
             </span>
-            <!-- <span><mat-icon>assignment_returned</mat-icon></span> -->
-            <!-- <span *ngIf="item.review.rating !== null && item.reviewStatus === 'Completed'"><mat-icon>assignment_returned</mat-icon></span>
-            <span *ngIf="item.review.rating !== null && item.reviewStatus === 'Pending'"><mat-icon>assignment_turned_in</mat-icon></span>
-            <span *ngIf="item.review.rating === null && item.reviewStatus === null"><mat-icon>assignment_late</mat-icon></span>
-            <span *ngIf="item.review.rating === null && item.reviewStatus === 'Pending'"><mat-icon>assignment_late</mat-icon></span> -->
+            <button *ngIf="item.assigned && selectedSection === item.id || currentUser?.role !== 'sme'"
+              mat-raised-button color="primary" (click)="toggleEntryForm(item)">
+              {{item.toggleForm ? 'Show Reviews' : 'Show Form'}}
+            </button>
           </div>
-
 
           <formio *ngIf="currentUser?.role !== 'sme' && item.review.rating === null" [form]="item.template"
             readOnly="true" [submission]="{data: item.data}"></formio>
+          <formio *ngIf="currentUser?.role !== 'sme' && item.review.rating !== null && item.toggleForm"
+            [form]="item.template" readOnly="true" [submission]="{data: item.data}"></formio>
           <formio *ngIf="!item.assigned && currentUser?.role === 'sme'" [form]="item.template" readOnly="true"
             [submission]="{data: item.data}"></formio>
-          <formio *ngIf="item.assigned && currentUser?.role === 'sme' && selectedSection.sectionId !== item.id"
+          <formio *ngIf="item.assigned && currentUser?.role === 'sme' && selectedSection !== item.id"
             [form]="item.template" readOnly="true" [submission]="{data: item.data}"></formio>
-          <!-- <formio *ngIf="currentUser?.role !== 'sme' && !item.review" [form]="item.form" readOnly="true"
-            [submission]="{data: item.submitData}"></formio> -->
+          <formio *ngIf="item.formReviewObjects && item.toggleForm" [form]="item.template" readOnly="true"
+            [submission]="{data: item.data}"></formio>
 
-          <!-- <button *ngIf="item.allReviews.length" mat-raised-button>View Previous</button> -->
-          <div *ngIf="currentUser?.role === 'sme' && item.assigned === true"
-            [hidden]="item.assigned && selectedSection.sectionId !== item.id">
+          <!-- SME ACTION BLOCK -->
+          <div *ngIf="currentUser?.role === 'sme' && item.assigned === true && !item.toggleForm"
+            [hidden]="item.assigned && selectedSection !== item.id">
+            <span *ngIf="item.assigned && selectedSection === item.id" id="myTopElement2" #myTopElement2></span>
             <div class="form-comments" *ngFor="let obj of item.formReviewObjects">
               <div class="details">
                 <span>{{obj.title}}</span>
                 <span *ngIf="item.value === true">{{"true"}}</span>
-                <span id="answer">{{obj.value}}</span>
+                <span *ngIf="obj.type !== 'file'" id="answer">{{obj.value}}</span>
+                <span *ngIf="obj.type === 'file'" id="answer">
+                  <span *ngIf="obj?.value?.length">Uploaded</span>
+                  <span *ngIf="!obj?.value?.length">Not Uploaded</span>
+                </span>
                 <span>
                   <mat-form-field>
                     <mat-label>Comments</mat-label>
@@ -204,7 +129,7 @@
                 </span>
               </div>
               <div class="controls">
-                <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
+                <bar-rating [theme]="'fontawesome-o'" [(rate)]="obj.rating" [max]="max"></bar-rating>
                 <mat-button-toggle-group [disabled]="reviewAdded" [(ngModel)]="obj.status"
                   #group="matButtonToggleGroup">
                   <mat-button-toggle color="primary" (change)="onValChange($event)" value="satisfy"
@@ -227,19 +152,23 @@
                 <button *ngIf="!submitLoading"
                   [disabled]="reviewAdded || (item.review.rating !== null && (item.reviewStatus === 'Completed' || item.reviewStatus === 'Expired'))"
                   (click)="addRequestReview(item)" mat-mini-fab color="accent">
-                  <!-- <button *ngIf="!submitLoading" [disabled]="reviewAdded" mat-mini-fab color="primary"> -->
                   <mat-icon>send</mat-icon>
                 </button>
               </div>
             </div>
           </div>
-          <div *ngIf="currentUser?.role !== 'sme' && item.review.rating !== null">
-            <!-- <div *ngFor="let review of item.allReviews; let i=index;"> -->
+
+          <!-- OTHERS ACTION BLOCK -->
+          <div *ngIf="currentUser?.role !== 'sme' && item.review.rating !== null && !item.toggleForm">
             <div class="form-comments" *ngFor="let obj of item.review.controlWiseComments">
               <div class="details">
                 <span>{{obj.title}}</span>
                 <span *ngIf="obj.value === true">{{"true"}}</span>
-                <span id="answer">{{obj.value}}</span>
+                <span *ngIf="obj.type !== 'file'" id="answer">{{obj.value}}</span>
+                <span *ngIf="obj.type === 'file'" id="answer">
+                  <span *ngIf="obj?.value?.length">Uploaded</span>
+                  <span *ngIf="!obj?.value?.length">Not Uploaded</span>
+                </span>
                 <span>
                   <mat-form-field>
                     <mat-label>Comments</mat-label>
@@ -249,7 +178,7 @@
                 </span>
               </div>
               <div class="controls admin-controls">
-                <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
+                <bar-rating [theme]="'fontawesome-o'" [(rate)]="obj.rating" [max]="max"></bar-rating>
                 <mat-button-toggle-group disabled [(ngModel)]="obj.status" #group="matButtonToggleGroup">
                   <mat-button-toggle *ngIf="obj.status === 'satisfy'" color="primary" (change)="onValChange($event)"
                     value="satisfy" aria-label="Text align left">
@@ -268,39 +197,74 @@
                 <textarea disabled [(ngModel)]="item.review.comments" matInput></textarea>
               </mat-form-field>
             </div>
-            <!-- <div *ngIf="i !== item.allReviews.length-1" style="padding: 15px;">
-                <mat-divider></mat-divider>
-              </div> -->
-            <!-- </div> -->
           </div>
+
         </mat-card-content>
       </mat-card>
     </div>
   </div>
+
+  <!-- RIGHT HAND LAYOUT -->
   <div class="margin-5 activity-items control-box">
-    <div class="right-layout">
+    <div [ngClass]="{'for-sme': currentUser?.role === 'sme'}" class="right-layout">
       <mat-card *ngIf="currentUser?.role !== 'sme'">
         <mat-card-content>
+          <small id="answer">Thematic Areas</small>
+          <section class="mb-3 mt-3">
+            <mat-chip-list>
+              <mat-chip *ngFor="let area of selectedRequest?.thematicAreas">
+                {{area.thematicAreaItem.name}}
+              </mat-chip>
+            </mat-chip-list>
+          </section>
+
           <mat-list>
             <mat-list-item>
+              <mat-icon mat-list-icon>emoji_events</mat-icon>
+              <div mat-line id="answer">{{'Experience'}}</div>
+              <div mat-line>{{getThematicAreaExp()}} Years</div>
+            </mat-list-item>
+          </mat-list>
+          <mat-list>
+            <mat-list-item>
+              <mat-icon mat-list-icon>accessibility</mat-icon>
+              <div mat-line id="answer">{{'Available As JV'}}</div>
+              <div mat-line>{{selectedRequest?.availableAsJv ? 'Yes' : 'No'}}</div>
+            </mat-list-item>
+            <mat-list-item *ngIf="selectedRequest?.availableAsJv">
+              <mat-icon mat-list-icon>assignment_ind</mat-icon>
+              <div mat-line id="answer">{{'JV User'}}</div>
+              <div mat-line>{{selectedRequest?.jvUser?.name}}</div>
+            </mat-list-item>
+            <mat-list-item>
               <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
-              <div mat-line>{{'Assigned Tasks'}}</div>
+              <div mat-line id="answer">{{'Assigned Tasks'}}</div>
               <div mat-line>{{sectionStats?.pendingCount}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>assignment_late</mat-icon>
-              <div mat-line>{{'Unassigned Tasks'}}</div>
+              <div mat-line id="answer">{{'Unassigned Tasks'}}</div>
               <div mat-line>{{sectionStats?.unassignCount}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>assignment_returned</mat-icon>
-              <div mat-line>{{'Reviews Submitted'}}</div>
+              <div mat-line id="answer">{{'Reviews Submitted'}}</div>
               <div mat-line>{{sectionStats?.reviewsCount}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>folder</mat-icon>
-              <div mat-line>{{'Total Sections'}}</div>
+              <div mat-line id="answer">{{'Total Sections'}}</div>
               <div mat-line>{{userReviewRequests.length}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>folder</mat-icon>
+              <div mat-line id="answer">{{'Pending FIP Tasks'}}</div>
+              <div mat-line>{{reAssignedTasks.length}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>alarm_on</mat-icon>
+              <div mat-line id="answer">{{'Expiry Date'}}</div>
+              <div mat-line>{{selectedRequest?.expiryDate | date:'fullDate'}}</div>
             </mat-list-item>
           </mat-list>
         </mat-card-content>
@@ -310,20 +274,26 @@
           <mat-list>
             <mat-list-item>
               <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
-              <div mat-line>{{'My Sections'}}</div>
+              <div mat-line id="answer">{{'Total Sections'}}</div>
+              <div mat-line>{{userReviewRequests?.length}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
+              <div mat-line id="answer">{{'Assigned Sections'}}</div>
               <div mat-line>{{sectionStats?.mySectionsCount}}</div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>assignment_returned</mat-icon>
-              <div mat-line>{{'Selected Task'}}</div>
-              <div mat-line>{{selectedSection?.sectionName}}</div>
+              <div mat-line id="answer">{{'Selected Task'}}</div>
+              <div mat-line>{{selectedSectionData?.name}}</div>
+              <div style="cursor: pointer;" mat-line id="answer" (click)="goToReviews()">view task</div>
             </mat-list-item>
+
           </mat-list>
         </mat-card-content>
       </mat-card>
       <mat-card>
         <mat-card-content>
-
           <div *ngIf="currentUser?.role !== 'sme'">
             <div class="top-controls">
               <div class="fullbtn">
@@ -331,10 +301,31 @@
                   class="control-btn" mat-flat-button>ASSIGN ALL
                   TASKS</button>
               </div>
+              <!-- <div class="fullbtn">
+                <button color="primary" (click)="viewEligibility()" class="control-btn" mat-flat-button>VIEW
+                  ELIGIBILITY</button>
+              </div> -->
+              <div class="fullbtn">
+                <button color="warn" (click)="exportReport()" class="control-btn" mat-flat-button>EXPORT
+                  REPORT</button>
+              </div>
               <div class="fullbtn">
                 <button color="primary" (click)="viewCommentsMatrix(userReviewRequests)" class="control-btn"
                   mat-flat-button>COMMENTS MATRIX</button>
               </div>
+              <div class="fullbtn">
+                <button (click)="showMitigationPlan(userReviewRequests)"
+                  *ngIf="allReviewsFlag && currentUser?.role !== 'sme'" color="warn" mat-raised-button>VIEW MITIGATION
+                  PLAN</button>
+              </div>
+              <!-- <div class="fullbtn">
+                <button [disabled]="selectedRequest?.subStatus === 'Pending' && 
+                selectedRequest?.markedTo === 'Marked To GM' || 
+                selectedRequest?.markedTo === 'Marked To CEO'" (click)="markToGm()"
+                  *ngIf="allReviewsFlag && currentUser?.role !== 'sme'" color="warn" mat-raised-button>MARK TO
+                  GM</button>
+                <mat-progress-spinner [diameter]="15"></mat-progress-spinner>
+              </div> -->
               <div class="fullbtn">
                 <button (click)="setRequestStatus()" *ngIf="allReviewsFlag && currentUser?.role !== 'sme'" color="warn"
                   mat-button>SET
@@ -346,68 +337,56 @@
                   <textarea matInput [(ngModel)]="commentsForFip" placeholder="write your comments..."></textarea>
                 </mat-form-field>
                 <button (click)="intimateFip()"
-                  [disabled]="!commentsForFip"
-                  color="accent" mat-raised-button>INTIMATE FIP</button>
+                  [disabled]="!commentsForFip || (sectionStats?.unassignCount !== userReviewRequests.length)"
+                  color="accent" mat-raised-button>INTIMATE
+                  FIP</button>
               </div>
             </div>
           </div>
           <div *ngIf="currentUser?.role === 'sme'">
             <div class="top-controls">
               <div class="fullbtn">
-                <button (click)="hideForms = !hideForms" color="warn" class="control-btn" mat-flat-button>
+                <button (click)="hideForms = !hideForms" [color]="!hideForms ? 'primary' : 'warn'" class="control-btn"
+                  mat-flat-button>
+                  <mat-icon style="font-size: 20px;">filter_alt</mat-icon>
                   {{!hideForms ? 'FILTER MY SECTIONS' : 'SHOW ALL SECTIONS'}}
                 </button>
               </div>
-              <!-- <div class="fullbtn">
-                <button [disabled]="reviewAdded" color="primary" class="control-btn" mat-flat-button>
-                  {{'ASSIGN TO MEMBERS'}}
-                </button>
-              </div> -->
-              <!-- <div class="comments-box">
-                <mat-form-field appearance="outline">
-                  <mat-label>Comments for others</mat-label>
-                  <textarea matInput placeholder="write your comments..."></textarea>
-                </mat-form-field>
-                <mat-spinner *ngIf="apiLoading" diameter="40"></mat-spinner> -->
-              <!-- <button *ngIf="!submitLoading" [disabled]="reviewAdded" color="accent" (click)="completeTask()"
-                  mat-raised-button>Complete
-                  Task</button> -->
-              <!-- </div> -->
             </div>
           </div>
-
         </mat-card-content>
-
         <mat-card-actions>
           <div class="bottom-controls" *ngIf="currentUser?.role !== 'sme'">
             <div class="left-block">
               <span class="head">Accredit Status:</span>
               <span id="comment" class="answer mb-3">{{selectedRequest?.status | uppercase}}</span>
               <span class="head" *ngIf="allReviewsFlag && currentUser?.role !== 'sme'">System Status:</span>
-              <span id="warn" class="answer"
-                *ngIf="allReviewsFlag && currentUser?.role !== 'sme'">{{userSystemStatus | uppercase}}</span>
+              <span id="warn" class="answer" *ngIf="allReviewsFlag && currentUser?.role !== 'sme'">{{userSystemStatus |
+                uppercase}}</span>
             </div>
             <div class="right-block">
               <span class="head">Current Score</span>
-              <span class="comments">{{userAllScore || 0}} / {{'5'}}</span>
-              <span *ngIf="userAllScore" id="answer" class="comments">{{(userAllScore/5 * 100)}}%</span>
+              <span class="comments">{{(userAllScore/2) || 0 | number:'1.0-4'}}</span>
+              <!-- <span *ngIf="userAllScore" id="answer" class="comments">{{(userAllScore/5 * 100)}}%</span> -->
             </div>
           </div>
-
         </mat-card-actions>
-
       </mat-card>
-
-
     </div>
   </div>
 </div>
 
-<div *ngIf="commentsFlag && !apiLoading">
+<!-- COMMENTS FROM FIP -->
+<div *ngIf="commentsFlag && !apiLoading && !mitigationsFlag && !viewReport">
   <mat-toolbar style="margin-bottom: 25px;" color="primary">
     <mat-toolbar-row>
       <span>{{"Comments Matrix"}}</span>
       <span class="example-spacer"></span>
+      <span>{{selectedRequest?.initiatedBy.name}}</span>
+      <span class="example-spacer"></span>
+      <button [useExistingCss]="true" printSectionId="print-comments-matrix" ngxPrint color="primary" mat-icon-button>
+        <mat-icon>print</mat-icon>
+      </button>
       <button (click)="hideComments()" mat-icon-button>
         <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
         </mat-icon>
@@ -423,18 +402,14 @@
       <small>Mitigations</small>
     </mat-toolbar-row>
   </mat-toolbar>
-  <mat-card style="padding: 0px;margin: 20px;">
+  <mat-card style="padding: 0px;margin: 20px;" id="print-comments-matrix">
     <div *ngIf="!commentsHistoryFlag">
       <div class="comments-matrix" *ngFor="let item of commentsData">
         <div class="title-details">
           <span id="title">{{item.name}}</span>
           <div class="review-info">
-            <!-- <span id="date" *ngIf="item.review.rating !== null">Reviewed:
-            {{item.endDate | date:'shortDate'}}</span>
-          <span id="date" *ngIf="item.review.rating === null">Pending:
-            {{item.endDate | date:'shortDate'}}</span> -->
             <span id="stars" *ngIf="item.review.rating !== null">
-              <bar-rating [(rate)]="item.review.rating" [max]="max"></bar-rating>
+              <bar-rating [theme]="'fontawesome-o'" [(rate)]="item.review.rating" [max]="max"></bar-rating>
             </span>
             <div class="m-2" *ngIf="item.reviewHistory !== null">
               <button color="accent" mat-button (click)="showCommentsHistoty(item)">View History</button>
@@ -447,13 +422,17 @@
               <div class="details">
                 <span>{{obj.title}}</span>
                 <span *ngIf="obj.value === true">{{"true"}}</span>
-                <span id="answer">{{obj.value}}</span>
+                <span *ngIf="obj.type !== 'file'" id="answer">{{obj.value}}</span>
+                <span *ngIf="obj.type === 'file'" id="answer">
+                  <span *ngIf="obj?.value?.length">Uploaded</span>
+                  <span *ngIf="!obj?.value?.length">Not Uploaded</span>
+                </span>
                 <div class="field-comments">
                   <span id="comment">{{obj.comments}}</span>
                 </div>
               </div>
               <div class="controls admin-controls">
-                <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
+                <bar-rating [theme]="'fontawesome-o'" [(rate)]="obj.rating" [max]="max"></bar-rating>
                 <mat-icon style="font-size: 20px;color: green;margin-top: 8px;" *ngIf="obj.status === 'satisfy'">
                   thumb_up
                 </mat-icon>
@@ -488,13 +467,17 @@
               <div class="details">
                 <span>{{obj.title}}</span>
                 <span *ngIf="obj.value === true">{{"true"}}</span>
-                <span id="answer">{{obj.value}}</span>
+                <span *ngIf="obj.type !== 'file'" id="answer">{{obj.value}}</span>
+                <span *ngIf="obj.type === 'file'" id="answer">
+                  <span *ngIf="obj?.value?.length">Uploaded</span>
+                  <span *ngIf="!obj?.value?.length">Not Uploaded</span>
+                </span>
                 <div class="field-comments">
                   <span id="comment">{{obj.comments}}</span>
                 </div>
               </div>
               <div class="controls admin-controls">
-                <bar-rating [(rate)]="obj.rating" [max]="max"></bar-rating>
+                <bar-rating [theme]="'fontawesome-o'" [(rate)]="obj.rating" [max]="max"></bar-rating>
                 <mat-icon style="font-size: 20px;color: green;margin-top: 8px;" *ngIf="obj.status === 'satisfy'">
                   thumb_up
                 </mat-icon>
@@ -512,3 +495,899 @@
     </div>
   </mat-card>
 </div>
+
+<div *ngIf="mitigationsFlag && !apiLoading && !viewReport">
+  <mat-toolbar style="margin-bottom: 25px;" color="primary">
+    <mat-toolbar-row>
+      <span>{{"Risk Mitigations"}}</span>
+      <span class="example-spacer"></span>
+      <span>{{selectedRequest?.initiatedBy.name}}</span>
+      <span class="example-spacer"></span>
+      <button [useExistingCss]="true" printSectionId="print-mitigation-report" ngxPrint color="primary" mat-icon-button>
+        <mat-icon>print</mat-icon>
+      </button>
+      <button (click)="hideMitigationsFlag()" mat-icon-button>
+        <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
+        </mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <small>{{"Sections"}}</small>
+      <span class="example-spacer"></span>
+      <small> Comments</small>
+      <span class="example-spacer"></span>
+      <small>Mitigations</small>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-card style="padding: 0px;margin: 20px;" id="print-mitigation-report">
+
+    <div *ngFor="let item of userReviewRequests">
+      <div *ngIf="item.review?.mitigationArray.length">
+        <div class="comments-matrix">
+          <div class="title-details">
+            <span id="title">{{item.name}}</span>
+            <div class="review-info">
+              <span id="stars" *ngIf="item.review.rating !== null">
+                <bar-rating [theme]="'fontawesome-o'" [(rate)]="item.review.rating" [max]="max"></bar-rating>
+              </span>
+              <!-- <div class="m-2" *ngIf="item.reviewHistory !== null">
+              <button color="accent" mat-button (click)="showCommentsHistoty(item)">View History</button>
+            </div> -->
+            </div>
+          </div>
+          <div class="form-comments">
+            <div class="form-item mat-elevation-z2" *ngFor="let obj of item.review?.mitigationArray">
+              <div class="form-item-boxes">
+                <div class="details">
+                  <span>{{obj.title}}</span>
+                  <span *ngIf="obj.value === true">{{"true"}}</span>
+                  <span *ngIf="obj.type !== 'file'" id="answer">{{obj.value}}</span>
+                  <span *ngIf="obj.type === 'file'" id="answer">
+                    <span *ngIf="obj?.value?.length">Uploaded</span>
+                    <span *ngIf="!obj?.value?.length">Not Uploaded</span>
+                  </span>
+                  <div class="field-comments">
+                    <span id="comment">{{obj.comments}}</span>
+                  </div>
+                </div>
+                <div class="controls admin-controls">
+                  <bar-rating [theme]="'fontawesome-o'" [(rate)]="obj.rating" [max]="max"></bar-rating>
+                  <mat-icon style="font-size: 20px;color: green;margin-top: 8px;" *ngIf="obj.status === 'satisfy'">
+                    thumb_up
+                  </mat-icon>
+                  <mat-icon style="font-size: 20px;color: red;margin-top: 8px;" *ngIf="obj.status === 'un-satisfy'">
+                    thumb_down</mat-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="review-comments">
+            <span>{{item.review?.comments}}</span>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<div *ngIf="viewReport">
+  <mat-toolbar style="margin-bottom: 25px;" color="primary">
+    <mat-toolbar-row>
+      <span class="d-flex flex-column justify-content-start">
+        {{"Detailed Accreditation Evaluation"}}
+        <small id="answer">{{selectedRequest?.initiatedBy.name || '&nbsp;'}}</small>
+      </span>
+      <span class="example-spacer"></span>
+      <button matTooltip="Save Report Details!" mat-icon-button (click)="saveReviewUsers()">
+        <mat-icon>save</mat-icon>
+      </button>
+      <button color="accent" class="ml-2" matTooltip="Add Internal Review User!" mat-icon-button
+        [matMenuTriggerFor]="menu">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button matTooltip="Print!" [useExistingCss]="true" printSectionId="print-accredit-report" ngxPrint
+        color="primary" mat-icon-button>
+        <mat-icon>print</mat-icon>
+      </button>
+      <button matTooltip="Close!" color="warn" (click)="hideExportReport()" mat-icon-button>
+        <mat-icon class="example-icon" aria-hidden="false" aria-label="Close">close
+        </mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" class="p-2">
+        <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+          <h5>Add Internal Review User</h5>
+          <form [formGroup]="addReportUsersForm" (ngSubmit)="addNewReviewUser(addReportUsersForm.value)">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input type="text" formControlName="name" [formControl]="addReportUsersForm.controls['name']" matInput
+                placeholder="Enter Name Here...">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Group</mat-label>
+              <input type="text" formControlName="group" [formControl]="addReportUsersForm.controls['group']" matInput
+                placeholder="Enter Group Here...">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Designation</mat-label>
+              <input type="text" formControlName="designation"
+                [formControl]="addReportUsersForm.controls['designation']" matInput
+                placeholder="Enter Designation Here...">
+            </mat-form-field>
+
+            <button class="pull-right" [disabled]="!addReportUsersForm.valid" mat-raised-button type="submit"
+              color="primary">
+              <mat-icon>add</mat-icon> Add User
+            </button>
+          </form>
+
+        </div>
+      </mat-menu>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-card style="padding: 15px;margin: 20px;" id="print-accredit-report" class="accredit-reports">
+    <mat-card-content>
+
+      <div class="row mb-3" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-12" style="padding: 0px;">
+          <img style="width: 100%;" src="../../../assets/accredit.png" class="img img-responsive" alt="">
+        </div>
+      </div>
+      <table style="width:100%">
+        <tr>
+          <td colspan="4">
+            <div class="team">
+              <div class="header">
+                <div class=" item">Accreditation Application</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class=" overall">
+              <span class="head">{{'Submitted at'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{(selectedRequest?.submittedAt | date:'fullDate') || '&nbsp;'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Appraisal Date'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class=" overall">
+              <span class="value">{{(selectedRequest?.lastModified | date:'fullDate') || '&nbsp;'}}</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <table style="width:100%; margin-bottom: 5px;">
+        <tr>
+          <td colspan="2">
+            <div class="overall">
+              <span class="head">{{'Name of the entity'}}</span>
+            </div>
+          </td>
+          <td colspan="2">
+            <div class="overall">
+              <span class="value">{{selectedRequest?.userInfo?.entityName || '&nbsp;'}}</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Type'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.availableAsJv ? 'Joint Venture' : 'Individual Entity'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Name(s) of associate(s):'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.jvUser?.name ?
+                selectedRequest?.jvUser?.name :
+                selectedRequest?.jvUser}}</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Nature of Entity'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">
+                {{selectedRequest?.userInfo.entityNature || '&nbsp;'}}
+              </span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Other Accrediation(s)'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.userInfo.otherAccreditation || '&nbsp;'}}</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <table style="width:100%">
+        <tr>
+          <td colspan="4">
+            <!-- REGISTRATIONS UNDER ACT -->
+
+            <div class="header">
+              <div class="item">Registration(s)</div>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+
+      <div *ngFor="let item of selectedRequest?.eligibility.data.registartions" style="padding: 0 2px;margin: 0px;">
+        <table style="width:100%; margin-bottom: 5px;">
+          <tr>
+            <td colspan="4">
+              <div class="accred" style="padding: 0px;margin: 0px 0px;">
+                <div class="title" style="margin-top:0px;">{{
+                  item === 'secp' ? 'Securities and Exchange Commission (SECP)' :
+                  item === 'co84orca2017' ? 'Companies Ordinance 1984 or Companies Act 2017' :
+                  item === 'sre1860' ? 'Societies Registration Act 1860' :
+                  item === 'vswoo61' ? 'Voluntary Social Welfare Organizations Ordinance 1961' :
+                  item === 'ta82' ? 'Trusts Act 1882' :
+                  item === 'eadgop' ? 'Economic Affairs Division, Government of Pakistan' :
+                  item === 'unag' ? 'By means of treaty or other agreement that acts as a charter with Government of
+                  Pakistan [for UN Agencies]' :
+                  '&nbsp;'
+                  }}</div>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="box team ">
+            <td class="name">{{'Reg. No.'}}</td>
+            <td class=" sme">{{selectedRequest?.eligibility.data[item+'regno'] || '&nbsp;'}}</td>
+            <td class="name">{{'Date'}}</td>
+            <td class="sme">{{(selectedRequest?.eligibility.data[item+'regdate'] |
+              date:'fullDate') || '&nbsp;'}}</td>
+          </tr>
+          <tr class="box" *ngIf="item === 'secp'">
+            <td class="name">{{'Status'}}</td>
+            <td class="sme">{{selectedRequest?.eligibility.data[item+'status'] || '&nbsp;'}}</td>
+            <td class="name">{{'Nature'}}</td>
+            <td class="sme">{{selectedRequest?.eligibility.data[item+'nature'] || '&nbsp;'}}</td>
+          </tr>
+
+        </table>
+      </div>
+
+
+      <!-- NTN INFO -->
+      <!-- <div class="team" style="padding: 15px;padding-bottom: 0px;margin: 0px 0px;">
+        <div class="header row">
+          <div class="col-md-12 item">Tax Registration</div>
+        </div>
+      </div> -->
+      <table style="width:100%; margin-bottom: 5px;">
+        <tr>
+          <td rowspan="2" style="padding: 0; background-color: #a8d08d;">
+            <div class="item" style="padding-left:10px;">Tax Registration</div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'NTN'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Status'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'MOU'}}</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="overall">
+              <span class="value">
+                {{selectedRequest?.eligibility?.data['ntnno'] || '&nbsp;'}}
+              </span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">
+                {{selectedRequest?.eligibility?.data['ntnstatus'] || '&nbsp;'}}
+              </span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <div *ngFor="let item of selectedRequest?.eligibility.data.registartions" class="col-md-12"
+                style="padding: 2px;margin: 0px 15px;">
+                <div class="box row" *ngIf="item === 'eadgop'">
+                  <div class="col-md-3 name">{{'EAD'}}</div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <!-- <div class="header row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-3 col-sm-3 col-xs-3 item" style="margin-top: 2px;
+    height: 82px;
+    display: table;
+    width: 98.2%;">Tax Registration</div>
+        <div class="col-md-3 col-sm-3 col-xs-3" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'NTN'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              {{selectedRequest?.eligibility?.data['ntnno'] || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-3" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Status'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              {{selectedRequest?.eligibility?.data['ntnstatus'] || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-3" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'MOU'}}</span>
+          </div>
+          <div class="overall">
+            <div *ngFor="let item of selectedRequest?.eligibility.data.registartions" class="col-md-12"
+              style="padding: 2px;margin: 0px;">
+              <div class="box row" *ngIf="item === 'eadgop'">
+                <div class="col-md-3 name">{{'EAD'}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- ADDRESSES OFFICE REGISTERED -->
+      <table style="width:100%; margin-bottom: 5px;">
+        <tr>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Registered Office Address'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.userInfo.address || '&nbsp;'}}</span>
+            </div>
+          </td>
+        <tr>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Other Office Address (if any)'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.userInfo.otherAddress || '&nbsp;'}}</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <!-- AUDIT FIRM INFO -->
+      <table style="width:100%; margin-bottom: 5px;">
+        <tr>
+          <td rowspan="2" style="padding: 0; background-color: #a8d08d;">
+            <div class="item" style="padding-left:10px;">Audit firm on panel fo applicant</div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Audit Firm Name'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">
+                {{selectedRequest?.eligibility?.data['auditFirmName'] || '&nbsp;'}}
+              </span>
+            </div>
+          </td>
+        <tr>
+          <td>
+            <div class="overall">
+              <span class="head">{{'SBP Ranking'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.eligibility?.data['auditFirmRanking'] || '&nbsp;'}}</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <!-- <div class="overall">
+            <span class="head">{{'Audit Firm (AF)'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              {{selectedRequest?.eligibility?.data['auditFirm'] || '&nbsp;'}}
+            </span>
+          </div> -->
+      <!-- <div class="header row"> -->
+
+      <!-- </div> -->
+
+      <!-- <div class="col-md-4 col-xs-4 col-sm-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Audit Firm Name'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              {{selectedRequest?.eligibility?.data['auditFirmName'] || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4 col-xs-4 col-sm-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'SBP Ranking'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">{{selectedRequest?.eligibility?.data['auditFirmRanking'] || '&nbsp;'}}</span>
+          </div>
+        </div> -->
+
+
+      <!-- THEMATIC AREAS -->
+      <table style="width:100%; margin-bottom: 5px;">
+        <tr>
+          <td colspan="4">
+            <div class="header ">
+              <div class="item">Applicant's Expertise</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Thematic Areas'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">
+                <span *ngFor="let area of selectedRequest?.thematicAreas; let i = index;">
+                  {{area.thematicAreaItem.name}}{{(i !== selectedRequest?.thematicAreas.length - 1) ? ','
+                  : ''}}</span>
+              </span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Experience'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{getThematicAreaExp()}} Years</span>
+            </div>
+          </td>
+        </tr>
+        <!-- COUNTER PART/COCEPT NOTE -->
+        <tr>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Counterpart Availability'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{(selectedRequest?.thematicAreas[0]?.counterpart | titlecase) || '&nbsp;'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Concept Note'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.eligibility?.data?.conceptnotefile ?
+                ('available' | titlecase) : ('Not Available' | titlecase) || '&nbsp;'}}</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="overall">
+              <span class="head">{{'Project Proposal Submission'}}</span>
+            </div>
+          </td>
+          <td colspan="2">
+            <div class="overall">
+              <span class="value">{{selectedRequest?.eligibility?.data?.projectproposal || '&nbsp;'}}</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <div class="overall">
+              <span class="head">{{"Applicant's Eligibility"}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.eligibility.status || '&nbsp;'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="head">{{'Reasons'}}</span>
+            </div>
+          </td>
+          <td>
+            <div class="overall">
+              <span class="value">{{selectedRequest?.eligibility?.comment || '&nbsp;'}}</span>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+
+      <!-- <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-6" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Appraisal Date'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">{{selectedRequest?.lastModified | date:'fullDate'}}</span>
+          </div>
+        </div>
+      </div> -->
+
+
+
+
+
+      <!-- ENTITY INFO -->
+      <!-- <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Name of Entity'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              {{selectedRequest?.userInfo.entityName || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Nature of Entity'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">
+              {{selectedRequest?.userInfo.entityNature || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4" style="padding: 0px;">
+          <div class="overall">
+            <span class="head">{{'Type of Entity'}}</span>
+          </div>
+          <div class="overall">
+            <span class="value">{{selectedRequest?.userInfo?.entityType || '&nbsp;'}}</span>
+          </div>
+        </div>
+      </div> -->
+
+
+
+
+
+
+
+      <!-- ADDRESSES OFFICE REGISTERED -->
+      <!-- <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'registered Office Address'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{selectedRequest?.userInfo.address || '&nbsp;'}}</span>
+        </div>
+      </div>
+
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'Other Office Address (if any)'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{selectedRequest?.userInfo.otherAddress || '&nbsp;'}}</span>
+        </div>
+      </div>
+
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'Other Accrediation(s)'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{selectedRequest?.userInfo.otherAccreditation || '&nbsp;'}}</span>
+        </div>
+      </div> -->
+
+
+
+      <!-- SECTION SMES LIST -->
+      <table style="width:100%; margin-bottom: 5px;">
+        <tr class="header">
+          <td>
+            <div class=" item">Internal Review Members</div>
+          </td>
+          <td>
+            <div class=" item">Areas</div>
+          </td>
+          <td>
+            <div class=" item">Names</div>
+          </td>
+          <td style="width:25%; height:60px;">
+            <div class=" item">Signatures</div>
+          </td>
+        </tr>
+        <tr *ngFor="let item of userReviewRequests" class="header box">
+          <td>
+            <div class="sme">{{item.reportSme.designation || '&nbsp;'}}</div>
+          </td>
+          <td>
+            <div class="name">{{item.name || '&nbsp;'}}</div>
+          </td>
+          <td>
+            <div class="sme">{{item.reportSme.name || '&nbsp;'}}</div>
+          </td>
+          <td>
+            <div class="sme">{{'&nbsp;'}}</div>
+          </td>
+        </tr>
+      </table>
+
+
+      <!-- SECTIONS INDIVISUAL SCORE -->
+      <div class="row accred" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-12 title">{{'Component wise score'}}</div>
+      </div>
+      <div class="scores row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 col-xs-4 col-sm-4 d-flex flex-column box" *ngFor="let item of userReviewRequests">
+          <span class="name">{{item.name || '&nbsp;'}}</span>
+          <span class="sme">{{item.review.rating || '&nbsp;'}}</span>
+        </div>
+      </div>
+
+      <!-- <div class="team" style="padding: 15px;padding-bottom: 0px;margin: 0px 0px;">
+        <div class="header row">
+          <div class="col-md-12 item">Accreditation:</div>
+        </div>
+      </div> -->
+
+      <div class="row header" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-2 col-xs-2 col-sm-2 item" style="padding: 8px 8px 0px !important;
+    margin-top: 2px;
+    height: 39px;">Accreditation</div>
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
+          <span class="head">{{'Overall Score'}}</span>
+        </div>
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
+          <span class="value">{{userAllScore/2 || '&nbsp;'}}</span>
+        </div>
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
+          <span class="head">{{'Risk Ranking'}}</span>
+        </div>
+
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
+          <span class="value">{{userSystemStatus || '&nbsp;'}}</span>
+        </div>
+      </div>
+
+      <div class="team" style="padding-top: 5px !important;padding: 15px;padding-bottom: 0px;margin: 0px 0px;">
+        <div class="header row">
+          <div class="col-md-12 item">Review Endorsed by as Chairman of Internal Review Committee</div>
+        </div>
+      </div>
+
+      <div class="row d-flex align-items-center" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
+          <span style="height: 49px;" class="head">{{'Deputy General Manager (P&OG)'}}</span>
+        </div>
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
+          <span style="height: 49px;" class="head">{{'Name' || '&nbsp;'}}</span>
+        </div>
+        <div class="col-md-3 col-xs-3 col-sm-3 overall">
+          <mat-form-field appearance="outline" style="margin: 0px;">
+            <input placeholder="Enter Name Here..." type="text" matInput [ngModel]="chairmanName" />
+          </mat-form-field>
+        </div>
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
+          <span style="height: 49px;" class="head">{{'Signature' || '&nbsp;'}}</span>
+        </div>
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
+          <span style="height: 49px;" class="value">{{'&nbsp;'}}</span>
+        </div>
+      </div>
+
+      <!-- <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-4 overall">
+          <span class="head">{{'System Status'}}</span>
+        </div>
+        <div class="col-md-8 overall">
+          <span class="value">{{userSystemStatus || '&nbsp;'}}</span>
+        </div>
+      </div> -->
+
+      <div class="row accred" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-12 title">
+          {{'Area wise factors requiring risk mitigation (if any)'}}
+        </div>
+      </div>
+
+      <div class="row d-flex flex-align-center miti" *ngFor="let item of userReviewRequests"
+        style="padding: 0px;margin: 0px 0px 10px;">
+        <div class="col-md-4 col-xs-4 col-sm-4" style="background-color: #E7E6E6;padding: 5px;">
+          <span>{{item.name}}</span>
+        </div>
+        <div class="col-md-8 col-xs-8 col-sm-8" style="background-color: #f9f9f9;padding: 5px;">
+          <div class="controls-wise" *ngFor="let obj of item.review.controlWiseComments">
+            <span *ngIf="obj.status === 'un-satisfy'">-{{obj.comments}}</span>
+            <span style="display: none;" *ngIf="obj.status === 'satisfy'">{{'&nbsp;'}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN REVIEWERS ARRAY -->
+      <div class="team" style="padding-top: 0px !important;padding: 15px;padding-bottom: 0px;margin: 0px 0px;">
+        <div class="header row">
+          <div class="col-md-12 item d-flex align-items-center justify-content-between">
+            Review Endorsed by Internal Review Committee
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="reportReviewUsers.length" class="team" style="padding: 0px 15px;margin: 0px 0px;">
+        <div class="header row">
+          <div class="col-md-3 col-xs-3 col-sm-3 item">Designation</div>
+          <div class="col-md-3 col-xs-3 col-sm-3 item">Group</div>
+          <div class="col-md-3 col-xs-3 col-sm-3 item">Name</div>
+          <div class="col-md-3 col-xs-3 col-sm-3 item">Signature</div>
+        </div>
+        <div *ngFor="let item of reportReviewUsers">
+          <div class="box row">
+            <div class="col-md-3 col-xs-3 col-sm-3 sme">{{item.designation || '&nbsp;'}}</div>
+            <div class="col-md-3 col-xs-3 col-sm-3 name">{{item.group || '&nbsp;'}}</div>
+            <div class="col-md-3 col-xs-3 col-sm-3 sme">{{item.name || '&nbsp;'}}</div>
+            <div class="col-md-3 col-xs-3 col-sm-3 sme">{{'&nbsp;'}}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN REVIEWERS ARRAY -->
+      <div class="team" style="padding: 15px;padding-bottom: 0px;margin: 0px 0px;">
+        <div class="header row">
+          <div class="col-md-12 item d-flex align-items-center justify-content-between">
+            Decision by Chief Executive Officer
+            <!-- <button mat-flat-button (click)="saveReviewUsers()">Save Users</button> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="padding: 0px;margin: 0px 0px;">
+        <!-- <div class="col-md-2 overall">
+          <span class="head">{{'Approved'}}</span>
+        </div> -->
+
+        <!-- <div class="col-md-4 overall">
+          <mat-checkbox labelPosition="'before'" [(ngModel)]="dceoapprove">
+            Approved
+          </mat-checkbox>
+        </div> -->
+
+        <!-- <div class="col-md-2 overall">
+          <span class="head">{{'Deffered'}}</span>
+        </div> -->
+
+        <!-- <div class="col-md-4 overall">
+          <mat-checkbox labelPosition="'before'" [(ngModel)]="dceodeffered">
+            Deffered
+          </mat-checkbox>
+        </div> -->
+
+        <!-- <div class="col-md-2 overall">
+          <span class="head">{{'Rejected'}}</span>
+        </div> -->
+
+        <!-- <div class="col-md-4 overall">
+          <mat-checkbox labelPosition="'before'" [(ngModel)]="dceorejected">
+            Rejected
+          </mat-checkbox>
+        </div> -->
+
+        <mat-radio-group style="width: 65%;
+    display: flex;
+    justify-content: space-between;padding:5px;" [(ngModel)]="dceo">
+          <mat-radio-button value="approved">Approved</mat-radio-button>
+          <mat-radio-button value="deffered">Deffered</mat-radio-button>
+          <mat-radio-button value="rejected">Rejected</mat-radio-button>
+        </mat-radio-group>
+
+      </div>
+
+      <div class="row d-flex align-items-center" style="padding: 0px;margin: 0px 0px;">
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
+          <span style="height: 49px;" class="head">{{'Name'}}</span>
+        </div>
+
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
+          <mat-form-field appearance="outline" style="margin: 0px;">
+            <input type="text" matInput placeholder="Enter Name Here..">
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
+          <span style="height: 49px;" class="head">{{'Signature'}}</span>
+        </div>
+
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
+          <span style="height: 49px;" class="value">{{'&nbsp;'}}</span>
+        </div>
+
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
+          <span style="height: 49px;" class="head">{{'Dated'}}</span>
+        </div>
+
+        <div class="col-md-2 col-xs-2 col-sm-2 overall">
+          <span style="height: 49px;" class="value">{{'&nbsp;'}}</span>
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- PRINT QUALIFICATION SECTIONS -->
+<ng-container>
+  <div id="print-proposal-sections" style="display: none;">
+    <div class="margin-5" *ngFor="let item of userReviewRequests">
+      <div class="border-heading">{{item.name}}</div>
+      <formio readOnly="true" [submission]="{data: item.data}" [form]="item.template"></formio>
+    </div>
+  </div>
+</ng-container>

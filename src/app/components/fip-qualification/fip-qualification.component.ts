@@ -56,6 +56,8 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   public loggedUser: any = null;
   public loadingApi: boolean = false;
 
+  selectedRequest: any = null;
+
   panelOpenState = false;
 
   @ViewChild('group') group;
@@ -101,7 +103,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
         this.accredited = data.auth.accredited;
         this.canInitiate = data.auth.canInitiate;
         this.orgName = data.auth.orgName;
-        console.log("QUALIFICATION FLAG:--", data.auth, this.qualificationFlag);
+        // console.log("QUALIFICATION FLAG:--", data.auth, this.qualificationFlag, this.eligibleFlag);
       })
     );
     if (this.orgName === 'govt') {
@@ -113,10 +115,10 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       this.Subscription.add(
         this._fipIntimationsStore.state$.subscribe(data => {
           this.allInitimations['intimations'] = data.intimations;
-          console.log("ALL INTIMATIONS FROM USER:--", this.allInitimations);
+          // console.log("ALL INTIMATIONS FROM USER:--", this.allInitimations);
         })
       );
-      if (this.qualificationFlag === 'Not Initiated') {
+      if (this.qualificationFlag === 'Not Initiated' && this.eligibleFlag === 'Approved') {
         this.openThematicModel();
         // this.loadingApi = true;
         // this._settingsService.getAccrediattionCommence().subscribe(
@@ -139,7 +141,9 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
     // console.log("FIP QUALIFICATION STARTED:---", this.loggedUser)
     if (this.orgName === 'fip') {
-      if (this.loggedUser.eligibileFlag === 'Not Initiated' || this.loggedUser.eligibileFlag === 'Under Review') {
+      if (this.loggedUser.eligibileFlag === 'Not Initiated' ||
+        this.loggedUser.eligibileFlag === 'Under Review' ||
+        this.loggedUser.eligibileFlag === 'Rejected') {
         this._router.navigate(['fip-home']);
       }
     }
@@ -148,18 +152,25 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
   getCommenceFromApi(commenceId) {
     this.userQualificationRequestId = commenceId;
     let user = JSON.parse(localStorage.getItem('user'));
-    console.log("USER TO SET QUALIFICATION FLAG:--", user);
     user.qualificationFlag = 'Draft';
     localStorage.setItem('user', JSON.stringify(user));
     this._authStore.setQualificationFlag(user.qualificationFlag);
     this._accreditationRequestService.getSingleQualificationRequest(commenceId).subscribe(
       (result: any) => {
         // this.loadingApi = false;
-        this.allSections = result.sections;
+        // this.allSections = result.sections;
+        // result = result.
+        // this.allSections = result.qualItem.sections;
+        let dummyResult = result.qualItem;
+        dummyResult.eligibility = result.eligItem[0];
+        dummyResult.thematicAreas = result.thematicAreasListItems;
+        dummyResult.userInfo = result.userInfo;
+        this.allSections = dummyResult;
+        // console.log("USER TO SET QUALIFICATION FLAG:--", user, dummyResult);
         let allInitimations = [];
         var count1 = 0;
         var count2 = 0;
-        this.allSmes = result.sections.map((c) => {
+        this.allSmes = dummyResult.sections.map((c) => {
           if (c.data === null) {
             count1 = count1 + 1;
           } else {
@@ -179,7 +190,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
         this.allSectionsCount = this.allSmes.length;
         this._fipIntimationsStore.addIntimations(allInitimations);
         this.loadingApi = false;
-        console.log("RESULT FROM ALL API REQUESTS:--", result, '\n', this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);
+        // console.log("RESULT FROM ALL API REQUESTS:--", result, '\n', this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);
       },
       error => {
         this.loadingApi = false;
@@ -192,22 +203,30 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     // this.groupType = groupType;
     this.justSubmittedId = this.groupType ? this.groupType.id : null;
     this.justSubmittedName = this.groupType ? this.groupType.name : null;
-    console.log("SELECTED SECTION TOP BTNSS:---\n", this.groupType,
-      "\nJUST SUMITTED NAME:--\n", this.justSubmittedName,
-      "\nJUST SUMITTED NAME:--\n", this.justSubmittedName
-    );
+    // console.log("SELECTED SECTION TOP BTNSS:---\n", this.groupType,
+    //   "\nJUST SUMITTED NAME:--\n", this.justSubmittedName,
+    //   "\nJUST SUMITTED NAME:--\n", this.justSubmittedName
+    // );
     this.loadingApi = true;
     this._accreditationRequestService.getQulificationRequests().subscribe(
       (result: any) => {
+        // console.log("GET QUALIFICATION REQUESTS:--", result);
         this.userQualificationRequest = result;
-        if (result) {
+        if (result && result.length) {
           this._accreditationRequestService.getSingleQualificationRequest(result[0].id).subscribe(
             (result: any) => {
-              this.allSections = result;
+              // this.allSections = result.qualItem.sections;
+              // result = result.
+              let dummyResult = result.qualItem;
+              dummyResult.eligibility = result.eligItem[0];
+              dummyResult.thematicAreas = result.thematicAreasListItems;
+              dummyResult.userInfo = result.userInfo;
+              this.allSections = dummyResult;
               let allInitimations = [];
               var count1 = 0;
               var count2 = 0;
-              this.allSmes = result.sections.map((c) => {
+              // this.allSmes = result.sections.map((c) => {
+              this.allSmes = dummyResult.sections.map((c) => {
                 if (c.data === null) {
                   count1 = count1 + 1;
                 } else {
@@ -222,6 +241,8 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
                   data: c.data === null ? c.data : JSON.parse(c.data)
                 }
               })
+              // console.log("GET QUALIFICATION REQUESTS WITH ID:--", result, dummyResult);
+              this.allSmes = _.orderBy(this.allSmes, ['orderNum'], ['asc']);
               this.pendingSectionsCount = count1;
               this.submitSectionsCount = count2;
               this.allSectionsCount = this.allSmes.length;
@@ -231,7 +252,13 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
               }
               this._fipIntimationsStore.addIntimations(allInitimations);
               this.loadingApi = false;
-              console.log("RESULT FROM ALL API REQUESTS:--", result, '\n', this.pendingSectionsCount, this.allSectionsCount, this.submitSectionsCount);
+              // console.log(
+              //   "RESULT FROM ALL API REQUESTS:--\n", result,
+              //   '\nPENDING SECTION COUNT:--', this.pendingSectionsCount,
+              //   '\nALL SECTIONS COUNT:--', this.allSectionsCount,
+              //   '\nALL SMES:--', this.allSmes,
+              //   '\nSUBMIT SECTIONS COUNT:--', this.submitSectionsCount
+              // );
             },
             error => {
               this.loadingApi = false;
@@ -275,9 +302,9 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
 
   openThematicModel() {
     const options = {
-      title: 'Select Thematic Areas!',
-      message: 'Select one or more areas to get Accredit for!',
-      cancelText: 'CANCEL',
+      title: 'Save your prefference for Qualification!',
+      message: 'You can apply as Joint Venture or Single Entity!',
+      cancelText: 'Proceed As Single Entity',
       confirmText: 'OK',
       add: false,
       confirm: false,
@@ -286,6 +313,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       disableClose: true,
       selectThematic: true,
       areas: null,
+      taSelectionType: 'qualification',
     };
     if (this.accredited === false && this.canInitiate === true) {
       this._settingsService.getAllThematicAreas().subscribe(
@@ -293,72 +321,33 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
           options.areas = result;
           this._confirmModelService.open(options);
           this._confirmModelService.confirmed().subscribe(confirmed => {
-            console.log("CONFIRMED FROM MODEL", confirmed);
+            // console.log("CONFIRMED FROM MODEL", confirmed);
             if (confirmed === false) {
               this._router.navigate(['fip-home']);
             } else {
               let object = {
                 areas: [],
-                availableAsJv: null,
+                availableAsJv: confirmed.applyAsJv,
+                jvUser: confirmed.jvUser
               }
               let areasId = [];
               for (let i = 0; i < confirmed.areas.length; i++) {
-                areasId.push(confirmed.areas[i].id);
+                let object2 = {
+                  areaId: confirmed.areas[i].id,
+                  experience: confirmed.areas[i].experience,
+                  counterpart: confirmed.areas[i].counterpart,
+                }
+                areasId.push(object2);
               }
               object.areas = areasId;
-              if (confirmed.applyAsJv === null) {
-                object.availableAsJv = false;
-              } else {
+              if (object.availableAsJv !== null) {
+                // console.log("PROCEED AS JV:--", object);
                 object.availableAsJv = confirmed.applyAsJv;
+                this.saveQualificationPrefrences(object);
+              } else {
+                // console.log("PROCEED AS SINGLE ENTITY:--", object);
+                this.startQualificationProcess();
               }
-              console.log("SAVE THEMATIC AREA:--", object);
-              this._userService.saveThemticAreas(object).subscribe(
-                result => {
-                  console.log("RESULT SAVING THEMATIC AREAS:--", result);
-                  const options = {
-                    title: 'Thematic areas defined successfully!',
-                    cancelText: 'CANCEL',
-                    confirmText: 'OK',
-                    add: true,
-                    confirm: false,
-                  };
-                  this._confirmModelService.open(options);
-                  this._confirmModelService.confirmed().subscribe(
-                    confirmed => {
-                      console.log("CONFIRMED AFTER SAVING:--", confirmed);
-                      this.loadingApi = true;
-                      this._settingsService.getAccrediattionCommence().subscribe(
-                        (result: any) => {
-                          console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
-                          this.getCommenceFromApi(result.id);
-                        },
-                        error => {
-                          this.loadingApi = false;
-                          console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
-                        }
-                      );
-                    }
-                  );
-                },
-                error => {
-                  console.log("RESULT SAVING THEMATIC AREAS:--", error);
-                  const options = {
-                    title: 'Thematic areas saved successfully!',
-                    cancelText: 'CANCEL',
-                    confirmText: 'OK',
-                    add: true,
-                    confirm: false,
-                  };
-                  options.title = error.error.message;
-                  this._confirmModelService.open(options);
-                  this._confirmModelService.confirmed().subscribe(
-                    confirmed => {
-                      console.log("CONFIRMED AFTER FAILING SAVE:--", confirmed);
-                      this.openThematicModel();
-                    }
-                  );
-                }
-              )
             }
           });
         },
@@ -366,7 +355,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
           options.areas = [];
           this._confirmModelService.open(options);
           this._confirmModelService.confirmed().subscribe(confirmed => {
-            console.log("CONFIRMED FROM MODEL", confirmed);
+            // console.log("CONFIRMED FROM MODEL", confirmed);
             if (confirmed === false) {
               this._router.navigate(['fip-home']);
             }
@@ -376,6 +365,61 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       );
     }
   }
+
+  saveQualificationPrefrences(object) {
+    this._userService.saveThemticAreas(object, 'qualification').subscribe(
+      result => {
+        // console.log("RESULT SAVING THEMATIC AREAS:--", result);
+        const options = {
+          title: 'Qualification will be saved with provided prefrences!',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+          confirm: false,
+        };
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(
+          confirmed => {
+            // console.log("CONFIRMED AFTER SAVING:--", confirmed);
+            this.loadingApi = true;
+            this.startQualificationProcess();
+          }
+        );
+      },
+      error => {
+        console.log("RESULT SAVING THEMATIC AREAS:--", error);
+        const options = {
+          title: 'Thematic areas saved successfully!',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+          confirm: false,
+        };
+        options.title = error.error.message;
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(
+          confirmed => {
+            // console.log("CONFIRMED AFTER FAILING SAVE:--", confirmed);
+            this.openThematicModel();
+          }
+        );
+      }
+    );
+  }
+
+  startQualificationProcess() {
+    this._settingsService.getAccrediattionCommence().subscribe(
+      (result: any) => {
+        // console.log("RESULT FROM ELIGIBILITY TEMPLATES:--", result);
+        this.getCommenceFromApi(result.id);
+      },
+      error => {
+        this.loadingApi = false;
+        console.log("ERROR FROM ELIGIBILITY TEMPLATES:--", error);
+      }
+    );
+  }
+
 
   onSubmit($event) {
     // console.log("FORM AFTER SUBMIT:---", $event.data, $event, this.form.formIdentity);
@@ -390,7 +434,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     if (this.userQualificationRequestId) {
       this._accreditationRequestService.addQulificationRequest(object, this.userQualificationRequestId).subscribe(
         result => {
-          console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
+          // console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
           // this._fipIntimationsStore.filterIntimations(object.id);
           this.getQualificationRequest(null);
         },
@@ -401,7 +445,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
     } else {
       this._accreditationRequestService.addQulificationRequest(object, this.userQualificationRequest[0].id).subscribe(
         result => {
-          console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
+          // console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
           // this._fipIntimationsStore.filterIntimations(object.id);
           this.getQualificationRequest(null);
         },
@@ -418,7 +462,7 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       this.groupType.template = JSON.parse(this.groupType.template)
     if (typeof (this.groupType.data) !== 'object')
       this.groupType.data = JSON.parse(this.groupType.data);
-    console.log("INITMATION BUTTON CLICK:---", this.groupType);
+    // console.log("INITMATION BUTTON CLICK:---", this.groupType);
     this.setDefaults();
     // setCommentValue(item.endDate, item.formIdentity, item.comments);
   }
@@ -449,10 +493,10 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
       id: this.allSmes[0].id
     }
 
-    console.log("OBJECT TO STORE:--", object, this.userQualificationRequest[0].id);
+    // console.log("OBJECT TO STORE:--", object, this.userQualificationRequest[0].id);
     this._accreditationRequestService.updateQulificationRequest(object, this.userQualificationRequest[0].id).subscribe(
       result => {
-        console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
+        // console.log("RESULT AFTER ADDING QUALIFICATION:--", result);
         this._authStore.setQualificationFlag('Under Review');
         let user = JSON.parse(localStorage.getItem('user'));
         user.qualificationFlag = "Under Review";
@@ -464,6 +508,20 @@ export class FipQualificationComponent implements OnInit, OnDestroy {
         console.log("ERROR AFTER ADDING QUALIFICATION:--", error);
       }
     );
+  }
+
+  getThematicAreaExp() {
+    let count = 0;
+    if (this.allSections && this.allSections.thematicAreas) {
+
+      if (this.allSections.thematicAreas) {
+        for (let i = 0; i < this.allSections.thematicAreas.length; i++) {
+          let key = this.allSections.thematicAreas[i];
+          count = count + key.experience;
+        }
+        return count;
+      }
+    }
   }
 
   // @HostListener('window:resize', ['$event'])

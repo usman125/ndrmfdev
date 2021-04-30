@@ -246,8 +246,38 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     })
   }
 
-  setExtAppraisalExpiryDays(days) {
+  setGiaChecklistExpiry(days) {
     console.log("CALLED:--")
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        giaChecklist: {
+          ...this.state.selectedProject.giaChecklist,
+          status: 'Expired',
+          expiryDays: days
+        }
+      }
+    })
+  }
+
+  extendGiaChecklistTimeline(days) {
+    console.log("CALLED:--")
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        giaChecklist: {
+          ...this.state.selectedProject.giaChecklist,
+          status: 'Pending',
+          expiryDays: days
+        }
+      }
+    })
+  }
+
+  setExtAppraisalExpiryDays(days) {
+    // console.log("CALLED:--");
     this.setState({
       ...this.state,
       selectedProject: {
@@ -319,7 +349,7 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
         gia: {
           ...this.state.selectedProject.gia,
           reviews: reviews,
-          subStatus: 'Pending Reviews',
+          subStatus: 'Review Pending',
         }
       }
     });
@@ -346,14 +376,70 @@ export class PrimaryAppraisalFormsStore extends Store<PrimaryAppraisalFormsState
     })
   }
 
-  addPipToProject(allCosts) {
+  setOfferLetter(offerLetter) {
     this.setState({
       ...this.state,
       selectedProject: {
         ...this.state.selectedProject,
-        implementationPlan: allCosts
+        offerLetter: offerLetter
+      }
+    })
+  }
+
+  addSelectedProjectFiles(files) {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        files: files
+      }
+    })
+  }
+
+  addPipToProject(allCosts, clubs) {
+    let object = {
+      costs: allCosts,
+      clubs: clubs
+    }
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        implementationPlan: object
       }
     });
+  }
 
+  addDelayedQuarter(costId, data, indexToAdd) {
+    this.setState({
+      ...this.state,
+      selectedProject: {
+        ...this.state.selectedProject,
+        implementationPlan: {
+          ...this.state.selectedProject.implementationPlan,
+          costs: this.state.selectedProject.implementationPlan.costs.map((c, i) => {
+            if (c._id === costId) {
+              return {
+                ...c,
+                quarters: c.quarters.map((d, j) => {
+                  if (j === indexToAdd) {
+                    return {
+                      ...d,
+                      data: {
+                        ...data,
+                        delayed: true,
+                      },
+                      value: true,
+                    }
+                  }
+                  return d;
+                }),
+              }
+            }
+            return c;
+          })
+        }
+      }
+    });
   }
 }

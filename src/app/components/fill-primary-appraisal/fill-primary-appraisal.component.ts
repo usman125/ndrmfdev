@@ -74,7 +74,7 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._authStore.state$.subscribe(data => {
         this.apiLoading = data.auth.apiCall;
-        console.log("API CALL:--", this.apiLoading);
+        // console.log("API CALL:--", this.apiLoading);
       })
     );
     this.Subscription.add(
@@ -93,7 +93,7 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
         }
         // if (this.selectedProject && this.selectedProject.preAppraisal.data) {
         // }
-        console.log("APPRASIAL FORM:----", this.selectedProject);
+        // console.log("APPRASIAL FORM:----", this.selectedProject);
         if (this.selectedProject && this.selectedProject.preAppraisal) {
 
           var date1 = new Date();
@@ -107,7 +107,7 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
 
           this.pendingAppraisalDays = Math.trunc(Difference_In_Days);
 
-          console.log("TIME DIFFERENCE:", Difference_In_Days, Math.trunc(Difference_In_Days));
+          // console.log("TIME DIFFERENCE:", Difference_In_Days, Math.trunc(Difference_In_Days));
         }
         // this._authStore.removeLoading();
         this.apiLoading = false;
@@ -116,21 +116,21 @@ export class FillPrimaryAppraisalComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._primaryAppraisalRequestsStore.state$.subscribe(data => {
         this.apprasialRequests = data.requests;
-        console.log("APPRASIAL REQUESTS:----\n", this.apprasialRequests,
-          "\nSINGLE REQUEST:---\n", this.apprasialRequest,
-          "\nSUBMIT DATA:---\n", this.submitData,
-        );
+        // console.log("APPRASIAL REQUESTS:----\n", this.apprasialRequests,
+        //   "\nSINGLE REQUEST:---\n", this.apprasialRequest,
+        //   "\nSUBMIT DATA:---\n", this.submitData,
+        // );
       })
     );
 
   }
 
   onSubmit($event) {
-    console.log("FORM SUBMIT DATA:---", $event.data);
+    // console.log("FORM SUBMIT DATA:---", $event.data);
     this.submitData = $event.data;
     this._projectService.submitPreAppraisal(this.selectedProject.id, { data: JSON.stringify($event.data) }).subscribe(
       result => {
-        console.log("RESULT FROM ADDING PRE APPRAISAL:--", result);
+        // console.log("RESULT FROM ADDING PRE APPRAISAL:--", result);
         this._primaryAppraisalFormsStore.addPrimaryAppraisal(
           {
             data: $event.data,

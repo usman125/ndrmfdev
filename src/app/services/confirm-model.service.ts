@@ -33,6 +33,11 @@ export class ConfirmModelService {
         disableClose: options.disableClose,
         selectThematic: options.selectThematic,
         areas: options.areas,
+        markUnEligible: options.markUnEligible,
+        markUnEligibleReason: options.markUnEligibleReason,
+        taSelectionType: options.taSelectionType,
+        enableGia: options.enableGia,
+        enableLoading: options.enableLoading,
       };
       this.dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     } else {
@@ -55,6 +60,11 @@ export class ConfirmModelService {
           areas: options.areas,
           proposal_sections: options.proposal_sections,
           proposal_initmation: options.proposal_initmation,
+          markUnEligible: options.markUnEligible,
+          markUnEligibleReason: options.markUnEligibleReason,
+          taSelectionType: options.taSelectionType,
+          enableGia: options.enableGia,
+          enableLoading: options.enableLoading,
         }
       });
     }
@@ -68,5 +78,10 @@ export class ConfirmModelService {
           }
         )
       );
+  }
+
+  public close() {
+    this.dialog.closeAll();
+    this.dialogRef.close();
   }
 }

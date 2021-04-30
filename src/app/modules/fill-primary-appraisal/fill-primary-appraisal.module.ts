@@ -10,6 +10,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { ProjectDetailsModule } from "../project-details/project-details.module";
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NgxPrintModule } from 'ngx-print';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatIconModule,
     MatButtonModule,
     MatChipsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    NgxPrintModule,
+    MatTooltipModule
   ],
   exports: [FillPrimaryAppraisalComponent]
 })

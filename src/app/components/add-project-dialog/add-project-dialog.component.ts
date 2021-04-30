@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProjectsStore } from "../../stores/projects/projects-store";
 import { SettingsService } from "../../services/settings.service";
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
+import { UserService } from 'src/app/services/user.service';
 
 export interface ConfirmData {
   cancelText: string;
@@ -31,35 +32,42 @@ export class AddProjectDialogComponent implements OnInit {
   selectedArea: any = null;
 
   apiLoading: boolean = false;
+  showJvUsers: boolean = false;
+  allJvUsers: any = null;
 
   constructor(
-    private _projectsStore: ProjectsStore,
+    private _userService: UserService,
     private _settingsService: SettingsService,
     private _formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AddProjectDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmData) {
-      this._buildAddProjectForm();
+    this._buildAddProjectForm();
   }
 
-  _buildAddProjectForm(){
+  _buildAddProjectForm() {
     this.addProjectForm = this._formBuilder.group({
       name: ['', Validators.required],
       type: ['', Validators.required],
       thematicArea: ['', Validators.required],
+      jvUser: [''],
     })
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.getThematicAreas();
   }
 
 
-  getThematicAreas(){
+  getThematicAreas() {
     this.apiLoading = true;
-    this._settingsService.getAllThematicAreas().subscribe(
+    this._userService.getUserThemticAreas().subscribe(
       (result: any) => {
-        console.log("RESULT FROM THEMATIC:--", result);
-        this.allThematicAreas = result;
+        // console.log("RESULT FROM THEMATIC:--", result);
+        let newArray = [];
+        for (let i = 0; i < result.length; i++) {
+          newArray.push(result[i].thematicAreaItem);
+        }
+        this.allThematicAreas = newArray;
         this.apiLoading = false;
       },
       error => {
@@ -94,11 +102,36 @@ export class AddProjectDialogComponent implements OnInit {
     // console.log(values);
     values.thematicAreaName = values.thematicArea.name;
     values.thematicAreaId = values.thematicArea.id;
+    values.jvUserID = null;
     this.close(values);
   }
 
-  thematicChanged($event){
-    console.log("THEMATIC CHANGS:=--", $event);
+  typeChanged($event) {
+    // console.log("TYPE CHANGS:=--", $event);
+    if ($event.value === 'jv') {
+      this._userService.getAllJvUsers().subscribe(
+        (result: any) => {
+          // console.log("ALL JV USERS:--", result);
+          this.allJvUsers = result;
+          this.showJvUsers = true;
+          this.addProjectForm.controls['jvUser'].setValidators([Validators.required]);
+        },
+        (error: any) => {
+          console.log("ALL JV USERS:--", error);
+        }
+      );
+    } else {
+      this.showJvUsers = false;
+      this.addProjectForm.controls['jvUser'].clearValidators();
+    }
+  }
+
+  jvUsersChanged($event) {
+    // console.log("JV USERS CHANGED:--", $event);
+  }
+
+  thematicChanged($event) {
+    // console.log("THEMATIC CHANGS:=--", $event);
     this.selectedArea = $event.name;
   }
 

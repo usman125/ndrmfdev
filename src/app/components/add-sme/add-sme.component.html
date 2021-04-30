@@ -21,6 +21,13 @@
               [formControl]="addSmeForm.controls['name']" />
           </mat-form-field>
         </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Order Number</mat-label>
+            <input matInput type="number" placeholder="e.g. 1" formControlName="orderNum"
+              [formControl]="addSmeForm.controls['orderNum']" />
+          </mat-form-field>
+        </mat-grid-tile>
         <!-- <mat-grid-tile>
           <mat-form-field>
             <mat-label>Key</mat-label>
@@ -31,7 +38,8 @@
         <mat-grid-tile>
           <mat-form-field>
             <mat-label>Process Type</mat-label>
-            <mat-select (ngModelChange)="getSubProcessTypes($event)" [formControl]="addSmeForm.controls['formIdentity']">
+            <mat-select (ngModelChange)="getSubProcessTypes($event)"
+              [formControl]="addSmeForm.controls['formIdentity']">
               <mat-option *ngFor="let type of processTypes" [value]="type">{{type}}</mat-option>
             </mat-select>
           </mat-form-field>
@@ -39,14 +47,17 @@
         <mat-grid-tile>
           <mat-form-field>
             <mat-label>Sub Process Type</mat-label>
-            <mat-select (ngModelChange)="subProcessTypeChanged($event)" [formControl]="addSmeForm.controls['subProcessType']">
+            <mat-select (ngModelChange)="subProcessTypeChanged($event)"
+              [formControl]="addSmeForm.controls['subProcessType']">
               <mat-option *ngFor="let type of subProcessTypes" [value]="type">{{type}}</mat-option>
             </mat-select>
           </mat-form-field>
         </mat-grid-tile>
         <mat-grid-tile>
-          <mat-progress-spinner *ngIf="addingFlag" mode="indeterminate" diameter="35" color="primary"></mat-progress-spinner>
-          <button *ngIf="!addingFlag" [disabled]="!addSmeForm.valid" mat-raised-button color="primary" type="submit">{{'Add'}}</button>
+          <mat-progress-spinner *ngIf="addingFlag" mode="indeterminate" diameter="35" color="primary">
+          </mat-progress-spinner>
+          <button *ngIf="!addingFlag" [disabled]="!addSmeForm.valid" mat-raised-button color="primary"
+            type="submit">{{'Add'}}</button>
         </mat-grid-tile>
       </form>
       <!-- <mat-grid-tile>

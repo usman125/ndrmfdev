@@ -1,13 +1,58 @@
-<div class="m-20" *ngIf="selectedQuarter !== null">
-  <div class="info-header d-flex">
-    <h6>Activity: {{costTitle}}</h6>
-    <h6 class="ml-4">Quarter: {{quarter}}</h6>
+<div class="m-2" *ngIf="selectedQuarter !== null">
+  <div class="info-header d-flex align-items-center">
+    <mat-chip-list aria-label="Quarter Info">
+      <mat-chip color="primary" selected>Activity: {{costTitle}}</mat-chip>
+      <mat-chip color="primary" selected>Quarter: {{quarter}}</mat-chip>
+    </mat-chip-list>
+    <div class="example-spacer"></div>
+    <mat-chip-list aria-label="Club Info" *ngIf="clubbed">
+      <mat-chip color="warn" selected>Clubbed Entry</mat-chip>
+      <mat-chip color="accent" selected>{{clubData.title}}</mat-chip>
+    </mat-chip-list>
+    <mat-chip-list aria-label="Club Info" *ngIf="selectedQuarter?.delayed">
+      <mat-chip color="warn" selected>Activity Delayed Quarter</mat-chip>
+    </mat-chip-list>
   </div>
   <form [formGroup]="_form" (ngSubmit)="submit()" *ngIf="_form && updateFlag">
     <mat-tab-group [(selectedIndex)]="selectedIndex" (selectedTabChange)="onTabChanged($event);">
       <mat-tab label="General" class="p-4">
         <div class="m-4">
           <div class="row">
+            <div class="col-md-3 mb-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Target</mat-label>
+                <input type="number" matInput formControlName="target">
+              </mat-form-field>
+            </div>
+            <div class="col-md-3 mb-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Target Type</mat-label>
+                <mat-select (selectionChange)="targetTypeChanged($event.value)" formControlName="targetType">
+                  <mat-option value="land">Land</mat-option>
+                  <mat-option value="beneficiary">Beneficiary</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3 mb-3" *ngIf="_form.controls['targetType'].value === 'beneficiary'">
+              <mat-form-field appearance="outline">
+                <mat-label>Target Male</mat-label>
+                <input matInput type="number" placeholder="Type number here..." formControlName="maleTarget"
+                  type="text">
+              </mat-form-field>
+            </div>
+            <div class="col-md-3 mb-3" *ngIf="_form.controls['targetType'].value === 'beneficiary'">
+              <mat-form-field appearance="outline">
+                <mat-label>Target Female</mat-label>
+                <input matInput type="number" placeholder="Type number here..." formControlName="femaleTarget"
+                  type="text">
+              </mat-form-field>
+            </div>
+            <div class="col-md-3 mb-3" *ngIf="_form.controls['targetType'].value === 'land'">
+              <mat-form-field appearance="outline">
+                <mat-label>Target Heactare</mat-label>
+                <input matInput type="number" placeholder="Type number here..." formControlName="hectare" type="text">
+              </mat-form-field>
+            </div>
             <div class="col-md-8">
               <div class="row">
                 <div class="col-md-6">
@@ -59,34 +104,127 @@
               </div>
             </div>
           </div>
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'province' | titlecase}}</mat-label>
+                <mat-select [compareWith]="compareProvinceObjects" formControlName="province"
+                  (selectionChange)="provinceChanged($event)">
+                  <mat-option *ngFor="let item of province;let i= index;" [value]="item">
+                    {{item.PROVINCE | titlecase}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'division' | titlecase}}</mat-label>
+                <mat-select [compareWith]="compareDivisionObjects" formControlName="division"
+                  (selectionChange)="divisionChanged($event)">
+                  <mat-option *ngFor="let item of division;let i= index;" [value]="item">
+                    {{item.DIVISION | titlecase}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'district' | titlecase}}</mat-label>
+                <mat-select [compareWith]="compareDistrictObjects" formControlName="district"
+                  (selectionChange)="districtChanged($event)">
+                  <mat-option *ngFor="let item of district;let i= index;" [value]="item">
+                    {{item.DISTRICT | titlecase}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'tehsil' | titlecase}}</mat-label>
+                <mat-select [compareWith]="compareTehsilObjects" formControlName="tehsil"
+                  (selectionChange)="tehsilChanged($event)">
+                  <mat-option *ngFor="let item of tehsil;let i= index;" [value]="item">
+                    {{item.TEHSIL | titlecase}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'uc' | titlecase}}</mat-label>
+                <mat-select [compareWith]="compareUcObjects" formControlName="uc">
+                  <mat-option *ngFor="let item of uc;let i = index;" [value]="item">
+                    {{item.UC | titlecase}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
         </div>
       </mat-tab>
       <mat-tab label="Financials">
-        <div class="m-4">
-          <mat-form-field appearance="outline">
-            <mat-label>NDRMF Share</mat-label>
-            <input matInput type="number" placeholder="Amount in PKR" formControlName="ndrmfShare">
-            <mat-error *ngIf="_form.get('ndrmfShare').hasError('required')">Required</mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>FIP Share</mat-label>
-            <input matInput type="number" placeholder="Amount in PKR" formControlName="fipShare">
-            <mat-error *ngIf="_form.get('fipShare').hasError('required')">Required</mat-error>
-          </mat-form-field>
+        <div class="m-4 row">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="mb-3">
+              <mat-label>NDRMF Share</mat-label>
+              <input matInput type="number" placeholder="Amount in PKR" formControlName="ndrmfShare">
+              <mat-error *ngIf="_form.get('ndrmfShare').hasError('required')">Required</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field appearance="outline">
+              <mat-label>FIP Share</mat-label>
+              <input matInput type="number" placeholder="Amount in PKR" formControlName="fipShare">
+              <mat-error *ngIf="_form.get('fipShare').hasError('required')">Required</mat-error>
+            </mat-form-field>
+          </div>
         </div>
       </mat-tab>
       <mat-tab label="Procurement">
         <div class="m-4">
-          <mat-checkbox labelPosition="'before'" formControlName="isProcurement">Is Procurement</mat-checkbox>
-          <mat-form-field appearance="fill">
-            <mat-label>Procurement Heads</mat-label>
-            <mat-select multiple formControlName="procurementHeads" [disabled]="!_form.controls['isProcurement'].value">
-              <mat-option value="1">Head 1</mat-option>
-              <mat-option value="2">Head 2</mat-option>
-              <mat-option value="3">Head 3</mat-option>
-              <mat-option value="4">Head 4</mat-option>
-            </mat-select>
-          </mat-form-field>
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <mat-checkbox (change)="procurementChanged($event)" labelPosition="'before'"
+                formControlName="isProcurement">
+                Is Procurement
+              </mat-checkbox>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="mb-3" appearance="outline" *ngIf="_form.controls['isProcurement'].value">
+                <mat-label>Procurement Head</mat-label>
+                <mat-select [compareWith]="compareMethods" (selectionChange)="headChanged($event)"
+                  formControlName="procurementHeads">
+                  <mat-option *ngFor="let head of heads" [value]="head">
+                    {{head.label}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-8">
+              <mat-form-field appearance="outline" *ngIf="_form.controls['isProcurement'].value">
+                <mat-label>Procurement Method</mat-label>
+                <mat-select [compareWith]="compareMethods" (selectionChange)="methodChanged($event)"
+                  formControlName="procurementMethod">
+                  <mat-option *ngFor="let method of methods" [value]="method">
+                    {{method.label}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mt-3" *ngIf="_form.controls['isProcurement'].value">
+            <div class="col-md-4" *ngFor="let item of _form.controls['procurementOptions'].value; let i = index;">
+              <span style="height:50px;display: block;width: 100%;">{{item.label}}</span>
+              <mat-form-field appearance="outline" class="mb-3">
+                <input matInput placeholder="Choose A Date" [matDatepicker]="i" [(ngModel)]="item.planned"
+                  [ngModelOptions]="{standalone: true}">
+                <mat-datepicker-toggle matSuffix [for]="i"></mat-datepicker-toggle>
+                <mat-datepicker #i></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
         </div>
       </mat-tab>
       <mat-tab label="M&E">
@@ -107,27 +245,99 @@
     <mat-tab-group (selectedTabChange)="onTabChanged($event);">
       <mat-tab label="General" class="p-4">
         <div class="m-3">
+          <!-- FIP FORM PROGRESS -->
+          <div class="mt-3 mb-3 d-flex align-items-center border-heading">
+            <span class="pl-2">
+              Progress
+            </span>
+          </div>
           <div class="row mb-3" *ngIf="loggedUser?.role === 'fip'">
             <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Progress</mat-label>
                 <input formControlName="generalProgress" matInput type="number" min="0" max="100">
-                <!-- <mat-hint>Numbers from 0-100</mat-hint> -->
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" *ngIf="selectedQuarter?.targetType === 'beneficiary'">
+                <mat-label>Male Achieved</mat-label>
+                <input formControlName="generalMaleAchieved" matInput type="number" min="0" max="100">
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" *ngIf="selectedQuarter?.targetType === 'beneficiary'">
+                <mat-label>Female Achieved</mat-label>
+                <input formControlName="generalFemaleAchieved" matInput type="number" min="0" max="100">
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Total Achieved</mat-label>
+                <input formControlName="generalTotalAchieved" matInput type="number" min="0" max="100">
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" *ngIf="selectedQuarter?.targetType === 'land'">
+                <mat-label>Hectare Achieved</mat-label>
+                <input formControlName="heactareAchieved" matInput type="number" min="0" max="100">
               </mat-form-field>
             </div>
             <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="generalProgressStatus">
-                  <mat-option value="1">Completed</mat-option>
-                  <mat-option value="2">Pending</mat-option>
-                  <mat-option value="3">Blocked</mat-option>
-                  <mat-option value="4">Head 4</mat-option>
+                  <mat-option value="onTime">Achieved on time</mat-option>
+                  <mat-option value="inProgress">In Progress</mat-option>
+                  <mat-option value="notAchieved">Not Achieved</mat-option>
+                  <mat-option value="delayed">Delayed Achievement</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
           </div>
+          <!-- OTHER USERS COST INFO -->
+          <div class="row mb-3" *ngIf="loggedUser?.role !== 'fip'">
+            <div class="col-md-4">
+              <div class="general-info">
+                <span id="title">Achieved</span>
+                <span id="value" *ngIf="progressData">
+                  {{progressData.generalProgress}}
+                </span>
+                <span id="value" *ngIf="!progressData">
+                  &nbsp;
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="general-info">
+                <span id="title">Status</span>
+                <span id="value" *ngIf="progressData">
+                  {{progressData.generalProgressStatus}}
+                </span>
+                <span id="value" *ngIf="!progressData">
+                  &nbsp;
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUBMITTED GENERAL INFO FOR COST -->
+          <div class="mt-4 mb-3 d-flex align-items-center border-heading">
+            <span class="pl-2">
+              Details
+            </span>
+          </div>
           <div class="row">
+            <div class="col-md-6 mb-3">
+              <div class="general-info">
+                <span id="title">Target</span>
+                <span id="value" *ngIf="selectedQuarter.target">
+                  {{selectedQuarter.target}}
+                </span>
+                <span id="value" *ngIf="!selectedQuarter.target">
+                  &nbsp;
+                </span>
+              </div>
+            </div>
             <div class="col-md-8">
               <div class="row">
                 <div class="col-md-6">
@@ -182,10 +392,49 @@
               <div class="d-flex">
                 <div class="general-info">
                   <span id="title">Description</span>
-                  <span id="value" *ngIf="selectedQuarter.description">
+                  <span style="height: 133px;" id="value" *ngIf="selectedQuarter.description">
                     {{selectedQuarter.description}}
                   </span>
                   <span id="value" *ngIf="!selectedQuarter.description">
+                    &nbsp;
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="d-flex mt-3">
+                <div class="general-info">
+                  <span id="title">Province</span>
+                  <span id="value" *ngIf="selectedQuarter.province?.PROVINCE">
+                    {{selectedQuarter.province.PROVINCE | titlecase}}
+                  </span>
+                  <span id="value" *ngIf="!selectedQuarter.province?.PROVINCE">
+                    &nbsp;
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="d-flex mt-3">
+                <div class="general-info">
+                  <span id="title">Division</span>
+                  <span id="value" *ngIf="selectedQuarter.province?.DIVISION">
+                    {{selectedQuarter.province.DIVISION | titlecase}}
+                  </span>
+                  <span id="value" *ngIf="!selectedQuarter.province?.DIVISION">
+                    &nbsp;
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="d-flex mt-3">
+                <div class="general-info">
+                  <span id="title">District</span>
+                  <span id="value" *ngIf="selectedQuarter.province?.DISTRICT">
+                    {{selectedQuarter.province.DISTRICT | titlecase}}
+                  </span>
+                  <span id="value" *ngIf="!selectedQuarter.province?.DISTRICT">
                     &nbsp;
                   </span>
                 </div>
@@ -196,36 +445,72 @@
       </mat-tab>
       <mat-tab label="Financials">
         <div class="m-4">
+          <!-- PROGRESS FORM FIELDS -->
+          <div class="mt-3 mb-3 d-flex align-items-center border-heading">
+            <span class="pl-2">
+              Progress
+            </span>
+          </div>
           <div class="row mb-3" *ngIf="loggedUser?.role === 'fip'">
-            <div class="col-md-3">
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Progress</mat-label>
                 <input formControlName="financialProgress" matInput type="number" min="0" max="100">
               </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'expenditure Ndrmf' | titlecase}}</mat-label>
+                <input formControlName="expenditureNdrmf" matInput type="number" min="0" max="100">
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'expenditure Fip' | titlecase}}</mat-label>
+                <input formControlName="expenditureFip" matInput type="number" min="0" max="100">
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'disbursed Ndrmf' | titlecase}}</mat-label>
+                <input formControlName="disbursedNdrmf" matInput type="number" min="0" max="100">
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>{{'contributed Fip' | titlecase}}</mat-label>
+                <input formControlName="contributedFip" matInput type="number" min="0" max="100">
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Amount</mat-label>
                 <input formControlName="financialProgressAmount" type="number" matInput>
               </mat-form-field>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <mat-form-field appearance="outline">
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="financialProgressStatus">
-                  <mat-option value="1">Completed</mat-option>
-                  <mat-option value="2">Pending</mat-option>
-                  <mat-option value="3">Blocked</mat-option>
-                  <mat-option value="4">Head 4</mat-option>
+                  <mat-option value="onTime">Achieved on time</mat-option>
+                  <mat-option value="inProgress">In Progress</mat-option>
+                  <mat-option value="notAchieved">Not Achieved</mat-option>
+                  <mat-option value="delayed">Delayed Achievement</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
+          </div>
+          <!-- SUBMITTED DETAILS -->
+          <div class="mt-4 mb-3 d-flex align-items-center border-heading">
+            <span class="pl-2">
+              Details
+            </span>
           </div>
           <div class="d-flex mt-3">
             <div class="general-info">
               <span id="title">Fip Share</span>
               <span id="value" *ngIf="selectedQuarter.fipShare">
-                {{selectedQuarter.fipShare}}
+                {{!clubbed ? (selectedQuarter.fipShare | number) : (clubData.fipShare | number)}}
               </span>
               <span id="value" *ngIf="!selectedQuarter.fipShare">
                 &nbsp;
@@ -234,27 +519,23 @@
             <div class="general-info ml-3">
               <span id="title">Ndrmf Share</span>
               <span id="value" *ngIf="selectedQuarter.ndrmfShare">
-                {{selectedQuarter.ndrmfShare}}
+                {{!clubbed ? (selectedQuarter.ndrmfShare | number) : (clubData.ndrmfShare | number)}}
               </span>
               <span id="value" *ngIf="!selectedQuarter.ndrmfShare">
                 &nbsp;
               </span>
             </div>
           </div>
-          <!-- <mat-form-field>
-            <mat-label>NDRMF Share</mat-label>
-            <input matInput type="number" placeholder="Amount in PKR" formControlName="ndrmfShare">
-            <mat-error *ngIf="_form.get('ndrmfShare').hasError('required')">Required</mat-error>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>FIP Share</mat-label>
-            <input matInput type="number" placeholder="Amount in PKR" formControlName="fipShare">
-            <mat-error *ngIf="_form.get('fipShare').hasError('required')">Required</mat-error>
-          </mat-form-field> -->
         </div>
       </mat-tab>
       <mat-tab label="Procurement">
         <div class="m-3">
+          <div class="mt-3 mb-3 d-flex align-items-center border-heading">
+            <span class="pl-2">
+              Progress
+            </span>
+          </div>
+          <!-- PROGRESS FROM FIELDS -->
           <div class="row mb-3" *ngIf="loggedUser?.role === 'fip'">
             <div class="col-md-3">
               <mat-form-field appearance="outline">
@@ -266,20 +547,104 @@
               <mat-form-field appearance="outline">
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="procProgressStatus">
-                  <mat-option value="1">Completed</mat-option>
-                  <mat-option value="2">Pending</mat-option>
-                  <mat-option value="3">Blocked</mat-option>
-                  <mat-option value="4">Head 4</mat-option>
+                  <mat-option value="onTime">Achieved on time</mat-option>
+                  <mat-option value="inProgress">In Progress</mat-option>
+                  <mat-option value="notAchieved">Not Achieved</mat-option>
+                  <mat-option value="delayed">Delayed Achievement</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
+            <div class="row mt-3" *ngIf="_form.controls['isProcurement'].value">
+              <div class="col-md-4" *ngFor="let item of _form.controls['procurementOptions'].value; let i = index;">
+                <span id="answer" style="height:50px;display: block;width: 100%;">{{item.label}}</span>
+                <mat-form-field appearance="outline">
+                  <input (dateChange)="calculateDaysDifference(item, item.actual, item.planned)"
+                    [disabled]="disableOptions" matInput placeholder="Choose A Date" [matDatepicker]="i"
+                    [(ngModel)]="item.actual" [ngModelOptions]="{standalone: true}">
+                  <mat-datepicker-toggle matSuffix [for]="i"></mat-datepicker-toggle>
+                  <mat-datepicker #i></mat-datepicker>
+                </mat-form-field>
+                <div class="d-flex mt-2 mb-2">
+                  <div class="general-info">
+                    <span id="title">Variance</span>
+                    <span id="value" *ngIf="item.variance !== null">
+                      {{item.variance}} Day(s)
+                    </span>
+                    <span id="value" *ngIf="item.variance === null">
+                      &nbsp;
+                    </span>
+                  </div>
+                </div>
+                <mat-form-field class="mb-3" appearance="outline">
+                  <mat-label>Reason</mat-label>
+                  <textarea [ngModelOptions]="{standalone: true}" [(ngModel)]="item.reason" matInput rows="3"
+                    cols="5"></textarea>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
         </div>
+        <!-- SUBMITTED DETAILS -->
+        <div class="mt-4 mb-3 ml-3 mr-3 d-flex align-items-center border-heading">
+          <span class="pl-2">
+            Details
+          </span>
+        </div>
+        <form [formGroup]="_form" class="m-3">
+          <div class="m-3">
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                <mat-checkbox (change)="procurementChanged($event)" labelPosition="'before'"
+                  formControlName="isProcurement">
+                  Is Procurement
+                </mat-checkbox>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="mb-3" appearance="outline" *ngIf="_form.controls['isProcurement'].value">
+                  <mat-label>Procurement Head</mat-label>
+                  <mat-select [compareWith]="compareMethods" (selectionChange)="headChanged($event)"
+                    formControlName="procurementHeads">
+                    <mat-option *ngFor="let head of heads" [value]="head">
+                      {{head.label}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-8">
+                <mat-form-field appearance="outline" *ngIf="_form.controls['isProcurement'].value">
+                  <mat-label>Procurement Method</mat-label>
+                  <mat-select [compareWith]="compareMethods" (selectionChange)="methodChanged($event)"
+                    formControlName="procurementMethod">
+                    <mat-option *ngFor="let method of methods" [value]="method">
+                      {{method.label}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row mt-3" *ngIf="_form.controls['isProcurement'].value">
+              <div class="col-md-4" *ngFor="let item of _form.controls['procurementOptions'].value; let i = index;">
+                <span style="height:50px;display: block;width: 100%;">{{item.label}}</span>
+                <mat-form-field appearance="outline" class="mb-3">
+                  <input disabled matInput placeholder="Choose A Date" [matDatepicker]="i" [(ngModel)]="item.planned"
+                    [ngModelOptions]="{standalone: true}">
+                  <mat-datepicker-toggle matSuffix [for]="i"></mat-datepicker-toggle>
+                  <mat-datepicker #i></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </form>
       </mat-tab>
       <mat-tab label="M&E">
         <div class="m-3">
           <div *ngIf="rfForm === null">
             <h3>Loading ...</h3>
+          </div>
+          <div *ngIf="rfForm !== null" class="mt-3 mb-3 d-flex align-items-center border-heading">
+            <span class="pl-2">
+              Progress
+            </span>
           </div>
           <div class="row mb-3" *ngIf="loggedUser?.role === 'fip'">
             <div class="col-md-4">
@@ -292,13 +657,18 @@
               <mat-form-field appearance="outline">
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="mneProgressStatus">
-                  <mat-option value="1">Completed</mat-option>
-                  <mat-option value="2">Pending</mat-option>
-                  <mat-option value="3">Blocked</mat-option>
-                  <mat-option value="4">Head 4</mat-option>
+                  <mat-option value="onTime">Achieved on time</mat-option>
+                  <mat-option value="inProgress">In Progress</mat-option>
+                  <mat-option value="notAchieved">Not Achieved</mat-option>
+                  <mat-option value="delayed">Delayed Achievement</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
+          </div>
+          <div class="mt-4 mb-3 d-flex align-items-center border-heading">
+            <span class="pl-2">
+              Details
+            </span>
           </div>
           <formio [readOnly]="true" *ngIf="rfForm !== null && selectedQuarter?.rfSubmitData" [form]="rfForm"
             (submit)="onSubmit($event)" [submission]="{data:selectedQuarter.rfSubmitData}">
@@ -312,4 +682,6 @@
       <button [disabled]="!progressForm.valid" mat-raised-button color="primary" type="submit">Submit</button>
     </div>
   </form>
+  <small><small class="warn-comment">*</small> Facing difficulty with Submit button please select Quarter again.
+    Further, you cannot submit if the quarter details are pending.</small>
 </div>

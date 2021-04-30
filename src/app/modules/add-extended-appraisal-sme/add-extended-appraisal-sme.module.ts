@@ -10,6 +10,8 @@ import { MatListModule } from "@angular/material/list";
 import { MatDividerModule } from "@angular/material/divider";
 import { FormioModule } from "angular-formio";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgxPrintModule } from 'ngx-print';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatDividerModule,
     MatListModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
+    NgxPrintModule
   ],
   exports: [AddExtendedAppraisalSmeComponent]
 })

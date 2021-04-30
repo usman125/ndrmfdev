@@ -3,147 +3,18 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {
   LoginComponent,
-  // SurveysComponent,
-  // CoffeeElectionComponent,
-  // RegisterComponent,
   AuthGuard,
   UsersComponent,
-  // CreateSurveyComponent,
   FipHomeComponent,
-  //UpdateComplaintComponent,
-  // FipEligibilityComponent,
-  // FipQualificationComponent,
-  // AccreditationRequestComponent,
-  // SmeComponent,
-  // AddSmeComponent,
-  // AddUserComponent,
-  // AccreditationCommentsMatrixComponent,
-  // EligibilityRequestsComponent,
 } from "./components/component-index";
 import { SiteLayout } from "./components/common/layouts/sitelayout/sitelayout.component";
 import { NoHeaderLayoutComponent } from "./components/common/layouts/no-header-layout/no-header-layout.component";
 import { Role } from './models/Roles';
-import { PipComponent } from "./components/pip/pip.component";
-import { ProjectWorkPlanComponent } from "./components/component-index";
+// import { PipComponent } from "./components/pip/pip.component";
+// import { ProjectWorkPlanComponent } from "./components/component-index";
 
 const loggedUser = JSON.parse(localStorage.getItem('user'));
 
-// const routes: Routes = [
-//   {
-//     path: 'test',
-//     component: SiteLayout,
-//     canActivate: [AuthGuard],
-//     children: [
-//       {
-//         path: 'home',
-//         component: FipHomeComponent,
-//       },
-//       {
-//         path: 'users',
-//         component: UsersComponent,
-//         // canActivate: [AuthGuard],
-//         // data: { roles: [Role.Admin] }
-//       },
-//     ]
-//   },
-//   {
-//     path: 'login',
-//     component: LoginComponent,
-//   },
-//   {
-//     path: 'register',
-//     component: RegisterComponent
-//   },
-//   {
-//     path: 'surveys',
-//     component: SurveysComponent,
-//     canActivate: [AuthGuard],
-//     data: { roles: [Role.Admin] }
-//   },
-//   {
-//     path: 'coffee',
-//     component: CoffeeElectionComponent,
-//     canActivate: [AuthGuard]
-//   },
-//   {
-//     path: 'users',
-//     component: UsersComponent,
-//     canActivate: [AuthGuard],
-//     data: { roles: [Role.Admin] }
-//   },
-//   {
-//     path: 'create-survey',
-//     component: CreateSurveyComponent,
-//     canActivate: [AuthGuard],
-//     data: { roles: [Role.Admin] }
-//   },
-//   {
-//     path: 'fip-home',
-//     component: FipHomeComponent,
-//     canActivate: [AuthGuard],
-//     data: { roles: [Role.Fip] }
-//   },
-//   {
-//     path: 'fip-eligibility',
-//     component: FipEligibilityComponent,
-//     canActivate: [AuthGuard],
-//     data: { roles: [Role.Fip] }
-//   },
-//   {
-//     path: 'fip-qualification',
-//     component: FipQualificationComponent,
-//     canActivate: [AuthGuard],
-//     data: { roles: [Role.Fip] }
-//   },
-//   {
-//     path: 'accreditation-requests',
-//     component: AccreditationRequestComponent,
-//     canActivate: [AuthGuard],
-//     data: {
-//       roles: [Role.Admin, Role.Sme]
-//     }
-//   },
-//   {
-//     path: 'smes',
-//     component: SmeComponent,
-//     canActivate: [AuthGuard],
-//     data: { roles: [Role.Admin] }
-//   },
-//   {
-//     path: 'add-sme',
-//     component: AddSmeComponent,
-//     canActivate: [AuthGuard],
-//     data: { roles: [Role.Admin] }
-//   },
-//   {
-//     path: 'add-user',
-//     component: AddUserComponent,
-//     canActivate: [AuthGuard],
-//     data: { roles: [Role.Admin] }
-//   },
-//   {
-//     path: 'request-comments',
-//     component: AccreditationCommentsMatrixComponent,
-//     canActivate: [AuthGuard],
-//     data: { roles: [Role.Admin] }
-//   },
-//   {
-//     path: 'eligibility-requests',
-//     component: EligibilityRequestsComponent,
-//     canActivate: [AuthGuard],
-//     data: { roles: [Role.Admin] }
-//   },
-//   // {
-//   //   path: 'form',
-//   //   loadChildren: './form/form.module#FormModule',
-//   //   canActivate: [AuthGuard]
-//   // },
-//   {
-//     path: '**',
-//     component: LoginComponent,
-//   },
-
-// ];
 const routes: Routes = [
   {
     path: '',
@@ -167,7 +38,6 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    // loadChildren: () => import('./modules/login/login.module').then(m => m.LoginModule),
     component: NoHeaderLayoutComponent,
     children: [
       {
@@ -324,7 +194,7 @@ const routes: Routes = [
     data: { roles: [Role.Fip] }
   },
   {
-    path: 'accreditation-requests',
+    path: 'accreditation-requests/:requestId/:sectionId',
     loadChildren: () => import('./modules/accreditation-request/accreditation-request.module').then(m => m.AccreditationRequestModule),
     canActivate: [AuthGuard],
     data: {
@@ -362,7 +232,7 @@ const routes: Routes = [
     data: { roles: [Role.Admin] }
   },
   {
-    path: 'eligibility-requests',
+    path: 'eligibility-requests/:requestId',
     loadChildren: () => import('./modules/eligibility-requests/eligibility-requests.module').then(m => m.EligibilityRequestsModule),
     canActivate: [AuthGuard],
     data: { roles: [Role.Po] }
@@ -478,6 +348,12 @@ const routes: Routes = [
   {
     path: 'departments',
     loadChildren: () => import('./modules/departments/departments.module').then(m => m.DepartmentsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'designations',
+    loadChildren: () => import('./modules/designations/designations.module').then(m => m.DesignationsModule),
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin] }
   },
@@ -658,10 +534,57 @@ const routes: Routes = [
     // component: PipComponent
   },
   {
+    path: 'all-eligibility-requests',
+    loadChildren: () => import('./modules/all-eligibility-requests/all-eligibility-requests.module').then(m => m.AllEligibilityRequestsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po, Role.Sme] }
+    // component: PipComponent
+  },
+  {
+    path: 'all-qualification-requests',
+    loadChildren: () => import('./modules/all-qualification-requests/all-qualification-requests.module').then(m => m.AllQualificationRequestsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po, Role.Sme] }
+    // component: PipComponent
+  },
+  {
+    path: 'eligibility-view/:requestId',
+    loadChildren: () => import('./modules/eligibility-request-view/eligibility-request-view.module').then(m => m.EligibilityRequestViewModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Po, Role.Sme] }
+    // component: PipComponent
+  },
+  {
     path: 'plan',
     loadChildren: () => import('./modules/project-imp-plan/project-imp-plan.module').then(m => m.ProjectImpPlanModule),
+    canActivate: [AuthGuard],
     // component: ProjectWorkPlanComponent
-  }
+  },
+  {
+    path: 'plan-report',
+    loadChildren: () => import('./modules/qualification-report/qualification-report.module').then(m => m.QualificationReportModule),
+    canActivate: [AuthGuard],
+    // component: ProjectWorkPlanComponent
+  },
+  {
+    path: 'grant-disbursments',
+    loadChildren: () => import('./modules/grant-disbursments/grant-disbursments.module').then(m => m.GrantDisbursmentsModule),
+    canActivate: [AuthGuard],
+    // component: ProjectWorkPlanComponent
+  },
+  {
+    path: 'view-grant-disbursment/:requestId',
+    loadChildren: () => import('./modules/view-grant-disbursment/view-grant-disbursment.module').then(m => m.ViewGrantDisbursmentModule),
+    canActivate: [AuthGuard],
+    // component: ProjectWorkPlanComponent
+  },
+  {
+    path: 'sme-qpr-requests',
+    loadChildren: () => import('./modules/sme-qpr-requests/sme-qpr-requests.module').then(m => m.SmeQprRequestsModule),
+    canActivate: [AuthGuard],
+    data: {roles: [Role.Sme]}
+    // component: ProjectWorkPlanComponent
+  },
 ];
 
 @NgModule({

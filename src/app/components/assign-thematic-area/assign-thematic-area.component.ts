@@ -25,7 +25,7 @@ export class AssignThematicAreaComponent implements OnInit {
 
   ngOnInit(): void {
     thematicAreaReplay.subscribe(data => {
-      console.log("DATA FROM THEMATIC AREA:--", data);
+      // console.log("DATA FROM THEMATIC AREA:--", data);
       this.selectedArea = data;
       this.processOwner = this.selectedArea.processOwner;
     });
@@ -36,7 +36,7 @@ export class AssignThematicAreaComponent implements OnInit {
     this.apiLoading = true;
     this._userService.withRoleprocessOwner().subscribe(
       (result: any) => {
-        console.log("RESULT FROM PROCEsS OWNER:---", result);
+        // console.log("RESULT FROM PROCEsS OWNER:---", result);
         this.poUsers = result;
         this.apiLoading = false;
       },
@@ -49,7 +49,7 @@ export class AssignThematicAreaComponent implements OnInit {
 
 
   poChanged($event) {
-    console.log("PO CHANGED:---", $event);
+    // console.log("PO CHANGED:---", $event);
   }
 
   comparePoObjects(o1: any, o2: any): boolean {
@@ -60,11 +60,11 @@ export class AssignThematicAreaComponent implements OnInit {
   }
 
   updateThematicArea() {
-    console.log("BODY FOR API:--", {
-      name: this.selectedArea.name,
-      enabled: this.selectedArea.enabled,
-      processOwnerId: this.processOwner.id
-    });
+    // console.log("BODY FOR API:--", {
+    //   name: this.selectedArea.name,
+    //   enabled: this.selectedArea.enabled,
+    //   processOwnerId: this.processOwner.id
+    // });
     this.apiLoading = true;
     this._settingsService.updateThematicArea(
       {
@@ -75,7 +75,7 @@ export class AssignThematicAreaComponent implements OnInit {
       this.selectedArea.id
     ).subscribe(
       result => {
-        console.log("RESULT UPDATING THEMATIC AREA:--", result);
+        // console.log("RESULT UPDATING THEMATIC AREA:--", result);
         this._proposalFormsStore.updateProcessOwner(this.selectedArea.id, this.processOwner);
         this.apiLoading = false;
       },

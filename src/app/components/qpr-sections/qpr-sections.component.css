@@ -1,0 +1,89 @@
+.poy-table thead {
+  /* background: #f9f9f9; */
+  background: #039be5;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.12);
+  border-radius: 7px !important;
+}
+
+.table-header {
+  /* background: #f9f9f9; */
+  background: #039be5;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.12);
+  /* border-radius: 7px; */
+}
+
+.table-header span {
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.table-row {
+  background: #ffffff;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.12);
+  /* border-radius: 7px; */
+}
+
+.poy-table thead tr {
+  /* color: #919191; */
+  color: #fff;
+}
+
+.poy-table tbody tr {
+  background: #ffffff;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.12);
+  border-radius: 7px;
+}
+
+.poy-table tbody tr td {
+  padding: 12px 5px;
+  width: 20%;
+  font-size: 12px;
+}
+
+.poy-table thead tr th {
+  padding: 5px;
+  width: 20%;
+  font-size: 12px;
+}
+
+.seprate-table {
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.rag-div {
+  margin-bottom: 8px;
+}
+
+.rag-div span {
+  width: 100%;
+  padding: 12px 5px;
+  font-size: 12px;
+  color: #474b56;
+  /* color: #919191; */
+}
+
+span.notstart {
+  background: #0070c0;
+}
+span.inProgress {
+  background: #ffff02;
+}
+span.delayed {
+  background: #ff0000;
+}
+span.notAchieved {
+  background: #ff0000;
+}
+span.onTime {
+  background: #01b050;
+}
+
+.rag-div span > .proc-estimates span {
+  display: none;
+}
+
+.rag-div span > .proc-estimates span.proc-active {
+  display: block !important;
+}

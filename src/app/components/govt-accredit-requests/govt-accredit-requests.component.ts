@@ -6,7 +6,7 @@ import { AccreditationRequestService } from 'src/app/services/accreditation-requ
 import { AccreditationRequestStore } from 'src/app/stores/accreditation-requests/accreditation-requests-store';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { setAccreditationRequestReplay } from "../../stores/accreditation-requests/AccreditationRequestReplay";
+import { AccreditationRequestReplayStore } from "../../stores/accreditation-requests/AccreditationRequestReplayStore";
 import { AuthStore } from 'src/app/stores/auth/auth-store';
 
 @Component({
@@ -34,6 +34,7 @@ export class GovtAccreditRequestsComponent implements OnInit, AfterViewInit, OnD
   constructor(
     private _accreditationRequestService: AccreditationRequestService,
     private _accreditationRequestStore: AccreditationRequestStore,
+    private _accreditationRequestReplayStore: AccreditationRequestReplayStore,
     private _authStore: AuthStore,
     private _router: Router,
   ) { }
@@ -48,13 +49,14 @@ export class GovtAccreditRequestsComponent implements OnInit, AfterViewInit, OnD
     this.Subscription.add(
       this._accreditationRequestStore.state$.subscribe(data => {
         console.log("AFTER VIEW INIT:--", data.requests);
-        let newArray = [];
-        data.requests.forEach((c) => {
-          if (c.pending) {
-            newArray.push(c);
-          }
-        });
-        this.dataSource = new MatTableDataSource(newArray);
+        // let newArray = [];
+        // data.requests.forEach((c) => {
+        //   if (c.pending) {
+        //     newArray.push(c);
+        //   }
+        // });
+        // this.dataSource = new MatTableDataSource(newArray);
+        this.dataSource = new MatTableDataSource(data.requests);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       })
@@ -64,12 +66,13 @@ export class GovtAccreditRequestsComponent implements OnInit, AfterViewInit, OnD
 
   getPendingRequests() {
     this._authStore.setLoading();
-    this._accreditationRequestService.getPendingAccreditation().subscribe(
+    this._accreditationRequestService.getAllAccreditationQuestionnaire().subscribe(
       (result: any) => {
         let newArray = result.map((c) => {
           return {
             ...c,
-            pending: true
+            pending: c.status === "Pending" ? true : false,
+            data: JSON.parse(c.data)
           }
         })
         this._accreditationRequestStore.addAllRequests(newArray);
@@ -81,6 +84,23 @@ export class GovtAccreditRequestsComponent implements OnInit, AfterViewInit, OnD
         console.log("ERROR FROM PENDING ACCREDITATIONS:--", error);
       }
     );
+    // this._accreditationRequestService.getPendingAccreditation().subscribe(
+    //   (result: any) => {
+    //     let newArray = result.map((c) => {
+    //       return {
+    //         ...c,
+    //         pending: true
+    //       }
+    //     })
+    //     this._accreditationRequestStore.addAllRequests(newArray);
+    //     this._authStore.removeLoading();
+    //   },
+    //   error => {
+
+    //     this._authStore.removeLoading();
+    //     console.log("ERROR FROM PENDING ACCREDITATIONS:--", error);
+    //   }
+    // );
   }
 
   ngAfterViewInit() {
@@ -91,12 +111,18 @@ export class GovtAccreditRequestsComponent implements OnInit, AfterViewInit, OnD
     // this._router.navigate(['view-govt-agency-request', element.id]);
     // this.viewRequest = true;
     // this.selectedrequest = element;
-    setAccreditationRequestReplay(
-      element.id,
-      element.assignee,
-      element.forUser,
-      element.assigned
-    );
+    var clearObject = {
+      id: element.id,
+      assignee: element.assignee,
+      forUser: element.forUser,
+      assigned: element.assigned,
+      pending: element.pending,
+      status: element.status,
+      data: element.data,
+      isJv: element.jv,
+      jvUser: element.jvUser,
+    }
+    this._accreditationRequestReplayStore.addRequests(clearObject);
   }
 
   trackTask(index: number, item): string {
@@ -105,6 +131,16 @@ export class GovtAccreditRequestsComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngOnDestroy() {
+    // setAccreditationRequestReplay(
+    //   null,
+    //   null,
+    //   null,
+    //   null,
+    //   null,
+    //   null,
+    //   null,
+    // );
+    this._accreditationRequestStore.addAllRequests([]);
     this.Subscription.unsubscribe();
   }
 

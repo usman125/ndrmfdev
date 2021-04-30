@@ -1,0 +1,140 @@
+<ng-container *ngIf="apiLoading">
+  <mat-progress-spinner mode="indeterminate" [diameter]="25"></mat-progress-spinner>
+</ng-container>
+<ng-container *ngIf="!apiLoading">
+  <mat-accordion>
+    <div class="p-2 mb-3" *ngFor="let output of outPutsArray">
+      <h4 class="mb-3" id="comment">{{output.value}} - {{output.label}}</h4>
+      <div *ngFor="let suboutput of output.subOutputs" class="mb-3">
+        <div class="d-flex align-items-center header-box mb-2">
+          <span class="p-3" id="answer">
+            {{suboutput.value}} - {{suboutput.label}}
+          </span>
+        </div>
+        <mat-expansion-panel [ngClass]="{'active': step === indicator.value}"
+          (opened)="checkProjectsForKpi(indicator.value);" *ngFor="let indicator of suboutput.indicators">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{indicator.value}}
+            </mat-panel-title>
+            <mat-panel-description>
+              <small>{{indicator.label}}</small>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+
+          <ng-container *ngIf="indicatorChartLabels.length && !chartLoading">
+            <div class="row mt-3 indi-chart">
+              <div class="col-md-12">
+                <p id="answer">KPI Record(s)</p>
+                <div class="d-flex justify-content-center">
+                  <canvas baseChart [datasets]="indicatorChartData" [labels]="indicatorChartLabels"
+                    [options]="indicatorChartOptions" [plugins]="indicatorChartPlugins" [legend]="indicatorChartLegend"
+                    [chartType]="indicatorChartType">
+                  </canvas>
+                </div>
+                <button class="mt-2" mat-raised-button color="accent" (click)="changeIndiChartType()">
+                  {{indicatorChartType === 'bar' ? 'Line' : 'Bar'}}
+                </button>
+              </div>
+            </div>
+          </ng-container>
+
+          <div class="row" *ngIf="!chartLoading">
+            <div class="col-md-6">
+              <ng-container *ngIf="provinceChartLabels.length">
+                <div class="row mt-5">
+                  <div class="col-md-12">
+                    <p id="answer">Province(s) Data</p>
+                    <div style="display: block">
+                      <canvas baseChart [datasets]="provinceChartData" [options]="provinceChartOptions"
+                        [labels]="provinceChartLabels" [chartType]="provinceChartType">
+                      </canvas>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <div class="col-md-6">
+              <ng-container *ngIf="divisionChartLabels.length">
+                <div class="row mt-5">
+                  <div class="col-md-12">
+                    <p id="answer">Division(s) Data</p>
+                    <div style="display: block">
+                      <canvas baseChart [datasets]="divisionChartData" [options]="divisionChartOptions"
+                        [labels]="divisionChartLabels" [chartType]="divisionChartType">
+                      </canvas>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <div class="row" *ngIf="!chartLoading">
+            <div class="col-md-6">
+
+
+              <ng-container *ngIf="districtChartLabels.length">
+                <div class="row mt-5">
+                  <div class="col-md-12">
+                    <p id="answer">District(s) Data</p>
+                    <div style="display: block">
+                      <canvas baseChart [datasets]="districtChartData" [options]="divisionChartOptions"
+                        [labels]="districtChartLabels" [chartType]="districtChartType">
+                      </canvas>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <div class="col-md-6">
+
+
+              <ng-container *ngIf="tehsilChartLabels.length">
+                <div class="row mt-5">
+                  <div class="col-md-12">
+                    <p id="answer">Tehsil(s) Data</p>
+                    <div style="display: block">
+                      <canvas baseChart [datasets]="tehsilChartData" [options]="divisionChartOptions"
+                        [labels]="tehsilChartLabels" [chartType]="tehsilChartType">
+                      </canvas>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+
+            </div>
+          </div>
+
+          <div class="row pb-4" *ngIf="!chartLoading">
+            <div class="col-md-6">
+              <ng-container *ngIf="ucChartLabels.length">
+                <div class="row mt-5">
+                  <div class="col-md-12">
+                    <p id="answer">Uc(s) Data</p>
+                    <div style="display: block">
+                      <canvas baseChart [datasets]="ucChartData" [options]="divisionChartOptions"
+                        [labels]="ucChartLabels" [chartType]="ucChartType">
+                      </canvas>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+
+          <ng-container *ngIf="chartLoading && 
+          (indicatorChartLabels.length === 0 ||
+          provinceChartLabels.length === 0 ||
+          divisionChartLabels.length === 0 ||
+          districtChartLabels.length === 0 ||
+          tehsilChartLabels.length === 0 ||
+          ucChartLabels.length === 0)">
+            <mat-progress-spinner mode="indeterminate" [diameter]="25"></mat-progress-spinner>
+          </ng-container>
+
+        </mat-expansion-panel>
+      </div>
+    </div>
+  </mat-accordion>
+</ng-container>

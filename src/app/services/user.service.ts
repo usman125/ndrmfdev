@@ -22,7 +22,7 @@ export class UserService {
       url,
       {
         "departmentId": values.department,
-        "designationId": null,
+        "designationId": values.designation,
         "email": values.email,
         "firstName": values.firstName,
         "lastName": values.lastName,
@@ -52,6 +52,7 @@ CEOComplains(){
     url,
   );
 }
+
   editUser(values, id) {
     const url = `${AppConfig.apiUrl}/user/${id}`;
     console.log("VALUES IN EDIT USER:--", values);
@@ -59,7 +60,7 @@ CEOComplains(){
       url,
       {
         "departmentId": values.department,
-        "designationId": null,
+        "designationId": values.designation,
         "email": values.email,
         "firstName": values.firstName,
         "lastName": values.lastName,
@@ -206,6 +207,17 @@ AssignComplainToConcernedPerson(complaintId, postBody){
     );
   }
 
+  rejectEligibility(id, comment) {
+    console.log("REJECT ELIGIBILITY:---", comment);
+    const url = `${AppConfig.apiUrl}/accreditation/eligibility/${id}/reject`;
+    return this._httpClient.post(
+      url,
+      {
+        comment: comment
+      }
+    );
+  }
+
   updateActiveStatus(username) {
     const url = `${AppConfig.apiUrl}/user/updateActiveStatus`;
     return this._httpClient.put(
@@ -293,11 +305,40 @@ AssignComplainToConcernedPerson(complaintId, postBody){
     );
   }
 
-  saveThemticAreas(areas) {
-    const url = `${AppConfig.apiUrl}/user/thematic-area`;
+  getAllJvUsers() {
+    const url = `${AppConfig.apiUrl}/user/get-jv-users`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  saveThemticAreas(areas, type) {
+    const url = `${AppConfig.apiUrl}/user/thematic-area?type=${type}`;
     return this._httpClient.post(
       url,
       areas
+    );
+  }
+
+  saveThemticAreasByPo(areas, type, userId) {
+    const url = `${AppConfig.apiUrl}/user/thematic-areas/${userId}?type=${type}`;
+    return this._httpClient.post(
+      url,
+      areas
+    );
+  }
+
+  getUserThemticAreas() {
+    const url = `${AppConfig.apiUrl}/user/thematic-area`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
+  getThemticAreasByUserId(userId) {
+    const url = `${AppConfig.apiUrl}/user/thematic-areas/${userId}`;
+    return this._httpClient.get(
+      url,
     );
   }
 

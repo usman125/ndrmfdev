@@ -25,7 +25,9 @@
   padding-right: 0 !important;
   padding-left: 15px !important;
 } */
-
+.appraisal-box > table tr td {
+  padding: 10px !important;
+}
 .top-form {
   padding: 0 30px;
   padding: 0 30px 30px;
@@ -37,19 +39,22 @@
   display: flex;
   justify-content: space-between;
   padding: 8px;
-  background: #f8f8f8;
+  background: #f9f9f9;
   margin: 5px 0px;
 }
 .project-details .field .value {
   text-transform: capitalize;
   width: 68%;
   text-align: right;
+  color: #919191;
+  font-weight: 300;
 }
 
 .project-details .field .title {
   font-weight: 500;
   text-transform: uppercase;
   width: 42%;
+  color: #919191;
 }
 
 .gia-link {
@@ -82,6 +87,11 @@ mat-button-toggle-group {
 .review-box .info .box-title {
   display: flex;
   align-items: center;
+  width: 50%;
+}
+.review-box .info small#comment,
+.review-box .info small.info-comment {
+  width: 50%;
 }
 .review-box .info {
   display: flex;
@@ -95,9 +105,15 @@ mat-button-toggle-group {
 .mat-list-item {
   background: rgba(235, 235, 235, 0.5);
   margin-bottom: 5px;
-  height: 60px !important;
-  width: 49%;
+  height: 80px !important;
+  width: 100%;
   font-size: 13px;
+}
+
+.mat-list-item.giachecklist {
+  height: 110px !important;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .top-info-bar {
@@ -138,20 +154,79 @@ mat-button-toggle-group {
   font-size: 16px;
   margin: 5px;
 }
-.mat-list-base{
+.mat-list-base {
   display: flex;
   justify-content: space-around;
   flex-direction: row;
   flex-wrap: wrap;
 }
-.mat-button-toggle-checked{
+.mat-button-toggle-checked {
   font-weight: 400;
   background-color: #e0e0e0;
 }
-mat-button-toggle-group .mat-button-toggle-checked .mat-button-toggle-label-content{color: #333;}
+mat-button-toggle-group .mat-button-toggle-checked .mat-button-toggle-label-content {
+  color: #333;
+}
 .proj-detail .mat-button-toggle-checked .mat-button-toggle-label-content {
   color: #333 !important;
 }
 .govfip {
-    width: 100% !important;
+  width: 100% !important;
 }
+
+.info-box {
+  background: #f4f4f4;
+  padding: 10px;
+  color: #4f4f4f;
+}
+
+.general-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.general-info #value {
+  background: #f0f0f0;
+  padding: 15px 20px;
+  display: block;
+  width: 100%;
+  font-size: 12px;
+  color: #474b56;
+}
+/*Form Sections*/
+.table td, .table th {
+  vertical-align: middle;
+}
+.table td, .table th, .no-top-border-table>.table>tbody>tr:first-child>td {
+  padding: .75rem !important;
+  vertical-align: middle !important;
+  border-top: 1px solid #dee2e6 !important;
+}
+.form-control{font-size: 12px !important;}
+.form-control:disabled, .form-control[readonly], .choices.is-disabled .choices__item {
+  font-size: 13px !important;
+}
+.col-form-label {
+  font-weight: 500 !important;
+}
+.formio-component-projectAtAGlance .form-control:disabled, .form-control[readonly] {text-align: center;    background-color: #e9ecef;}
+ 
+/*Action Box*/
+.pre-section{
+  border: 1px solid #ccc;
+    padding: 13px 0px;
+}
+.expiry-section, .expiry-sections {
+  display: flex;
+  justify-content: space-between;
+}
+.appraisals mat-chip-list {
+  margin-left: auto;
+  margin-right: 25px;
+}
+.appraisals .mat-chip.mat-standard-chip.mat-chip-selected.mat-warn, .mat-chip.mat-standard-chip.mat-chip-selected.mat-accent{
+  font-size: 10px !important;
+}
+

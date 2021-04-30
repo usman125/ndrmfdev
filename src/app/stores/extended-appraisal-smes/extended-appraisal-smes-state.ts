@@ -44,8 +44,20 @@ export class ExtendedAppraisalSmesState {
     comments: any;
     endDate: any;
     id: any;
-    sections: any;
+    sections: {
+      id: any,
+      templateType: any,
+      template: any,
+      data: any,
+      sme: any,
+      assigned: any,
+      status: any,
+    }[];
     startDate: any;
     status: any;
+    completedDate: any;
+    decisionByDm: any;
+    isMarkedTo: any;
+    subStatus: any;
   } = null;
 }

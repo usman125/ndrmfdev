@@ -1,0 +1,573 @@
+<ng-container>
+  <mat-toolbar class="toolbar-sticky" style="padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>{{selectedRequest?.proposalName | titlecase}} - Disbursments</span>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</ng-container>
+
+<div class="m-20">
+  <div class="box-heading">
+    <span>Initial Advance(s)</span>
+  </div>
+  <ng-container>
+    <mat-accordion class="example-headers-align">
+
+      <mat-expansion-panel class="mb-5" [expanded]="step === selectedRequest?.initialAdvance.id"
+        (opened)="setStep(selectedRequest?.initialAdvance.id, 'initial')">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Initial Advance
+          </mat-panel-title>
+          <mat-panel-description>
+            <span *ngIf="selectedRequest?.initialAdvance.status === 'Completed'" id="comment">
+              Submitted
+            </span>
+            <span *ngIf="selectedRequest?.initialAdvance.status === 'Pending'" id="comment">
+              {{selectedRequest ? selectedRequest.initialAdvance.status : ''}}
+            </span>
+
+            <span id="answer">
+              {{selectedRequest ? selectedRequest.status : ''}}
+            </span>
+            <mat-icon *ngIf="selectedRequest !== null">
+              {{'unfold_more'}}
+            </mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <!-- TOP FORM FIELDS -->
+        <ng-container *ngIf="loggedUser?.role === 'fip'">
+          <div class="row d-flex align-items-center">
+            <div class="col-md-10">
+
+              <mat-form-field *ngIf="apiCosts === null">
+                <mat-label>Select Cost(s)</mat-label>
+                <mat-select matNativeControl [formControl]="costsData" multiple>
+                  <!-- OPTIONS FILTER -->
+                  <mat-form-field class="p-3 filter-input" *ngIf="apiCosts === null" appearance="outline">
+                    <mat-label>Filter</mat-label>
+                    <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
+                  </mat-form-field>
+                  <mat-select-trigger>
+                    <span *ngFor="let item of costsData.value; let i=index">
+                      <span *ngIf="i===0">{{item.title}}</span>
+                    </span>
+                    <span *ngIf="costsData.value?.length > 1">
+                      (+{{costsData.value.length - 1}} others)
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option *ngFor="let item of costSelections | costsFilter:filterQuery" [value]="item">{{item.title
+                    | titlecase}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field *ngIf="apiCosts !== null">
+                <mat-label>Select Cost</mat-label>
+                <mat-select matNativeControl [formControl]="costsData">
+                  <!-- OPTIONS FILTER -->
+                  <mat-form-field class="p-3 filter-input" *ngIf="apiCosts !== null" appearance="outline">
+                    <mat-label>Filter</mat-label>
+                    <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
+                  </mat-form-field>
+                  <mat-option *ngFor="let item of costSelections | costsFilter:filterQuery" [value]="item">{{item.title
+                    | titlecase}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </div>
+            <div class="col-md-2">
+              <button mat-raised-button color="primary" (click)="addDataCosts();">Add Costs</button>
+            </div>
+          </div>
+        </ng-container>
+        <!-- FIP SUBMITTED DATA TABLE -->
+        <ng-container *ngIf="loggedUser?.role === 'fip'">
+          <div class="row d-flex align-items-center">
+            <div class="col-md-6 heading-contain">
+              <span class="pl-2">Title</span>
+            </div>
+            <div class="col-md-6 heading-contain">
+              <span class="pl-2">Amount</span>
+            </div>
+          </div>
+          <div class="row d-flex align-items-center mt-2" *ngFor="let item of apiCosts; let i = index;">
+            <div class="col-md-6">
+              <span>{{item.title}}</span>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Amount</mat-label>
+                <input matInput type="number" placeholder="Enter Amount..." [(ngModel)]="item.amount">
+              </mat-form-field>
+            </div>
+          </div>
+        </ng-container>
+        <!-- OTHERS SUBMITTED DATA TABLE -->
+        <div class="row">
+          <div class="col-md-7">
+            <ng-container *ngIf="loggedUser?.role !== 'fip'">
+              <div class="row d-flex align-items-center header-box">
+                <div class="col-md-6 heading-contain">
+                  <span>Title</span>
+                </div>
+                <div class="col-md-6 heading-contain">
+                  <span>Amount</span>
+                </div>
+              </div>
+              <div *ngIf="selectedRequest?.initialAdvance.data">
+                <div class="row d-flex cost-box align-items-center mt-2" *ngFor="let item of apiCosts; let i = index;">
+                  <div class="col-md-6">
+                    <span>{{item.title}}</span>
+                  </div>
+                  <div class="col-md-6">
+                    <span>{{item.amount}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row d-flex align-items-center header-box mt-2">
+                <div class="col-md-6 heading-contain">
+                  <span class="pl-2">Total</span>
+                </div>
+                <div class="col-md-6 heading-contain">
+                  <span *ngIf="selectedRequest !== null" class="pl-2">{{selectedRequest.initialAdvance.amount}}</span>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <div class="col-md-5">
+            <!-- PROCESS OWNER FOR DISBURSEMENT -->
+            <ng-container *ngIf="selectedRequest?.assigned">
+              <div class="d-flex align-items-center heading-contain header-box">
+                <mat-icon>
+                  settings_applications
+                </mat-icon>
+                <span class="pl-2">
+                  Toolbox
+                </span>
+              </div>
+              <mat-form-field appearance="outline" class="mt-2">
+                <mat-label>Select User(s) For Reviews</mat-label>
+                <mat-select matNativeControl [compareWith]="compareSmeObjects" [formControl]="reviewUsers" multiple>
+                  <mat-form-field class="p-3 filter-input" appearance="outline">
+                    <mat-label>Filter By Department</mat-label>
+                    <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
+                  </mat-form-field>
+                  <mat-select-trigger>
+                    <span *ngFor="let item of reviewUsers.value; let i=index">
+                      <span *ngIf="i===0">{{item.name}}</span>
+                    </span>
+                    <span *ngIf="reviewUsers.value?.length > 1">
+                      (+{{reviewUsers.value.length - 1}} others)
+                    </span>
+                  </mat-select-trigger>
+                  <mat-optgroup *ngFor="let user of allUsers | depUserFilter:filterQuery" [label]="user.name">
+                    <mat-option [hidden]="loggedUser.id === item.id || checkDisabled(item)"
+                      *ngFor="let item of user.users" [value]="item">
+                      {{item.name}}
+                    </mat-option>
+                  </mat-optgroup>
+                </mat-select>
+              </mat-form-field>
+              <div class="d-flex justify-content-end">
+                <button [disabled]="!reviewUsers.valid" class="mt-2 mb-2" mat-raised-button color="primary"
+                  (click)="assignUsersForReviews('initial')">
+                  Assign For Reviews
+                </button>
+              </div>
+
+              <mat-chip-list *ngIf="initialAdvanceStats !== null" class="mt-3 review-chip">
+                <mat-chip (click)="getReviewsList(selectedRequest.initialAdvance.initialAdvanceReviewsList);"
+                  *ngIf="initialAdvanceStats.pendingCount !== 0" class="mt-2" color="warn" selected>
+                  {{initialAdvanceStats.pendingCount}} Reviews Pending
+                </mat-chip>
+                <mat-chip (click)="getReviewsList(selectedRequest.initialAdvance.initialAdvanceReviewsList);"
+                  *ngIf="initialAdvanceStats.completedCount !== 0" class="mt-2" color="accent" selected>
+                  {{initialAdvanceStats.completedCount}} Reviews Submitted
+                </mat-chip>
+              </mat-chip-list>
+
+            </ng-container>
+
+            <!-- SUBMIT YOUR REVIEW -->
+            <ng-container>
+              <div *ngIf="selectedRequest !== null">
+                <div *ngFor="let item of selectedRequest.initialAdvance.initialAdvanceReviewsList">
+                  <div *ngIf="item.assignee.id === loggedUser.id">
+                    <p>{{item.assignee.name}} please submit your review</p>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Your Reviews</mat-label>
+                      <textarea [disabled]="item.status === 'Completed'" placeholder="Enter text here..."
+                        [(ngModel)]="item.comments" matInput cols="30" rows="10"></textarea>
+                    </mat-form-field>
+                    <mat-radio-group class="mt-2 example-radio-group" [disabled]="item.status === 'Completed'"
+                      [(ngModel)]="item.subStatus">
+                      <mat-radio-button class="example-radio-button" value="Approve">
+                        <span id="comment">{{'Approved' | uppercase}}</span>
+                      </mat-radio-button>
+                      <mat-radio-button class="example-radio-button" value="Reject">
+                        <span id="warn-comment">{{'Rejected' | uppercase}}</span>
+                      </mat-radio-button>
+                    </mat-radio-group>
+                    <div class="mb-2 d-flex justify-content-end">
+                      <button color="primary" (click)="submitReview(item)"
+                        [disabled]="!item.comments || item.status === 'Completed'" mat-raised-button>
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+          </div>
+        </div>
+
+
+        <!-- ASSIGNED REVIEWS LIST -->
+        <ng-container *ngIf="selectedRequest?.assigned">
+          <div class="row mt-5" *ngIf="currentReviewsList && currentReviewsList.length !== 0">
+            <div class="d-flex flex-fill align-items-center heading-contain header-box">
+              <mat-icon>
+                settings_applications
+              </mat-icon>
+              <span class="pl-2">
+                Reviews History
+              </span>
+              <div class="example-spacer">
+              </div>
+              <mat-icon style="cursor: pointer;" class="ml-2" (click)="currentReviewsList = [];">
+                disabled_by_default
+              </mat-icon>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 d-flex cost-box align-items-center mt-2"
+              *ngFor="let item of currentReviewsList; let i = index;">
+              <div class="col-md-3">
+                <span>{{item.assignee.name}}</span>
+              </div>
+              <div class="col-md-3">
+                <span id="warn-comment" *ngIf="item.status === 'Pending'">{{item.status}}</span>
+                <span id="comment" *ngIf="item.status === 'Completed'">{{item.status}}</span>
+              </div>
+              <div class="col-md-6">
+                <span>{{item.comments}}</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <mat-action-row>
+          <button *ngIf="loggedUser?.role === 'fip'" [disabled]="apiCosts === null" mat-raised-button color="accent"
+            (click)="submitInitalAdvance();">Submit</button>
+          <div *ngIf="selectedRequest?.assigned"
+            class="d-flex align-items-center flex-fill justify-content-between p-3">
+            <div>
+              <span id="answer">Advance Status:</span>
+              {{selectedRequest?.initialAdvance.subStatus}}
+            </div>
+            <div>
+              <button (click)="(selectedRequest?.initialAdvance.subStatus === null ||
+                selectedRequest?.initialAdvance.subStatus === 'Pending') ?
+                approveInitialAdvance('Approve Advance') : rejectInitialAdvance('Reject Advance')" [color]="(selectedRequest?.initialAdvance.subStatus === null ||
+                selectedRequest?.initialAdvance.subStatus === 'Pending') ?
+                'accent' : 'warn'" mat-raised-button>
+                {{(selectedRequest?.initialAdvance.subStatus === null ||
+                selectedRequest?.initialAdvance.subStatus === 'Pending') ?
+                'Approve Advance' : 'Reject Advance'}}</button>
+            </div>
+          </div>
+        </mat-action-row>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ng-container>
+
+  <!-- <ng-container *ngIf="selectedRequest?.initialAdvance.status === 'Completed'"> -->
+  <div class="box-heading">
+    <span>Quarter Advance(s)</span>
+  </div>
+  <ng-container>
+    <mat-accordion class="example-headers-align" multi>
+      <mat-expansion-panel *ngFor="let item of selectedRequest?.quarterAdvanceList; let i = index;"
+        [expanded]="step === i" (opened)="setStep(i, 'quarter')">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <span class="responsive-text">Quarter Advance #{{i+2}}</span>
+          </mat-panel-title>
+          <mat-panel-description>
+            <span id="comment" class="responsive-text">
+              {{item.status ?
+              item.status : '&nbsp;' }}
+            </span>
+            <span id="answer" class="responsive-text">
+              {{item.subStatus ?
+              item.subStatus : '&nbsp;' }}
+            </span>
+            <mat-icon>
+              unfold_more
+            </mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+
+
+        <!-- TOP FORM FIELDS -->
+        <ng-container *ngIf="loggedUser?.role === 'fip'">
+          <div class="row d-flex align-items-center">
+            <div class="col-md-10">
+
+              <mat-form-field appearance="outline" *ngIf="selectedRequest?.quarterAdvanceList[step]?.data === null">
+                <mat-label>Select Cost(s)</mat-label>
+                <mat-select matNativeControl [formControl]="costsData" multiple>
+                  <!-- OPTIONS FILTER -->
+                  <mat-form-field class="p-3 filter-input"
+                    *ngIf="selectedRequest?.quarterAdvanceList[step]?.data === null" appearance="outline">
+                    <mat-label>Filter</mat-label>
+                    <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
+                  </mat-form-field>
+                  <mat-select-trigger>
+                    <div *ngIf="costsData && costsData?.value?.length">
+                      <span *ngFor="let item of costsData.value; let i=index">
+                        <span *ngIf="i===0">{{item.title}}</span>
+                      </span>
+                      <span *ngIf="costsData.value?.length > 1">
+                        (+{{costsData.value.length - 1}} others)
+                      </span>
+                    </div>
+                  </mat-select-trigger>
+                  <mat-option *ngFor="let item of costSelections | costsFilter:filterQuery" [value]="item">{{item.title
+                    | titlecase}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" *ngIf="selectedRequest?.quarterAdvanceList[step]?.data !== null">
+                <mat-label>Select Cost</mat-label>
+                <mat-select matNativeControl [formControl]="costsData">
+                  <!-- OPTIONS FILTER -->
+                  <mat-form-field class="p-3 filter-input"
+                    *ngIf="selectedRequest?.quarterAdvanceList[step]?.data !== null" appearance="outline">
+                    <mat-label>Filter</mat-label>
+                    <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
+                  </mat-form-field>
+                  <mat-option *ngFor="let item of costSelections | costsFilter:filterQuery" [value]="item">{{item.title
+                    | titlecase}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </div>
+            <div class="col-md-2">
+              <button [disabled]="selectedRequest.quarterAdvanceList[step]?.status === 'Completed'" mat-raised-button
+                color="primary" (click)="addQuarterData();">Add Costs</button>
+            </div>
+          </div>
+        </ng-container>
+        <!-- FIP SUBMITTED DATA TABLE -->
+        <ng-container *ngIf="loggedUser?.role === 'fip' && selectedRequest?.quarterAdvanceList[step]?.data !== null">
+          <div class="row d-flex align-items-center">
+            <div class="col-md-6 heading-contain">
+              <span class="pl-2">Title</span>
+            </div>
+            <div class="col-md-6 heading-contain">
+              <span class="pl-2">Amount</span>
+            </div>
+          </div>
+          <div *ngIf="selectedRequest !== null && selectedRequest.quarterAdvanceList[step]">
+            <div class="row d-flex align-items-center mt-2"
+              *ngFor="let item of selectedRequest.quarterAdvanceList[step].data; let i = index;">
+              <div class="col-md-6">
+                <span>{{item.title}}</span>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field appearance="outline">
+                  <mat-label>Amount</mat-label>
+                  <input [disabled]="selectedRequest.quarterAdvanceList[step].status === 'Completed'" matInput
+                    type="number" placeholder="Enter Amount..." [(ngModel)]="item.amount">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button [disabled]="selectedRequest.quarterAdvanceList[step].status === 'Completed'" color="accent"
+              mat-raised-button class="mt-3" (click)="submitQuarterAdvance();">
+              Submit
+            </button>
+          </div>
+        </ng-container>
+        <!-- NOT FIP SUBMITTED DATA TABLE -->
+        <ng-container *ngIf="loggedUser?.role !== 'fip'">
+          <div class="row">
+            <div class="col-md-7">
+              <div class="row d-flex align-items-center header-box">
+                <div class="col-md-6 heading-contain">
+                  <span>Title</span>
+                </div>
+                <div class="col-md-6 heading-contain">
+                  <span>Amount</span>
+                </div>
+              </div>
+              <div *ngIf="selectedRequest.quarterAdvanceList[step]?.data !== null">
+                <div class="row d-flex cost-box align-items-center mt-2"
+                  *ngFor="let item of selectedRequest.quarterAdvanceList[step].data; let i = index;">
+                  <div class="col-md-6">
+                    <span>{{item.title}}</span>
+                  </div>
+                  <div class="col-md-6">
+                    <span>{{item.amount}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row d-flex align-items-center header-box mt-2">
+                <div class="col-md-6 heading-contain">
+                  <span class="pl-2">Total</span>
+                </div>
+                <div class="col-md-6 heading-contain">
+                  <span *ngIf="selectedRequest !== null" class="pl-2">
+                    {{selectedRequest.selectionType ?
+                    selectedRequest.quarterAdvanceList[step] ?
+                    selectedRequest.quarterAdvanceList[step].amount : '' :
+                    ''}}
+                  </span>
+                </div>
+              </div>
+
+            </div>
+            <!-- PROCESS OWNER FOR DISBURSEMENT -->
+            <ng-container *ngIf="selectedRequest?.assigned">
+              <div class="col-md-5">
+                <div class="d-flex align-items-center heading-contain header-box">
+                  <mat-icon>
+                    settings_applications
+                  </mat-icon>
+                  <span class="pl-2">
+                    Toolbox
+                  </span>
+                </div>
+                <mat-form-field appearance="outline" class="mt-2">
+                  <mat-label>Select User(s) For Reviews</mat-label>
+                  <mat-select matNativeControl [compareWith]="compareSmeObjects" [formControl]="reviewUsers" multiple>
+                    <mat-form-field class="p-3 filter-input" appearance="outline">
+                      <mat-label>Filter By Department</mat-label>
+                      <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
+                    </mat-form-field>
+                    <mat-select-trigger>
+                      <span *ngFor="let item of reviewUsers.value; let i=index">
+                        <span *ngIf="i===0">{{item.name}}</span>
+                      </span>
+                      <span *ngIf="reviewUsers.value?.length > 1">
+                        (+{{reviewUsers.value.length - 1}} others)
+                      </span>
+                    </mat-select-trigger>
+                    <mat-optgroup *ngFor="let user of allUsers | depUserFilter:filterQuery" [label]="user.name">
+                      <mat-option [hidden]="loggedUser.id === item.id || checkQuarterUserDisabled(item)"
+                        *ngFor="let item of user.users" [value]="item">
+                        {{item.name}}
+                      </mat-option>
+                    </mat-optgroup>
+                  </mat-select>
+                </mat-form-field>
+                <div class="d-flex justify-content-end">
+                  <button [disabled]="!reviewUsers.valid" class="mt-2 mb-2" mat-raised-button color="primary"
+                    (click)="assignUsersForReviews('quarter')">
+                    Assign For Reviews
+                  </button>
+                </div>
+
+                <mat-chip-list *ngIf="controlReviewUserForm?.stats?.pendingCount || 
+                controlReviewUserForm?.stats?.completedCount" class="mt-3 review-chip">
+                  <mat-chip (click)="getReviewsList(controlReviewUserForm.quarterAdvanceReviewsList);"
+                    *ngIf="controlReviewUserForm?.stats?.pendingCount !== 0" class="mt-2" color="warn" selected>
+                    {{controlReviewUserForm.stats ?
+                    controlReviewUserForm.stats.pendingCount : '&nbsp;'}} Reviews Pending
+                  </mat-chip>
+                  <mat-chip (click)="getReviewsList(controlReviewUserForm.quarterAdvanceReviewsList);"
+                    *ngIf="controlReviewUserForm?.stats?.completedCount !== 0" class="mt-2" color="accent" selected>
+                    {{controlReviewUserForm.stats ?
+                    controlReviewUserForm.stats.completedCount : '&nbsp;'}} Reviews Submitted
+                  </mat-chip>
+                </mat-chip-list>
+
+
+
+
+              </div>
+            </ng-container>
+            <!-- SUBMIT YOUR REVIEW -->
+            <ng-container>
+              <div class="col-md-5">
+                <div *ngIf="selectedRequest !== null && controlReviewUserForm">
+                  <div *ngFor="let item of controlReviewUserForm.quarterAdvanceReviewsList">
+                    <div *ngIf="item.assignee.id === loggedUser.id">
+                      <p>{{item.assignee.name}} please submit your review</p>
+                      <mat-form-field appearance="outline">
+                        <mat-label>Your Reviews</mat-label>
+                        <textarea [disabled]="item.status === 'Completed'" placeholder="Enter text here..."
+                          [(ngModel)]="item.comments" matInput cols="30" rows="10"></textarea>
+                      </mat-form-field>
+                      <mat-radio-group class="mt-2 example-radio-group" [disabled]="item.status === 'Completed'"
+                        [(ngModel)]="item.subStatus">
+                        <mat-radio-button class="example-radio-button" value="Approve">
+                          <span id="comment">{{'Approved' | uppercase}}</span>
+                        </mat-radio-button>
+                        <mat-radio-button class="example-radio-button" value="Reject">
+                          <span id="warn-comment">{{'Rejected' | uppercase}}</span>
+                        </mat-radio-button>
+                      </mat-radio-group>
+                      <div class="mb-2 d-flex justify-content-end">
+                        <button color="primary" (click)="submitReview(item)"
+                          [disabled]="!item.comments || item.status === 'Completed'" mat-raised-button>
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+
+        <!-- ASSIGNED REVIEWS LIST -->
+        <ng-container *ngIf="selectedRequest?.assigned">
+          <div class="row mt-5" *ngIf="currentReviewsList.length !== 0">
+            <div class="d-flex flex-fill align-items-center heading-contain header-box">
+              <mat-icon>
+                settings_applications
+              </mat-icon>
+              <span class="pl-2">
+                Reviews History
+              </span>
+              <div class="example-spacer">
+              </div>
+              <mat-icon style="cursor: pointer;" class="ml-2" (click)="currentReviewsList = [];">
+                disabled_by_default
+              </mat-icon>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 d-flex cost-box align-items-center mt-2"
+              *ngFor="let item of currentReviewsList; let i = index;">
+              <div class="col-md-3">
+                <span>{{item.assignee.name}}</span>
+              </div>
+              <div class="col-md-3">
+                <span id="warn-comment" *ngIf="item.status === 'Pending'">{{item.status}}</span>
+                <span id="comment" *ngIf="item.status === 'Completed'">{{item.status}}</span>
+              </div>
+              <div class="col-md-6">
+                <span>{{item.comments}}</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+
+        <mat-action-row>
+          <button mat-button color="primary" (click)="nextStep('quarter')">Next</button>
+        </mat-action-row>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ng-container>
+</div>

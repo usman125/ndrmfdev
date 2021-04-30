@@ -44,10 +44,9 @@ export class SubProjectDocumentComponent implements OnInit, OnDestroy {
 
   getAllRequests() {
     if (this.loggedUser.role === 'fip') {
-
       this._projectService.getPendingSubProjectDoc().subscribe(
         (result: any) => {
-          console.log("PENGING SUB PROJ SOC SME:--", result);
+          // console.log("PENGING SUB PROJ SOC SME:--", result);
           this._subProjectDocStore.addAllRequests(result);
         },
         error => {
@@ -57,19 +56,18 @@ export class SubProjectDocumentComponent implements OnInit, OnDestroy {
     } else if (this.loggedUser.role === 'process owner' || this.loggedUser.role === 'sme') {
       this._projectService.getSubProjectDoc().subscribe(
         (result: any) => {
-          console.log("PENGING SUB PROJ SOC PO:--", result);
+          // console.log("PENGING SUB PROJ SOC PO:--", result);
           this._subProjectDocStore.addAllRequests(result);
         },
         error => {
           console.log("PENGING SUB PROJ SOC PO:--", error);
         }
       );
-
     }
   }
 
   applyFilter(event: Event) {
-    console.log("APPLY FIKTER:--", event);
+    // console.log("APPLY FIKTER:--", event);
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 

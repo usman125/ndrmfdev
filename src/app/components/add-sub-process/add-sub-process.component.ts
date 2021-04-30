@@ -36,7 +36,7 @@ export class AddSubProcessComponent implements OnInit {
   getAllProcesses() {
     this._settingService.getProcesses().subscribe(
       (result: any) => {
-        console.log("RESULT AFTER ALL PROCESS:--", result);
+        // console.log("RESULT AFTER ALL PROCESS:--", result);
         this.allProcesses = result;
       },
       error => {
@@ -46,7 +46,7 @@ export class AddSubProcessComponent implements OnInit {
   }
 
   processNameChanged($event) {
-    console.log("PROCESS NAME CHANGED:--", $event);
+    // console.log("PROCESS NAME CHANGED:--", $event);
     this.processName = $event;
   }
 
@@ -64,10 +64,10 @@ export class AddSubProcessComponent implements OnInit {
 
   getSubProcess($event) {
     this.allProcessType = [];
-    console.log("PROCESS TYPE CHANGED:--", $event, this.assignProcess);
+    // console.log("PROCESS TYPE CHANGED:--", $event, this.assignProcess);
     this._settingService.getSubProcessTypes($event).subscribe(
       (result: any) => {
-        console.log("RESULT AFTER GETTING SUB PROCESS:--", result);
+        // console.log("RESULT AFTER GETTING SUB PROCESS:--", result);
         this.allSubProcesses = result;
       },
       error => {
@@ -85,10 +85,10 @@ export class AddSubProcessComponent implements OnInit {
       add: true,
       confirm: false,
     };
-    console.log("SUB PROCESS VALUES:--", this.processName, this.process);
+    // console.log("SUB PROCESS VALUES:--", this.processName, this.process);
     this._settingService.addProcess(this.process, this.processName).subscribe(
       (result: any) => {
-        console.log("RESULT ADDING SUB PROCESS:--", result);
+        // console.log("RESULT ADDING SUB PROCESS:--", result);
         this._confirmModelService.open(options);
         this.process = null;
         this.processName = null;
@@ -102,12 +102,12 @@ export class AddSubProcessComponent implements OnInit {
   }
 
   processChanged($event) {
-    console.log("PROCESS CHANGED:---", $event);
+    // console.log("PROCESS CHANGED:---", $event);
     // this.apiLoading = true;
     this._settingService.getProcessMeta($event).subscribe(
       (result: any) => {
         // this.apiLoading = false;
-        console.log("RESULT FETCHING TYPE:---", result);
+        // console.log("RESULT FETCHING TYPE:---", result);
         this.allProcessType = result;
         this.getProcessOwners();
         this.getSMES();
@@ -122,7 +122,7 @@ export class AddSubProcessComponent implements OnInit {
     this._userService.withRoleprocessOwner().subscribe(
       (result: any) => {
         // this.apiLoading = false;
-        console.log("RESULT FROM PROCEsS OWNER:---", result);
+        // console.log("RESULT FROM PROCEsS OWNER:---", result);
         this.poUsers = result;
       },
       error => {
@@ -136,7 +136,7 @@ export class AddSubProcessComponent implements OnInit {
     // this.apiLoading = true;
     this._userService.withRoleSME().subscribe(
       (result: any) => {
-        console.log("RESULT FROM SMES:---", result);
+        // console.log("RESULT FROM SMES:---", result);
         this.smeUsers = result;
         this.apiLoading = false;
       },
@@ -148,11 +148,11 @@ export class AddSubProcessComponent implements OnInit {
   }
 
   poChanged($event) {
-    console.log("PO CHANGED:---", $event);
+    // console.log("PO CHANGED:---", $event);
   }
 
   smeChanged($event) {
-    console.log("SME CHANGED:---", $event);
+    // console.log("SME CHANGED:---", $event);
   }
 
   comparePoObjects(o1: any, o2: any): boolean {
@@ -191,7 +191,7 @@ export class AddSubProcessComponent implements OnInit {
     this._settingService.updateProcess(this.assignProcess, object).subscribe(
       result => {
         this.apiLoading = false;
-        console.log("RESULT FROM UPDATING:---", result);
+        // console.log("RESULT FROM UPDATING:---", result);
         const options = {
           title: 'Success!',
           message: 'Succefully Saved.',
@@ -205,7 +205,7 @@ export class AddSubProcessComponent implements OnInit {
 
         this._confirmModelService.confirmed().subscribe(confirmed => {
           if (confirmed) {
-            console.log("CONFIRMED FROM MODEL", confirmed);
+            // console.log("CONFIRMED FROM MODEL", confirmed);
           }
         });
       },
@@ -233,7 +233,7 @@ export class AddSubProcessComponent implements OnInit {
   }
 
   setArrayStep(i, item) {
-    console.log("ITEM TO FETCH USERS:--", i, item);
+    // console.log("ITEM TO FETCH USERS:--", i, item);
     setTimeout(() => {
       this.allProcessType = [];
       // this.assignProcess = item;

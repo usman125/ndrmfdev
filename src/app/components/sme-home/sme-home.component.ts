@@ -98,7 +98,11 @@ export class SmeHomeComponent implements OnInit {
   }
 
   goToRoute(route) {
-    this._router.navigate([route]);
+    // if (route === 'accreditation-requests'){
+    //   this._router.navigate([route]);
+    // }else{
+      this._router.navigate([route]);
+    // }
   }
 
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FillQprRoutingModule } from './fill-qpr-routing.module';
 import { FillQprComponent } from '../../components/component-index';
 import { QprSectionsModule } from '../qpr-sections/qpr-sections.module';
+import { ProjectImpPlanModule } from '../project-imp-plan/project-imp-plan.module';
 
 
 
@@ -13,7 +14,8 @@ import { QprSectionsModule } from '../qpr-sections/qpr-sections.module';
   imports: [
     CommonModule,
     FillQprRoutingModule,
-    QprSectionsModule
+    QprSectionsModule,
+    ProjectImpPlanModule
   ],
   exports: []
 })

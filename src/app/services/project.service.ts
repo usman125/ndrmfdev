@@ -65,7 +65,8 @@ export class ProjectService {
     console.log("----FINAL API OBJECT:----", {
       name: values.name,
       thematicAreaId: values.thematicAreaId,
-      type: values.type
+      type: values.type,
+      jvUserID: values.jvUser !== null ? values.jvUser.id : null,
     })
     const url = `${AppConfig.apiUrl}/project-proposal/commence/`;
     return this._httpClient.post(
@@ -73,7 +74,8 @@ export class ProjectService {
       {
         name: values.name,
         thematicAreaId: values.thematicAreaId,
-        type: values.type
+        type: values.type,
+        jvUserID: values.jvUser !== null ? values.jvUser.id : null,
       }
     );
   }
@@ -141,6 +143,22 @@ export class ProjectService {
     );
   }
 
+  assignExtAppraisal(id, data) {
+    const url = `${AppConfig.apiUrl}/project-proposal/ext-appraisal/${id}/section/assign`;
+    return this._httpClient.post(
+      url,
+      data
+    );
+  }
+
+  extendedAppraisalDecisionByDm(id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/ext-appraisal/${id}/decisionbydm`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
   assignProposalSectionTasks(sectionId, data) {
     const url = `${AppConfig.apiUrl}/project-proposal/section/${sectionId}/task/add`;
     return this._httpClient.post(
@@ -166,7 +184,7 @@ export class ProjectService {
   }
 
   markToGm(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=MARKED_TO_GM`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=MARKED_TO_GM&subStatus=PENDING`;
     const status = 'MARKED_TO_GM';
     return this._httpClient.put(
       url,
@@ -175,7 +193,7 @@ export class ProjectService {
   }
 
   markToCeo(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=MARKED_TO_CEO`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=MARKED_TO_CEO&subStatus=PENDING`;
     const status = 'MARKED_TO_GM';
     return this._httpClient.put(
       url,
@@ -184,7 +202,7 @@ export class ProjectService {
   }
 
   setProjectStage(id, stage) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=${stage}`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=${stage}&subStatus=PENDING`;
     const status = 'MARKED_TO_GM';
     return this._httpClient.put(
       url,
@@ -193,7 +211,7 @@ export class ProjectService {
   }
 
   approvePreApparisalByGm(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=APPROVED`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=APPROVED&subStatus=PENDING`;
     return this._httpClient.put(
       url,
       null
@@ -201,7 +219,7 @@ export class ProjectService {
   }
 
   disapprovePreApparisalByGm(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=REJECTED`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=REJECTED&subStatus=PENDING`;
     return this._httpClient.put(
       url,
       null
@@ -209,7 +227,7 @@ export class ProjectService {
   }
 
   approveExtApparisalByGm(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=APPROVED`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=APPROVED&subStatus=PENDING`;
     return this._httpClient.put(
       url,
       null
@@ -218,7 +236,7 @@ export class ProjectService {
 
 
   disapproveExtApparisalByGm(id) {
-    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=REJECTED`;
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=REJECTED&subStatus=PENDING`;
     return this._httpClient.put(
       url,
       null
@@ -363,6 +381,57 @@ export class ProjectService {
     return this._httpClient.post(
       url,
       sectionIds
+    );
+  }
+
+  getProposalAttachments(id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}/allAttachments`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  downloadAttachments(fileName, filePath) {
+    let header = new HttpHeaders()
+    header.append("Content-Type", "multipart/form-data;");
+    header.append("responseType", "blob");
+    const url = `${AppConfig.apiUrl}/project-proposal/attachment/download/?fileName=${fileName}&filePath=${filePath}`;
+    return this._httpClient.get(
+      url,
+      {
+        headers: header,
+      }
+    );
+  }
+
+  updateProposalOfferLetterStatus(
+    id,
+    status,
+    subStatus,
+    body
+  ) {
+    const url = `${AppConfig.apiUrl}/project-proposal/${id}?status=${status}&subStatus=${subStatus}`;
+    return this._httpClient.put(
+      url,
+      body
+    );
+  }
+
+  getOfferLetter(id) {
+    const url = `${AppConfig.apiUrl}/project-proposal/offerLetter/${id}`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
+  commenceGrantDisbursment(id) {
+    const url = `${AppConfig.apiUrl}/grant-disbursement/commence/${id}`;
+    return this._httpClient.post(
+      url,
+      {
+        body: null,
+        amount: null,
+      }
     );
   }
 

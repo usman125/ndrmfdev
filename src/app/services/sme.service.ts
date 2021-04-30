@@ -24,8 +24,9 @@ export class SmeService {
       url,
       {
         "name": values.name,
+        "orderNum": values.orderNum,
         "enabled": true
-      },
+      }
     );
   }
 

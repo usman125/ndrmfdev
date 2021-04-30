@@ -40,3 +40,32 @@
 .proposal-section{
   margin: 0 1.3rem 1.5rem !important
 }
+.appraisal-box table td {
+  padding: 10px !important;
+}
+@media print {
+.appraisal-box{
+  background-color: transparent;
+  padding: 0px;
+  margin-bottom: 0;
+  overflow-x: unset;
+  overflow: unset;
+}
+.appraisal-box table{
+  width:80%;
+  margin: 5px auto;
+}
+
+.appraisal-box .rfData.font-small > span {
+  font-size: 10px;
+}
+.appraisal-box .remove-btn{display: none;}
+.mat-toolbar-multiple-rows {
+  display: none;
+}
+.appraisal-box table td {
+  padding: 10px !important;
+}
+
+.form-check input:disabled, .form-check input[type="radio" i]:disabled{color: red; background-color: blue;}
+}

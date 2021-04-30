@@ -1,0 +1,42 @@
+<mat-toolbar class="mat-elevation-z8" color="primary">
+  <mat-toolbar-row>
+    <span>Designations</span>
+    <span class="example-spacer"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-card class="m-20">
+  <mat-card-content>
+    <mat-form-field>
+      <mat-label>Enter Name</mat-label>
+      <input type="text" matInput placeholder="e.g. Health" [(ngModel)]="areaName">
+    </mat-form-field>
+    <button [disabled]="!areaName || apiLoading" mat-raised-button color="primary" (click)="goToAdd()">ADD NEW</button>
+  </mat-card-content>
+</mat-card>
+
+<div class="mr-4 ml-4">
+  <mat-form-field>
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia">
+  </mat-form-field>
+</div>
+<mat-card class="m-20 p-0">
+  <mat-card-content>
+    <div *ngIf="apiLoading" class="p-3">
+      <mat-progress-spinner mode="indeterminate" diameter="35"></mat-progress-spinner>
+    </div>
+    <table mat-table [trackBy]="trackTask" [hidden]="apiLoading" [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [hidden]="apiLoading" #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+    </mat-paginator>
+
+  </mat-card-content>
+</mat-card>

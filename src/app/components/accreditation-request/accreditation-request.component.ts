@@ -1,28 +1,23 @@
-import { Component, OnInit, OnDestroy, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, ViewChild, AfterViewInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-// import { AccreditationRequestStore } from "../../stores/accreditation-requests/accreditation-requests-store";
-import { Subscription, from } from "rxjs";
-import { distinctUntilChanged, filter, count } from "rxjs/operators";
+import { Subscription } from "rxjs";
+import { distinctUntilChanged } from "rxjs/operators";
 import { AuthStore } from "../../stores/auth/auth-store";
-// import { SmeStore } from "../../stores/sme/sme-store";
-// import { SurveysStore } from "../../stores/surveys/surveys-store";
 import * as _ from 'lodash';
 import FormioUtils from 'formiojs/utils';
 import { SingleAccreditationRequestStore } from 'src/app/stores/single-accreditation-requests/single-accreditation-requests-store';
-// import { AccreditationReviewStore } from 'src/app/stores/accreditation-reviews/accreditation-reviews-store';
 import { SectionSelectorStore } from "../../stores/section-selector/section-selector-store";
-// import { fipIntimationsStore } from "../../stores/fip-intimations/fip-intimations-store";
 import { setValue } from "../../stores/fip-intimations/intimate-fip";
-// import { SurveysService } from "../../services/surveys.service";
-import { FlatTreeControl } from '@angular/cdk/tree';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+// import { MatPaginator } from '@angular/material/paginator';
+// import { MatSort } from '@angular/material/sort';
+// import { MatTableDataSource } from '@angular/material/table';
 import { AccreditationRequestService } from "../../services/accreditation-request.service";
-// import { SmeService } from "../../services/sme.service";
 import { AccreditationReviewsService } from "../../services/accreditation-reviews.service";
 import { ConfirmModelService } from "../../services/confirm-model.service";
+import { DomSanitizer } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from "@angular/common";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 declare var $: any;
 
 export interface DialogData {
@@ -32,18 +27,6 @@ export interface DialogData {
   minDate: string;
 }
 
-interface ExampleFlatNode {
-  expandable: boolean;
-  name: string;
-  level: number;
-}
-
-interface FoodNode {
-  name: string;
-  children?: FoodNode[];
-}
-
-
 @Component({
   selector: 'app-accreditation-request',
   templateUrl: './accreditation-request.component.html',
@@ -51,14 +34,15 @@ interface FoodNode {
   providers: [ConfirmModelService]
 })
 
-export class AccreditationRequestComponent implements OnInit, OnDestroy {
+export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public allRequests: any = [];
   public Subscription: Subscription = new Subscription();
 
-  public displayedColumns = ['user', 'status', 'actions'];
-  public displayedColumns2 = ['section', 'startDate', 'endDate', 'expiry', 'status', 'comments', 'actions'];
-  public dataSource: any = [];
+  // public displayedColumns = ['user', 'status', 'actions'];
+  // public displayedColumns2 = ['section', 'startDate', 'endDate', 'expiry', 'status', 'comments', 'actions'];
+  // public dataSource: any = [];
+  // public dataSource2: any = [];
 
   public toggle: boolean = false;
   public form: any = null;
@@ -82,11 +66,14 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   allSurveys: any = [];
   allSmes: any = [];
   selectedRequest: any = null;
+  selectedRequestId: any = null;
+  selectedSectionId: any = null;
+  selectedSectionData: any = null;
 
   totalFormScore: any = 0;
   totalPassScore: any = 0;
 
-  max = 5;
+  max = 6;
 
   startDate: string;
   endDate: string;
@@ -124,34 +111,28 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   allReviewsFlag: boolean = false;
   hideForms: boolean = false;
   commentsHistoryFlag: boolean = false;
+  mitigationsFlag: boolean = false;
+  viewReport: boolean = false;
   commentsHistory: any = [];
+  reAssignedTasks: any = [];
   selectedHistoryItem: any = null;
 
   sectionStats: any = null;
   selectedSection: any = null;
+  chairmanName: any = null;
+
+  dceoapprove: any = null;
+  dceodeffered: any = null;
+  dceorejected: any = null;
+  dceo: any = null;
 
 
-  private _transformer = (node: FoodNode, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-    };
-  }
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
+  // @ViewChild('sort') sort: MatSort;
+  // @ViewChild('sort2') sort2: MatSort;
 
-
-
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
-    node => node.level, node => node.expandable);
-
-  treeFlattener = new MatTreeFlattener(
-    this._transformer, node => node.level, node => node.expandable, node => node.children);
-
-  dataSourceTree = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-  // dataSourceTree;
-
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  addReportUsersForm: FormGroup;
+  reportReviewUsers: any = [];
 
 
   constructor(
@@ -169,9 +150,20 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     // private _smeService: SmeService,
     public dialog: MatDialog,
     public _confirmModelService: ConfirmModelService,
+    public _domSanitizer: DomSanitizer,
+    public _activatedRoute: ActivatedRoute,
+    public _location: Location,
+    public _formBuilder: FormBuilder,
   ) {
+    this._buildReviewUserForm();
+  }
 
-
+  _buildReviewUserForm() {
+    this.addReportUsersForm = this._formBuilder.group({
+      name: [null, Validators.required],
+      designation: [null, Validators.required],
+      group: [null, Validators.required],
+    })
   }
 
   ngOnInit() {
@@ -179,146 +171,37 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this._authStore.setRouteName('ACCREDITATION-REQUESTS');
     });
-
     this.Subscription.add(
       this._authStore.state$.subscribe(data => {
         this.submitLoading = data.auth.apiCall;
       })
     );
-
-
-    // this._surveysService.getAllSurveys().subscribe(
-    //   result => {
-    //     let surveysArray = []
-    //     console.log("ALL SURVEYS FROM API:--", result['formInfoList']);
-    //     if (result['formInfoList']) {
-    //       result['formInfoList'].forEach(element => {
-    //         var object = {
-    //           name: element.sectionName,
-    //           smeRef: element.sectionKey,
-    //           formIdentity: element.formIdentity,
-    //           passScore: element.passingScore,
-    //           totalScore: element.totalScore,
-    //           display: element.displayType,
-    //           page: element.page,
-    //           numPages: element.numOfPages,
-    //           components: JSON.parse(element.component),
-    //         }
-    //         surveysArray.push(object)
-    //       });
-    //       this._surveysStore.addAllForms(surveysArray);
-    //     }
-    //     this._accreditationRequestService.getAllAccreditationRequests().subscribe(
-    //       result => {
-    //         console.log("RESULT FROM ALL API REQUESTS:--", result['accreditationInfos']);
-    //         let tempRequestsArray = [];
-    //         if (result['accreditationInfos']) {
-    //           result['accreditationInfos'].forEach(element => {
-    //             var object = {
-    //               userRef: element.userName,
-    //               formSubmitData: JSON.parse(element.formSubmitData),
-    //               formData: element.formData,
-    //               status: element.status,
-    //               formIdentity: element.sectionKey,
-    //               startDate: element.startDate,
-    //               endDate: element.endDate,
-    //               previousReview: element.prevReview,
-    //               currentReview: element.currentReview,
-    //               requestKey: element.requestKey,
-    //               userUpdateFlag: element.userUpdateFlag,
-    //               rating: element.ratings,
-    //             }
-    //             tempRequestsArray.push(object);
-    //           })
-    //         }
-    //         this._accreditationRequestStore.addAllRequests(tempRequestsArray);
-    //         this._smeService.getAllSmes().subscribe(
-    //           result => {
-    //             console.log("ALL SMES FROM APi:--", result);
-    //             let smesArray = [];
-    //             if (result['sectionInfos']) {
-    //               result['sectionInfos'].forEach(element => {
-    //                 var object = {
-    //                   name: element.sectionName,
-    //                   userRef: element.username,
-    //                   formGenerated: element.formGenerated,
-    //                   key: element.sectionKey,
-    //                   formIdentity: element.formIdentity,
-    //                 }
-    //                 if (element.formIdentity === 'qualification') smesArray.push(object);
-    //               });
-    //               this._smeStore.addAllSmes(smesArray);
-    //             }
-    //             this._accreditationReviewsService.getAllReviews().subscribe(
-    //               result => {
-    //                 console.log("ALL REVIEWS FROM APi:--", result);
-    //                 let reviewsArray = [];
-    //                 if (result['sectionReviewInfos']) {
-    //                   result['sectionReviewInfos'].forEach(element => {
-    //                     var object = {
-    //                       data: element.componentReviewInfos,
-    //                       rating: element.rating,
-    //                       status: element.status,
-    //                       userRef: element.username,
-    //                       formIdentity: element.sectionKey,
-    //                       generalComments: element.comments,
-    //                     }
-    //                     reviewsArray.push(object);
-    //                   });
-    //                   this._accreditationReviewStore.addAllReviews(reviewsArray);
-    //                 }
-    //               },
-    //               error => {
-    //                 console.log("ERROR SMES FROM APi:--", result);
-    //               }
-    //             );
-    //           },
-    //           error => {
-    //             console.log("ERROR SMES FROM APi:--", result);
-    //           }
-    //         );
-    //       },
-    //       error => {
-    //         console.log("ERROR FROM ALL REQUESTS:--", error);
-    //       }
-    //     );
-    //   },
-    //   error => {
-    //     console.log("ERROR SURVEYS API:--", error);
-    //   }
-    // );
-
-    // this.Subscription.add(
-    //   this._surveysStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-    //     this.allSurveys = data.surveys;
-    //   })
-    // );
     this.Subscription.add(
       this._authStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
         // this.allSmes = data.smes;
         this.addMobileClasses = data.auth.applyMobileClasses;
       })
     );
-    // this.Subscription.add(
-    //   this._smeStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-    //     this.allSmes = data.smes;
-    //     // this.allSmes = _.filter(data.smes, { formGenerated: true });
-    //   })
-    // );
-    // this.Subscription.add(
-    //   this._accreditationReviewStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-    //     this.allRequestReviews = data.reviews;
-    //     console.log("---:ALL REQEST REVIEWS:---\n", this.allRequestReviews);
-    //   })
-    // );
+    this._activatedRoute.paramMap.subscribe(params => {
+      this.selectedRequestId = params.get("requestId");
+      this.selectedSectionId = params.get("sectionId");
+      // this.getRequest(this.selectedRequestId);
+      if (this.currentUser.role !== 'sme') {
+        this.getRequest(this.selectedRequestId);
+      } else if (this.currentUser.role === 'sme') {
+        this.getSmeRequest(this.selectedRequestId, this.selectedSectionId);
+      }
+    });
     this.Subscription.add(
       this._singleAccreditationRequestStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
         this.userReviewRequests = data.requests;
-        console.log("OVER ALL REQUEST IN SUBSCRIPTION:--", this.userReviewRequests);
+        this.userReviewRequests = _.orderBy(this.userReviewRequests, ['orderNum'], ['asc']);
+        // console.log("OVER ALL REQUEST IN SUBSCRIPTION:--", this.userReviewRequests);
         if (this.userReviewRequests) {
           this.checkScores(this.userReviewRequests);
           this.checkAllReviews(this.userReviewRequests);
           this.checkForAllTasks();
+          this.checkForReAssign();
         }
       })
     );
@@ -327,119 +210,87 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         this.allSectionSelections = data.selections;
       })
     );
-    // this.Subscription.add(
-    //   this._fipIntimationsStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-    //     // console.log("ALL ADDED INTIMATIONS:--", data.intimations);
-    //   })
-    // );
-    // this.Subscription.add(
-    //   this._accreditationRequestStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
-    //     // console.log(data);
-    //     // this.generatePipe = generate(data)
-    //     this.userRequests = [];
-    //     this.dataSource = [];
-    //     this.userRequests = data.requests;
-    //     console.log("ALL ADDED INTIMATIONS:--", data.requests);
-    //     if (this.currentUser.role !== 'sme') {
-    //       // this.checkForAllTasks();
-    //       this.adminDefaults();
-    //     } else if (this.currentUser.role === 'sme') {
-    //       this.smeDefaults();
-    //     }
-    //   })
-    // );
-    // this.adminDefaults();
-    if (this.currentUser.role !== 'sme') {
-      this.adminDefaults();
-    } else if (this.currentUser.role === 'sme') {
-      this.smeDefaults();
-    }
-
-
-
 
   }
 
-  // hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
-  adminDefaults() {
-    //   this.allRequests = _.chain(this.userRequests)
-    //     .filter({ requestKey: 'qualification', status: 'submit' })
-    //     .groupBy('userRef')
-    //     .map((val, user) => {
-    //       return { val, user }
-    //     })
-    //     .value();
-    //   this.dataSource = this.allRequests;
-    //   this.dataSourceTree.data = this.allRequests;
-    //   console.log("ALL REQUESTS:--", this.allRequests);
-    this.apiLoading = true;
+  // adminDefaults() {
+  //   this.apiLoading = true;
+  //   this._accreditationRequestService.getQulificationRequests().subscribe(
+  //     (result: any) => {
+  //       this.apiLoading = false;
+  //       console.log("RESULT AFETR GETTING ALL QUALIFICATION:--", result);
+  //       this.dataSource2 = new MatTableDataSource(result);
+  //       this.dataSource2.sortingDataAccessor = (item, property) => {
+  //         if (property === 'user') {
+  //           return item.initiatorFullName;
+  //         } else {
+  //           return item[property];
+  //         }
+  //       };
+  //       this.dataSource2.sort = this.sort2;
+  //     },
+  //     error => {
+  //       this.apiLoading = false;
+  //       console.log("ERROR FROM GETTING ALL QUALIFICATIONS:---", error);
+  //     }
+  //   );
+  // }
 
-    this._accreditationRequestService.getQulificationRequests().subscribe(
-      (result: any) => {
-        this.apiLoading = false;
-        console.log("RESULT AFETR GETTING ALL QUALIFICATION:--", result);
-        this.dataSource = new MatTableDataSource(result);
-      },
-      error => {
-        this.apiLoading = false;
-        console.log("ERROR FROM GETTING ALL QUALIFICATIONS:---", error);
-      }
-    );
-  }
+  // smeDefaults() {
+  //   this.apiLoading = true;
+  //   this._accreditationRequestService.getSmeTasks().subscribe(
+  //     (result: any) => {
+  //       console.log("RESULT SME TASKS:--", result);
+  //       const array: any = result.qualification.map(c => {
+  //         const date1: any = new Date();
+  //         const date2: any = new Date(c.endDate);
+  //         const diffTime = Math.abs(date2 - date1);
+  //         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  //         console.log(diffTime + " milliseconds");
+  //         console.log(diffDays + " days");
+  //         return {
+  //           ...c,
+  //           expiry: diffDays
+  //         }
+  //       });
+  //       this.dataSource = new MatTableDataSource(array);
+  //       this.dataSource.sortingDataAccessor = (item, property) => {
+  //         if (property === 'section') {
+  //           return item.sectionName;
+  //         } else {
+  //           return item[property];
+  //         }
+  //       };
+  //       this.dataSource.sort = this.sort;
+  //       this.apiLoading = false;
+  //     },
+  //     error => {
+  //       this.apiLoading = false;
+  //       console.log("ERROR SME TASKS:--", error);
+  //     }
+  //   );
 
-  smeDefaults() {
-    //   this.allRequests = _.chain(this.userRequests)
-    //     .filter({ currentReview: "in_review", formIdentity: this.currentUser.smeRef })
-    //     .groupBy('userRef')
-    //     .map((val, user) => {
-    //       return { val, user }
-    //     })
-    //     .value();
-    //   this.dataSource = this.allRequests;
-    //   console.log("ALL REQUESTS:--", this.allRequests);
-    // this.apiLoading = true;
-    // const id = "842aa74e-b48d-4988-86d5-172a55fa495e";
-    // const id = "eecf9f85-5dab-4580-8e48-0b2b346b0b14";
-    // const id = "91a7a3d7-0bb0-4608-98f7-6a5b96db5d12";
-    this.apiLoading = true;
-    const id = "88ff4768-2a23-44d0-9af3-4d398e78d5a4";
-    this._accreditationRequestService.getSmeTasks().subscribe(
-      (result: any) => {
-        console.log("RESULT SME TASKS:--", result);
-        // result.
-        const array: any = result.qualification.map(c => {
-          const date1: any = new Date();
-          const date2: any = new Date(c.endDate);
-          const diffTime = Math.abs(date2 - date1);
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-          console.log(diffTime + " milliseconds");
-          console.log(diffDays + " days");
-          return {
-            ...c,
-            expiry: diffDays
-          }
-        });
-        this.dataSource = new MatTableDataSource(array);
-        this.apiLoading = false;
-      },
-      error => {
-        this.apiLoading = false;
-        console.log("ERROR SME TASKS:--", error);
-      }
-    );
-
-  }
+  // }
 
   checkForAllTasks() {
     let array = this.userReviewRequests;
     for (let i = 0; i < array.length; i++) {
-      // console.log("CHECK FOR ALL TASKS:--", request.val[i]);
       if (array[i].reviewStatus === 'Pending') {
         this.allTasksAssingedFlag = true;
       } else {
         this.allTasksAssingedFlag = false;
         break;
+      }
+    }
+  }
+
+  checkForReAssign() {
+    let array = this.userReviewRequests;
+    this.reAssignedTasks = [];
+    for (let i = 0; i < array.length; i++) {
+      if (array[i].reassignmentStatus === 'Pending') {
+        this.reAssignedTasks.push(array[i]);
       }
     }
   }
@@ -456,7 +307,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log("TASK ASSIGNMENT VALUES:---", result);
+      // console.log("TASK ASSIGNMENT VALUES:---", result);
       if (result && this.selectedTask) {
         if (typeof (this.selectedTask) === 'object') {
           this.selectedTask.startDate = result.startDate;
@@ -473,41 +324,20 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   }
 
   addSingleTaskReview(comments, endDate, startDate) {
-    // var values = {
-    //   currentReview: 'in_review',
-    //   endDate: this.selectedTask.endDate,
-    //   formData: "string",
-    //   formSubmitData: JSON.stringify(this.selectedTask.submitData),
-    //   prevReview: this.selectedTask.previousReview,
-    //   ratings: this.selectedTask.rating,
-    //   sectionKey: this.selectedTask.formIdentity,
-    //   startDate: this.selectedTask.startDate,
-    //   status: this.selectedTask.status,
-    //   userName: this.selectedRequest.user,
-    //   userUpdateFlag: this.selectedTask.userUpdateFlag,
-    // }
     var object = {
       "comments": comments || null,
       "endDate": endDate,
       "startDate": startDate
     }
-    console.log("REQEST FOR SME:---", object, this.selectedTask);
+    // console.log("REQEST FOR SME:---", object, this.selectedTask);
     this._accreditationRequestService.assignTaskToSme(object, this.selectedTask.id).subscribe(
       result => {
-        console.log("RESULT AFTER UPDATING REQUEST:--", result);
+        // console.log("RESULT AFTER UPDATING REQUEST:--", result);
         this._singleAccreditationRequestStore.setTaskReview(
           'Pending',
           this.selectedTask.id,
         );
         this.checkForAllTasks();
-        // this._accreditationRequestStore.updateRequestReview(
-        //   this.selectedTask.formIdentity,
-        //   this.selectedRequest.user,
-        //   this.selectedTask.startDate,
-        //   this.selectedTask.endDate,
-        //   null,
-        //   'in_review'
-        // );
       },
       error => {
         console.log("ERROR AFTER UPDATING REQUEST:--", error);
@@ -516,39 +346,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   }
 
   addAllTaskReview(comments, startDate, endDate) {
-    console.log("ADD ALL TASK REVIEW CALLED:--", this.userReviewRequests)
+    // console.log("ADD ALL TASK REVIEW CALLED:--", this.userReviewRequests);
     this.userReviewRequests.forEach(element => {
-      // if (element.currentReview !== 'in_review') {
-      //   var values = {
-      //     currentReview: 'in_review',
-      //     endDate: endDate,
-      //     formData: "string",
-      //     formSubmitData: JSON.stringify(element.formSubmitData),
-      //     prevReview: element.previousReview,
-      //     ratings: element.rating,
-      //     sectionKey: element.formIdentity,
-      //     startDate: startDate,
-      //     status: element.status,
-      //     userName: this.selectedRequest.user,
-      //     userUpdateFlag: element.userUpdateFlag,
-      //   }
-      //   this._accreditationRequestService.updateAccreditationRequest(values).subscribe(
-      //     result => {
-      //       console.log("RESULT AFTER UPDATING REQUEST:--", result);
-      //       this._accreditationRequestStore.updateRequestReview(
-      //         values.sectionKey,
-      //         this.selectedRequest.user,
-      //         startDate,
-      //         endDate,
-      //         null,
-      //         'in_review'
-      //       );
-      //     },
-      //     error => {
-      //       console.log("ERROR AFTER UPDATING REQUEST:--", error);
-      //     }
-      //   );
-      // }
       if (element.reviewStatus === null || element.reviewStatus === 'Completed') {
         var object = {
           "comments": comments || null,
@@ -558,7 +357,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         // console.log("ITEMS TO ASSIGN TASK:---", element, object);
         this._accreditationRequestService.assignTaskToSme(object, element.id).subscribe(
           result => {
-            console.log("RESULT AFTER UPDATING REQUEST:--", result, element);
+            // console.log("RESULT AFTER UPDATING REQUEST:--", result, element);
             this._singleAccreditationRequestStore.setTaskReview(
               'Pending',
               element.id,
@@ -572,30 +371,41 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     });
     this.calcSectionStats(this.userReviewRequests);
     this.checkForAllTasks();
-    // this._singleAccreditationRequestStore.setAllTaskReview(
-    //   startDate,
-    //   endDate
-    // );
   }
 
-  getRequest(request) {
+  getRequest(requestId) {
     this.toggle = !this.toggle;
     this.generalComments = null;
-    // var keys = Object.keys(request.formSubmitData);
-    // this.formKeys = keys;
-    this.selectedRequest = request;
-    // this.checkForAllTasks(this.selectedRequest);
-    console.log("REQUEST TO CHECK:--", this.selectedRequest);
+    // this.selectedRequest = request;
     this.apiLoading = true;
     if (this.currentUser.role !== 'sme') {
-      this._accreditationRequestService.getSingleQualificationRequest(this.selectedRequest.id).subscribe(
+      // this._accreditationRequestService.getSingleQualificationRequest(this.selectedRequest.id).subscribe(
+      this._accreditationRequestService.getSingleQualificationRequest(requestId).subscribe(
         (result: any) => {
+          // this.selectedRequest = result;
+          this.selectedRequest = result.qualItem;
+          this.selectedRequest.eligibility = result.eligItem[0];
+          this.selectedRequest.eligibility.data = typeof (this.selectedRequest.eligibility.data) === 'string' ?
+            JSON.parse(this.selectedRequest.eligibility.data) :
+            this.selectedRequest.eligibility.data;
+          this.selectedRequest.thematicAreas = result.thematicAreasListItems;
+          this.selectedRequest.userInfo = result.userInfo;
+          if (this.selectedRequest.reviewUsers && this.selectedRequest.reviewUsers !== null) {
+            this.reportReviewUsers = typeof (this.selectedRequest.reviewUsers) === 'string' ?
+              JSON.parse(this.selectedRequest.reviewUsers) : this.selectedRequest.reviewUsers;
+          }
+          console.log("REQUEST TO CHECK:--", this.selectedRequest);
           let count = 0;
           // let passCount = 0;
           let tasksFlag = false;
-          this.userReviewRequests = result.sections.map((c) => {
+          // this.reAssignedTasks = [];
+          // this.userReviewRequests = result.sections.map((c) => {
+          this.userReviewRequests = this.selectedRequest.sections.map((c) => {
             count = count + parseInt(c.totalScore);
             // passCount = passCount + parseInt(c.passingScore);
+            // if (c.reassignmentStatus === 'Pending') {
+            //   this.reAssignedTasks.push(c);
+            // }
             return {
               ...c,
               template: JSON.parse(c.template),
@@ -603,17 +413,17 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
               review: c.review ? {
                 comments: c.review.comments,
                 status: c.review.status,
-                rating: c.review.rating,
+                rating: parseFloat(c.review.rating)/2,
                 controlWiseComments: JSON.parse(c.review.controlWiseComments),
               } : {
-                  comments: null,
-                  status: null,
-                  rating: null,
-                  controlWiseComments: null,
-                }
+                comments: null,
+                status: null,
+                rating: null,
+                controlWiseComments: null,
+              }
             }
           });
-          console.log("SELECTED REQUEST FORMS:---", result, this.userReviewRequests, tasksFlag);
+          // console.log("SELECTED REQUEST FORMS:---", this.userReviewRequests, tasksFlag);
           this.totalFormScore = count;
           this._singleAccreditationRequestStore.addAllRequest(this.userReviewRequests);
 
@@ -626,193 +436,29 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         }
       );
     } else {
-      // const id = "842aa74e-b48d-4988-86d5-172a55fa495e";
-      // this._accreditationRequestService.getSingleQualificationRequest(id).subscribe(
-      //   (result: any) => {
-      //     this.apiLoading = false;
-      //     console.log("RESULT QUALIFICATION SME:--", result);
-      //     let count = 0;
-      //     // let passCount = 0;
-      //     this.userReviewRequests = result.sections.map((c) => {
-      //       count = count + parseInt(c.totalScore);
-      //       // passCount = passCount + parseInt(c.passingScore);
-      //       return {
-      //         ...c,
-      //         template: JSON.parse(c.template),
-      //         data: c.data === null ? c.data : JSON.parse(c.data)
-      //       }
-      //     })
-      //     this.totalFormScore = count;
-      //     this.apiLoading = false;
-      //     // this.totalPassScore = passCount;
-      //   },
-      //   error => {
-      //     this.apiLoading = false;
-      //     console.log("ERROR QUALIFICATION SME:---", error);
-      //   }
-      // );
     }
-    // var count = 0;
-    // var passCount = 0;
-    // var resultedArray = [];
-    // this.userReviewRequests = [];
-    // for (let i = 0; i < this.allSmes.length; i++) {
-    //   var object = {
-    //     name: '',
-    //     userRef: '',
-    //     submitData: null,
-    //     form: null,
-    //     status: null,
-    //     formIdentity: null,
-    //     startDate: null,
-    //     endDate: null,
-    //     previousReview: null,
-    //     currentReview: null,
-    //     review: null,
-    //     allReviews: null,
-    //     userUpdateFlag: null,
-    //     // rating: 0,
-    //   }
-    // var resultProfile = _.find(this.allSurveys, { 'smeRef': this.allSmes[i].key });
-    // var resultRequest = _.find(this.userRequests, { 'formIdentity': this.allSmes[i].key, 'userRef': request.user });
-    // object.name = this.allSmes[i].name;
-    // object.formIdentity = this.allSmes[i].key;
-    // if (resultProfile) {
-    //   object.form = resultProfile;
-    // }
-    // if (resultRequest) {
-    //   object.userRef = resultRequest.userRef;
-    //   object.submitData = resultRequest.formSubmitData;
-    //   object.status = resultRequest.status;
-    //   object.currentReview = resultRequest.currentReview;
-    //   object.previousReview = resultRequest.previousReview;
-    //   object.startDate = resultRequest.startDate;
-    //   object.endDate = resultRequest.endDate;
-    //   object.userUpdateFlag = resultRequest.userUpdateFlag;
-    // }
-
-    // count = count + parseInt(object.form.totalScore);
-    // passCount = passCount + parseInt(object.form.passScore);
-    // this.totalFormScore = count;
-    // this.totalPassScore = passCount;
-    // object.totalScore = this.totalFormScore;
-    // object.totalPassScore = this.totalPassScore;
-    // var reviewe = null;
-    // var reviewe = _.filter(this.allRequestReviews, { 'userRef': object.userRef, 'formIdentity': this.allSmes[i].key });
-    // var reviewe = null;
-    // this._accreditationReviewsService.getLastestAccreditationReviews(
-    //   object.userRef,
-    //   this.allSmes[i].key
-    // ).subscribe(
-    //   result => {
-    //     console.log("RESULT FROM ACCREDITATION REVIEWS:---", result, object);
-    //     if (result['sectionReviewInfos']) object.review = result['sectionReviewInfos'][0];           
-    //   },
-    //   error => {
-    //     console.log("RESULT FROM ACCREDITATION REVIEWS:---", error);
-    //   }
-    // );
-    // console.log("REVIEW OBJECT:--", reviewe);
-    // if (reviewe) {
-    //   object.review = reviewe[reviewe.length - 1] || null;
-    //   object.allReviews = reviewe;
-    // }
-    // console.log("FINAL OBJECT:--", object, resultRequest, resultProfile, count);
-    // console.log("FINAL OBJECT:--", object);
-    // resultedArray.push(object);
-    // this.userReviewRequests = resultedArray;
-    // this._singleAccreditationRequestStore.addAllRequest(resultedArray);
-
-
-    // if (this.currentUser.smeRef === this.allSmes[i].key) {
-    //   // console.log("USER DEPARTMENT MATCH:--", this.currentUser.smeRef, this.allSmes[i].key);
-    //   this.form = object.form;
-    //   this.formSubmission = object.submitData;
-
-    //   var contentElements = [];
-    //   var formElements = [];
-    //   this.formReviewObjects = [];
-
-
-    //   // if (reviewe) {
-    //   //   this.formReviewObjects = reviewe.data;
-    //   // } else {
-    //   FormioUtils.eachComponent(this.form.components, (component) => {
-    //     if (component.key != 'submit') {
-    //       if (component.type != 'content') {
-    //         formElements.push(component);
-    //       } else {
-    //         contentElements.push(component);
-    //       }
-    //     }
-    //   });
-
-    //   // console.log(formElements, contentElements);
-
-    //   for (let i = 0; i < formElements.length; i++) {
-    //     var jsonObject = {
-    //       title: '',
-    //       value: '',
-    //       submitValue: '',
-    //       key: '',
-    //       rating: 0,
-    //       status: 'un-satisfy',
-    //       comments: '',
-    //     }
-    //     if (formElements[i].label === '&nbsp;') {
-    //       var titleObject = _.find(contentElements, { 'key': formElements[i].key })
-    //       if (titleObject) {
-    //         jsonObject.title = titleObject.html;
-    //         jsonObject.key = formElements[i].key;
-    //         jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
-    //       } else {
-    //         jsonObject.title = 'Question-' + i;
-    //         jsonObject.key = formElements[i].key;
-    //         jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
-    //       }
-    //     } else {
-    //       jsonObject.title = formElements[i].label;
-    //       jsonObject.key = formElements[i].key;
-    //       jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
-    //     }
-    //     this.formReviewObjects.push(jsonObject);
-    //   }
-    //   // var x = $('.formio-component-submit').css({ "display": "none" });
-    //   // console.log("JAVA SCRIPT OBJECTS:--", x);
-    //   if (reviewe) {
-    //     // if (reviewe[reviewe.length - 1]) {
-
-    //     for (let i = 0; i < reviewe[reviewe.length - 1].data.length; i++) {
-    //       for (let j = 0; j < this.formReviewObjects.length; j++) {
-    //         if (this.formReviewObjects[j].key === reviewe[reviewe.length - 1].data[i].key) {
-    //           this.formReviewObjects[j].rating = reviewe[reviewe.length - 1].data[i].rating;
-    //           this.formReviewObjects[j].status = reviewe[reviewe.length - 1].data[i].status;
-    //           this.formReviewObjects[j].comments = reviewe[reviewe.length - 1].data[i].comments;
-    //         }
-    //       }
-    //     }
-    //     console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects);
-    //     this.generalComments = reviewe[reviewe.length - 1].generalComments;
-    //     // }
-    //   }
-    // }
-
-    // }
-    // }
   }
 
-  getSmeRequest(id) {
-    this.selectedSection = id;
+  getSmeRequest(id, sectionId) {
+    this.selectedSection = sectionId;
     this.toggle = !this.toggle;
     this.apiLoading = true;
 
-    this._accreditationRequestService.getSingleQualificationRequest(id.requestId).subscribe(
+    this._accreditationRequestService.getSingleQualificationRequest(id).subscribe(
       (result: any) => {
-        this.selectedRequest = result;
+        // this.selectedRequest = result;
+        this.selectedRequest = result.qualItem;
+        this.selectedRequest.eligibility = result.eligItem[0];
+        this.selectedRequest.thematicAreas = result.thematicAreasListItems;
+        this.selectedRequest.userInfo = result.userInfo;
+        // console.log("RESULT QUALIFICATION SME:--", this.selectedRequest);
         let count = 0;
         let smeComponent: any = null;
-        console.log("RESULT QUALIFICATION SME:--", result);
-        this.userReviewRequests = result.sections.map((c) => {
+        // this.userReviewRequests = result.sections.map((c) => {
+        this.userReviewRequests = this.selectedRequest.sections.map((c) => {
+          if (c.id === sectionId) {
+            this.selectedSectionData = c;
+          }
           if (c.assigned === true) {
             var contentElements = [];
             var formElements = [];
@@ -840,40 +486,53 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
                 rating: 0,
                 status: 'un-satisfy',
                 comments: '',
+                type: '',
               }
               if (formElements[i].label === '&nbsp;') {
                 var titleObject = _.find(contentElements, { 'key': formElements[i].key })
                 if (titleObject) {
                   jsonObject.title = titleObject.html;
                   jsonObject.key = formElements[i].key;
+                  jsonObject.type = formElements[i].type;
                   jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
                 } else {
                   jsonObject.title = 'Question-' + i;
                   jsonObject.key = formElements[i].key;
+                  jsonObject.type = formElements[i].type;
                   jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
                 }
               } else {
                 jsonObject.title = formElements[i].label;
                 jsonObject.key = formElements[i].key;
+                jsonObject.type = formElements[i].type;
                 jsonObject.value = this.formSubmission ? this.formSubmission[formElements[i].key] : null;
               }
-              this.formReviewObjects.push(jsonObject);
+              if (jsonObject.type === 'file') {
+                if (jsonObject.value && jsonObject.value.length) {
+                  const blob = new Blob([jsonObject.value[0]['url']], { type: 'application/octet-stream' });
+                  jsonObject['downloadLink'] = this._domSanitizer.bypassSecurityTrustResourceUrl(
+                    window.URL.createObjectURL(blob)
+                  );
+                }
+              }
+              if (this.formSubmission[jsonObject.key])
+                this.formReviewObjects.push(jsonObject);
             }
-            console.log("FORM REVIEW OBJECT:---", form, this.formSubmission, this.formReviewObjects, contentElements, formElements);
+            // console.log("FORM REVIEW OBJECT:---", form, this.formSubmission, this.formReviewObjects, contentElements, formElements);
             if (c.review) {
 
               for (let i = 0; i < JSON.parse(c.review.controlWiseComments).length; i++) {
                 // if (c.formReviewObjects) {
                 for (let j = 0; j < this.formReviewObjects.length; j++) {
                   if (this.formReviewObjects[j].key === JSON.parse(c.review.controlWiseComments)[i].key) {
-                    this.formReviewObjects[j].rating = JSON.parse(c.review.controlWiseComments)[i].rating;
+                    this.formReviewObjects[j].rating = parseFloat(JSON.parse(c.review.controlWiseComments)[i].rating)/2;
                     this.formReviewObjects[j].status = JSON.parse(c.review.controlWiseComments)[i].status;
                     this.formReviewObjects[j].comments = JSON.parse(c.review.controlWiseComments)[i].comments;
                   }
                 }
                 // }
               }
-              console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects);
+              // console.log("JSON OBJECT TO PUSH:--", this.formReviewObjects, this.formSubmission);
               // this.generalComments = c.review.comments;
             }
           }
@@ -886,22 +545,23 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
             review: c.review !== null ? {
               comments: c.review.comments,
               status: c.review.status,
-              rating: c.review.rating,
+              rating: c.review.rating/2,
               controlWiseComments: c.review.controlWiseComments !== null ? JSON.parse(c.review.controlWiseComments) : c.review.controlWiseComments,
             } : {
-                comments: null,
-                status: null,
-                rating: null,
-                controlWiseComments: null
-              },
+              comments: null,
+              status: null,
+              rating: null,
+              controlWiseComments: null
+            },
             formReviewObjects: this.formReviewObjects,
-            comments: c.review ? c.review.comments : null
+            comments: c.review ? c.review.comments : null,
+            toggleForm: false,
           }
         })
         this.totalFormScore = count;
-        console.log("RESULT QUALIFICATION SME:--", this.userReviewRequests);
-        this.apiLoading = false;
+        // console.log("RESULT QUALIFICATION SME:--", this.userReviewRequests, this.formReviewObjects, this.formSubmission);
         this._singleAccreditationRequestStore.addAllRequest(this.userReviewRequests);
+        this.apiLoading = false;
       },
       error => {
         this.apiLoading = false;
@@ -911,19 +571,11 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   }
 
   completeTask() {
-    // this.selectedRequest.val[0]
-    // var result = _.find(this.userReviewRequests, { userRef: this.selectedRequest.user, formIdentity: this.selectedRequest.val[0].formIdentity })
-    // console.log("REQUEST TO REVIEW:--", this.selectedRequest, result);
-    // this.addRequestReview(result);
-    console.log("REQUEST TO POST:--", this.selectedRequest);
+    // console.log("REQUEST TO POST:--", this.selectedRequest);
   }
 
   addRequestReview(item) {
-    // this.apiLoading = true;
-    // this.currentReviewItem = item;
-    // console.log("REVIEW ITWM:--", item);
     this._authStore.setLoading();
-
     var rating = {
       0: 0,
       1: 0,
@@ -931,15 +583,16 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       3: 0,
       4: 0,
       5: 0,
+      6: 0,
     };
-    for (let j = 0; j <= 5; j++) {
+    for (let j = 0; j <= 6; j++) {
       var count = 0;
       for (let i = 0; i < item.formReviewObjects.length; i++) {
         if (item.formReviewObjects[i].rating === j) {
           count = count + 1;
         }
       }
-      console.log('COUNT FOR:--', j, count, '\n');
+      // console.log('COUNT FOR:--', j, count, '\n');
       rating[j] = count;
     }
     var count1 = 0;
@@ -949,40 +602,42 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       count1 = count1 + parseInt(key) * rating[key];
       count2 = count2 + rating[key];
     })
-    if (Math.ceil(count1 / count2) >= 0 && Math.ceil(count1 / count2) <= 2) {
-      requestStatus = "Failed";
-    } else if (Math.ceil(count1 / count2) > 2 && Math.ceil(count1 / count2) <= 3) {
-      requestStatus = "Deffered";
+    if ((count1 / count2) >= 0.00 && (count1 / count2) <= 0.75) {
+      requestStatus = "High Risk";
+    } else if ((count1 / count2) > 0.75 && (count1 / count2) <= 2.00) {
+      requestStatus = "Substantial Risk";
+    } else if ((count1 / count2) > 2.00 && (count1 / count2) <= 2.25) {
+      requestStatus = "Moderate Risk";
     } else {
-      requestStatus = "Accredited";
+      requestStatus = "Low Risk";
     }
     var apiValues = {
       "comments": item.review.comments,
       "controlWiseComments": JSON.stringify(item.formReviewObjects),
-      "rating": Math.ceil(count1 / count2),
+      "rating": (count1 / count2),
       "status": requestStatus
     }
-    console.log(
-      "REVIEW TO ADD FOR ITEM:--\n", item,
-      "\nACTUAL REVIEW:--\n", item.formReviewObjects,
-      "\nTOAL RATING :--\n", rating,
-      "\nCOUNT 1 :--\n", count1,
-      "\nCOUNT 2 :--\n", count2,
-      "\nRATING RAW:--\n", count1 / count2,
-      "\nRATING :--\n", Math.ceil(count1 / count2),
-      "\nGENERAL COMMENTS :--\n", item.review.comments,
-      "\nEQUEST STATUS :--\n", requestStatus,
-      "\nAPI VALUES :--\n", apiValues,
-    );
+    // console.log(
+    //   "REVIEW TO ADD FOR ITEM:--\n", item,
+    //   "\nACTUAL REVIEW:--\n", item.formReviewObjects,
+    //   "\nTOAL RATING :--\n", rating,
+    //   "\nCOUNT 1 :--\n", count1,
+    //   "\nCOUNT 2 :--\n", count2,
+    //   "\nRATING RAW:--\n", count1 / count2,
+    //   "\nRATING :--\n", Math.ceil(count1 / count2),
+    //   "\nGENERAL COMMENTS :--\n", item.review.comments,
+    //   "\nEQUEST STATUS :--\n", requestStatus,
+    //   "\nAPI VALUES :--\n", apiValues,
+    // );
     this._accreditationReviewsService.addReview(item.id, apiValues).subscribe(
       result => {
-        console.log("RESULT FROM ADDING REVIEW:--", result);
+        // console.log("RESULT FROM ADDING REVIEW:--", result);
         this._singleAccreditationRequestStore.addSectionReview(
           item.id,
           {
             "comments": item.review.comments,
             "controlWiseComments": item.formReviewObjects,
-            "rating": Math.ceil(count1 / count2),
+            "rating": (count1 / count2),
             "status": requestStatus
           }
         );
@@ -994,114 +649,6 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
         console.log("ERROR ADDING REVIEW:--", error);
       }
     );
-    // var flag = _.find(this.allRequestReviews, { userRef: item.userRef, formIdentity: item.formIdentity });
-    // if (!flag) {
-    // console.log("FLAG FROM ANOTHER FIND:-", flag);
-    // this._accreditationReviewsService.addReview(
-    //   this.formReviewObjects,
-    //   Math.ceil(count1 / count2),
-    //   item.userRef,
-    //   item.formIdentity,
-    //   this.generalComments,
-    //   requestStatus,
-    //   this.currentUser.username
-    // ).subscribe(
-    //   result => {
-    //     console.log("RESULT AFTER ADDING REVIEW:--", result);
-    //     this.apiLoading = false;
-    //     this.reviewAdded = true;
-    //     var object = {
-    //       currentReview: 'reviewed',
-    //       endDate: item.endDate,
-    //       formData: "string",
-    //       formSubmitData: JSON.stringify(item.submitData),
-    //       prevReview: "done",
-    //       ratings: Math.ceil(count1 / count2),
-    //       sectionKey: item.formIdentity,
-    //       startDate: item.startDate,
-    //       status: item.status,
-    //       userName: item.userRef,
-    //       userUpdateFlag: item.userUpdateFlag,
-    //     }
-    //     this._accreditationReviewStore.addReview(
-    //       this.formReviewObjects,
-    //       Math.ceil(count1 / count2),
-    //       requestStatus,
-    //       item.userRef,
-    //       item.formIdentity,
-    //       this.generalComments,
-    //     );
-    //     this._accreditationRequestService.updateAccreditationRequest(object).subscribe(
-    //       result => {
-    //         console.log("RESULT AFTER UPDATING REQUEST:---", result);
-    //         this._accreditationRequestStore.markRequestReview(
-    //           item.userRef,
-    //           item.formIdentity,
-    //           "reviewed",
-    //           "done",
-    //           requestStatus,
-    //           Math.ceil(count1 / count2),
-    //         );
-    //         this._singleAccreditationRequestStore.updateSingleReviewStatus(
-    //           item.userRef,
-    //           item.formIdentity,
-    //           {
-    //             data: this.formReviewObjects,
-    //             rating: Math.ceil(count1 / count2),
-    //             status: requestStatus,
-    //             userRef: item.userRef,
-    //             formIdentity: item.formIdentity
-    //           }
-    //         );
-    //       },
-    //       error => {
-    //         console.log("RESULT AFTER UPDATING REQUEST:---", error);
-    //       }
-    //     );
-    //   },
-    //   error => {
-    //     this.apiLoading = false;
-    //     console.log("RESULT AFTER ADDING REVIEW:--", error);
-    //   }
-    // )
-    // } else {
-    // console.log("VALUE EXISTS:--");
-    // this._accreditationReviewStore.udpateReview(
-    //   this.formReviewObjects,
-    //   Math.ceil(count1 / count2),
-    //   requestStatus,
-    //   item.userRef,
-    //   item.formIdentity,
-    //   this.generalComments,
-    // )
-    // this._accreditationReviewStore.addReview(
-    //   this.formReviewObjects,
-    //   Math.ceil(count1 / count2),
-    //   requestStatus,
-    //   item.userRef,
-    //   item.formIdentity,
-    //   this.generalComments,
-    // );
-    // this._accreditationRequestStore.markRequestReview(
-    //   item.userRef,
-    //   item.formIdentity,
-    //   "reviewed",
-    //   "done",
-    //   requestStatus,
-    //   Math.ceil(count1 / count2),
-    // );
-    // this._singleAccreditationRequestStore.updateSingleReviewStatus(
-    //   item.userRef,
-    //   item.formIdentity,
-    //   {
-    //     data: this.formReviewObjects,
-    //     rating: Math.ceil(count1 / count2),
-    //     status: requestStatus,
-    //     userRef: item.userRef,
-    //     formIdentity: item.formIdentity
-    //   }
-    // )
-    // }
   }
 
   checkAllReviews(item) {
@@ -1118,7 +665,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       if (item[i].review.comment === null && (item[i].reviewStatus === null || item[i].reviewStatus === 'Pending')) {
         count2 = count2 + 1;
       }
-      console.log("CHECK ALL REVIEWS:--", count1, count2);
+      // console.log("CHECK ALL REVIEWS:--", count1, count2);
     }
     if (count1 === item.length) {
       this.allReviewsFlag = true;
@@ -1136,65 +683,45 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       3: 0,
       4: 0,
       5: 0,
+      6: 0,
     };
-    var pendingCount = 0;
-    var reviewsCount = 0;
-    // var unassignCount = 0;
-    for (let j = 0; j <= 5; j++) {
+    for (let j = 0; j <= 6; j++) {
       var count = 0;
       for (let i = 0; i < item.length; i++) {
         if (item[i].review.rating !== null) {
-          if (item[i].review.rating === j.toString()) {
-            count = count + 1;
+          var number = ~~item[i].review.rating;
+          var float = parseFloat((item[i].review.rating % 1).toFixed(3)) * (10);
+          float = ~~float;
+          // console.log(
+          //   "REVMIEW RATE:---\n", item[i].review.rating,
+          //   "\nFLOAT DIGIT:---\n", parseFloat((item[i].review.rating % 1).toFixed(3)) * (10),
+          //   "\nACTUAL DIGIT:---\n", number, typeof (number),
+          //   "\nFLOAT DIGIT:---\n", float, typeof (float),
+          // );
+          // if (float > 5) {
+
+          //   if ((number + 1) === j) {
+          //     count = count + 1;
+          //   }
+          // } else if (float >= 0 && (float < 5)) {
+          if (number === j) {
+            // count = count + 1;
+            count = count + parseFloat(item[i].review.rating);
           }
+          // }
         }
         rating[j] = count;
         // console.log("ITEM IN CHECK SCORE:--", item[i].review.rating)
         if (j === 0) {
-          // if (item[i].reviewStatus === 'Pending') {
-          //   pendingCount = pendingCount + 1;
-          // }
-          // if (item[i].review.rating !== null) {
-          //   reviewsCount = reviewsCount + 1;
-          // }
-          // if ((item[i].review.rating === null && item[i].reviewStatus === null) ||
-          //   (item[i].review.rating !== null && item[i].reviewStatus === null)
-          // ) {
-          //   unassignCount = unassignCount + 1;
-          // }
           this.calcSectionStats(item);
         }
         // console.log('COUNT FOR:--', count, rating[j], { pendingCount, reviewsCount });
       }
       // this.sectionStats = { pendingCount, reviewsCount, unassignCount };
-      if (j === 5) {
+      if (j === 6) {
         this.rateApplication(rating);
       }
     }
-    // var count1 = 0;
-    // var count2 = 0;
-    // var requestStatus = null;
-    // Object.keys(rating).forEach((key) => {
-    //   count1 = count1 + parseInt(key) * rating[key];
-    //   count2 = count2 + rating[key];
-    // })
-    // if (count1 && count2) {
-    //   if (Math.ceil(count1 / count2)) {
-    //     this.userSectionScore = this.userSectionScore + Math.ceil(count1 / count2);
-    //   } else {
-    //     this.userSectionScore = this.userSectionScore + 0;
-    //   }
-    // }
-    // if (Math.ceil(count1 / count2) >= 0 && Math.ceil(count1 / count2) <= 2) {
-    //   requestStatus = "Failed";
-    // } else if (Math.ceil(count1 / count2) > 2 && Math.ceil(count1 / count2) <= 3) {
-    //   requestStatus = "Deffered";
-    // } else if (Math.ceil(count1 / count2) > 3 && Math.ceil(count1 / count2) <= 5) {
-    //   requestStatus = "Accredited";
-    // }
-
-    // if ()
-
   }
 
   calcSectionStats(item) {
@@ -1228,31 +755,37 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
 
     var count1 = 0;
     var count2 = 0;
+    this.userAllScore = 0;
     var requestStatus = null;
     Object.keys(rating).forEach((key) => {
-      count1 = count1 + parseInt(key) * rating[key];
-      count2 = count2 + rating[key];
+      // console.log("DATA TYPE OF INDEX:--", parseFloat(rating[key]));
+      count1 = count1 + parseInt(key) * parseFloat(rating[key]);
+      count2 = count2 + parseFloat(rating[key]);
     })
 
-    if (Math.ceil(count1 / count2) >= 0 && Math.ceil(count1 / count2) <= 2) {
-      requestStatus = "Failed";
+    if (((count1 / count2) / 2) >= 0 && ((count1 / count2) / 2) <= 0.75) {
+      requestStatus = "High Risk";
       this.userSystemStatus = requestStatus;
-      this.userAllScore = Math.ceil(count1 / count2);
-    } else if (Math.ceil(count1 / count2) > 2 && Math.ceil(count1 / count2) <= 3) {
-      requestStatus = "Deffered";
+      this.userAllScore = (count1 / count2);
+    } else if (((count1 / count2) / 2) > 0.75 && ((count1 / count2) / 2) <= 2.00) {
+      requestStatus = "Substantial Risk";
       this.userSystemStatus = requestStatus;
-      this.userAllScore = Math.ceil(count1 / count2);
-    } else if (Math.ceil(count1 / count2) > 3 && Math.ceil(count1 / count2) <= 5) {
-      requestStatus = "Accredited";
+      this.userAllScore = (count1 / count2);
+    } else if (((count1 / count2) / 2) > 2.00 && ((count1 / count2) / 2) <= 2.25) {
+      requestStatus = "Moderate Risk";
       this.userSystemStatus = requestStatus;
-      this.userAllScore = Math.ceil(count1 / count2);
+      this.userAllScore = (count1 / count2);
+    } else if (((count1 / count2) / 2) > 2.25 && ((count1 / count2) / 2) <= 3) {
+      requestStatus = "Low Risk";
+      this.userSystemStatus = requestStatus;
+      this.userAllScore = (count1 / count2);
     }
-    console.log(
-      "ALL Request SCORES:--\n", rating,
-      "SYSTEM STATUS:--\n", requestStatus,
-      "USER SCORES:--\n", this.userAllScore,
+    // console.log(
+    //   "ALL Request SCORES:--\n", rating,
+    //   "SYSTEM STATUS:--\n", requestStatus,
+    //   "USER SCORES:--\n", count1 / count2, this.userAllScore, count1, count2,
 
-    );
+    // );
 
   }
 
@@ -1262,21 +795,27 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       message: 'You can set one of the following status',
       cancelText: 'CANCEL',
       confirmText: 'OK',
+      endDate: null,
+      startDate: new Date(),
       add: false,
       confirm: false,
       setStatus: true,
+      markUnEligibleReason: '',
     };
 
     this._confirmModelService.open(options);
 
     this._confirmModelService.confirmed().subscribe(confirmed => {
       if (confirmed) {
-        console.log("CONFIRMED FROM MODEL", confirmed, this.selectedRequest);
+        this.selectedRequest.comment = confirmed.comments;
+        this.selectedRequest.expiryDate = confirmed.endDate;
+        this.selectedRequest.status = confirmed.status;
+        // console.log("CONFIRMED FROM MODEL", confirmed, this.selectedRequest);
         this.apiLoading = true;
-        this._accreditationRequestService.updateAccreditationRequest(this.selectedRequest.id, confirmed.status).subscribe(
+        this._accreditationRequestService.updateAccreditationRequest(this.selectedRequestId, this.selectedRequest).subscribe(
           result => {
             this.apiLoading = false;
-            console.log("RESULT AFTER UPDATING STATUS:---", result);
+            // console.log("RESULT AFTER UPDATING STATUS:---", result);
           },
           error => {
             this.apiLoading = false;
@@ -1288,7 +827,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
   }
 
   showCommentsHistoty(item) {
-    console.log('ALL SECTIONS IN HISTORY:--', this.userReviewRequests, item);
+    // console.log('ALL SECTIONS IN HISTORY:--', this.userReviewRequests, item);
     this.selectedHistoryItem = item;
     this.commentsHistory = item.reviewHistory.map(c => {
       return {
@@ -1311,114 +850,45 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
       data: { comments: this.commentsForFip, minDate: new Date() }
     });
     dialogRef.afterClosed().subscribe(result => {
-      //   var currentIntimation: any = this._fipIntimationsStore.filterIntimations(this.selectedRequest.user);
-      //   if (result) {
-      let sectionIds = this.allSectionSelections.map(element => {
-        if (element.reassignmentStatus === null || element.reassignmentStatus === 'Completed') {
-          return element.id;
+      if (result) {
+        let sectionIds = [];
+        for (let i = 0; i < this.allSectionSelections.length; i++) {
+          if (this.allSectionSelections[i].reassignmentStatus === null || this.allSectionSelections[i].reassignmentStatus === 'Completed') {
+            sectionIds.push(this.allSectionSelections[i].id);
+          }
         }
-      });
-      let values = {
-        sectionIds,
-        comments: this.commentsForFip,
-        startDate: result.startDate,
-        endDate: result.endDate,
-      }
-      console.log("RESULT:--", result, this.allSectionSelections, this.selectedRequest, values);
-      this._accreditationRequestService.reassignFipSection(this.selectedRequest.id, values).subscribe(
-        result => {
-          console.log("RESULT FROM REASSIGN:--", result);
-          this._singleAccreditationRequestStore.updateReassignFipSection(sectionIds);
-          const options = {
-            title: 'Success!',
-            message: 'Intimation has been send.',
-            cancelText: 'CANCEL',
-            confirmText: 'OK',
-            add: true,
-            confirm: false,
-          };
 
-          this._confirmModelService.open(options);
-          this.commentsForFip = null;
-        },
-        error => {
-          console.log("RESULT FROM REASSIGN:--", error);
+        let values = {
+          sectionIds,
+          comments: this.commentsForFip,
+          startDate: result.startDate,
+          endDate: result.endDate,
         }
-      );
-      //     if (currentIntimation.intimations.length) {
-      //       // console.log("CURRENT INTIMATION:--", currentIntimation);
-      //       var newEntry = [];
-      //       var previousEntries = [];
-      //       var allEntries = [];
-      //       for (let i = 0; i < this.allSectionSelections.length; i++) {
-      //         var bool = false;
-      //         for (let j = 0; j < currentIntimation.intimations.length; j++) {
-      //           if (this.allSectionSelections[i].key === currentIntimation.intimations[j].formIdentity) {
-      //             currentIntimation.intimations[j].comments.push({ data: this.commentsForFip, date: result.startDate });
-      //             previousEntries.push(currentIntimation.intimations[j]);
-      //             bool = true;
-      //             this._accreditationRequestStore.setUserUpdateFlag(this.selectedRequest.user, this.allSectionSelections[i].key);
-      //             break;
-      //           }
-      //         }
-      //         if (!bool) {
-      //           var object = {
-      //             userRef: '',
-      //             formIdentity: '',
-      //             endDate: '',
-      //             comments: [],
-      //             intimation_status: ''
-      //           }
-      //           this.selectedRequest.val.forEach((d) => {
-      //             if (d.formIdentity === this.allSectionSelections[i].key) {
-      //               object.userRef = d.userRef;
-      //               object.formIdentity = d.formIdentity;
-      //               object.endDate = result.endDate;
-      //               object.intimation_status = 'pending';
-      //               object.comments.push({ data: this.commentsForFip, date: result.startDate });
-      //             }
-      //           })
-      //           newEntry.push(object);
-      //           this._accreditationRequestStore.setUserUpdateFlag(this.selectedRequest.user, this.allSectionSelections[i].key);
-      //         }
-      //       }
-      //       newEntry.concat(previousEntries);
-      //       console.log("ENTRIES ARRAYS:--", newEntry, previousEntries, allEntries);
-      //       this._fipIntimationsStore.newIntimations(newEntry);
-      //       this.commentsForFip = null;
-      //     } else {
-      //       var initimations = [];
-      //       for (let i = 0; i < this.allSectionSelections.length; i++) {
-      //         // console.log("ENTRY TO CHECK:--", this.allSectionSelections[i])
-      //         var object = {
-      //           userRef: '',
-      //           formIdentity: '',
-      //           endDate: '',
-      //           comments: [],
-      //           intimation_status: ''
-      //         }
-      //         for (let j = 0; j < this.selectedRequest.val.length; j++) {
-      //           if (this.allSectionSelections[i].key === this.selectedRequest.val[j].formIdentity) {
-      //             // console.log("ENTRY MATCHED:--", this.selectedRequest.val[j].formIdentity);
-      //             object.userRef = this.selectedRequest.val[j].userRef;
-      //             object.formIdentity = this.selectedRequest.val[j].formIdentity;
-      //             object.endDate = result.endDate;
-      //             object.intimation_status = 'pending';
-      //             object.comments.push({ data: this.commentsForFip, date: result.startDate });
-      //             break;
-      //           }
-      //         }
-      //         initimations.push(object);
-      //         this._accreditationRequestStore.setUserUpdateFlag(this.selectedRequest.user, this.allSectionSelections[i].key);
-      //       }
-      //       // console.log("OBJECT TO SHOW:--", initimations);
-      //       this._fipIntimationsStore.addIntimations(initimations);
-      //       this._sectionSelectorStore.removeAllSelections();
-      //       this.commentsForFip = null;
-      //     }
-      //   } else {
-      //     setValue(null, null, []);
-      //   }
+        // console.log("RESULT:--", result, this.allSectionSelections, this.selectedRequest, values);
+        this._accreditationRequestService.reassignFipSection(this.selectedRequestId, values).subscribe(
+          result => {
+            // console.log("RESULT FROM REASSIGN:--", result);
+            this._singleAccreditationRequestStore.updateReassignFipSection(sectionIds);
+            // if (c.reassignmentStatus === 'Pending') {
+            //   this.reAssignedTasks = sectionIds.length;
+            // }
+            const options = {
+              title: 'Success!',
+              message: 'Intimation has been send.',
+              cancelText: 'CANCEL',
+              confirmText: 'OK',
+              add: true,
+              confirm: false,
+            };
+
+            this._confirmModelService.open(options);
+            this.commentsForFip = null;
+          },
+          error => {
+            console.log("RESULT FROM REASSIGN:--", error);
+          }
+        );
+      }
     });
   }
 
@@ -1427,27 +897,37 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     // this.generalComments = null;
   }
 
-  applyFilter(event: Event) {
-    console.log("APPLY FIKTER:--", event);
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  // applyFilter(event: Event) {
+  //   console.log("APPLY FIKTER:--", event);
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.dataSource2.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
+  //   if (this.dataSource2.paginator) {
+  //     this.dataSource2.paginator.firstPage();
+  //   }
+  // }
+
+  // applyFilter2(event: Event) {
+  //   console.log("APPLY FIKTER:--", event);
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.dataSource.filter = filterValue.trim().toLowerCase();
+
+  //   if (this.dataSource.paginator) {
+  //     this.dataSource.paginator.firstPage();
+  //   }
+  // }
 
   convertNumber(number) {
     return parseInt(number);
   }
 
   inputChanged($event) {
-    console.log("SELECT BOX VALUE:--", $event);
+    // console.log("SELECT BOX VALUE:--", $event);
 
   }
 
   onValChange($event) {
-    console.log("ON STTATUS CHANGE:--", $event);
+    // console.log("ON STTATUS CHANGE:--", $event);
   }
 
 
@@ -1455,27 +935,154 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy {
     this.toggle = !this.toggle;
     this.generalComments = null;
     this.selectedRequest = null;
+    this.selectedRequestId = null;
     this.reviewAdded = false;
     this.hideForms = false;
     this._singleAccreditationRequestStore.resetData();
-    if (this.currentUser.role === 'sme') {
-      this.smeDefaults();
-    }
-    if (this.currentUser.role === 'process owner') {
-      this.adminDefaults();
-    }
+    // if (this.currentUser.role === 'sme') {
+    //   this.smeDefaults();
+    // }
+    // if (this.currentUser.role === 'process owner') {
+    //   this.adminDefaults();
+    // }
     // this.cameFromComments = !this.cameFromComments;
+    this._location.back();
   }
 
   ngOnDestroy() {
-    console.log("NG ON DESTORY CALLED:--");
+    // console.log("NG ON DESTORY CALLED:--");
     this._singleAccreditationRequestStore.resetData();
     this.Subscription.unsubscribe();
     this.generalComments = null;
   }
 
+  ngAfterViewInit() {
+    // this.dataSource.sort = this.sort;
+  }
+
   submitReview() {
-    console.log("REVIEW TO SUMBIT:--", this.formReviewObjects);
+    // console.log("REVIEW TO SUMBIT:--", this.formReviewObjects);
+  }
+
+  checkTypeString(value) {
+    if (typeof (value) === 'string') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  checkTypeObject(value) {
+    if (typeof (value) === 'object') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  toggleEntryForm(item) {
+    // console.log("TOGGLE ENTRY FORM:---", item);
+    item.toggleForm = !item.toggleForm;
+  }
+
+  goToReviews() {
+    document.querySelector('#myTopElement2').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  showMitigationPlan(userReviewRequests) {
+    this.mitigationsFlag = true;
+    for (let i = 0; i < userReviewRequests.length; i++) {
+      let mitigationArray = [];
+      for (let j = 0; j < userReviewRequests[i].review.controlWiseComments.length; j++) {
+        if (userReviewRequests[i].review.controlWiseComments[j].status === "un-satisfy") {
+          mitigationArray.push(userReviewRequests[i].review.controlWiseComments[j]);
+        }
+      }
+      userReviewRequests[i].review.mitigationArray = mitigationArray;
+    }
+    // console.log("REQUEST TO VIEW MITIGATION FACTOR:--", userReviewRequests);
+  }
+
+  hideMitigationsFlag() {
+    this.mitigationsFlag = false;
+  }
+
+  markToGm() {
+    // console.log("MARK REQUEST TO GM:--", this.selectedRequest);
+    // this.selectedRequest.status = 'Approved';
+    // this.selectedRequest.subStatus = 'Pending';
+    // this.selectedRequest.markedTo = 'MARKED_TO_GM';
+    this._accreditationRequestService.markToGm(this.selectedRequest, this.selectedRequestId).subscribe(
+      result => {
+        // console.log("RESULT DEOM QUERY:--", result);
+        this.selectedRequest.subStatus = 'Pending';
+        this.selectedRequest.markedTo = 'Marked To GM';
+      },
+      error => {
+        console.log("RESULT FROM QUERY:--", error);
+      }
+    )
+  }
+
+  viewEligibility() {
+    // console.log("VIEW ELIGIBILITY");
+  }
+
+  exportReport() {
+    // console.log("EXPORT REPORT BUTTON CLICKED");
+    this.viewReport = true;
+  }
+
+  hideExportReport() {
+    // console.log("EXPORT REPORT BUTTON CLICKED");
+    this.viewReport = false;
+  }
+
+  getThematicAreaExp() {
+    let count = 0;
+    if (this.selectedRequest && this.selectedRequest.thematicAreas) {
+
+      if (this.selectedRequest.thematicAreas) {
+        for (let i = 0; i < this.selectedRequest.thematicAreas.length; i++) {
+          let key = this.selectedRequest.thematicAreas[i];
+          count = count + key.experience;
+        }
+        return count;
+      }
+    }
+  }
+
+  getRegDate(object) {
+    let date = new Date(object);
+    return date;
+  }
+
+  addNewReviewUser(values) {
+    this.reportReviewUsers.push(values);
+    this.addReportUsersForm.reset();
+  }
+
+  saveReviewUsers() {
+    const options = {
+      title: 'Users Saved!',
+      message: 'OK to exit',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      endDate: null,
+      startDate: new Date(),
+      add: true,
+    };
+    this._accreditationRequestService.addQualificationReviewUsers(
+      this.selectedRequestId,
+      { reviewUsers: JSON.stringify(this.reportReviewUsers) }
+    ).subscribe((result: any) => {
+      // console.log("RESULT SACONG REVIEW USERS:--", result);
+      // this.selectedRequest.review
+      this._confirmModelService.open(options);
+    })
+  }
+
+  getRating(rating) {
+    return rating / 2;
   }
 
 }
@@ -1559,6 +1166,8 @@ export class IntimateFip implements OnDestroy {
   ngOnDestroy() {
     this.Subscription.unsubscribe();
   }
+
+
 
 
 }

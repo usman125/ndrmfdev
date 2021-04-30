@@ -9,6 +9,8 @@ import { FipEligibilityComponent } from "../../components/component-index";
 import { FipEligibilityRoutingModule } from "./fip-eligibility-routing.module";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -25,7 +27,10 @@ import { MatChipsModule } from '@angular/material/chips';
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatToolbarModule,
-    MatChipsModule
+    MatChipsModule,
+    MatListModule,
+    MatChipsModule,
+    MatIconModule
   ]
 })
 export class FipEligibilityModule { }

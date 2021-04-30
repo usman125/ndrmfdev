@@ -34,6 +34,13 @@ export class SettingsService {
     );
   }
 
+  getSubProcessMeta(type) {
+    const url = `${AppConfig.apiUrl}/setting/process/${type}/meta`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
   updateProcess(type, values) {
     console.log("VALUES IN API:---", values);
     const url = `${AppConfig.apiUrl}/setting/process/${type}/meta`;
@@ -158,6 +165,22 @@ export class SettingsService {
     return this._httpClient.put(
       url,
       values
+    );
+  }
+
+
+  addDesignations(values) {
+    const url = `${AppConfig.apiUrl}/setting/designation/add`;
+    return this._httpClient.post(
+      url,
+      values
+    );
+  }
+
+  getAllDesignations() {
+    const url = `${AppConfig.apiUrl}/setting/designation`;
+    return this._httpClient.get(
+      url,
     );
   }
 

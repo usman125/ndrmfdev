@@ -37,7 +37,10 @@
             ],
             "allowedCommonJsDependencies": [
               "lodash",
-              "formiojs"
+              "formiojs",
+              "chart.js",
+              "xlsx",
+              "chartjs-plugin-datalabels"
             ]
           },
           "configurations": {
@@ -59,8 +62,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "10mb",
-                  "maximumError": "10mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "8mb"
                 },
                 {
                   "type": "anyComponentStyle",

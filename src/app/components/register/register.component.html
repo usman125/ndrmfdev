@@ -1,8 +1,8 @@
 <div class="login-container">
-  <mat-card class="col-md-6 col-10 col-sm-6 col-lg-4">
+  <mat-card class="col-md5 col-10 col-sm-5 col-lg-5">
     <mat-card-content>
       <p class="col-md-12" style="display: flex;">
-        <img style="margin:0 auto;" style="width: 50%; min-width: 60%; margin: 0 auto;" mat-card-image
+        <img style="margin:0 auto;" style="width: 220px; min-width: 150px; margin: 0 auto;" mat-card-image
           src="https://www.ndrmf.pk/wp-content/themes/ndrmf-v2/images/ndrmf-logo.png" alt="NDRMF">
       </p>
       <div class="heading-title">
@@ -10,25 +10,25 @@
         <span class="subheading">Please fill in the below info!</span>
       </div>
       <form [formGroup]="registerForm" (ngSubmit)="registerUser(registerForm.value)">
-        <mat-form-field class="col col-md-12">
-          <mat-label>First Name</mat-label>
-          <input matInput type="text" placeholder="John Doe" formControlName="firstName"
+        <mat-form-field class="col-md-12">
+          <mat-label>Authorized Person Name</mat-label>
+          <input matInput type="text" placeholder="e.g. John Doe" formControlName="firstName"
             [formControl]="registerForm.controls['firstName']" />
         </mat-form-field>
         <div class="alert alert-danger require-field" role="alert" *ngIf="registerForm.controls['firstName'].hasError('required') && 
             (registerForm.controls['firstName'].touched || registerForm.controls['firstName'].dirty)">
           This is Required Field
         </div>
-        <mat-form-field class="col col-md-12">
-          <mat-label>Last Name</mat-label>
-          <input matInput type="text" placeholder="e.g. User123" formControlName="lastName"
-            [formControl]="registerForm.controls['lastName']" />
+        <mat-form-field class="col-md-6">
+          <mat-label>Phone Number</mat-label>
+          <input matInput type="text" placeholder="e.g. 111-11-11" formControlName="phoneNumber"
+            [formControl]="registerForm.controls['phoneNumber']" />
         </mat-form-field>
-        <div class="alert alert-danger require-field" role="alert" *ngIf="registerForm.controls['lastName'].hasError('required') && 
-            (registerForm.controls['lastName'].touched || registerForm.controls['lastName'].dirty)">
+        <div class="alert alert-danger require-field" role="alert" *ngIf="registerForm.controls['phoneNumber'].hasError('required') && 
+            (registerForm.controls['phoneNumber'].touched || registerForm.controls['phoneNumber'].dirty)">
           This is Required Field
         </div>
-        <mat-form-field class="col col-md-12">
+        <mat-form-field class="col-md-6">
           <mat-label>Email</mat-label>
           <input matInput type="email" placeholder="johndoe@mail.com" formControlName="email"
             [formControl]="registerForm.controls['email']" />
@@ -41,24 +41,69 @@
           *ngIf="registerForm.controls['email'].hasError('email')">
           Email is not valid
         </div>
-        <mat-form-field class="col col-md-12">
+        <mat-form-field class="col-md-6">
           <mat-label>Password</mat-label>
           <input matInput type="password" formControlName="password"
             [formControl]="registerForm.controls['password']" />
         </mat-form-field>
         <div class="alert alert-danger require-field" role="alert" *ngIf="registerForm.controls['password'].hasError('required') && 
         (registerForm.controls['password'].touched || registerForm.controls['password'].dirty)">
-          <!-- <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-square" fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd"
-              d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
-            <path
-              d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z" />
-            <circle cx="8" cy="4.5" r="1" />
-          </svg>&nbsp;&nbsp; -->
           This is Required Field
         </div>
-        <button *ngIf="!loading" mat-raised-button class="col col-md-12" color="primary" type="submit">Register</button>
+        <mat-form-field class="col-md-6">
+          <mat-label>Re-Password</mat-label>
+          <input matInput type="password" formControlName="repassword"
+            [formControl]="registerForm.controls['repassword']" />
+        </mat-form-field>
+        <div class="alert alert-danger require-field" role="alert" *ngIf="registerForm.controls['repassword'].hasError('required') && 
+        (registerForm.controls['repassword'].touched || registerForm.controls['repassword'].dirty)">
+          This is Required Field
+        </div>
+        <mat-form-field class="col-md-6">
+          <mat-label>Name of Entity</mat-label>
+          <input matInput type="text" placeholder="Type Here..." formControlName="entityName"
+            [formControl]="registerForm.controls['entityName']" />
+        </mat-form-field>
+        <mat-form-field class="col-md-6">
+          <mat-label>Nature of Entity</mat-label>
+          <input matInput type="text" placeholder="Type Here..." formControlName="entityNature"
+            [formControl]="registerForm.controls['entityNature']" />
+        </mat-form-field>
+        <mat-form-field class="col-md-12">
+          <mat-label>Type of Entity</mat-label>
+          <mat-select placeholder="Select One" [formControl]="registerForm.controls['entityType']">
+            <mat-option value=""></mat-option>
+            <mat-option value="ngo">NGO</mat-option>
+            <mat-option value="ingo">INGO</mat-option>
+            <mat-option value="pvtltd">Private Limited</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="col-md-6">
+          <mat-label>Location</mat-label>
+          <input matInput type="text" placeholder="Type Here..." formControlName="location"
+            [formControl]="registerForm.controls['location']" />
+        </mat-form-field>
+        <mat-form-field class="col-md-6">
+          <mat-label>Province</mat-label>
+          <input matInput type="text" placeholder="Type Here..." formControlName="province"
+            [formControl]="registerForm.controls['province']" />
+        </mat-form-field>
+        <mat-form-field class="col-md-12">
+          <mat-label>Address Registered Office</mat-label>
+          <input matInput type="text" placeholder="Type Here..." formControlName="address"
+            [formControl]="registerForm.controls['address']" />
+        </mat-form-field>
+        <mat-form-field class="col-md-12">
+          <mat-label>Address other office if any</mat-label>
+          <input matInput type="text" placeholder="Type Here..." formControlName="otherAddress"
+            [formControl]="registerForm.controls['otherAddress']" />
+        </mat-form-field>
+        <mat-form-field class="col-md-12">
+          <mat-label>Other Accreditation</mat-label>
+          <input matInput type="text" placeholder="Type Here..." formControlName="otherAccreditation"
+            [formControl]="registerForm.controls['otherAccreditation']" />
+        </mat-form-field>
+        <button *ngIf="!loading" mat-raised-button class="col-md-12" color="primary" type="submit">Register</button>
         <div class="spinner">
           <mat-progress-spinner *ngIf="loading" diameter="30" mode="indeterminate"></mat-progress-spinner>
         </div>

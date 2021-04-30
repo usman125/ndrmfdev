@@ -21,7 +21,7 @@ import { MatSort } from "@angular/material/sort";
 export class SmeComponent implements OnInit, OnDestroy {
 
 
-  public displayedColumns = ['name', 'userRef', 'actions'];
+  public displayedColumns = ['name', 'userRef', 'orderNum', 'actions'];
   public dataSource: any = [];
   public allSmes: any = [];
   public loadingProcess: boolean = false;

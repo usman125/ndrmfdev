@@ -128,16 +128,16 @@ export class CreateProposalFormComponent implements OnInit, OnDestroy {
   }
 
   smeChanged($event) {
-    console.log("SME CHANGED:--", $event);
+    // console.log("SME CHANGED:--", $event);
   }
 
   onSubmit($event) {
     this.secondForm = $event.data;
-    console.log("EVENT FROM FORM:---", this.secondForm);
+    // console.log("EVENT FROM FORM:---", this.secondForm);
   }
 
   saveForm(values) {
-    console.log("FORM TO SAVE:--", values, "\nform", this.form);
+    // console.log("FORM TO SAVE:--", values, "\nform", this.form);
     // console.log("FORM TO SAVE:--", 
     // "\nname", this.formName, 
     // "\ntype", this.formType, 

@@ -3,54 +3,65 @@
   <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
     <mat-toolbar-row>
       <!-- <span>{{preAppViewType === 'fill' ? 'Submit Primary Appresial' : 'View Primary Appraisal'}}</span> -->
-      <span>{{selectedProject?.preAppraisal?.data === null ? 'Submit Primary Appresial' : 'View Primary Appraisal'}}</span>
+      <span>{{selectedProject?.preAppraisal?.data === null ? 'Submit Primary Appresial' : 'View Primary
+        Appraisal'}}</span>
       <div class="example-spacer"></div>
-      <button class="mr-2" (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })"
-        mat-button color="accent">
-        <mat-icon class="mr-1">table_chart</mat-icon> Proposal Details
+      <button matTooltip="Print Pre-Appraisal!" [useExistingCss]="true" printSectionId="print-pre-appraisal" ngxPrint
+        color="primary" mat-icon-button>
+        <mat-icon>print</mat-icon>
+      </button>
+      <button matTooltip="Proposal Details!" class="mr-2"
+        (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'center' })" mat-button color="accent">
+        <mat-icon class="mr-1">table_chart</mat-icon>
       </button>
       <button mat-button color="primary" (click)="goBack()">
-        <mat-icon class="mr-2">undo</mat-icon>Go Back
+        <mat-icon class="mr-2">arrow_back</mat-icon> Back
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
-  <!-- <mat-card class="m-20 p-4" *ngIf="preAppViewType === 'fill'">
-    <mat-card-title>
-    </mat-card-title>
-    <mat-card-content>
-    </mat-card-content>
-    <mat-card-actions>
-      <button class="m-1" mat-raised-button color="primary">ASSIGN PROPOSAL REQUESTS TO DESK</button>
-      <button class="m-1" *ngIf="selectedProject && selectedProject?.status === 'Extended Appraisal'" mat-raised-button
-        color="primary">ASSIGN
-        EXTENDED APPRAISAL TO DESK</button>
-    </mat-card-actions>
-  </mat-card> -->
 
-  <mat-card class="m-20 p-4">
+  <mat-card class="m-20 p-4" id="print-pre-appraisal">
     <ng-container *ngIf="!apiLoading">
       <mat-card-title>
-        <button disabled (click)="completeTask()" mat-raised-button color="accent"
-          *ngIf="selectedProject?.preAppraisal.data === null">PENDING TASK -
+
+        <button disabled (click)="completeTask()" mat-raised-button color="accent" *ngIf="(selectedProject?.preAppraisal.data === null && 
+          selectedProject?.preAppraisal.status === 'Pending')">PENDING TASK -
           {{pendingAppraisalDays ? pendingAppraisalDays+' DAYS REMAINING' : '0' | uppercase}}</button>
         <button mat-raised-button color="warn" disabled
           *ngIf="selectedProject?.preAppraisal.status === 'Completed'">TASK
           SUBMITTED - {{selectedProject?.preAppraisal.completedDate | date:'fullDate' | uppercase}}</button>
+        <button mat-raised-button color="warn" disabled *ngIf="selectedProject?.preAppraisal.status === 'Expired'">TASK
+          EXPIRED {{pendingAppraisalDays ? pendingAppraisalDays+' DAYS BEFORE' : '0' | uppercase}}</button>
         <mat-chip-list class="mt-2 display-block" *ngIf="selectedProject?.status === 'Marked to GM'">
           <mat-chip color="warn" selected>{{'marked to gm' | uppercase}}</mat-chip>
         </mat-chip-list>
-        <mat-chip-list class="mt-2 display-block"
-          *ngIf="loggedUser?.role === 'gm' && selectedProject?.status === 'Preliminary Appraisal'">
+        <mat-chip-list class="mt-2 display-block" *ngIf="(loggedUser?.role === 'gm' && selectedProject?.status === 'Preliminary Appraisal'
+          && (selectedProject?.preAppraisal.isMarkedTo === 'Marked to GM'
+          && selectedProject?.preAppraisal.subStatus === 'Approved'))">
           <mat-chip color="accent" selected>{{'approved by gm' | uppercase}}</mat-chip>
         </mat-chip-list>
+        <mat-chip-list class="mt-2 display-block" *ngIf="(loggedUser?.role === 'gm' && selectedProject?.status === 'Preliminary Appraisal'
+          && (selectedProject?.preAppraisal.isMarkedTo === 'Marked to GM'
+          && selectedProject?.preAppraisal.subStatus === 'Rejected'))">
+          <mat-chip color="accent" selected>{{'rejected by gm' | uppercase}}</mat-chip>
+        </mat-chip-list>
       </mat-card-title>
-      <mat-card-content>
+      <mat-card-content [ngClass]="{'margin-5': (loggedUser?.role === 'process owner' 
+      || loggedUser?.role === 'gm' || loggedUser?.role === 'ceo')}">
+        <p class="heading-contain">
+          <span id="answer">Comments:</span>&nbsp;{{selectedProject?.preAppraisal.commentsByPo}}
+        </p>
         <formio *ngIf="(loggedUser?.role === 'dm pam' || loggedUser?.role === 'process owner') && 
         selectedProject !== null && selectedProject?.preAppraisal.status === 'Pending'"
           [form]="selectedProject.preAppraisal.template" [submission]="{data:selectedProject.preAppraisal.data}"
           (submit)="onSubmit($event)"></formio>
         <formio
           *ngIf="(selectedProject !== null && selectedProject?.preAppraisal.status === 'Completed')
+        || selectedProject?.preAppraisal.status === 'Marked to GM' || selectedProject?.preAppraisal.status === 'Marked to CEO'"
+          [form]="selectedProject.preAppraisal.template" readOnly="true"
+          [submission]="{data:selectedProject.preAppraisal.data}"></formio>
+        <formio
+          *ngIf="(selectedProject !== null && selectedProject?.preAppraisal.status === 'Expired')
         || selectedProject?.preAppraisal.status === 'Marked to GM' || selectedProject?.preAppraisal.status === 'Marked to CEO'"
           [form]="selectedProject.preAppraisal.template" readOnly="true"
           [submission]="{data:selectedProject.preAppraisal.data}"></formio>

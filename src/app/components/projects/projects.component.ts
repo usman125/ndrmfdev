@@ -7,12 +7,14 @@ import { setCurrentProject } from "../../stores/projects/project-replay";
 // import { trigger, state, style, transition, animate } from '@angular/animations';
 import { ProjectService } from "../../services/project.service";
 // import { DataFilterPipe } from "../../pipes/data-filter.pipe";
+import * as _ from 'lodash';
+import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css'],
-  providers: [AddProjectModelService],
+  providers: [AddProjectModelService, ConfirmModelService]
   // animations: [
   //   trigger('changeDivSize', [
   //     state('initial', style({
@@ -44,6 +46,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   constructor(
     private _projectsStore: ProjectsStore,
     private _AddProjectModelService: AddProjectModelService,
+    private _confirmModelService: ConfirmModelService,
     private _projectService: ProjectService,
     private _router: Router,
   ) { }
@@ -62,10 +65,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     if (this.loggedUser.role === 'dm pam' && this.viewType === 'extapp') this.getExtAppraisalProjects();
     if (this.loggedUser.role === 'dm pam' && this.viewType === 'propapp') this.getAllProjects();
     if (this.loggedUser.role === 'sme') this.getExtAppraisalProjects();
-    console.log("SHOW BUTTON VALUE:--", this.showAddBtn, this.viewType, this.loggedUser);
+    // console.log("SHOW BUTTON VALUE:--", this.showAddBtn, this.viewType, this.loggedUser);
     this.Subscriptions.add(
       this._projectsStore.state$.subscribe(data => {
-        console.log("PROJECTS FROM STORE:--", data.projects);
+        // console.log("PROJECTS FROM STORE:--", data.projects);
         this.allProjects = data.projects;
       })
     );
@@ -74,8 +77,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   getAllProjects() {
     this._projectService.getAllProjects().subscribe(
       (result: any) => {
-        console.log("RESULT ALL PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        // console.log("RESULT ALL PROJECT:---", result);
+        let newResults = _.uniqBy(result, 'id');
+        this._projectsStore.addAllProjects(newResults);
       },
       error => {
         console.log("ERROR ALL PROJECT:---", error);
@@ -86,8 +90,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   getGiaProjects() {
     this._projectService.getGiaProjects().subscribe(
       (result: any) => {
-        console.log("RESULT ALL GIA PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        let newResults = _.uniqWith(result, _.isEqual);
+        // console.log("RESULT ALL GIA PROJECT:---", result, newResults);
+        this._projectsStore.addAllProjects(newResults);
       },
       error => {
         console.log("ERROR ALL GIA PROJECT:---", error);
@@ -98,8 +103,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   getExtAppraisalProjects() {
     this._projectService.getExtAppraisalProjects().subscribe(
       (result: any) => {
-        console.log("RESULT EXTENDED APPRAISAL PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        // console.log("RESULT EXTENDED APPRAISAL PROJECT:---", result);
+        let newResults = _.uniqBy(result, 'id');
+        this._projectsStore.addAllProjects(newResults);
       },
       error => {
         console.log("ERROR EXTENDED APPRAISAL PROJECT:---", error);
@@ -110,8 +116,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   getPoProjects() {
     this._projectService.getPoProjects().subscribe(
       (result: any) => {
-        console.log("RESULT ALL PO PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        // console.log("RESULT ALL PO PROJECT:---", result);
+        let newResults = _.uniqBy(result, 'id');
+        this._projectsStore.addAllProjects(newResults);
         // this.getExtAppraisalProjects();
       },
       error => {
@@ -123,8 +130,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   getGmProjects() {
     this._projectService.getGmProjects().subscribe(
       (result: any) => {
-        console.log("RESULT ALL GM PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        // console.log("RESULT ALL GM PROJECT:---", result);
+        let newResults = _.uniqBy(result, 'id');
+        this._projectsStore.addAllProjects(newResults);
         // this.getExtAppraisalProjects();
       },
       error => {
@@ -136,8 +144,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   getCeoProjects() {
     this._projectService.getCeoProjects().subscribe(
       (result: any) => {
-        console.log("RESULT ALL CEO PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        // console.log("RESULT ALL CEO PROJECT:---", result);
+        let newResults = _.uniqBy(result, 'id');
+        this._projectsStore.addAllProjects(newResults);
         // this.getExtAppraisalProjects();
       },
       error => {
@@ -149,8 +158,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   getDmPamProjects() {
     this._projectService.getDmPamProjects().subscribe(
       (result: any) => {
-        console.log("RESULT ALL DM PAM PROJECT:---", result);
-        this._projectsStore.addAllProjects(result);
+        // console.log("RESULT ALL DM PAM PROJECT:---", result);
+        let newResults = _.uniqBy(result, 'id');
+        this._projectsStore.addAllProjects(newResults);
       },
       error => {
         console.log("ERROR ALL DM PAM PROJECT:---", error);
@@ -159,7 +169,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   goToDetails(item) {
-    console.log("PROJECT TO VIEW:---", item);
+    // console.log("PROJECT TO VIEW:---", item);
     // setCurrentProject(
     //   item.name,
     //   item.type,
@@ -214,7 +224,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this._AddProjectModelService.confirmed().subscribe(confirmed => {
       if (confirmed) {
         // this.saveData();
-        console.log("CONFIRMED FROM MODEL", confirmed);
+        // console.log("CONFIRMED FROM MODEL", confirmed);
         this.addProject(confirmed);
         // this._router.navigate()
         // this._projectsStore.addProject(
@@ -230,9 +240,19 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   addProject(values) {
+
+    const options = {
+      title: '',
+      message: '',
+      cancelText: 'CANCEL',
+      confirmText: 'ADD PROJECT',
+      enableLoading: true,
+      disableClose: true,
+    };
+    this._confirmModelService.open(options);
     this._projectService.commenceNewProjects(values).subscribe(
       (result: any) => {
-        console.log("RESULT ADDING PROJECT:---", result);
+        // console.log("RESULT ADDING PROJECT:---", result);
         if (this.viewType !== 'govt') {
           this._projectsStore.addProject(
             result.id,
@@ -252,7 +272,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
             new Date().toISOString(),
             values.thematicAreaName
           );
+          this._confirmModelService.dialogRef.close();
           this._router.navigate(['/project-details', result.id]);
+          // window.location.href = '/project-details/' + result.id;
         }
       },
       error => {

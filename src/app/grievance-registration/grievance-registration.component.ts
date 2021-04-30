@@ -5,7 +5,7 @@ import { UserService } from 'src/app/services/user.service';
 import { FormGroup, FormBuilder, Validators} from '@angular/forms';
 import { Router } from "@angular/router";
 import * as moment from "moment"; 
-import { SignaturePad } from 'angular2-signaturepad/signature-pad';
+import { SignaturePad } from 'angular2-signaturepad';
 import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 @Component({
   selector: 'app-grievance-registration',

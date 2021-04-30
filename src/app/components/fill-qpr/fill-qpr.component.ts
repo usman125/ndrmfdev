@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { QprSectionsStore } from 'src/app/stores/qpr-sections/qpr-sections-store';
 import { ProjectService } from 'src/app/services/project.service';
 import { QprStore } from 'src/app/stores/qpr/qpr-store';
+import { PrimaryAppraisalFormsStore } from 'src/app/stores/primary-appraisal-forms/primary-appraisal-forms-store';
+import { AuthStore } from 'src/app/stores/auth/auth-store';
 
 @Component({
   selector: 'app-fill-qpr',
@@ -35,7 +37,9 @@ export class FillQprComponent implements OnInit {
     private _activatedRoute: ActivatedRoute,
     private _qprSectionsStore: QprSectionsStore,
     private _projectService: ProjectService,
+    private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
     private _qprStore: QprStore,
+    private _authStore: AuthStore,
   ) { }
 
   ngOnInit(): void {
@@ -45,17 +49,22 @@ export class FillQprComponent implements OnInit {
       this.selectedRequestId = params.get("requestId");
       this.getSingleQprRequests();
       // this.selectedProjectId = params.get("projectId");
-      this.getSingleProposalRequest();
+      // this.getSingleProposalRequest();
     });
   }
 
   getSingleQprRequests() {
     this._qprService.getSingleQPR(this.selectedRequestId).subscribe(
       (result: any) => {
-        console.log("RESULT SINGLE REQUEST:---", result);
+        // console.log("RESULT SINGLE REQUEST:---", result);
         this.selectedRequest = result;
         this.quarter = this.selectedRequest.quarter;
+        this._authStore.setCurrentQuarter(this.quarter);
         this._qprSectionsStore.addAllSections(result.sections);
+        this._primaryAppraisalFormsStore.addSelectedProject({
+          id: result.proposalRef,
+          implementationPlan: JSON.parse(result.implementationPlan)
+        });
       },
       error => {
         console.log("RESULT SINGLE REQUEST:---", error);
@@ -63,20 +72,20 @@ export class FillQprComponent implements OnInit {
     );
   }
 
-  getSingleProposalRequest() {
-    this._projectService.getSingleProject("4da6a693-beac-46fa-b2ec-b5c7a9a50cfa").subscribe(
-      (result: any) => {
-        // this._qprSectionsStore.addAllSections(result.sections);
-        this.implementationPlan = JSON.parse(result.implementationPlan);
-        var quarter = this.selectedRequest.quarter * 3 - 1;
-        this.getQuartersShare(quarter);
-        console.log("RESULT SINGLE PROJECT:---", this.implementationPlan, quarter);
-      },
-      error => {
-        console.log("RESULT SINGLE PROJECT:---", error);
-      }
-    );
-  }
+  // getSingleProposalRequest() {
+  //   this._projectService.getSingleProject("4da6a693-beac-46fa-b2ec-b5c7a9a50cfa").subscribe(
+  //     (result: any) => {
+  //       // this._qprSectionsStore.addAllSections(result.sections);
+  //       this.implementationPlan = JSON.parse(result.implementationPlan);
+  //       var quarter = this.selectedRequest.quarter * 3 - 1;
+  //       this.getQuartersShare(quarter);
+  //       console.log("RESULT SINGLE PROJECT:---", this.implementationPlan, quarter);
+  //     },
+  //     error => {
+  //       console.log("RESULT SINGLE PROJECT:---", error);
+  //     }
+  //   );
+  // }
 
   getQuartersShare(quarter) {
     this.quarterNdrmfArray = [];
@@ -104,16 +113,16 @@ export class FillQprComponent implements OnInit {
         this.ndrmfShare = ndrmfShare;
         this.fipShare = fipShare;
       }
-      console.log("FILETERED ARRAY:---", newFinancers, this.implementationPlan[i].title, ndrmfShare, fipShare);
+      // console.log("FILETERED ARRAY:---", newFinancers, this.implementationPlan[i].title, ndrmfShare, fipShare);
     }
     this._qprStore.setDefaults(this.quarter, this.ndrmfShare, this.fipShare);
-    console.log(
-      "FILETERED ARRAY FIP:---\n",
-      this.quarterFipArray,
-      "\nNDRMF ARRAY:--", this.quarterNdrmfArray,
-      this.ndrmfShare,
-      this.fipShare
-    );
+    // console.log(
+    //   "FILETERED ARRAY FIP:---\n",
+    //   this.quarterFipArray,
+    //   "\nNDRMF ARRAY:--", this.quarterNdrmfArray,
+    //   this.ndrmfShare,
+    //   this.fipShare
+    // );
   }
 
 }

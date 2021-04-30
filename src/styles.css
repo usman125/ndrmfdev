@@ -4,6 +4,7 @@
 /* @import '@angular/material/prebuilt-themes/indigo-pink.css'; */
 /* @import '~ngx-bar-rating/themes/br-fontawesome-theme'; */
 @import "~ngx-bar-rating/themes/br-default-theme.css";
+@import "~ngx-bar-rating/themes/br-fontawesome-o-theme";
 html,
 body {
   height: 100%;
@@ -310,42 +311,57 @@ table {
   justify-content: center;
 }
 
-.mat-toolbar-row span {
+.mat-toolbar-row span,
+.mat-toolbar-row small {
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 /*Generic Classes*/
-.mat-elevation-z3{
+.mat-elevation-z3 {
   box-shadow: none !important;
 }
-.mat-list-item{
+.mat-list-item {
   font-size: 13px !important;
   text-transform: capitalize;
 }
-.mat-chip.mat-standard-chip.mat-chip-selected.mat-warn, .mat-chip.mat-standard-chip.mat-chip-selected.mat-accent{
+.mat-chip.mat-standard-chip.mat-chip-selected.mat-warn,
+.mat-chip.mat-standard-chip.mat-chip-selected.mat-accent {
   font-size: 11px !important;
 }
 .proj-detail .mat-button-toggle-checked .mat-button-toggle-label-content {
   color: #333 !important;
 }
-.mat-tree-node, .mat-nested-tree-node{
+.mat-tree-node,
+.mat-nested-tree-node {
   font-size: 13px !important;
 }
-.mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button, .mat-fab, .mat-mini-fab, .mat-card-subtitle, .mat-card-content{
+.mat-button,
+.mat-raised-button,
+.mat-icon-button,
+.mat-stroked-button,
+.mat-flat-button,
+.mat-fab,
+.mat-mini-fab,
+.mat-card-subtitle,
+.mat-card-content {
   font-size: 13px !important;
 }
-.mat-raised-button{
+.mat-raised-button {
   min-width: 58px !important;
   line-height: 32px !important;
 }
-.mat-radio-outer-circle, .mat-radio-inner-circle{
+.mat-radio-outer-circle,
+.mat-radio-inner-circle {
   width: 18px !important;
   height: 18px !important;
 }
-button:focus{outline: none;}
-h5,.h5{
-  font-weight: 400; 
+button:focus {
+  outline: none;
+}
+h5,
+.h5 {
+  font-weight: 400;
   font-size: 1.06rem;
   text-decoration: underline;
 }
@@ -471,4 +487,106 @@ h6 {
 
 .bg-white {
   background-color: #ffff;
+}
+
+.border-heading {
+  border-bottom: 0.1px solid #ddd;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  font-size: 15px;
+  color: #151515;
+  text-transform: uppercase;
+}
+
+.heading-contain {
+  background: #f9f9f9;
+  padding: 10px 10px;
+}
+.heading-contain mat-icon {
+  width: 21px;
+  height: 21px;
+  font-size: 21px;
+  color: #969696;
+}
+
+.header-box {
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.12);
+  border-radius: 7px;
+  background-color: #f9f9f9;
+}
+
+.header-box span {
+  font-style: normal;
+  font-weight: 450;
+  font-size: 15px;
+  line-height: 19px;
+  /* color: #777777; */
+  color: #969696;
+}
+
+.filter-input {
+  position: sticky !important;
+  top: 0px;
+  background: #fff;
+  z-index: 999;
+}
+
+.responsive-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.active .mat-expansion-indicator::after {
+  color: #4d97c6 !important;
+}
+
+.general-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.general-info #value {
+  background: #f0f0f0;
+  padding: 10px 15px;
+  display: block;
+  width: 100%;
+  font-size: 12px;
+  color: #474b56;
+}
+
+.general-info #title {
+  margin-bottom: 5px;
+  font-size: 11px;
+  color: #474b56;
+}
+/*Proposal Templates Styles*/
+
+.proposaldisplay .table td, .proposaldisplay .table th {
+  vertical-align: middle;
+}
+.proposaldisplay .table td, .proposaldisplay .table th, .proposaldisplay .no-top-border-table>.table>tbody>tr:first-child>td {
+  padding: .75rem;
+  vertical-align: middle !important;
+}
+.proposaldisplay .form-control:disabled, .proposaldisplay .form-control[readonly], .choices.is-disabled .choices__item {
+  font-size: 13px !important;
+}
+.proposaldisplay .col-form-label {
+  font-weight: 500 !important;
+}
+.table-responsive>.table-bordered{border:initial;}
+.formio-component-textfield input{
+  width: 100%;
+  width: -moz-available;          /* WebKit-based browsers will ignore this. */
+  width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+  width: stretch;
+}
+.image-style-align-center img{
+  display: inherit;
+  margin: 0 auto;
+}
+.appraisal-box table tr td {
+  padding: 10px !important;
 }

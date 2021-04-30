@@ -49,6 +49,14 @@ export class LoginService {
       "password": values.password,
       "lastName": values.lastName,
       "firstName": values.firstName,
+      "entityName": values.entityName,
+      "entityNature": values.entityNature,
+      "entityType": values.entityType,
+      "location": values.location,
+      "province": values.province,
+      "address": values.address,
+      "otherAddress": values.otherAddress,
+      "otherAccreditation": values.otherAccreditation,
     }
     const url = `${AppConfig.apiUrl}/user/signup`;
     console.log("REGISTER USER CALLED:--", values, url)
@@ -66,6 +74,7 @@ reggisterComplaint(params){
     params,
   );
 }
+
   checkAccreditationStatus() {
     const url = `${AppConfig.apiUrl}/accreditation/status`;
     return this._httpClient.get(

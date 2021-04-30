@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ProjectService } from 'src/app/services/project.service';
 import { ConfirmModelService } from 'src/app/services/confirm-model.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-extended-appraisal-smes',
@@ -27,6 +28,7 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
     private _accreditationCommentsMatrixStore: AccreditationCommentsMatrixStore,
     private _activatedRoute: ActivatedRoute,
     private _projectService: ProjectService,
+    private _settingsService: SettingsService,
     private _confirmModelService: ConfirmModelService,
     private _location: Location,
   ) { }
@@ -35,14 +37,14 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
 
     this._activatedRoute.paramMap.subscribe(params => {
       this.selectedProjectId = params.get("projectId");
-      console.log("SELECTED PROJECT ID IS:--", this.selectedProjectId);
+      // console.log("SELECTED PROJECT ID IS:--", this.selectedProjectId);
       this.getProjectComments();
     });
 
     this.Subscription.add(
       this._accreditationCommentsMatrixStore.state$.subscribe(data => {
         this.allComments = data.comments;
-        console.log("COMMENTS MATRIX FROM STORE IN COMPOENNT:--", this.allComments);
+        // console.log("COMMENTS MATRIX FROM STORE IN COMPOENNT:--", this.allComments);
       })
     );
   }
@@ -53,7 +55,7 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
         this.selectedProject = result;
         // this.selectedProject.id = this.selectedProjectId;
         result.id = this.selectedProjectId;
-        console.log("PROJECT DETAILS FROM DATABASE:--", result);
+        // console.log("PROJECT DETAILS FROM DATABASE:--", result);
         this._accreditationCommentsMatrixStore.addCommentsArray(result.commentsMatrix);
       },
       error => {
@@ -64,16 +66,6 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
 
   fipIntimation() {
     let proposalSections = [];
-    for (let i = 0; i < this.allComments.length; i++) {
-      // console.log("SINGLE NETRY:--", this.allComments[i]);
-      if (this.allComments[i].sectionsWithIds !== null) {
-        for (let j = 0; j < this.allComments[i].sectionsWithIds.length; j++) {
-          proposalSections.push(this.allComments[i].sectionsWithIds[j]);
-        }
-      }
-    }
-    // console.log("PROPOSAL SECTIONS FOR FIP:--", proposalSections);
-
     let options = {
       title: 'Fip Intimation to update sections',
       message: 'Please select section for FIP to update',
@@ -83,7 +75,16 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
       add: false,
       proposal_sections: proposalSections,
       proposal_initmation: true,
+      comments: null,
     };
+    for (let i = 0; i < this.allComments.length; i++) {
+      // console.log("SINGLE NETRY:--", this.allComments[i]);
+      if (this.allComments[i].sectionsWithIds !== null) {
+        for (let j = 0; j < this.allComments[i].sectionsWithIds.length; j++) {
+          proposalSections.push(this.allComments[i].sectionsWithIds[j]);
+        }
+      }
+    }
     this._confirmModelService.open(options);
     this._confirmModelService.confirmed().subscribe(confirmed => {
       if (confirmed) {
@@ -91,13 +92,14 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
         confirmed.sections.forEach(c => {
           sectionIds.push(c.id);
         });
-        console.log("CONFIRMED DATA IS:---", sectionIds, confirmed);
         let object = {
-          sectionIds: sectionIds
+          sectionIds: sectionIds,
+          comments: confirmed.comments,
         }
+        // console.log("CONFIRMED DATA IS:---", sectionIds, confirmed, object);
         this._projectService.reassignProposalToFIP(this.selectedProjectId, object).subscribe(
           (result: any) => {
-            console.log("RESULT AFTER RE-ASSIGN:--", result);
+            // console.log("RESULT AFTER RE-ASSIGN:--", result);
           },
           (error: any) => {
             console.log("RESULT AFTER RE-ASSIGN:--", error);
@@ -105,6 +107,12 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
         );
       }
     });
+    //   },
+    //   error => {
+    //     console.log("RESULT ALL PROCESS META:---", error);
+    //   }
+    // );
+
   }
 
   goBack() {

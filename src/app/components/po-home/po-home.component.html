@@ -1,169 +1,334 @@
 <ng-container>
-  <div class="trackpad">
-    <mat-toolbar class="toolbar-sticky" style="margin-bottom:25px;padding: 15px 0px;" color="primary">
-      <mat-toolbar-row>
-        <span>My Trackpad</span>
-        <span class="example-spacer"></span>
-      </mat-toolbar-row>
-    </mat-toolbar>
-  <div class="box-heading">
-    <span>Eligibility Requests</span>
-  </div>
-  <div class="row m-20">
-    <div class="col-md-3" (click)="goToRoute('eligibility-requests')">
-      <mat-card>
-        <mat-card-content>
-          <div class="box">
-            <div class="heading">
-              <h6>Requests</h6>
-            </div>
-            <div class="value">
-              <span *ngIf="!apiLoading">{{eligiUnderReviewCount+eligiApprovedCount}}</span>
-              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-md-3" (click)="goToRoute('eligibility-requests')">
-      <mat-card>
-        <mat-card-content>
-          <div class="box">
-            <div class="heading">
-              <h6>Under Review</h6>
-            </div>
-            <div class="value">
-              <span *ngIf="!apiLoading">{{eligiUnderReviewCount}}</span>
-              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-md-3" (click)="goToRoute('eligibility-requests')">
-      <mat-card>
-        <mat-card-content>
-          <div class="box">
-            <div class="heading">
-              <h6>Approved</h6>
-            </div>
-            <div class="value">
-              <span *ngIf="!apiLoading">{{eligiApprovedCount}}</span>
-              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-  <div class="box-heading">
-    <span>Qualifciation Requests</span>
-  </div>
-  <div class="row m-20">
-    <div class="col-md-3" (click)="goToRoute('accreditation-requests')">
-      <mat-card>
-        <mat-card-content>
-          <div class="box">
-            <div class="heading">
-              <h6>Under Review</h6>
-            </div>
-            <div class="value">
-              <span *ngIf="!apiLoading">{{qualiUnderReviewCount}}</span>
-              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-md-3" (click)="goToRoute('accreditation-requests')">
-      <mat-card>
-        <mat-card-content>
-          <div class="box">
-            <div class="heading">
-              <h6>Approved</h6>
-            </div>
-            <div class="value">
-              <span *ngIf="!apiLoading">{{qualiApprovedCount}}</span>
-              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
+  <mat-toolbar class="toolbar-sticky" style="margin-bottom:25px;padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>My Trackpad</span>
+      <span class="example-spacer"></span>
+      <mat-button-toggle-group #group="matButtonToggleGroup">
+        <mat-button-toggle matTooltip="List View!" (change)="toggleChanged($event)" value="boxes" [checked]="true"
+          aria-label="Boxes">
+          <mat-icon>list_alt</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle matTooltip="Graph View!" (change)="toggleChanged($event)" value="graph"
+          aria-label="Info Graphs">
+          <mat-icon>donut_small</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle matTooltip="Proposal Insights!" (change)="toggleChanged($event)" value="rfr"
+          aria-label="Projects Info">
+          <mat-icon>auto_graph</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle matTooltip="Result Framework Report!" (change)="toggleChanged($event)" value="kpi-projects"
+          aria-label="Projects Info">
+          <mat-icon>query_stats</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </mat-toolbar-row>
+  </mat-toolbar>
 
-  <div class="box-heading">
-    <span>Projects</span>
+  <!-- <input type="file" style="display: inline-block;" (change)="onFileChange($event)" placeholder="Upload file"
+    accept=".xlsx">
+  <button type="button" class="btn btn-info" (click)="Upload()">Upload</button> -->
+
+  <div class="trackpad" *ngIf="group.value === 'boxes'">
+    <div class="box-heading">
+      <span>Eligibility Requests</span>
+    </div>
+    <div class="row m-20">
+      <div class="col-md-3" (click)="goToRoute('all-eligibility-requests')">
+        <mat-card>
+          <mat-card-content>
+            <div class="box">
+              <div class="heading">
+                <h6>Requests</h6>
+              </div>
+              <div class="value">
+                <span *ngIf="!apiLoading">{{eligiUnderReviewCount+eligiApprovedCount}}</span>
+                <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-md-3" (click)="goToRoute('all-eligibility-requests')">
+        <mat-card>
+          <mat-card-content>
+            <div class="box">
+              <div class="heading">
+                <h6>Under Review</h6>
+              </div>
+              <div class="value">
+                <span *ngIf="!apiLoading">{{eligiUnderReviewCount}}</span>
+                <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-md-3" (click)="goToRoute('all-eligibility-requests')">
+        <mat-card>
+          <mat-card-content>
+            <div class="box">
+              <div class="heading">
+                <h6>Approved</h6>
+              </div>
+              <div class="value">
+                <span *ngIf="!apiLoading">{{eligiApprovedCount}}</span>
+                <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <div class="box-heading">
+      <span>Qualifciation Requests</span>
+    </div>
+    <div class="row m-20">
+      <div class="col-md-3" (click)="goToRoute('all-qualification-requests')">
+        <mat-card>
+          <mat-card-content>
+            <div class="box">
+              <div class="heading">
+                <h6>Under Review</h6>
+              </div>
+              <div class="value">
+                <span *ngIf="!apiLoading">{{qualiUnderReviewCount}}</span>
+                <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-md-3" (click)="goToRoute('all-qualification-requests')">
+        <mat-card>
+          <mat-card-content>
+            <div class="box">
+              <div class="heading">
+                <h6>Approved</h6>
+              </div>
+              <div class="value">
+                <span *ngIf="!apiLoading">{{qualiApprovedCount}}</span>
+                <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <div class="box-heading">
+      <span>Projects</span>
+    </div>
+    <div class="row m-20">
+      <div class="col-md-3" (click)="goToRoute('primary-appraisal')">
+        <mat-card>
+          <mat-card-content>
+            <div class="box">
+              <div class="heading">
+                <h6>Total Projects</h6>
+              </div>
+              <div class="value">
+                <!-- <span>0</span> -->
+                <span *ngIf="!apiLoading">{{projectStats?.totalCount}}</span>
+                <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+                <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-md-3" (click)="goToRoute('primary-appraisal')">
+        <mat-card>
+          <mat-card-content>
+            <div class="box">
+              <div class="heading">
+                <h6>Under Review</h6>
+              </div>
+              <div class="value">
+                <!-- <span>0</span> -->
+                <span *ngIf="!apiLoading">{{projectStats?.urCount}}</span>
+                <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+                <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-md-3" (click)="goToRoute('primary-appraisal')">
+        <mat-card>
+          <mat-card-content>
+            <div class="box">
+              <div class="heading">
+                <h6>Primary Appraisal Requests</h6>
+              </div>
+              <div class="value">
+                <!-- <span>0</span> -->
+                <span *ngIf="!apiLoading">{{projectStats?.preCount}}</span>
+                <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+                <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-md-3" (click)="goToRoute('primary-appraisal')">
+        <mat-card>
+          <mat-card-content>
+            <div class="box">
+              <div class="heading">
+                <h6>Extended Appraisal Requests</h6>
+              </div>
+              <div class="value">
+                <!-- <span>0</span> -->
+                <span *ngIf="!apiLoading">{{projectStats?.extCount}}</span>
+                <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+                <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
   </div>
-  <div class="row m-20">
-    <div class="col-md-3" (click)="goToRoute('primary-appraisal')">
-      <mat-card>
-        <mat-card-content>
-          <div class="box">
-            <div class="heading">
-              <h6>Total Projects</h6>
+  <div class="trackpad" *ngIf="group.value === 'graph'">
+    <!-- <div class="row">
+      <div class="col-md-6"> -->
+
+    <div class="row">
+      <div class="col-md-6 pr-0">
+        <mat-card class="m-20 mr-2">
+          <mat-card-content>
+            <p id="answer">Eligibility</p>
+            <div style="display: block" *ngIf="eligiChartLabels && eligiChartData">
+              <canvas baseChart [options]="pieChartOptions" [colors]="pieChartColors" [data]="eligiChartData"
+                [labels]="eligiChartLabels" [chartType]="doughnutChartType">
+              </canvas>
             </div>
-            <div class="value">
-              <!-- <span>0</span> -->
-              <span *ngIf="!apiLoading">{{projectStats?.preCount + projectStats?.extCount + projectStats?.urCount}}</span>
-              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
-              <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-md-6 pl-0">
+        <mat-card class="m-20 ml-2">
+          <mat-card-content>
+            <p id="answer">Qualification</p>
+            <div class="chart">
+              <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+                [options]="pieChartOptions" [colors]="pieChartColors" [legend]="pieChartLegend">
+              </canvas>
             </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </div>
-    <div class="col-md-3" (click)="goToRoute('primary-appraisal')">
-      <mat-card>
-        <mat-card-content>
-          <div class="box">
-            <div class="heading">
-              <h6>Under Review</h6>
-            </div>
-            <div class="value">
-              <!-- <span>0</span> -->
-              <span *ngIf="!apiLoading">{{projectStats?.urCount}}</span>
-              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
-              <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-md-3" (click)="goToRoute('primary-appraisal')">
-      <mat-card>
-        <mat-card-content>
-          <div class="box">
-            <div class="heading">
-              <h6>Primary Appraisal Requests</h6>
-            </div>
-            <div class="value">
-              <!-- <span>0</span> -->
-              <span *ngIf="!apiLoading">{{projectStats?.preCount}}</span>
-              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
-              <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-md-3" (click)="goToRoute('extended-appraisals')">
-      <mat-card>
-        <mat-card-content>
-          <div class="box">
-            <div class="heading">
-              <h6>Extended Appraisal Requests</h6>
-            </div>
-            <div class="value">
-              <!-- <span>0</span> -->
-              <span *ngIf="!apiLoading">{{projectStats?.extCount}}</span>
-              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
-              <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
+
+    <mat-card class="m-20">
+      <mat-card-content>
+
+        <!-- <div class="border-heading">
+          <h6>Project Proposals Infographs</h6>
+        </div> -->
+
+        <!-- <div style="display: block">
+              <canvas baseChart [datasets]="radarChartData" [options]="radarChartOptions" [labels]="radarChartLabels"
+              [chartType]="radarChartType">
+            </canvas>
+          </div> -->
+
+
+        <p id="answer">Stage Wise Project Proposals</p>
+        <div style="display: block;" class="mb-5">
+          <canvas [options]="pieChartOptions" baseChart [colors]="pieChartColors" [data]="polarAreaChartData"
+            [labels]="polarAreaChartLabels" [legend]="polarAreaLegend" [chartType]="polarAreaChartType">
+          </canvas>
+        </div>
+
+        <!-- <div style="display: block" *ngIf="doughnutChartLabels && doughnutChartData">
+          <canvas baseChart [colors]="pieChartColors" [data]="doughnutChartData" [labels]="doughnutChartLabels"
+            [chartType]="doughnutChartType">
+          </canvas>
+        </div> -->
+
+      </mat-card-content>
+    </mat-card>
+    <!-- </div>
+      <div class="col-md-6"> -->
+
+    <!-- <mat-card class="m-20">
+      <mat-card-content>
+        <div style="display: block" *ngIf="doughnutChartLabels && doughnutChartData">
+          <canvas baseChart [colors]="pieChartColors" [data]="doughnutChartData" [labels]="doughnutChartLabels"
+            [chartType]="doughnutChartType">
+          </canvas>
+        </div>
+
+      </mat-card-content>
+    </mat-card> -->
+    <!-- </div> -->
+    <!-- </div> -->
+
+    <!-- <div>
+      <div>
+        <div style="display: block">
+          <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+            [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
+          </canvas>
+        </div>
+      </div>
+    </div> -->
+
+
+
+    <!-- <mat-card class="m-20 mr-2">
+      <mat-card-content>
+
+        <p id="answer">Eligibility</p>
+        <div class="mb-5" style="display: block" *ngIf="eligiChartLabels && eligiChartData">
+          <canvas baseChart [options]="pieChartOptions" [colors]="pieChartColors" [data]="eligiChartData"
+            [labels]="eligiChartLabels" [chartType]="doughnutChartType">
+          </canvas>
+        </div>
+
+        <p id="answer">Qualification</p>
+        <div class="chart">
+          <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+            [options]="pieChartOptions" [colors]="pieChartColors" [legend]="pieChartLegend">
+          </canvas>
+        </div>
+
+      </mat-card-content>
+    </mat-card> -->
+
+
   </div>
+  <div *ngIf="group.value === 'rfr'">
+    <!-- <mat-tab-group (selectedTabChange)="onTabChanged($event);">
+      <mat-tab label="General" class="p-4">
+      </mat-tab>
+    </mat-tab-group> -->
+    <mat-card class="m-20">
+      <mat-card-content>
+        <mat-tab-group (selectedTabChange)="onTabChanged($event);">
+          <mat-tab [id]="tab.id" *ngFor="let tab of projectTabs; let index = index" [label]="tab.name">
+            <div *ngIf="selectedProject !== null" class="mt-4">
+              <app-result-framework-report></app-result-framework-report>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div *ngIf="group.value === 'kpi-projects'">
+    <mat-card class="m-20">
+      <mat-card-content>
+        <!-- <mat-tab-group (selectedTabChange)="onTabChanged($event);">
+          <mat-tab [id]="tab.id" *ngFor="let tab of projectTabs; let index = index" [label]="tab.name">
+            <div *ngIf="selectedProject !== null" class="mt-4">
+              <app-result-framework-report></app-result-framework-report>
+            </div>
+          </mat-tab>
+        </mat-tab-group> -->
+        <app-kpi-project-stats></app-kpi-project-stats>
+      </mat-card-content>
+    </mat-card>
   </div>
 </ng-container>

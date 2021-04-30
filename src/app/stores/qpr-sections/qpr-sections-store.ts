@@ -21,7 +21,7 @@ export class QprSectionsStore extends Store<QprSectionsState> {
       sections: this.state.sections.map(c => {
         if (c.id === id) {
           return {
-            ...c, 
+            ...c,
             data: data,
           }
         }
@@ -46,14 +46,14 @@ export class QprSectionsStore extends Store<QprSectionsState> {
     })
   }
 
-  submitProposalReview(sectionId, review) {
+  submitSectionReview(sectionId, body) {
     this.setState({
       ...this.state,
       sections: this.state.sections.map(c => {
         if (c.id === sectionId) {
           return {
             ...c,
-            review: review,
+            review: body,
             reviewStatus: 'Completed',
             reviewCompletedDate: new Date().toISOString()
           }
@@ -63,41 +63,19 @@ export class QprSectionsStore extends Store<QprSectionsState> {
     })
   }
 
-  // updateSectionFormgenerated(
-  //   key: string,
-  // ): void {
-  //   this.setState({
-  //     ...this.state,
-  //     sections: this.state.sections.map((c) => {
-  //       if (c.key === key) {
-  //         return {
-  //           ...c,
-  //           formGenerated: true
-  //         }
-  //       }
-  //       return c;
-  //     })
-  //   });
-  // }
-
-  // updateSectionUserRef(
-  //   key: string,
-  //   userRef: string,
-  // ): void {
-  //   this.setState({
-  //     ...this.state,
-  //     sections: this.state.sections.map((c) => {
-  //       if (c.key === key) {
-  //         return {
-  //           ...c,
-  //           userRef: userRef
-  //         }
-  //       }
-  //       return c;
-  //     })
-  //   });
-  // }
-
-
+  submitSection(id, data) {
+    this.setState({
+      ...this.state,
+      sections: this.state.sections.map((c) => {
+        if (c.id === id) {
+          return {
+            ...c,
+            data: data
+          }
+        }
+        return c;
+      })
+    })
+  }
 
 }

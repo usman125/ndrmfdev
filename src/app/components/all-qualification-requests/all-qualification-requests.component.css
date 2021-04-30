@@ -1,0 +1,13 @@
+.example-container {
+  height: 400px;
+  overflow: auto;
+}
+
+.margin-5 {
+  margin: 20px;
+  padding: 0px;
+}
+
+table {
+  width: 100%;
+}

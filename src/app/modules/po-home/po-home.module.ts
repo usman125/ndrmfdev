@@ -8,6 +8,12 @@ import { MatButtonModule } from "@angular/material/button";
 // import { MatGridListModule } from "@angular/material/grid-list";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { ChartsModule } from 'ng2-charts';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ResultFrameworkReportModule } from '../result-framework-report/result-framework-report.module';
+import { KpiProjectStatsModule } from '../kpi-project-stats/kpi-project-stats.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -16,12 +22,18 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
   imports: [
     CommonModule,
     PoHomeRoutingModule,
+    ResultFrameworkReportModule,
+    KpiProjectStatsModule,
     MatCardModule,
     MatIconModule,
     MatButtonModule,
     // MatGridListModule,
     MatToolbarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ChartsModule,
+    MatButtonToggleModule,
+    MatTabsModule,
+    MatTooltipModule
   ]
 })
 export class PoHomeModule { }

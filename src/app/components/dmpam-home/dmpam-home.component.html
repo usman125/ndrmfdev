@@ -1,64 +1,64 @@
 <div class="trackpad">
-<mat-toolbar class="toolbar-sticky" style="margin-bottom:25px;padding: 15px 0px;" color="primary">
-  <mat-toolbar-row>
-    <span>My Trackpad</span>
-    <span class="example-spacer"></span>
-  </mat-toolbar-row>
-</mat-toolbar>
-<div class="box-heading">
-  <span>Projects</span>
-</div>
-<div class="row m-20">
-  <div class="col-md-3" (click)="goToRoute('primary-appraisal-forms')">
-    <mat-card>
-      <mat-card-content>
-        <div class="box">
-          <div class="heading">
-            <h6>Total Projects</h6>
-          </div>
-          <div class="value">
-            <!-- <span>0</span> -->
-            <span *ngIf="!apiLoading">{{projectStats?.preCount + projectStats?.extCount}}</span>
-            <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
-            <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
+  <mat-toolbar class="toolbar-sticky" style="margin-bottom:25px;padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>My Trackpad</span>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div class="box-heading">
+    <span>Projects</span>
   </div>
-  <div class="col-md-3" (click)="goToRoute('primary-appraisal-projects')">
-    <mat-card>
-      <mat-card-content>
-        <div class="box">
-          <div class="heading">
-            <h6>Primary Appraisal Requests</h6>
+  <div class="row m-20">
+    <div class="col-md-3" (click)="goToRoute('primary-appraisal-forms')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Total Projects</h6>
+            </div>
+            <div class="value">
+              <!-- <span>0</span> -->
+              <span *ngIf="!apiLoading">{{projectStats?.preCount + projectStats?.extCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+              <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+            </div>
           </div>
-          <div class="value">
-            <!-- <span>0</span> -->
-            <span *ngIf="!apiLoading">{{projectStats?.preCount}}</span>
-            <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
-            <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-3" (click)="goToRoute('primary-appraisal-projects')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Primary Appraisal Requests</h6>
+            </div>
+            <div class="value">
+              <!-- <span>0</span> -->
+              <span *ngIf="!apiLoading">{{projectStats?.preCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+              <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+            </div>
           </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-3" (click)="goToRoute('extended-appraisals')">
+      <mat-card>
+        <mat-card-content>
+          <div class="box">
+            <div class="heading">
+              <h6>Extended Appraisal Requests</h6>
+            </div>
+            <div class="value">
+              <!-- <span>0</span> -->
+              <span *ngIf="!apiLoading">{{projectStats?.extCount}}</span>
+              <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+              <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
-  <div class="col-md-3" (click)="goToRoute('extended-appraisals')">
-    <mat-card>
-      <mat-card-content>
-        <div class="box">
-          <div class="heading">
-            <h6>Extended Appraisal Requests</h6>
-          </div>
-          <div class="value">
-            <!-- <span>0</span> -->
-            <span *ngIf="!apiLoading">{{projectStats?.extCount}}</span>
-            <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
-            <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
-</div>
 </div>

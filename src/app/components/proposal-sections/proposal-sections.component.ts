@@ -59,7 +59,7 @@ export class ProposalSectionsComponent implements OnInit, OnDestroy {
     this._authStore.setLoading();
     this._settingsService.addThematicArea({ name: this.areaName, processOwnerId: null }).subscribe(
       (result: any) => {
-        console.log("ADDED SUCCEFULLY:--", result);
+        // console.log("ADDED SUCCEFULLY:--", result);
         this._proposalFormsStore.addProposalForm(result.id, result.name, result.enabled, result.processOwner);
         this.areaName = null;
         this._authStore.removeLoading();

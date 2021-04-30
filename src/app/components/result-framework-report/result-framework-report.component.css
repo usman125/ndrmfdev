@@ -1,0 +1,43 @@
+.main-node {
+  display: flex;
+  align-items: center;
+  margin: 10px 0px;
+}
+
+.main-node .header {
+  min-width: 160px;
+}
+
+.main-node .kpi-title {
+  display: flex;
+  min-width: 200px;
+}
+
+.node-quarters {
+  display: flex;
+}
+
+.node-quarters .quarter {
+  font-size: 12px;
+  display: flex;
+  min-width: 320px;
+  color: #919191;
+  min-height: 150px;
+}
+
+.node-quarters .quarter .box {
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 15px;
+}
+
+.node-quarters .quarter .box span {
+  font-weight: 300;
+}
+
+.node-quarters > div {
+  background: #f9f9f9;
+  margin: 0px 5px;
+  padding: 5px 15px;
+}

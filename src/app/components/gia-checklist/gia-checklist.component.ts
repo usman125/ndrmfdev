@@ -35,7 +35,7 @@ export class GiaChecklistComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
         this.selectedProject = data.selectedProject;
-        console.log("SELECTED PROJECT GIA CHECKLIST:--", this.selectedProject);
+        // console.log("SELECTED PROJECT GIA CHECKLIST:--", this.selectedProject);
         if (this.selectedProject) {
           if (this.selectedProject.giaChecklist !== null) {
             if (typeof (this.selectedProject.giaChecklist.data) === 'string') {
@@ -53,7 +53,7 @@ export class GiaChecklistComponent implements OnInit, OnDestroy {
     this.apiLoading = true;
     this._settingsService.getProcessTemplate('GIA_CHECKLIST').subscribe(
       (result: any) => {
-        console.log("RESULT AFTER GETTING TEMPLATE:---", result);
+        // console.log("RESULT AFTER GETTING TEMPLATE:---", result);
         this.selectedRequestTemplate = JSON.parse(result.sections[0].template)
       },
       error => {
@@ -68,10 +68,10 @@ export class GiaChecklistComponent implements OnInit, OnDestroy {
       data: JSON.stringify($event.data),
       template: JSON.stringify(this.selectedRequestTemplate),
     }
-    console.log("DATA ON SUBMISSION:--", $event.data, this.selectedRequestTemplate);
+    // console.log("DATA ON SUBMISSION:--", $event.data, this.selectedRequestTemplate);
     this._projectService.submitGiaChecklist(this.selectedProjectId, object).subscribe(
       result => {
-        console.log("RESULT AFTER ADDING:--", result);
+        // console.log("RESULT AFTER ADDING:--", result);
         this._primaryAppraisalFormsStore.submitGiaCheckList($event.data);
       },
       error => {

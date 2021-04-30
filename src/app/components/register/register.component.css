@@ -2,11 +2,12 @@
   padding: 0px;
 }
 .login-container {
-  height: 100vh;
+  /* height: 100vh; */
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #eaedf4;
+  padding-top: 22px;
 }
 .login-actions {
   display: flex;

@@ -31,32 +31,43 @@
 </ng-container>
 <mat-toolbar class="mat-elevation-z8" [hidden]="!sectionStats" color="primary">
   <mat-toolbar-row>
-    <span>{{'Tasks'}}</span>
+    <small>{{'Fill(ed) Report Task(s)'}}</small>
     <div class="example-spacer"></div>
+    <button [useExistingCss]="true" printSectionId="print-extended-appraisal" ngxPrint color="primary" mat-icon-button>
+      <mat-icon>print</mat-icon>
+    </button>
+    <button [disabled]="sectionStats?.pendingCount !== 0 ||
+    extendedAppraisal?.decisionByDm !== null" matTooltip="Approve Appraisal!" mat-mini-fab
+      (click)="extendedAppraisalDecisionByDm()" color="primary" *ngIf="loggedUser?.role === 'dm pam'">
+      <mat-icon>thumb_up_alt</mat-icon>
+    </button>
   </mat-toolbar-row>
 </mat-toolbar>
 <ng-container>
   <!-- <div *ngIf="!apiLoading"> -->
-  <mat-card class="m-20 p-3" *ngIf="sectionStats">
+  <mat-card class="m-20 p-3 ext-print" *ngIf="sectionStats" id="print-extended-appraisal">
     <div class="mb-4" *ngFor="let item of appraisalSections">
       <div class="top-info-bar">
-        <span style="display: flex;align-items:center;font-weight: bold;">
+        <small style="display: flex;align-items:center;font-weight: bold;">
           <mat-icon class="mr-2" [style.color]="item.status === 'Pending' ? '#F57F17' : null"
             [color]="item.status === 'Pending' ? 'warn' : 'accent'">
             {{item.status === 'Pending' ? 'pending_actions' : 'check'}}</mat-icon>
           SME:
-          <span id="answer" class="ml-2">{{item.sme.name}}</span>
-        </span>
-        <div class="dates">
-          <span *ngIf="extendedAppraisal.status === 'Pending'" style="display: block;font-weight: bold;">
+          <small id="answer" class="ml-2">{{item.sme.name}}</small>
+        </small>
+        <div class="dates d-flex flex-column justify-content-start">
+          <small *ngIf="item.status === 'Pending'" style="display: block;font-weight: bold;">
             PENDING:
-            <span class="warn-comment ml-1">{{extendedAppraisal.endDate | date:'fullDate' | uppercase}}</span>
-          </span>
-          <span *ngIf="extendedAppraisal.status === 'Completed'" style="display: block;font-weight: bold;">
+            <small class="warn-comment ml-1">{{extendedAppraisal.endDate | date:'fullDate' | uppercase}}</small>
+          </small>
+          <small *ngIf="item.status === 'Completed'" style="display: block;font-weight: bold;">
             COMPLETED:
-            <span id="answer" class="ml-1">{{extendedAppraisal.completedDate | date:'fullDate' | uppercase}}</span>
-          </span>
+            <small id="answer" class="ml-1">{{extendedAppraisal.completedDate | date:'fullDate' | uppercase}}</small>
+          </small>
         </div>
+      </div>
+      <div class="top-info-bar">
+        <span><span id="answer">Comments:</span> {{extendedAppraisal.comments}}</span>
       </div>
       <div class="forms p-3">
         <formio *ngIf="(item.data === null || item.data !== null) && item.status === 'Pending'" [form]="item.template"
@@ -66,24 +77,27 @@
       </div>
     </div>
     <mat-divider *ngIf="appraisalSections.length"></mat-divider>
-    <div class="mt-5 mb-4 no-submit margin-5" *ngFor="let item of unassignedSections">
+    <div class="mt-4 mb-4 no-submit margin-5" *ngFor="let item of unassignedSections">
       <div class="top-info-bar">
-        <span style="display: flex;align-items:center;font-weight: bold;">
+        <small style="display: flex;align-items:center;font-weight: bold;">
           <mat-icon class="mr-2" [style.color]="item.status === 'Pending' ? '#F57F17' : null"
             [color]="item.status === 'Pending' ? 'warn' : 'accent'">
             {{item.status === 'Pending' ? 'pending_actions' : 'check'}}</mat-icon>
           SME:
-          <span id="answer" class="ml-2">{{item.sme.name}}</span>
-        </span>
-        <div class="dates">
-          <small *ngIf="extendedAppraisal.status === 'Pending'" style="display: block;font-weight: bold;">
+          <small id="answer" class="ml-2">{{item.sme.name}}</small>
+        </small>
+        <div class="dates d-flex flex-column justify-content-start">
+          <small *ngIf="item.status === 'Pending'" style="display: block;font-weight: bold;">
             PENDING:
-            <span class="info-comment ml-1">{{extendedAppraisal.endDate | date:'fullDate' | uppercase}}</span>
+            <small class="info-comment ml-1">{{extendedAppraisal.endDate | date:'fullDate' | uppercase}}</small>
           </small>
-          <small *ngIf="extendedAppraisal.status === 'Completed'" style="display: block;font-weight: bold;">
+          <small *ngIf="item.status === 'Completed'" style="display: block;font-weight: bold;">
             COMPLETED:
-            <span class="ml-1" id="answer">{{extendedAppraisal.completedDate | date:'fullDate' | uppercase}}</span>
+            <small class="ml-1" id="answer">{{extendedAppraisal.completedDate | date:'fullDate' | uppercase}}</small>
           </small>
+          <button *ngIf="loggedUser?.role === 'dm pam'" matTooltip="Re-Evaluate!"
+            (click)="assignExtendedAppraisalSection(item.id)" [disabled]="item.status === 'Pending' || 
+          extendedAppraisal?.decisionByDm !== null" mat-button color="primary">Assign Task</button>
         </div>
       </div>
       <div class="form p-3">

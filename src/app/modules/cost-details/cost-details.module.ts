@@ -10,6 +10,7 @@ import { FormioModule } from 'angular-formio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
 
 
 
@@ -29,7 +30,8 @@ import { MatSelectModule } from '@angular/material/select';
     ReactiveFormsModule,
     MatDatepickerModule,
     MatCheckboxModule,
-    MatSelectModule
+    MatSelectModule,
+    MatChipsModule
   ],
   exports: [CostDetailsComponent]
 })

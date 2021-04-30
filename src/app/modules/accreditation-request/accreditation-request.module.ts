@@ -19,6 +19,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
+import { MatSortModule } from '@angular/material/sort';
+import { MatChipsModule } from '@angular/material/chips';
+import { NgxPrintModule } from 'ngx-print';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [
@@ -45,6 +51,11 @@ import { MatListModule } from '@angular/material/list';
     MatProgressSpinnerModule,
     MatTooltipModule,
     AccreditationRequestRoutingModule,
+    MatSortModule,
+    MatChipsModule,
+    NgxPrintModule,
+    MatMenuModule,
+    MatRadioModule,
   ],
   entryComponents: [AssignTask]
 })

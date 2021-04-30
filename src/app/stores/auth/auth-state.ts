@@ -17,6 +17,7 @@ const AUTH = {
   orgName: null,
   userInfo: null,
   currentQuarter: null,
+  id: null,
 }
 
 export class AuthState {
@@ -39,5 +40,6 @@ export class AuthState {
     orgName: any,
     userInfo: any,
     currentQuarter: any,
+    id: any,
   } = AUTH;
 }

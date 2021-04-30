@@ -6,6 +6,7 @@ import { UserService } from "../../services/user.service";
 import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 import { AuthStore } from 'src/app/stores/auth/auth-store';
 import { Subscription } from 'rxjs';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-edit-user',
@@ -23,6 +24,8 @@ export class EditUserComponent implements OnInit {
 
   allUserTypes: any = [];
   allRoles: any = [];
+  allDepartments: any = [];
+  allDesignations: any = [];
 
   Subscription: Subscription = new Subscription();
 
@@ -33,6 +36,7 @@ export class EditUserComponent implements OnInit {
     private _authStore: AuthStore,
     private _confirmModelService: ConfirmModelService,
     private _router: Router,
+    private _settingsService: SettingsService,
   ) {
     this._buildEditUserForm();
   }
@@ -46,6 +50,7 @@ export class EditUserComponent implements OnInit {
       username: [null, Validators.required],
       password: [null],
       department: [null],
+      designation: [null],
       role: [null, Validators.required],
       org: [null, Validators.required],
       active: [null],
@@ -58,6 +63,8 @@ export class EditUserComponent implements OnInit {
         this.apiLoading = data.auth.apiCall;
       })
     );
+    this.getAllDepartments();
+    this.getAllDesignations();
 
     this._activatedRoute.paramMap.subscribe(params => {
       this.selectedUserId = params.get("userId");
@@ -77,6 +84,7 @@ export class EditUserComponent implements OnInit {
               : null,
             smeRef: null,
             department: result.departmentId || null,
+            designation: result.designationId || null,
             active: result.enabled,
             eligibileFlag: false,
             qualificationFlag: false,
@@ -94,6 +102,7 @@ export class EditUserComponent implements OnInit {
             object.role,
             object.smeRef,
             object.department,
+            object.designation,
             object.username,
             object.password,
             object.active,
@@ -123,29 +132,38 @@ export class EditUserComponent implements OnInit {
         username: this.selectedUser.username,
         password: this.selectedUser.password,
         department: this.selectedUser.department,
+        designation: this.selectedUser.designation,
         role: this.selectedUser.roles,
         org: this.selectedUser.org,
         active: this.selectedUser.active,
       }, { onlySelf: true })
       // }
       // if (th)
-      if (this.selectedUser.role === 'fip') {
+      if ((this.selectedUser.role === 'fip' ||
+        this.selectedUser.role === 'fip data entry' ||
+        this.selectedUser.role === 'fip signatory' ||
+        this.selectedUser.role === 'fip endorsement') &&
+        this.selectedUser.orgName !== 'govt'
+      ) {
         this.editUserForm.controls['firstName'].disable({ onlySelf: true });
         this.editUserForm.controls['lastName'].disable({ onlySelf: true });
         this.editUserForm.controls['email'].disable({ onlySelf: true });
         this.editUserForm.controls['username'].disable({ onlySelf: true });
+        this.editUserForm.controls['password'].disable({ onlySelf: true });
+        this.editUserForm.controls['org'].disable({ onlySelf: true });
+        this.editUserForm.controls['role'].disable({ onlySelf: true });
       }
-      // else {
-      //   this.editUserForm.controls['firstName'].disable({ onlySelf: true });
-      //   this.editUserForm.controls['lastName'].disable({ onlySelf: true });
-      //   this.editUserForm.controls['email'].disable({ onlySelf: true });
-      //   this.editUserForm.controls['username'].disable({ onlySelf: true });
-      //   this.editUserForm.controls['password'].disable({ onlySelf: true });
-      //   this.editUserForm.controls['role'].clearValidators();
-      //   this.editUserForm.controls['role'].disable({ onlySelf: true });
-      //   this.editUserForm.controls['org'].clearValidators();
-      //   this.editUserForm.controls['org'].disable({ onlySelf: true });
-      // }
+      else if (this.selectedUser.orgName === 'govt') {
+        this.editUserForm.controls['firstName'].disable({ onlySelf: true });
+        this.editUserForm.controls['lastName'].disable({ onlySelf: true });
+        this.editUserForm.controls['email'].disable({ onlySelf: true });
+        this.editUserForm.controls['username'].disable({ onlySelf: true });
+        this.editUserForm.controls['role'].disable({ onlySelf: true });
+        this.editUserForm.controls['org'].disable({ onlySelf: true });
+        // this.editUserForm.controls['password'].disable({ onlySelf: true });
+        // this.editUserForm.controls['role'].clearValidators();
+        // this.editUserForm.controls['org'].clearValidators();
+      }
     });
   }
 
@@ -166,6 +184,39 @@ export class EditUserComponent implements OnInit {
       error => {
         this._authStore.removeLoading();
         console.log("ERROR FROM ALL ORGS:--", error);
+      }
+    );
+  }
+
+
+  getAllDepartments() {
+    // this.apiLoading = true;
+    this._settingsService.getAllDepartments().subscribe(
+      (result: any) => {
+        console.log("RESULT FROM DEPARTMENTS:--", result);
+        // this._departmentsStore.addAllDepartments(result);
+        // this.apiLoading = false;
+        this.allDepartments = result;
+      },
+      error => {
+        // this.apiLoading = false;
+        console.log("ERROR FROM DEPARTMENTS:--", error);
+      }
+    );
+  }
+
+  getAllDesignations() {
+    // this.apiLoading = true;
+    this._settingsService.getAllDesignations().subscribe(
+      (result: any) => {
+        console.log("RESULT FROM DESIGNATIONS:--", result);
+        // this._departmentsStore.addAllDepartments(result);
+        // this.apiLoading = false;
+        this.allDesignations = result;
+      },
+      error => {
+        // this.apiLoading = false;
+        console.log("ERROR FROM DESIGNATIONS:--", error);
       }
     );
   }
@@ -226,6 +277,14 @@ export class EditUserComponent implements OnInit {
         console.log("RESULT AFTER UPDATING USER:---", error);
       }
     );
+  }
+
+  compareMethods(o1: any, o2: any): boolean {
+    console.log("COMPARE DESIGNATIONS:---", o1, o2);
+    if (o2) {
+      return o1 === o2.id;
+    }
+    return false;
   }
 
 }

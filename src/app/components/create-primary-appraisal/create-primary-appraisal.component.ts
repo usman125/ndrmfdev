@@ -43,7 +43,7 @@ export class CreatePrimaryAppraisalComponent implements OnInit, OnDestroy {
     currentProjectReplay.subscribe((data) => {
       this.selectedProject = data;
     })
-    console.log("SELCTED PROJECT ID IS:--", this.selectedProjectId, this.selectedProject);
+    // console.log("SELCTED PROJECT ID IS:--", this.selectedProjectId, this.selectedProject);
   }
 
 

@@ -102,7 +102,7 @@ export class AccreditationCommentsMatrixComponent implements OnInit, OnDestroy {
       // if (this.currentComment.endDate){
         this._heroes = this.currentComment.comments;
         this.heroTotal = this.currentComment.comments;
-        console.log("CURRENT COMMENT:--", this.currentComment);
+        // console.log("CURRENT COMMENT:--", this.currentComment);
       // }else{
         // this.heroTotal = -1;
       // }

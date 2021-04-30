@@ -29,6 +29,7 @@ export class AddSmeComponent implements OnInit, OnDestroy {
   private _buildAddSmeForm() {
     this.addSmeForm = this._formBuilder.group({
       name: [null, Validators.required],
+      orderNum: [null, Validators.required],
       userRef: [null],
       key: [null],
       subProcessType: [null],

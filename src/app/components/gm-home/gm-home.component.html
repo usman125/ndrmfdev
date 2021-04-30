@@ -1,21 +1,70 @@
-<div class="box-heading">
-  <span>Projects</span>
-</div>
-<div class="row m-20">
-  <div class="col-md-3" (click)="goToRoute('gmproposals')">
-    <mat-card>
+<ng-container>
+
+  <mat-toolbar class="toolbar-sticky" style="margin-bottom:25px;padding: 15px 0px;" color="primary">
+    <mat-toolbar-row>
+      <span>My Trackpad</span>
+      <span class="example-spacer"></span>
+      <mat-button-toggle-group #group="matButtonToggleGroup">
+        <mat-button-toggle value="boxes" [checked]="true" aria-label="Boxes">
+          <mat-icon>list_alt</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="graph" aria-label="Info Graphs">
+          <mat-icon>analytics</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div class="trackpad" *ngIf="group.value === 'boxes'">
+    <div class="box-heading">
+      <span>Projects</span>
+    </div>
+    <div class="row m-20">
+      <div class="col-md-3" (click)="goToRoute('gmproposals')">
+        <mat-card>
+          <mat-card-content>
+            <div class="box">
+              <div class="heading">
+                <h6>Assigned Requests</h6>
+              </div>
+              <div class="value">
+                <span *ngIf="!apiLoading">{{projectStats?.gmCount}}</span>
+                <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+                <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-md-3" (click)="goToRoute('gmproposals')">
+        <mat-card>
+          <mat-card-content>
+            <div class="box">
+              <div class="heading">
+                <h6>Total Projects</h6>
+              </div>
+              <div class="value">
+                <span *ngIf="!apiLoading">{{projectStats?.totalCount}}</span>
+                <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
+                <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  <div class="trackpad" *ngIf="group.value === 'graph'">
+    <mat-card class="m-20">
       <mat-card-content>
-        <div class="box">
-          <div class="heading">
-            <h6>Requests</h6>
-          </div>
-          <div class="value">
-            <span *ngIf="!apiLoading">{{projectStats?.gmCount}}</span>
-            <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
-            <!-- <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner> -->
-          </div>
+
+        <p id="answer">Thematic area wise proposals</p>
+        <div style="display: block;" class="mb-5">
+          <canvas [options]="pieChartOptions" baseChart [colors]="pieChartColors" [data]="thematicAreaData"
+            [labels]="thematicAreaLabels" [legend]="polarAreaLegend" [chartType]="polarAreaChartType">
+          </canvas>
         </div>
+
       </mat-card-content>
     </mat-card>
   </div>
-</div>
+</ng-container>

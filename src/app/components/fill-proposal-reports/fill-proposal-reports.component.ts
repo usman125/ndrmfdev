@@ -22,7 +22,7 @@ export class FillProposalReportsComponent implements OnInit {
   ngOnInit(): void {
     this._activatedRoute.paramMap.subscribe(params => {
       this.selectedProjectId = params.get("projectId");
-      console.log("SELECTED PROJECT ID IS:--", this.selectedProjectId);
+      // console.log("SELECTED PROJECT ID IS:--", this.selectedProjectId);
       this.getProcessMeta();
     });
   }
@@ -30,7 +30,7 @@ export class FillProposalReportsComponent implements OnInit {
   getProcessMeta() {
     this._settingsService.getProcessMeta("PROJECT_PROPOSAL").subscribe(
       (result: any) => {
-        console.log("RESULT FROM PROCESS TEMPLATES:---", result);
+        // console.log("RESULT FROM PROCESS TEMPLATES:---", result);
       },
       error => {
         console.log("RESULT FROM PROCESS TEMPLATES:---", error);
