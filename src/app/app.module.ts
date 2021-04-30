@@ -76,13 +76,7 @@ import { SingleGrantDisbursmentsStore } from './stores/single-grant-disbursment/
 import { DesignationsStore } from './stores/designations/designations-store';
 import { MatRadioModule } from '@angular/material/radio';
 import { AccreditationRequestReplayStore } from './stores/accreditation-requests/AccreditationRequestReplayStore';
-// import { DesignationsComponent } from './components/designations/designations.component';
-// import { SmeQprRequestsComponent } from './components/sme-qpr-requests/sme-qpr-requests.component';
-// import { KpiProjectStatsComponent } from './components/kpi-project-stats/kpi-project-stats.component';
-// import { GrantDisbursmentsComponent } from './components/grant-disbursments/grant-disbursments.component';
-// import { ViewGrantDisbursmentComponent } from './components/view-grant-disbursment/view-grant-disbursment.component';
-// import { ResultFrameworkReportComponent } from './components/result-framework-report/result-framework-report.component';
-// import { ProjectProposalFilesComponent } from './components/project-proposal-files/project-proposal-files.component';
+
 
 export function tokenGetter() {
   let user = JSON.parse(localStorage.getItem('user'));
@@ -99,13 +93,6 @@ export function tokenGetter() {
     NoHeaderLayoutComponent,
     AddProjectComponent,
     ActivityDetailsComponent,
-    // DesignationsComponent,
-    // SmeQprRequestsComponent,
-    // KpiProjectStatsComponent,
-    // ViewGrantDisbursmentComponent,
-    // GrantDisbursmentsComponent,
-    // ResultFrameworkReportComponent,
-    // ProjectProposalFilesComponent,
   ],
   imports: [
     BrowserModule,
