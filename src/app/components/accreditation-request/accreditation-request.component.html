@@ -366,7 +366,8 @@
             </div>
             <div class="right-block">
               <span class="head">Current Score</span>
-              <span class="comments">{{(userAllScore/2) || 0 | number:'1.0-4'}}</span>
+              <span class="comments">{{(userAllScore) || 0 | number:'1.0-4'}}</span>
+              <!-- <span class="comments">{{(userAllScore/2) || 0 | number:'1.0-4'}}</span> -->
               <!-- <span *ngIf="userAllScore" id="answer" class="comments">{{(userAllScore/5 * 100)}}%</span> -->
             </div>
           </div>

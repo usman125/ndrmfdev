@@ -1,0 +1,70 @@
+insert into organisations values(1, 'script', now(), 'script', now(), 'NDRMF');
+insert into organisations values(2, 'script', now(), 'script', now(), 'FIP');
+insert into organisations values(3, 'script', now(), 'script', now(), 'GOVT');
+
+insert into roles values (1, 'script', now(), 'script', now(), 'ADMIN', 1);
+insert into roles values (2, 'script', now(), 'script', now(), 'SME', 1);
+insert into roles values (3, 'script', now(), 'script', now(), 'PROCESS OWNER', 1);
+insert into roles values (4, 'script', now(), 'script', now(), 'APPROVER', 1);
+
+insert into roles values (5, 'script', now(), 'script', now(), 'FIP SIGNATORY', 2);
+insert into roles values (6, 'script', now(), 'script', now(), 'FIP ENDORSEMENT', 2);
+insert into roles values (7, 'script', now(), 'script', now(), 'FIP DATA ENTRY', 2);
+
+insert into roles values (8, 'script', now(), 'script', now(), 'GOVT SIGNATORY', 3);
+insert into roles values (9, 'script', now(), 'script', now(), 'GOVT ENDORSEMENT', 3);
+insert into roles values (10, 'script', now(), 'script', now(), 'GOVT DATA ENTRY', 3);
+insert into roles values (11, 'script', now(), 'script', now(), 'DM PAM', 1);
+insert into roles values (12, 'script', now(), 'script', now(), 'GM', 1);
+insert into roles values (13, 'script', now(), 'script', now(), 'CEO', 1);
+insert into roles values (14, 'script', now(), 'script', now(), 'FIP', 3);
+insert into roles values (15, 'script', now(), 'script', now(), 'SIGNUP_APPROVER', 1);
+insert into roles values (16, 'script', now(), 'script', now(), 'FMG', 1);
+insert into roles values (17, 'script', now(), 'script', now(), 'PAM', 1);
+insert into roles values (18, 'script', now(), 'script', now(), 'MnE', 1);
+insert into roles values (19, 'script', now(), 'script', now(), 'PROC', 1);
+insert into roles values (20, 'script', now(), 'script', now(), 'DM', 1);
+
+
+insert into users values (
+  '298e975d-6217-4bb2-adfa-9aff2bf3e1fb', 
+						  'script', 
+						  now(), 
+						  'script', 
+						  now(), 
+						  false,
+						  'script',
+						  false, 
+						  'admin@ndrmf.com', 
+						  true, 
+						  null,
+						  null,
+						  null,
+						  'Arslan',
+						  null,
+						  'Ali',
+						  null,
+						  null,
+						  null,
+						  '$2a$10$9CPt91CAC1yVI.a1/ei4d.pumWTo5e2NDjSMN6xYvkPIFbXELSJ/S', 
+						  null,
+						  null,
+						  'admin', 
+						  null, 
+						  null, 
+						  1
+						 );
+insert into user_roles values('298e975d-6217-4bb2-adfa-9aff2bf3e1fb', 1);
+
+
+insert into process_types values ('ELIGIBILITY', 'script', now(), 'script', now(), null);
+insert into process_types values ('QUALIFICATION', 'script', now(), 'script', now(), null);
+insert into process_types values ('ACCREDITATION_QUESTIONNAIRE', 'script', now(), 'script', now(), null);
+insert into process_types values ('PROJECT_PROPOSAL', 'script', now(), 'script', now(), null);
+insert into process_types values ('PRELIMINARY_APPRAISAL', 'script', now(), 'script', now(), null);
+insert into process_types values ('EXTENDED_APPRAISAL', 'script', now(), 'script', now(), null);
+insert into process_types values ('GIA', 'script', now(), 'script', now(), null);
+insert into process_types values ('GIA_CHECKLIST', 'script', now(), 'script', now(), null);
+insert into process_types values ('SUB_PROJECT_DOCUMENT', 'script', now(), 'script', now(), null);
+insert into process_types values ('DISBURSEMENT', 'script', now(), 'script', now(), null);
+insert into process_types values ('QPR', 'script', now(), 'script', now(), null);
