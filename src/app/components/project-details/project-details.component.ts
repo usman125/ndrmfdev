@@ -166,6 +166,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             if (result !== null) {
               if (c.data) {
                 this.selectedProjectInfo = c.data;
+                console.log("***********************SELECTED PROJECT MONTHS***********************", c.data, this.selectedProjectInfo)
                 this._authStore.setProjectMonths(c.data.duration);
               }
             }
@@ -235,6 +236,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
     this.Subscription.add(
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
         this.selectedProject = data.selectedProject;
+
+        console.log("***********************SELECTED PROJECT MONTHS***********************", this.selectedProject)
         if (this.selectedProject && this.selectedProject.commentsMatrix) {
           this._accreditationCommentsMatrixStore.addCommentsArray(this.selectedProject.commentsMatrix);
         }

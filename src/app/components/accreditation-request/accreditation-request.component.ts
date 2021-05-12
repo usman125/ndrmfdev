@@ -196,7 +196,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
       this._singleAccreditationRequestStore.state$.pipe(distinctUntilChanged()).subscribe((data) => {
         this.userReviewRequests = data.requests;
         this.userReviewRequests = _.orderBy(this.userReviewRequests, ['orderNum'], ['asc']);
-        console.log("OVER ALL REQUEST IN SUBSCRIPTION:--", this.userReviewRequests);
+        // console.log("OVER ALL REQUEST IN SUBSCRIPTION:--", this.userReviewRequests);
         if (this.userReviewRequests) {
           this.checkScores(this.userReviewRequests);
           this.checkAllReviews(this.userReviewRequests);
@@ -394,7 +394,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
             this.reportReviewUsers = typeof (this.selectedRequest.reviewUsers) === 'string' ?
               JSON.parse(this.selectedRequest.reviewUsers) : this.selectedRequest.reviewUsers;
           }
-          // console.log("REQUEST TO CHECK:--", this.selectedRequest);
+          console.log("REQUEST TO CHECK:--", this.selectedRequest);
           let count = 0;
           // let passCount = 0;
           let tasksFlag = false;

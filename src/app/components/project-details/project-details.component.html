@@ -736,7 +736,6 @@
                   </mat-chip>
                 </mat-chip-list>
               </div>
-
               <div class="expiry-sections">
                 <button (click)="markToGm()" *ngIf="selectedProject?.preAppraisal?.status === 'Completed'" mat-button
                   color="primary" [disabled]="selectedProject?.extendedAppraisal !== null || 
@@ -818,7 +817,6 @@
                   </mat-chip>
                 </mat-chip-list>
               </div>
-
               <div class="expiry-sections">
                 <button *ngIf="selectedProject?.extendedAppraisal?.status === 'Completed'" mat-button color="primary"
                   [disabled]="(selectedProject?.extendedAppraisal?.status === 'Pending' || 

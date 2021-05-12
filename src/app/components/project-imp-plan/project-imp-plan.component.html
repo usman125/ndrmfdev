@@ -117,7 +117,7 @@
               <div class="general-info">
                 <span style="color: #0070b1;font-weight:600;" id="title">Ndrmf Share</span>
                 <span id="value" *ngIf="selectedClub.ndrmfShare">
-                  {{selectedClub.ndrmfShare}}
+                  {{selectedClub.ndrmfShare | number}}
                 </span>
                 <span id="value" *ngIf="!selectedClub.ndrmfShare">
                   &nbsp;
@@ -128,7 +128,7 @@
               <div class="general-info">
                 <span style="color: #0070b1;font-weight:600;" id="title">Fip Share</span>
                 <span id="value" *ngIf="selectedClub.fipShare">
-                  {{selectedClub.fipShare}}
+                  {{selectedClub.fipShare | number}}
                 </span>
                 <span id="value" *ngIf="!selectedClub.fipShare">
                   &nbsp;
@@ -280,7 +280,7 @@
           <div class="general-info">
             <span style="color: #0070b1;font-weight:600;" id="title">{{'Activities Total' | titlecase}}</span>
             <span id="value" *ngIf="totalUnClubbedEntriesCount">
-              {{totalUnClubbedEntriesCount}}
+              {{totalUnClubbedEntriesCount | number}}
             </span>
             <span id="value" *ngIf="!totalUnClubbedEntriesCount">
               &nbsp;
@@ -291,7 +291,7 @@
           <div class="general-info">
             <span style="color: #0070b1;font-weight:600;" id="title">{{'Clubs Total' | titlecase}}</span>
             <span id="value" *ngIf="totalClubsCount">
-              {{totalClubsCount}}
+              {{totalClubsCount | number}}
             </span>
             <span id="value" *ngIf="!totalClubsCount">
               &nbsp;
@@ -302,7 +302,7 @@
           <div class="general-info">
             <span style="color: #0070b1;font-weight:600;" id="title">{{'Grand Total' | titlecase}}</span>
             <span id="value" *ngIf="totalClubsCount">
-              {{totalClubsCount + totalUnClubbedEntriesCount}}
+              {{(totalClubsCount + totalUnClubbedEntriesCount) | number}}
             </span>
             <span id="value" *ngIf="!totalClubsCount">
               &nbsp;
@@ -381,7 +381,7 @@
                     <span class="mr-2"
                       [ngStyle]="{'background-color': item.randomColor, 'width.px':20, 'height.px': 20}">&nbsp;</span>
                     <span class="mr-2">{{item.title}}</span>
-                    <span>{{item.fipShare + item.ndrmfShare}}</span>
+                    <span>{{(item.fipShare + item.ndrmfShare) | number}}</span>
                   </div>
                 </button>
               </div>
@@ -417,7 +417,8 @@
                       (click)="openProgressDetails(object, item)">insights</mat-icon>
                   </div>
                   <div class="item">
-                    <span *ngIf="!node.clubbed" id="answer" style="text-align: center;">{{item.totalCost || 0}}</span>
+                    <span *ngIf="!node.clubbed" id="answer" style="text-align: center;">{{((item.totalCost) | number) ||
+                      0}}</span>
                     <span [matTooltip]="item.totalCost" *ngIf="node.clubbed">
                       <span [ngStyle]="{
                           'background-color': getClubColor(node.clubId), 
@@ -433,7 +434,7 @@
                   <div class="finance-item" [ngClass]="{'active': object.value === true, 
                 'delayed': object?.data?.delayed, 'font-small': qprView}" *ngFor="let object of item.quarters">
                     <span *ngIf="object.data" matTooltip="Fip / NDRMF">
-                      {{object.data.fipShare || 0}} / {{object.data.ndrmfShare || 0}}
+                      {{(object.data.fipShare | number) || 0}} / {{(object.data.ndrmfShare | number) || 0}}
                     </span>
                     <span *ngIf="object.data === null">
                       {{'&nbsp;'}}

@@ -5,6 +5,6 @@ export const AppConfig = {
   // apiUrl: 'https://ndrmfdev-backend.herokuapp.com/api'
   // apiUrl: 'https://attendance.tallymarkscloud.com:8080/ndrmf'
   apiUrl: 'https://ndrmf.tallymarkscloud.com:8443/ndrmf'
-  // apiUrl: 'http://localhost:4200'
+  // apiUrl: 'http://localhost:8080/ndrmf'
   // apiUrl: 'http://103.226.216.96:8088'
 };

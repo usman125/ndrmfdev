@@ -224,7 +224,6 @@ export class PoHomeComponent implements OnInit, OnDestroy {
           if (element.status === "Extended Appraisal") extCount = extCount + 1;
           if (element.status === "Preliminary Appraisal") preCount = preCount + 1;
           if (element.status === "Under Review") urCount = urCount + 1;
-
         });
         this.projectStats = {
           preCount,

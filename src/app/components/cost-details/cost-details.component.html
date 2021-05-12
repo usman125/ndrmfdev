@@ -510,7 +510,7 @@
             <div class="general-info">
               <span id="title">Fip Share</span>
               <span id="value" *ngIf="selectedQuarter.fipShare">
-                {{!clubbed ? selectedQuarter.fipShare : clubData.fipShare}}
+                {{!clubbed ? (selectedQuarter.fipShare | number) : (clubData.fipShare | number)}}
               </span>
               <span id="value" *ngIf="!selectedQuarter.fipShare">
                 &nbsp;
@@ -519,7 +519,7 @@
             <div class="general-info ml-3">
               <span id="title">Ndrmf Share</span>
               <span id="value" *ngIf="selectedQuarter.ndrmfShare">
-                {{!clubbed ? selectedQuarter.ndrmfShare : clubData.ndrmfShare}}
+                {{!clubbed ? (selectedQuarter.ndrmfShare | number) : (clubData.ndrmfShare | number)}}
               </span>
               <span id="value" *ngIf="!selectedQuarter.ndrmfShare">
                 &nbsp;
@@ -577,20 +577,20 @@
                 </div>
                 <mat-form-field class="mb-3" appearance="outline">
                   <mat-label>Reason</mat-label>
-                  <textarea [ngModelOptions]="{standalone: true}" [(ngModel)]="item.reason" matInput
-                     rows="3" cols="5"></textarea>
+                  <textarea [ngModelOptions]="{standalone: true}" [(ngModel)]="item.reason" matInput rows="3"
+                    cols="5"></textarea>
                 </mat-form-field>
               </div>
             </div>
           </div>
         </div>
         <!-- SUBMITTED DETAILS -->
-        <div class="mt-4 mb-3 d-flex align-items-center border-heading">
+        <div class="mt-4 mb-3 ml-3 mr-3 d-flex align-items-center border-heading">
           <span class="pl-2">
             Details
           </span>
         </div>
-        <form [formGroup]="_form">
+        <form [formGroup]="_form" class="m-3">
           <div class="m-3">
             <div class="row">
               <div class="col-md-12 mb-3">

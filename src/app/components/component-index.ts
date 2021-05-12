@@ -1,3 +1,22 @@
+export  { CeoActionsComponent } from './ceo-actions/ceo-actions.component';
+export { CEOComponent } from './ceo/ceo.component';
+export { GrcActionsComponent } from './grc-actions/grc-actions.component';
+
+export  { EvidenceAndReviewsComponent } from './evidence-and-reviews/evidence-and-reviews.component';
+export { ShowAttachmentsComponent } from './show-attachments/show-attachments.component';
+export  { UpdateComplaintComponent } from './update-complaint/update-complaint.component';
+export { UpdateComplaintStatusComponent } from './update-complaint-status/update-complaint-status.component';
+export { GRCComponent } from './grc/grc.component';
+export { EmailToConcernPersonComponent } from './email-to-concern-person/email-to-concern-person.component';
+export { ConcernedPersonDialogComponent } from './concerned-person-dialog/concerned-person-dialog.component';
+export { ComplainantScreenComponent } from "./complainant-screen/complainant-screen.component";
+export { AssignToConcernPersonComponent } from "./assign-to-concern-person/assign-to-concern-person.component";
+
+export { AssignComplainComponent } from "./assign-complain/assign-complain.component";
+export { ListOfAllComplainsComponent } from "./list-of-all-complains/list-of-all-complains.component";
+export { EditComplainComponent } from "./edit-complain/edit-complain.component";
+
+
 export { LoginComponent } from "./login/login.component";
 export { SurveysComponent } from "./surveys/surveys.component";
 export { CoffeeElectionComponent } from "./coffee-election/coffee-election.component";

@@ -11,8 +11,8 @@
       </div>
       <form [formGroup]="registerForm" (ngSubmit)="registerUser(registerForm.value)">
         <mat-form-field class="col-md-12">
-          <mat-label>Company Name</mat-label>
-          <input matInput type="text" placeholder="John Doe" formControlName="firstName"
+          <mat-label>Authorized Person Name</mat-label>
+          <input matInput type="text" placeholder="e.g. John Doe" formControlName="firstName"
             [formControl]="registerForm.controls['firstName']" />
         </mat-form-field>
         <div class="alert alert-danger require-field" role="alert" *ngIf="registerForm.controls['firstName'].hasError('required') && 
