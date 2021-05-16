@@ -19,9 +19,10 @@
     .top-info-bar{
       display: none; 
       position:absolute;
+      page-break-after:avoid;
     }
 
-    .bg-light {
+    .card-body .bg-light, .card, .card.border .bg-light, .bg-light {
       background-color: transparent !important;
   }
 

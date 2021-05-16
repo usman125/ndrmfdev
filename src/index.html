@@ -107,13 +107,12 @@
         page-break-after: auto;
       }
 
-      table,
       td,
       .row,
       .header,
       .formio-component-panel {
         page-break-inside: avoid;
-        page-break-after: auto;
+        page-break-before: auto;
       }
 
       .formio-component-submit {
@@ -139,6 +138,10 @@
         padding: 0px;
         margin-bottom: 0;
       }
+      .card-body .bg-light, .card, .card.border .bg-light, .bg-light {
+      background-color: transparent !important;
+      background: transparent !important;
+  }
 
       .appraisal-box table {
         width: 80%;

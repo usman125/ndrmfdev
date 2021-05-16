@@ -1387,7 +1387,6 @@
 <ng-container>
   <div id="print-proposal-sections" style="display: none;">
     <div class="margin-5" *ngFor="let item of userReviewRequests">
-      <div class="border-heading">{{item.name}}</div>
       <formio readOnly="true" [submission]="{data: item.data}" [form]="item.template"></formio>
     </div>
   </div>

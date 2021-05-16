@@ -1,0 +1,18 @@
+@media print{
+    .top-info-bar{
+      display: none; 
+      position:absolute;
+      page-break-after:avoid;
+    }
+
+    .card-body .bg-light {
+      background-color: transparent !important;
+  }
+
+  .image-style-align-center img {
+    display: inherit;
+    margin: 0 auto;
+}
+
+
+}

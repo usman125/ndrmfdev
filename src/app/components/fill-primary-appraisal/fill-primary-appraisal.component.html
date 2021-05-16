@@ -20,7 +20,7 @@
     </mat-toolbar-row>
   </mat-toolbar>
 
-  <mat-card class="m-20 p-4" id="print-pre-appraisal">
+  <mat-card class="m-20 p-4">
     <ng-container *ngIf="!apiLoading">
       <mat-card-title>
 
@@ -51,6 +51,7 @@
         <p class="heading-contain">
           <span id="answer">Comments:</span>&nbsp;{{selectedProject?.preAppraisal.commentsByPo}}
         </p>
+        <div id="print-pre-appraisal">
         <formio *ngIf="(loggedUser?.role === 'dm pam' || loggedUser?.role === 'process owner') && 
         selectedProject !== null && selectedProject?.preAppraisal.status === 'Pending'"
           [form]="selectedProject.preAppraisal.template" [submission]="{data:selectedProject.preAppraisal.data}"
@@ -65,6 +66,7 @@
         || selectedProject?.preAppraisal.status === 'Marked to GM' || selectedProject?.preAppraisal.status === 'Marked to CEO'"
           [form]="selectedProject.preAppraisal.template" readOnly="true"
           [submission]="{data:selectedProject.preAppraisal.data}"></formio>
+        </div>
       </mat-card-content>
       <mat-card-actions class="m-1">
         <button (click)="completeTask()" disabled mat-raised-button color="accent"
