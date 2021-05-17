@@ -219,14 +219,18 @@ mat-button-toggle-group .mat-button-toggle-checked .mat-button-toggle-label-cont
     padding: 13px 0px;
 }
 .expiry-section, .expiry-sections {
-  display: flex;
+  /* display: flex; */
   justify-content: space-between;
 }
-.appraisals mat-chip-list {
-  margin-left: auto;
-  margin-right: 25px;
+.mat-card-actions mat-chip-list {
+  /* margin-left: auto;
+  margin-right: 25px; */
+  display: inline-block;
 }
-.appraisals .mat-chip.mat-standard-chip.mat-chip-selected.mat-warn, .mat-chip.mat-standard-chip.mat-chip-selected.mat-accent{
+.mat-card-actions .mat-chip.mat-standard-chip.mat-chip-selected.mat-warn, .mat-chip.mat-standard-chip.mat-chip-selected.mat-accent{
   font-size: 10px !important;
 }
 
+.proj-detail .mat-toolbar-row span{
+  white-space: normal;
+}

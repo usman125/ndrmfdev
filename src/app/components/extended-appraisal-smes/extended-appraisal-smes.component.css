@@ -39,3 +39,17 @@ span.mobileheads {
     text-align: right;
 }
 }
+@media print{
+    .top-info-bar{
+      display: none; 
+      position:absolute;
+      page-break-after:avoid;
+    }
+
+    .card-body .bg-light {
+      background-color: transparent !important;
+  }
+
+
+
+}
