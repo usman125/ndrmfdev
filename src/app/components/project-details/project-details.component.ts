@@ -325,30 +325,31 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             (result: any) => {
               console.log("ALL ATTACHMENTS:--", result);
               this._primaryAppraisalFormsStore.addSelectedProjectFiles(result);
-              if (this.selectedProject.status === 'Offer Letter') {
-                this._projectService.getOfferLetter(this.selectedProjectId).subscribe(
-                  (result: any) => {
-                    if (result) {
-                      if (result.expiryDate) {
-                        result.expiryDate = result.expiryDate.split('T')[0];
-                        result.offerLetterDays = this.calculateDaysDifference(result.expiryDate);
-                        if (result.offerLetterDays < parseInt('0')) {
-                          result.status = 'Expired';
-                        }
-                      }
-                      this._primaryAppraisalFormsStore.setOfferLetter(result);
-                    }
-                  },
-                  error => {
-                    console.log("RESULT AFTER OFFER LETTER:--", error);
-                  }
-                );
-              }
             },
             error => {
               console.log("FILES FOR THIS PROJECT:--", error);
             }
           );
+          // if (this.selectedProject.status === 'Offer Letter') {
+          this._projectService.getOfferLetter(this.selectedProjectId).subscribe(
+            (result: any) => {
+              if (result) {
+                if (result.expiryDate) {
+                  // result.expiryDate = result.expiryDate.split('T')[0];
+                  result.offerLetterDays = this.calculateDaysDifference(result.expiryDate);
+                  if (result.offerLetterDays < parseInt('0')) {
+                    result.status = 'Expired';
+                  }
+                }
+                console.log("OFFER LETTER:--", result);
+                this._primaryAppraisalFormsStore.setOfferLetter(result);
+              }
+            },
+            error => {
+              console.log("RESULT AFTER OFFER LETTER:--", error);
+            }
+          );
+          // }
         } else {
           this.apiLoading = false;
         }
@@ -1126,6 +1127,84 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       }
     });
 
+  }
+
+  changeProjectStages(status) {
+    const options = {
+      title: 'Set one of the following state!',
+      message: 'Select any of the following',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: false,
+      setStages: true,
+    };
+    if (status !== 'GIA') {
+      this._projectService.setProjectStage(this.selectedProjectId, status).subscribe(
+        result => {
+          let stage = null;
+          if (status === 'PRELIMINARY_APPRAISAL') stage = 'Preliminary Appraisal'
+          if (status === 'EXTENDED_APPRAISAL') stage = 'Extended Appraisal'
+          if (status === 'TAC_MEETING') stage = 'TAC Meeting'
+          if (status === 'RMC_MEETING') stage = 'RMC Meeting'
+          if (status === 'BOD_MEETING') stage = 'BOD Meeting'
+          if (status === 'OFFER_LETTER') stage = 'Offer Letter'
+          if (status === 'GIA') stage = 'GIA'
+          this._primaryAppraisalFormsStore.setProjectStage(stage);
+          options.setStages = false;
+          options.add = true;
+          options.title = 'Successfull!';
+          options.message = 'Project stage has been changed';
+          this._confirmModelService.open(options);
+        },
+        error => {
+          console.log("ERROR FROM MARK TO GM:--", error);
+        }
+      );
+    } else {
+      const options = {
+        title: 'Information regarding enabling GIA!',
+        message: 'Fill the following checklist!',
+        cancelText: 'CANCEL',
+        confirmText: 'ENABLE GIA',
+        add: false,
+        confirm: false,
+        setStatus: false,
+        assignToGm: false,
+        setStages: false,
+        enableGia: true,
+      };
+      this._confirmModelService.open(options);
+      this._confirmModelService.confirmed().subscribe(confirmed => {
+        if (confirmed) {
+          this._projectService.setProjectStage(this.selectedProjectId, status).subscribe(
+            (result: any) => {
+              let stage = null;
+              if (status === 'PRELIMINARY_APPRAISAL') stage = 'Preliminary Appraisal'
+              if (status === 'EXTENDED_APPRAISAL') stage = 'Extended Appraisal'
+              if (status === 'TAC_MEETING') stage = 'TAC Meeting'
+              if (status === 'RMC_MEETING') stage = 'RMC Meeting'
+              if (status === 'BOD_MEETING') stage = 'BOD Meeting'
+              if (status === 'OFFER_LETTER') stage = 'Offer Letter'
+              if (status === 'GIA') stage = 'GIA'
+              this._primaryAppraisalFormsStore.setProjectStage(stage);
+              options.setStages = false;
+              options.add = true;
+              options.enableGia = false;
+              options.title = 'Successfull!';
+              options.confirmText = 'OK',
+              options.message = 'Project stage has been changed';
+              this._confirmModelService.open(options);
+            },
+            error => {
+              console.log("ERROR FROM MARK TO GM:--", error);
+            }
+          );
+        }
+      })
+    }
   }
 
   setProjectStages() {

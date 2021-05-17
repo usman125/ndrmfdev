@@ -33,6 +33,8 @@
             uppercase}}</button>
           <button mat-button color="warn" (click)="uploadTacMoms('TAC_MEETING', 'no')">{{'disapprove' |
             uppercase}}</button>
+          <button mat-button color="warn" (click)="changeProjectStages('RMC_MEETING')">{{'not applicable' |
+            uppercase}}</button>
         </mat-card-actions>
       </mat-card>
 
@@ -67,6 +69,8 @@
           <button mat-button color="accent" (click)="uploadTacMoms('RMC_MEETING', 'yesrmc')">{{'approve' |
             uppercase}}</button>
           <button mat-button color="warn" (click)="uploadTacMoms('RMC_MEETING', 'no')">{{'disapprove' |
+            uppercase}}</button>
+          <button mat-button color="warn" (click)="changeProjectStages('BOD_MEETING')">{{'not applicable' |
             uppercase}}</button>
         </mat-card-actions>
       </mat-card>
@@ -105,6 +109,8 @@
           <button mat-button color="warn" (click)="uploadTacMoms('BOD_MEETING', 'no')">
             {{'disapprove' | uppercase}}
           </button>
+          <button mat-button color="warn" (click)="changeProjectStages('OFFER_LETTER')">{{'not applicable' |
+            uppercase}}</button>
 
         </mat-card-actions>
       </mat-card>
@@ -115,6 +121,14 @@
         <mat-toolbar-row>
           <span>Upload Offer Letter</span>
           <div class="example-spacer"></div>
+          <div *ngIf="selectedProject?.offerLetter?.fipResponse === 'Approved'
+                                && (selectedProject?.offerLetter?.fipStatus === 'Completed' || 
+                                selectedProject?.offerLetter?.fipMarkingStatus === 'Completed')
+                                && selectedProject?.owner">
+            <button (click)="changeProjectStages('GIA')" mat-button color="primary">
+              <mat-icon class="mr-1">edit</mat-icon> {{'enable gia' | uppercase}}
+            </button>
+          </div>
         </mat-toolbar-row>
       </mat-toolbar>
       <mat-card class="m-20" style="padding: 30px;"
@@ -131,15 +145,17 @@
                                                 || selectedProject?.offerLetter?.fipStatus === 'Pending') && 
                                                 selectedProject?.offerLetter?.status !== 'Expired'" color="primary"
               selected>
-              Pending: {{selectedProject.offerLetter.offerLetterDays ? selectedProject.offerLetter.offerLetterDays
-              : selectedProject.offerLetter.expiryDate | date:'shortDate'}} Days Remaining
+              Pending: {{selectedProject.offerLetter.offerLetterDays ? (selectedProject.offerLetter.offerLetterDays +
+              ' Days Remaining')
+              : selectedProject.offerLetter.expiryDate | date:'shortDate'}}
             </mat-chip>
             <mat-chip *ngIf="(selectedProject?.offerLetter?.fipMarkingStatus === 'Pending'
                                                 || selectedProject?.offerLetter?.fipStatus === 'Pending') && 
                                                 selectedProject?.offerLetter?.status === 'Expired'" color="warn"
               selected>
-              Expired: {{selectedProject.offerLetter.offerLetterDays ? selectedProject.offerLetter.offerLetterDays
-              : selectedProject.offerLetter.expiryDate | date:'shortDate'}} Days Ago
+              Expired: {{selectedProject.offerLetter.offerLetterDays ? (selectedProject.offerLetter.offerLetterDays +
+              ' Days Ago')
+              : selectedProject.offerLetter.expiryDate | date:'shortDate'}}
             </mat-chip>
           </mat-chip-list>
 
@@ -213,7 +229,7 @@
           <button [disabled]="files.length === 0 || (selectedProject?.offerLetter?.gmResponse === 'Approved' && 
           selectedProject?.offerLetter?.fipResponse === 'Approved')" mat-button color="accent"
             (click)="uploadOfferLetter()">
-            {{'assign for signing' | uppercase}}
+            {{'MArk to gm' | uppercase}}
             <mat-icon class="ml-2">gesture</mat-icon>
           </button>
           <button mat-button color="warn" (click)="markOfferLetterToFip()" *ngIf="selectedProject?.offerLetter"
@@ -1295,14 +1311,16 @@
                   <mat-chip *ngIf="(selectedProject?.offerLetter?.fipMarkingStatus === 'Pending' || 
                   selectedProject?.offerLetter?.fipStatus === 'Pending') && 
                   selectedProject?.offerLetter?.status !== 'Expired'" color="primary" selected>
-                    Pending: {{selectedProject.offerLetter.offerLetterDays ? selectedProject.offerLetter.offerLetterDays
-                    : selectedProject.offerLetter.expiryDate | date:'shortDate'}} Days Remaining
+                    Pending: {{selectedProject.offerLetter.offerLetterDays ?
+                    (selectedProject.offerLetter.offerLetterDays + ' Days Remaining')
+                    : selectedProject.offerLetter.expiryDate | date:'shortDate'}}
                   </mat-chip>
                   <mat-chip *ngIf="(selectedProject?.offerLetter?.fipMarkingStatus === 'Pending' || 
                   selectedProject?.offerLetter?.fipStatus === 'Pending') && 
                   selectedProject?.offerLetter?.status === 'Expired'" color="warn" selected>
-                    Expired: {{selectedProject.offerLetter.offerLetterDays ? selectedProject.offerLetter.offerLetterDays
-                    : selectedProject.offerLetter.expiryDate | date:'shortDate'}} Days Ago
+                    Expired: {{selectedProject.offerLetter.offerLetterDays ?
+                    (selectedProject.offerLetter.offerLetterDays + ' Days Ago')
+                    : selectedProject.offerLetter.expiryDate | date:'shortDate'}}
                   </mat-chip>
                 </mat-chip-list>
                 <mat-chip-list *ngIf="selectedProject?.offerLetter?.fipResponse !== null">

@@ -13,8 +13,8 @@
         <span style="word-break: break-all;">{{node.name}}</span>
         <small>added by: <small id="comment">{{node.created_by | titlecase}}</small></small>
       </div>
-      <a class="view-btn-attach" [download]="node.name"
-        [href]="'data:image/jpeg;base64,' + node.picByte" target="_blank">
+      <a class="view-btn-attach" [download]="node.name" [href]="'data:image/jpeg;base64,' + node.picByte"
+        target="_blank">
         <mat-icon class="download-btn">cloud_download</mat-icon>
       </a>
     </div>

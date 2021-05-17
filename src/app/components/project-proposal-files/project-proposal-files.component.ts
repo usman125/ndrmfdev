@@ -45,6 +45,8 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
   selectedFileBLOB: any = null;
   @ViewChild('downloadLink') downloadLink;
 
+  loggedUser = JSON.parse(localStorage.getItem('user'));
+
   private _transformer = (node: FoodNode, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0,
@@ -74,17 +76,36 @@ export class ProjectProposalFilesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.Subscription.add(
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
-        var array = _.chain(data.selectedProject.files)
-          .groupBy('status')
-          .map((val, status) => {
-            return {
-              children: val,
-              name: status,
+        if (this.loggedUser.role === 'fip') {
+          let newArray = [];
+          for (let i = 0; i < data.selectedProject.files.length; i++) {
+            if (data.selectedProject.files[i].status === 'Offer Letter') {
+              newArray.push(data.selectedProject.files[i]);
             }
-          })
-          .value();
-        this.dataSource.data = array;
-        // console.log("ALL FILES FROM PROJECT:---", data.selectedProject.files, array);
+          }
+          var array = _.chain(newArray)
+            .groupBy('status')
+            .map((val, status) => {
+              return {
+                children: val,
+                name: status,
+              }
+            })
+            .value();
+          this.dataSource.data = array;
+        } else {
+          var array = _.chain(data.selectedProject.files)
+            .groupBy('status')
+            .map((val, status) => {
+              return {
+                children: val,
+                name: status,
+              }
+            })
+            .value();
+          this.dataSource.data = array;
+        }
+        console.log("ALL FILES FROM PROJECT:---", data.selectedProject.files, array);
       })
     )
   }
