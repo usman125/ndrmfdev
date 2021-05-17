@@ -134,7 +134,9 @@ export class PoHomeComponent implements OnInit, OnDestroy {
     private _settingsService: SettingsService,
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
     private _router: Router,
-  ) { }
+  ) {
+    this.reloadPage();
+  }
 
   ngOnInit(): void {
     this.Subscription.add(
@@ -154,8 +156,42 @@ export class PoHomeComponent implements OnInit, OnDestroy {
         this.selectedProject = data.selectedProject;
         // console.log("SELECTED PROJECT ON PO HOME***********", this.selectedProject);
       })
-    )
+    );
+
   }
+
+  reloadPage() {
+    // var currentDocumentTimestamp = new Date(performance.timing.domLoading).getTime();
+    // // Current Time //
+    // var now = Date.now();
+    // // Total Process Lenght as Minutes //
+    // var tenSec = 10 * 1000;
+    // // End Time of Process //
+    // var plusTenSec = currentDocumentTimestamp + tenSec;
+    // if (now > plusTenSec) {
+    //   location.reload();
+    // }
+    if (window.localStorage) {
+      if (!localStorage.getItem('firstLoad')) {
+        localStorage['firstLoad'] = true;
+        window.location.reload();
+      }
+      else
+        localStorage.removeItem('firstLoad');
+    }
+  }
+  // reloadPage() {
+  //   var currentDocumentTimestamp = new Date(performance.timing.domLoading).getTime();
+  //   // Current Time //
+  //   var now = Date.now();
+  //   // Total Process Lenght as Minutes //
+  //   var tenSec = 10 * 1000;
+  //   // End Time of Process //
+  //   var plusTenSec = currentDocumentTimestamp + tenSec;
+  //   if (now > plusTenSec) {
+  //     location.reload();
+  //   }
+  // }
 
 
   getProcessTypes() {

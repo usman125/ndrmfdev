@@ -74,6 +74,7 @@ export class ProjectsState {
     name: string,
     status: string,
     submittedAt: string,
-    thematicAreaName: string
+    thematicAreaName: string,
+    newEntry: boolean,
   }[] = []
 }

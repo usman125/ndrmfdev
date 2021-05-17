@@ -14,20 +14,22 @@ export class ProjectsStore extends Store<ProjectsState> {
     name: string,
     status: string,
     submittedAt: string,
-    thematicAreaName: string
+    thematicAreaName: string,
+    newEntry: boolean,
   ): void {
     this.setState({
       ...this.state,
       projects: [
-        ...this.state.projects,
         {
           "id": id,
           "initiatorFullName": initiatorFullName,
           "name": name,
           "status": status,
           "submittedAt": submittedAt,
-          "thematicAreaName": thematicAreaName
-        }
+          "thematicAreaName": thematicAreaName,
+          "newEntry": newEntry,
+        },
+        ...this.state.projects,
       ]
     });
   }

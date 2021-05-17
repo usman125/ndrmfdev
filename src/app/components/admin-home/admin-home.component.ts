@@ -38,9 +38,13 @@ export class AdminHomeComponent implements OnInit {
     private _settingsService: SettingsService,
     private _authStore: AuthStore,
     private _router: Router,
-  ) { }
+  ) {
+
+    this.reloadPage();
+  }
 
   ngOnInit(): void {
+
 
     this.Subscription.add(
       this._authStore.state$.subscribe(data => {
@@ -53,6 +57,27 @@ export class AdminHomeComponent implements OnInit {
     this.pendingSignUps();
     this.templateStats();
     this.thematicAreasCount();
+  }
+
+  reloadPage() {
+    // var currentDocumentTimestamp = new Date(performance.timing.domLoading).getTime();
+    // // Current Time //
+    // var now = Date.now();
+    // // Total Process Lenght as Minutes //
+    // var tenSec = 10 * 1000;
+    // // End Time of Process //
+    // var plusTenSec = currentDocumentTimestamp + tenSec;
+    // if (now > plusTenSec) {
+    //   location.reload();
+    // }
+    if (window.localStorage) {
+      if (!localStorage.getItem('firstLoad')) {
+        localStorage['firstLoad'] = true;
+        window.location.reload();
+      }
+      else
+        localStorage.removeItem('firstLoad');
+    }
   }
 
   userStats() {

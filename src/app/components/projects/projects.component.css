@@ -45,7 +45,7 @@
     padding: 15px;
     background: #fff;
     width: 100%;
-    box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
     border: 1px solid transparent;
     height: 100%;
     border-radius: 3px;
@@ -60,7 +60,11 @@
     font-style: italic;
     color: #666;
 }
-.inner-content h6{
+.inner-content h6 {
     font-size: 13px;
     font-weight: 500;
+}
+
+.new-tile .inner-content.mat-elevation-z8 {
+    box-shadow: 0 0 0 1px rgb(30 130 76);
 }

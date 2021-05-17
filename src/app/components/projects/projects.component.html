@@ -18,8 +18,8 @@
           </mat-form-field>
         </div>
       </mat-grid-tile>
-      <mat-grid-tile class="own-tiles" rowspan="2" colspan="1"
-        *ngFor="let item of allProjects | dataFilter:filterQuery">
+      <mat-grid-tile [matTooltip]="item.newEntry ? 'New Project' : ''" [ngClass]="{'new-tile': item.newEntry}"
+        class="own-tiles" rowspan="2" colspan="1" *ngFor="let item of allProjects | dataFilter:filterQuery">
         <div class="inner-content mat-elevation-z8" (click)="goToDetails(item)">
           <div class="content">
             <h6>{{item?.name | titlecase}}</h6>

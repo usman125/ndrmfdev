@@ -42,6 +42,28 @@ export class GmHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllProject();
+    this.reloadPage();
+  }
+
+  reloadPage() {
+    // var currentDocumentTimestamp = new Date(performance.timing.domLoading).getTime();
+    // // Current Time //
+    // var now = Date.now();
+    // // Total Process Lenght as Minutes //
+    // var tenSec = 10 * 1000;
+    // // End Time of Process //
+    // var plusTenSec = currentDocumentTimestamp + tenSec;
+    // if (now > plusTenSec) {
+    //   location.reload();
+    // }
+    if (window.localStorage) {
+      if (!localStorage.getItem('firstLoad')) {
+        localStorage['firstLoad'] = true;
+        window.location.reload();
+      }
+      else
+        localStorage.removeItem('firstLoad');
+    }
   }
 
   getAllProject() {

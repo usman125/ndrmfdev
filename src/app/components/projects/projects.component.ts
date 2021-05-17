@@ -77,8 +77,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   getAllProjects() {
     this._projectService.getAllProjects().subscribe(
       (result: any) => {
-        // console.log("RESULT ALL PROJECT:---", result);
         let newResults = _.uniqBy(result, 'id');
+        console.log("RESULT ALL PROJECT:---", result);
         this._projectsStore.addAllProjects(newResults);
       },
       error => {
@@ -91,6 +91,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this._projectService.getGiaProjects().subscribe(
       (result: any) => {
         let newResults = _.uniqWith(result, _.isEqual);
+        // newResults.sort(function (x, y) {
+        //   return x.submittedAt - y.submittedAt;
+        // })
         // console.log("RESULT ALL GIA PROJECT:---", result, newResults);
         this._projectsStore.addAllProjects(newResults);
       },
@@ -105,6 +108,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       (result: any) => {
         // console.log("RESULT EXTENDED APPRAISAL PROJECT:---", result);
         let newResults = _.uniqBy(result, 'id');
+        // newResults.sort(function (x, y) {
+        //   return x.submittedAt - y.submittedAt;
+        // })
         this._projectsStore.addAllProjects(newResults);
       },
       error => {
@@ -118,6 +124,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       (result: any) => {
         // console.log("RESULT ALL PO PROJECT:---", result);
         let newResults = _.uniqBy(result, 'id');
+        // newResults.sort(function (x, y) {
+        //   return x.submittedAt - y.submittedAt;
+        // })
         this._projectsStore.addAllProjects(newResults);
         // this.getExtAppraisalProjects();
       },
@@ -132,6 +141,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       (result: any) => {
         // console.log("RESULT ALL GM PROJECT:---", result);
         let newResults = _.uniqBy(result, 'id');
+        // newResults.sort(function (x, y) {
+        //   return x.submittedAt - y.submittedAt;
+        // })
         this._projectsStore.addAllProjects(newResults);
         // this.getExtAppraisalProjects();
       },
@@ -146,6 +158,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       (result: any) => {
         // console.log("RESULT ALL CEO PROJECT:---", result);
         let newResults = _.uniqBy(result, 'id');
+        // newResults.sort(function (x, y) {
+        //   return x.submittedAt - y.submittedAt;
+        // })
         this._projectsStore.addAllProjects(newResults);
         // this.getExtAppraisalProjects();
       },
@@ -160,6 +175,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       (result: any) => {
         // console.log("RESULT ALL DM PAM PROJECT:---", result);
         let newResults = _.uniqBy(result, 'id');
+        // newResults.sort(function (x, y) {
+        //   return x.submittedAt - y.submittedAt;
+        // })
         this._projectsStore.addAllProjects(newResults);
       },
       error => {
@@ -223,18 +241,8 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
     this._AddProjectModelService.confirmed().subscribe(confirmed => {
       if (confirmed) {
-        // this.saveData();
         // console.log("CONFIRMED FROM MODEL", confirmed);
         this.addProject(confirmed);
-        // this._router.navigate()
-        // this._projectsStore.addProject(
-        //   null,
-        //   this.loggedUser.firstName + this.loggedUser.lastName,
-        //   confirmed.name,
-        //   'Draft',
-        //   new Date().toISOString(),
-        //   confirmed.thematicAreaName
-        // );
       }
     });
   }
@@ -260,9 +268,11 @@ export class ProjectsComponent implements OnInit, OnDestroy {
             values.name,
             'Draft',
             new Date().toISOString(),
-            values.thematicAreaName
+            values.thematicAreaName,
+            true
           );
-          this._router.navigate(['/project-details', result.id]);
+          this._confirmModelService.close();
+          // this._router.navigate(['/project-details', result.id]);
         } else {
           this._projectsStore.addProject(
             result.id,
@@ -270,9 +280,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
             values.name,
             'Upload PC1',
             new Date().toISOString(),
-            values.thematicAreaName
+            values.thematicAreaName,
+            true
           );
-          this._confirmModelService.dialogRef.close();
+          // this._confirmModelService.dialogRef.close();
           this._router.navigate(['/project-details', result.id]);
           // window.location.href = '/project-details/' + result.id;
         }

@@ -32,6 +32,28 @@ export class SmeHomeComponent implements OnInit {
     );
     this.getQualificationTasks();
     this.getAllProject();
+    this.reloadPage();
+  }
+
+  reloadPage() {
+    // var currentDocumentTimestamp = new Date(performance.timing.domLoading).getTime();
+    // // Current Time //
+    // var now = Date.now();
+    // // Total Process Lenght as Minutes //
+    // var tenSec = 10 * 1000;
+    // // End Time of Process //
+    // var plusTenSec = currentDocumentTimestamp + tenSec;
+    // if (now > plusTenSec) {
+    //   location.reload();
+    // }
+    if (window.localStorage) {
+      if (!localStorage.getItem('firstLoad')) {
+        localStorage['firstLoad'] = true;
+        window.location.reload();
+      }
+      else
+        localStorage.removeItem('firstLoad');
+    }
   }
 
   getQualificationTasks() {
@@ -54,9 +76,9 @@ export class SmeHomeComponent implements OnInit {
         // });
         console.log("RESULT SME HOME TASKS:--", result);
         let count = 0;
-        for (let i = 0; i < result.qualification.length; i++){
+        for (let i = 0; i < result.qualification.length; i++) {
           let key = result.qualification[i];
-          if (key.status === "Pending"){
+          if (key.status === "Pending") {
             count = count + 1;
           }
         }
@@ -101,7 +123,7 @@ export class SmeHomeComponent implements OnInit {
     // if (route === 'accreditation-requests'){
     //   this._router.navigate([route]);
     // }else{
-      this._router.navigate([route]);
+    this._router.navigate([route]);
     // }
   }
 

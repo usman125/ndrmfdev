@@ -18,6 +18,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
     FormsModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
+    MatTooltipModule
   ],
   exports: [ProjectsComponent]
 })
