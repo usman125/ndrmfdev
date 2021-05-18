@@ -4,6 +4,7 @@ import { ExtendedAppraisalSmesStore } from "../../stores/extended-appraisal-smes
 import { Subscription } from 'rxjs';
 import { ProjectService } from "../../services/project.service";
 import { ConfirmModelService } from 'src/app/services/confirm-model.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-add-extended-appraisal-sme',
@@ -66,13 +67,15 @@ export class AddExtendedAppraisalSmeComponent implements OnInit {
               submitCount = submitCount + 1;
             }
           });
-          // console.log("EXTENDED APPRAISAL IN SMES:---", data.extendedAppraisal, this.appraisalSections);
+          console.log("EXTENDED APPRAISAL IN SMES:---", data.extendedAppraisal, this.appraisalSections, this.unassignedSections);
           this.totalSections = data.extendedAppraisal.sections.length;
           this.sectionStats = {
             pendingCount,
             submitCount
           }
         }
+        this.appraisalSections = _.orderBy(this.appraisalSections, ['orderNum'], ['asc']);
+        this.unassignedSections = _.orderBy(this.unassignedSections, ['orderNum'], ['asc']);
         this.apiLoading = false;
       })
     );
