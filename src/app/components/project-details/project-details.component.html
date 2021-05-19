@@ -306,7 +306,8 @@
       <!-- GIA CARD -->
       <mat-toolbar *ngIf="(selectedProject?.status === 'GIA' || 
         selectedProject?.status === 'Checklist to FIP') && 
-        loggedUser?.role === 'process owner'" class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+        loggedUser?.role === 'process owner'" [hidden]="viewType === 'extapp'" class="mat-elevation-z8"
+        style="padding: 15px 0px;" color="primary">
         <mat-toolbar-row>
           <span>{{selectedProject?.status === 'Checklist to FIP' ?
             'Uploaded Final GIA' : 'Upload Final GIA'}}</span>
@@ -323,7 +324,7 @@
           </button>
         </mat-toolbar-row>
       </mat-toolbar>
-      <mat-card class="m-20 p-3" *ngIf="(selectedProject?.status === 'GIA' || 
+      <mat-card [hidden]="viewType === 'extapp'" class="m-20 p-3" *ngIf="(selectedProject?.status === 'GIA' || 
         selectedProject?.status === 'Checklist to FIP') && 
         loggedUser?.role === 'process owner' && selectedProject?.gia.processOwner.id === loggedUser?.id">
         <mat-card-content>
@@ -632,7 +633,7 @@
     </div>
 
     <!-- ACTION BUTTONS AND PROJECT GENERAL INFO -->
-    <div class="col-md-5 pl-0 mt-4">
+    <div class="col-md-5 pl-0 mt-4" [ngStyle]="{'margin-top':viewType === 'extapp' ? '0px !important' : 'initial'}">
       <mat-card class="m-20 ml-0" style="padding: 0px;position: sticky;top: 60px;" *ngIf="loggedUser.role !== 'fip'">
         <mat-toolbar class="mat-elevation-z8 no-margin" style="padding: 15px 0px;" color="primary">
           <mat-toolbar-row>

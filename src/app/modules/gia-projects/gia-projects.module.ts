@@ -20,6 +20,7 @@ import { NgxPrintModule } from 'ngx-print';
 import { ProjectPlanModule } from '../project-plan/project-plan.module';
 import { ProjectImpPlanModule } from '../project-imp-plan/project-imp-plan.module';
 import { AngularEditorModule } from '@kolkov/angular-editor';
+import { ProjectDetailsModule } from '../project-details/project-details.module';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { AngularEditorModule } from '@kolkov/angular-editor';
     GiaProjectsRoutingModule,
     // ProjectPlanModule,
     ProjectImpPlanModule,
+    ProjectDetailsModule,
     // ProjectDetailsModule,
     // ProjectsModule,
     MatCardModule,

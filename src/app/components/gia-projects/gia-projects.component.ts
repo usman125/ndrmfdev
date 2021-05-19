@@ -50,6 +50,7 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
 
 
   @Input() viewType: string = 'add-gia';
+  @Output() viewType2: string = 'extapp';
 
   giaFilter: Subject<any> = new Subject<any>();
 
@@ -244,6 +245,53 @@ export class GiaProjectsComponent implements OnInit, OnDestroy {
     this.apiLoading = true;
     this._projectService.getSingleProject(this.selectedProjectId).subscribe(
       (result: any) => {
+
+        // this.proposalSections.forEach(c => {
+        //   if ((c.data) === null ||
+        //     (c.data !== null && c.reassignmentStatus === 'Pending')
+        //   ) {
+        //     pendingCount = pendingCount + 1;
+        //   }
+        //   if ((c.data !== null && c.reassignmentStatus === null) ||
+        //     (c.data !== null && c.reassignmentStatus === 'Completed')
+        //   ) {
+        //     submitCount = submitCount + 1;
+        //   }
+        //   let result = c.name.toLowerCase().match(/glance/g);
+        //   let result1 = c.name.match(/Beneficiaries/g);
+        //   if (result !== null) {
+        //     if (c.data) {
+        //       this.selectedProjectInfo = c.data;
+        //       console.log("***********************SELECTED PROJECT MONTHS***********************", c.data, this.selectedProjectInfo)
+        //       this._authStore.setProjectMonths(c.data.duration);
+        //     }
+        //   }
+        //   if (this.selectedProjectInfo) {
+        //     if (result1 !== null) {
+        //       if (c.data) {
+        //         this.selectedProjectInfo.pb = c.data;
+        //       }
+        //     }
+        //   }
+        //   if (c.assigned === false) {
+        //     this.unassignedProposalSections.push(c);
+        //   } else if (c.assigned === true && c.reviewStatus !== null) {
+        //     this.assignedProposalSections.push(c);
+        //   }
+        //   if (c.reviewStatus === 'Pending') {
+        //     pendingReviewCount = pendingReviewCount + 1;
+        //   }
+        //   if (c.review !== null) {
+        //     reviewsCount = reviewsCount + 1;
+        //   }
+        //   if ((c.review === null && c.reviewStatus === null) ||
+        //     (c.review !== null && c.reviewStatus === null) ||
+        //     (c.review !== null && c.reviewStatus === 'Completed')
+        //   ) {
+        //     unassignCount = unassignCount + 1;
+        //   }
+        // });
+
         this._primaryAppraisalFormsStore.addSelectedProject(result);
         // console.log("PROJECT DETAILS FROM DATABASE:--", this.selectedProject);
         this.apiLoading = false;
