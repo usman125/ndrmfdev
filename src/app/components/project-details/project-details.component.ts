@@ -237,7 +237,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
         this.selectedProject = data.selectedProject;
 
-        console.log("***********************SELECTED PROJECT MONTHS***********************", this.selectedProject)
+        console.log("***********************SELECTED PROJECT MONTHS***********************", this.selectedProject, this.selectedProject ? this.selectedProject.implementationPlan ? JSON.parse(this.selectedProject.implementationPlan) : null : null);
         if (this.selectedProject && this.selectedProject.commentsMatrix) {
           this._accreditationCommentsMatrixStore.addCommentsArray(this.selectedProject.commentsMatrix);
         }

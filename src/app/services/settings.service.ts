@@ -19,6 +19,13 @@ export class SettingsService {
     );
   }
 
+  getProcessesNamesForPo() {
+    const url = `${AppConfig.apiUrl}/setting/processowner/get`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
   addProcess(processType, name) {
     const url = `${AppConfig.apiUrl}/setting/process/${processType}/sub-process-type/add?name=${name}`;
     return this._httpClient.post(

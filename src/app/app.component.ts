@@ -47,7 +47,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     this.loading = true;
     this.currentUser = JSON.parse(localStorage.getItem('user'));
-    // console.log("APP COMPONENT USER:--", this.currentUser);
+    console.log("APP COMPONENT USER:--", this.currentUser);
     // if (this.currentUser) {
     //   this._authStore.setEligibleFlag(this.currentUser.eligibileFlag);
     //   this._authStore.setAuthToken(this.currentUser.authToken);

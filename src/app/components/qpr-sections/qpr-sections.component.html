@@ -58,7 +58,7 @@
                     placeholder="Write comments here..." rows="3"></textarea>
                 </mat-form-field>
                 <button *ngIf="item.review === null && 
-                (item.reviewStatus === null || item.reviewStatus === 'Pending')" (click)="addQprSectionReview(item.id)"
+                (item.reviewStatus === null || item.reviewStatus === 'Pending')" (click)="addQprSectionReview(item)"
                   [disabled]="!comments || allLoading" mat-mini-fab color="accent">
                   <mat-icon>send</mat-icon>
                 </button>

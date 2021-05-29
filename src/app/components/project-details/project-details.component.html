@@ -371,13 +371,26 @@
             <mat-icon class="mr-1">grading</mat-icon>
             {{'view checklist' | titlecase}}
           </a>
-          <button mat-button (click)="commenceQPR()"
+          <!-- <button mat-button (click)="commenceQPR()"
             *ngIf="selectedProject?.status === 'Checklist to FIP' && selectedProject?.giaChecklist?.data !== null"
             color="warn">
             <mat-icon class="mr-1">grading</mat-icon>
             {{'COMMence qpr' | titlecase}}
-          </button>
+          </button> -->
 
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card class="m-20" *ngIf="loggedUser?.role === 'process owner' && 
+      loggedUser?.processNames.indexOf('QPR') > -1">
+        <mat-card-actions>
+          <button mat-button (click)="commenceQPR()"
+            *ngIf="(selectedProject?.status === 'Checklist to FIP' && selectedProject?.giaChecklist?.data !== null)
+            || (selectedProject?.status === 'GIA' && selectedProject?.gia?.status !== 'Not Initiated')"
+            color="warn">
+            <mat-icon class="mr-1">grading</mat-icon>
+            {{'COMMence qpr' | titlecase}}
+          </button>
         </mat-card-actions>
       </mat-card>
 

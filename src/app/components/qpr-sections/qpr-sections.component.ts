@@ -389,12 +389,18 @@ export class QprSectionsComponent implements OnInit {
 
   addQprSectionReview(item) {
     this.allLoading = true;
-    console.log("REVIEW TO ADD FOR SECTION:--", item);
     let body: any = null;
-    if (item.review === null && (item.reviewStatus === null || item.reviewStatus === 'Pending'))
-      body = { comments: this.comments };
-    if (item.review !== null && (item.reviewStatus === 'Pending'))
-      body = { comments: item.review.comments };
+    if (item.review === null && (item.reviewStatus === null || item.reviewStatus === 'Pending')) {
+      body = {
+        comments: this.comments
+      };
+    }
+    if (item.review !== null && (item.reviewStatus === 'Pending')) {
+      body = {
+        comments: item.review.comments
+      };
+    }
+    console.log("REVIEW TO ADD FOR SECTION:--", item, body);
     this._qprService.addReview(item.id, body).subscribe(
       (result: any) => {
         console.log("API RESULT ADDING REVIEW:--", result);

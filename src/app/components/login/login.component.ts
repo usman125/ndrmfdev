@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { Subscription } from "rxjs";
 import * as _ from 'lodash';
 import { LoginService } from "../../services/login.service";
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-login',
@@ -31,6 +32,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _formBuilder: FormBuilder,
     private _loginService: LoginService,
+    private _settingsService: SettingsService,
   ) {
     this._buildLoginForm();
   }
@@ -61,6 +63,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this._router.navigate(['adminhome']);
       }
       if (this.loggedUser.role === 'process owner') {
+        // console.log("LOGGED IN USER:---", this.loggedUser);
         this._router.navigate(['pohome']);
       }
       if (this.loggedUser.role === 'sme') {
@@ -89,7 +92,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this._authStore.setLoading();
     this._loginService.loginUser(values).subscribe(
       (result: any) => {
-        // console.log("RESULT AFTER CALIING LOGIN API:---", result);
+        console.log("RESULT AFTER CALIING LOGIN API:---", result);
         this.user = {
           id: result['user']['id'],
           firstName: result['user']['firstName'],
@@ -145,7 +148,20 @@ export class LoginComponent implements OnInit, OnDestroy {
             // console.log("Login CAlled:--", this.user);
             this._router.navigate(['adminhome']);
           } else if (this.user.role === 'process owner') {
-            this._router.navigate(['pohome']);
+            this._settingsService.getProcessesNamesForPo().subscribe(
+              (result => {
+                console.log("PROCESS NAMES FOR PO:--", result);
+                this.user.processNames = result;
+                var newUser = JSON.stringify(this.user);
+                // console.log(newUser);
+                localStorage.setItem('user', newUser);
+                this._router.navigate(['pohome']);
+              }),
+              error => {
+                console.log("PROCESS NAMES ERROR:--", error);
+              }
+            );
+            // this._router.navigate(['pohome']);
           } else if (this.user.role === 'sme') {
             this._router.navigate(['smehome']);
           } else if (this.user.role === 'dm pam') {
