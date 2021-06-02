@@ -6,6 +6,7 @@ import { ProjectService } from 'src/app/services/project.service';
 import { QprStore } from 'src/app/stores/qpr/qpr-store';
 import { PrimaryAppraisalFormsStore } from 'src/app/stores/primary-appraisal-forms/primary-appraisal-forms-store';
 import { AuthStore } from 'src/app/stores/auth/auth-store';
+import { QprSingleRequestStore } from 'src/app/stores/qpr-single-request/qpr-single-request-store';
 
 @Component({
   selector: 'app-fill-qpr',
@@ -36,7 +37,7 @@ export class FillQprComponent implements OnInit {
     private _qprService: QprService,
     private _activatedRoute: ActivatedRoute,
     private _qprSectionsStore: QprSectionsStore,
-    private _projectService: ProjectService,
+    private _qprSingleRequestStore: QprSingleRequestStore,
     private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
     private _qprStore: QprStore,
     private _authStore: AuthStore,
@@ -56,8 +57,9 @@ export class FillQprComponent implements OnInit {
   getSingleQprRequests() {
     this._qprService.getSingleQPR(this.selectedRequestId).subscribe(
       (result: any) => {
-        // console.log("RESULT SINGLE REQUEST:---", result);
+        console.log("RESULT SINGLE REQUEST:---", result);
         this.selectedRequest = result;
+        this._qprSingleRequestStore.addQpr(result);
         this.quarter = this.selectedRequest.quarter;
         this._authStore.setCurrentQuarter(this.quarter);
         this._qprSectionsStore.addAllSections(result.sections);
@@ -125,4 +127,18 @@ export class FillQprComponent implements OnInit {
     // );
   }
 
+
+  calculateDaysDifference(date) {
+    var date1 = new Date();
+    var date2 = new Date(date);
+    // To calculate the time difference of two dates 
+    var Difference_In_Time = date2.getTime() - date1.getTime();
+    // To calculate the no. of days between two dates 
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    if (Math.trunc(Difference_In_Days) < 0) {
+      return Math.trunc(Difference_In_Days);
+    } else {
+      return Math.trunc(Difference_In_Days);
+    }
+  }
 }

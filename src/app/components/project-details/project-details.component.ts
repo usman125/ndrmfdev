@@ -100,6 +100,8 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   printMneHeading: any = "Project M& E Plan";
 
 
+  commenceGdLoader: boolean = false;
+
   constructor(
     private _proposalSectionsStore: ProposalSectionsStore,
     // private _proposalFormsStore: ProposalFormsStore,
@@ -1195,7 +1197,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
               options.enableGia = false;
               options.title = 'Successfull!';
               options.confirmText = 'OK',
-              options.message = 'Project stage has been changed';
+                options.message = 'Project stage has been changed';
               this._confirmModelService.open(options);
             },
             error => {
@@ -1598,11 +1600,24 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   commenceGrantDisbursment() {
+    this.commenceGdLoader = true;
+    const options = {
+      title: 'Grant Disbursment Initiated Successfully!!',
+      message: '',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+    };
     this._projectService.commenceGrantDisbursment(this.selectedProjectId).subscribe(
       (result: any) => {
         // console.log("ERROR COMMENING GD:---", result);
+        this._confirmModelService.open(options);
+        this.commenceGdLoader = false;
       },
       error => {
+        options.title = error.error.message;
+        this._confirmModelService.open(options);
+        this.commenceGdLoader = false;
         console.log("ERROR COMMENING GD:---", error);
       }
     )

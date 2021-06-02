@@ -50,6 +50,14 @@ export class QprService {
     );
   }
 
+  addTasksForQpr(qprId, body) {
+    const url = `${AppConfig.apiUrl}/qpr/${qprId}/tasks/add`;
+    return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
   addReview(sectionId, body) {
     const url = `${AppConfig.apiUrl}/qpr/section/${sectionId}/review/add`;
     return this._httpClient.post(
@@ -57,6 +65,17 @@ export class QprService {
       body
     );
   }
+
+  
+  addReviewForQprTask(taskId, body) {
+    const url = `${AppConfig.apiUrl}/qpr/${taskId}/review/add`;
+    return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
+
 
 
 }

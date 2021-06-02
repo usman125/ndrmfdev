@@ -80,6 +80,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { AccreditationRequestReplayStore } from './stores/accreditation-requests/AccreditationRequestReplayStore';
 import { GrievanceRegistrationComponent } from './grievance-registration/grievance-registration.component';
 import { ConcernedPersonDialogComponent } from './components/concerned-person-dialog/concerned-person-dialog.component';
+import { QprSingleRequestStore } from './stores/qpr-single-request/qpr-single-request-store';
 
 
 export function tokenGetter() {
@@ -132,6 +133,7 @@ export function tokenGetter() {
     MatTabsModule,
     MatDatepickerModule,
     MatRadioModule,
+
 
     JwtModule.forRoot({
       config: {
@@ -192,7 +194,8 @@ export function tokenGetter() {
     CostDetailsStore,
     GrantDisbursmentsStore,
     SingleGrantDisbursmentsStore,
-    AccreditationRequestReplayStore
+    AccreditationRequestReplayStore,
+    QprSingleRequestStore,
   ],
   bootstrap: [AppComponent],
   exports: [FlexLayoutModule],

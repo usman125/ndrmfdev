@@ -384,10 +384,8 @@
       <mat-card class="m-20" *ngIf="loggedUser?.role === 'process owner' && 
       loggedUser?.processNames.indexOf('QPR') > -1">
         <mat-card-actions>
-          <button mat-button (click)="commenceQPR()"
-            *ngIf="(selectedProject?.status === 'Checklist to FIP' && selectedProject?.giaChecklist?.data !== null)
-            || (selectedProject?.status === 'GIA' && selectedProject?.gia?.status !== 'Not Initiated')"
-            color="warn">
+          <button mat-button (click)="commenceQPR()" *ngIf="(selectedProject?.status === 'Checklist to FIP' && selectedProject?.giaChecklist?.data !== null)
+            || (selectedProject?.status === 'GIA' && selectedProject?.gia?.status !== 'Not Initiated')" color="warn">
             <mat-icon class="mr-1">grading</mat-icon>
             {{'COMMence qpr' | titlecase}}
           </button>
@@ -935,7 +933,8 @@
               </div>
 
               <div class="expiry-sections mt-2">
-                <button (click)="commenceGrantDisbursment()" class="m-1" mat-button color="basic">
+                <button [disabled]="commenceGdLoader" (click)="commenceGrantDisbursment()" class="m-1" mat-button
+                  color="basic">
                   <mat-icon class="mr-1">table_chart</mat-icon> {{'Inititate Grant Disbursment' | titlecase}}
                 </button>
               </div>

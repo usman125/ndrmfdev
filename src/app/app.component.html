@@ -411,6 +411,21 @@
         </mat-accordion>
 
         <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                QPR
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sme-qpr-requests">
+                All Review Requests
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        <mat-accordion multi="true">
 
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
@@ -465,6 +480,21 @@
             <mat-nav-list>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/gia-review-projects">
                 GIA Reviews Requests
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                QPR
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sme-qpr-requests">
+                All Requests
               </a>
             </mat-nav-list>
           </mat-expansion-panel>
@@ -568,6 +598,11 @@
             <mat-nav-list>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/qpr">
                 All Requests
+              </a>
+            </mat-nav-list>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sme-qpr-requests">
+                All Review Requests
               </a>
             </mat-nav-list>
           </mat-expansion-panel>

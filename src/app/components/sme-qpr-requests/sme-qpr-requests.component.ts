@@ -88,11 +88,12 @@ export class SmeQprRequestsComponent implements OnInit {
 
   goToRequest(request) {
     // console.log("REQUEST ELECTED:--", request);
-    if (this.currentUser.role === 'sme') {
-      this._router.navigate(['/fill-qpr', request.requestId]);
-    } else {
-      this._router.navigate(['/accreditation-requests', request.id, 'view']);
-    }
+    // if (this.currentUser.role === 'sme') {
+    this._router.navigate(['/fill-qpr', request.requestId]);
+    // } 
+    // else {
+    //   this._router.navigate(['/accreditation-requests', request.id, 'view']);
+    // }
   }
 
   applyFilter2(event: Event) {

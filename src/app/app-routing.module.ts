@@ -493,7 +493,7 @@ const routes: Routes = [
     path: 'fill-qpr/:requestId',
     loadChildren: () => import('./modules/fill-qpr/fill-qpr.module').then(m => m.FillQprModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Po, Role.Sme, Role.Fip] }
+    data: { roles: [Role.Po, Role.Sme, Role.Fip, Role.Gm, Role.Ceo] }
   },
   {
     path: 'fill-proposal-reports/:requestId',
@@ -582,7 +582,7 @@ const routes: Routes = [
     path: 'sme-qpr-requests',
     loadChildren: () => import('./modules/sme-qpr-requests/sme-qpr-requests.module').then(m => m.SmeQprRequestsModule),
     canActivate: [AuthGuard],
-    data: {roles: [Role.Sme]}
+    data: {roles: [Role.Sme, Role.Po, Role.Ceo, Role.Gm]}
     // component: ProjectWorkPlanComponent
   },
 ];

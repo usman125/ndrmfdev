@@ -18,5 +18,6 @@ export class QprSectionsState {
     reassignmentStatus: string,
     reviewDeadline: any,
     reviewCompletedDate: any,
+    qprId: any,
   }[] = SECTIONS;
 }
