@@ -538,7 +538,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     );
   }
 
-  rejectInitialAdvance(type) {
+  rejectInitialAdvance(request, type) {
     console.log("REJECT INTIAL ADVANCE********", type);
   }
 
