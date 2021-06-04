@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ConfirmModelService } from 'src/app/services/confirm-model.service';
@@ -7,6 +7,7 @@ import { GrantDisbursmentsService } from 'src/app/services/grant-disbursment.ser
 import { UserService } from 'src/app/services/user.service';
 import { SingleGrantDisbursmentsStore } from 'src/app/stores/single-grant-disbursment/single-grant-disbursment-store';
 import { MatAccordion } from '@angular/material/expansion';
+import { AdvanceLiquidationItemStore } from 'src/app/stores/advance-liquidation-item/advance-liquidation-item-store';
 
 @Component({
   selector: 'app-view-grant-disbursment',
@@ -40,13 +41,29 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
 
   controlReviewUserForm: any = null;
 
+  selectedAdvanceLiquidation: any = null;
+
+  advanceForm: FormGroup;
+
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _grantDisbursmentsService: GrantDisbursmentsService,
     private _singleGrantDisbursmentsStore: SingleGrantDisbursmentsStore,
     private _confirmModelService: ConfirmModelService,
     private _userService: UserService,
-  ) { }
+    private _formBuilder: FormBuilder,
+    private _advanceLiquidationItemStore: AdvanceLiquidationItemStore,
+  ) {
+    this.advanceForm = this._formBuilder.group({
+      'payeesName': [null],
+      'payeesAddress': [null],
+      'bankName': [null],
+      'bankAddress': [null],
+      'payeesAccount': [null],
+      'swiftCode': [null],
+      'specialPaymentInstruction': [null],
+    })
+  }
 
   ngOnInit(): void {
     this.reviewUsers.setValidators([Validators.required]);
@@ -136,6 +153,12 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         }
       )
     );
+    this.Subscription.add(
+      this._advanceLiquidationItemStore.state$.subscribe(data => {
+        this.selectedAdvanceLiquidation = data.data;
+        console.log("SELECTED ADVANCE LIQUIDATION IS:----", data.data, this.selectedAdvanceLiquidation);
+      })
+    );
   }
 
   getCostSelection(implementationPlan) {
@@ -152,10 +175,10 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     // console.log("GET DISBURSSMENT DETAILS:---", id);
     this._grantDisbursmentsService.getSingleGrantDisbursment(id).subscribe(
       (result: any) => {
-        // console.log("RESULT SINGLE GRANT DISBURSMENT:---", result);
-        if (result && this.loggedUser.role === 'fip') {
-          this.getCostSelection(result.implementationPlan);
-        }
+        console.log("RESULT SINGLE GRANT DISBURSMENT:---", result);
+        // if (result && this.loggedUser.role === 'fip') {
+        this.getCostSelection(result.implementationPlan);
+        // }
         result.quarterAdvanceList = result.quarterAdvanceList.map(element => {
           return {
             ...element,
@@ -406,7 +429,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   getAllUsers() {
     this._userService.getAllDepartmentUsers().subscribe(
       (result: any) => {
-        // console.log("RESULT DEPARTMENT USERS:--", result);
+        console.log("RESULT DEPARTMENT USERS:--", result);
         this.allUsers = [];
         for (var key of Object.keys(result)) {
           let object = {
@@ -496,12 +519,27 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     });
   }
 
-  approveInitialAdvance(type) {
-    // console.log("APPROVE INTIAL ADVANCE********", type);
+  approveInitialAdvance(request, type) {
+    const options = {
+      title: '',
+      message: 'Press OK to canel!',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: true,
+      confirm: false,
+    };
+    console.log("APPROVE INTIAL ADVANCE********", request, type);
+    this._grantDisbursmentsService.approveInitialAdvance(request.id).subscribe(
+      (result: any) => {
+        console.log("RESULT AFTER APPROVE:---", result);
+        options.title = result.message;
+        this._confirmModelService.open(options);
+      }
+    );
   }
 
   rejectInitialAdvance(type) {
-    // console.log("REJECT INTIAL ADVANCE********", type);
+    console.log("REJECT INTIAL ADVANCE********", type);
   }
 
   ngOnDestroy() {
@@ -509,9 +547,24 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     this.Subscription.unsubscribe();
   }
 
-  setStep(id, selectionType) {
-    // console.log("CURRENT STEP:---", id);
+  setStep(item, id, selectionType) {
+    console.log("CURRENT STEP:---", item, id);
     // @setTimeout(() => {})
+    this.currentReviewsList = [];
+    // this.selectedStepData = item;
+    for (let i = 0; i < this.costSelections.length; i++) {
+      let obj = this.costSelections[i];
+      for (let j = 0; j < item.data.length; j++) {
+        if (item.data[j]._id === obj._id) {
+          console.log("**********ID MATCHED:---", item.data[j], obj);
+        }
+      }
+    }
+    if (item !== null) {
+      // this.selectedStepData.advanceLiquidationItem.data = item.data;
+      this._advanceLiquidationItemStore.addAdvanceLiquidationItem(JSON.parse(JSON.stringify(item.advanceLiquidationItem)));
+      this._advanceLiquidationItemStore.addAdvanceLiquidationItemData(JSON.parse(JSON.stringify(item.data)));
+    }
     this.step = id;
     if (this.step !== null) {
       if (selectionType === 'quarter') {
@@ -525,10 +578,20 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
 
   nextStep(selectionType) {
     // console.log("CURRENT STEP:---", this.step);
+    this.currentReviewsList = [];
     this.step = this.step + 1;
     // if (selectionType === 'quarter') {
     this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: this.step })
     // }
+  }
+
+  amountChanged($event) {
+    console.log("AMOUNT CHANGES:---", $event.srcElement.value);
+    let count = 0;
+    this.selectedAdvanceLiquidation.data.forEach(element => {
+      count = count + element.amount;
+      this._advanceLiquidationItemStore.addAdvanceLiquidationItemTotalCost(count);
+    });
   }
 
 }

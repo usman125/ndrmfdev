@@ -81,6 +81,7 @@ import { AccreditationRequestReplayStore } from './stores/accreditation-requests
 import { GrievanceRegistrationComponent } from './grievance-registration/grievance-registration.component';
 import { ConcernedPersonDialogComponent } from './components/concerned-person-dialog/concerned-person-dialog.component';
 import { QprSingleRequestStore } from './stores/qpr-single-request/qpr-single-request-store';
+import { AdvanceLiquidationItemStore } from './stores/advance-liquidation-item/advance-liquidation-item-store';
 
 
 export function tokenGetter() {
@@ -196,6 +197,7 @@ export function tokenGetter() {
     SingleGrantDisbursmentsStore,
     AccreditationRequestReplayStore,
     QprSingleRequestStore,
+    AdvanceLiquidationItemStore,
   ],
   bootstrap: [AppComponent],
   exports: [FlexLayoutModule],

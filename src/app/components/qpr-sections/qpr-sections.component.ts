@@ -98,6 +98,9 @@ export class QprSectionsComponent implements OnInit {
         let reviewUsers = [];
         this.myAssginedTasks = [];
         this.othersAssginedTasks = [];
+        // typeof (data.qpr.implementationPlan) === 'string' ?
+        //   data.qpr.implementationPlan = JSON.parse(data.qpr.implementationPlan) :
+        //   data.qpr.implementationPlan = data.qpr.implementationPlan;
         this.selectedQpr = data.qpr;
         // if (this.loggedUser.processNames.indexOf('QPR') < 0 && 
         // this.loggedUser.role === 'process owner'){

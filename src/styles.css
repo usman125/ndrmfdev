@@ -499,20 +499,32 @@ h6 {
 }
 
 .heading-contain {
-  background: #f9f9f9;
+  background: #058ecf;
+  /* background: #f9f9f9; */
   padding: 10px 10px;
 }
 .heading-contain mat-icon {
   width: 21px;
   height: 21px;
   font-size: 21px;
-  color: #969696;
+  /* color: #969696; */
+  color: #fff;
 }
 
 .header-box {
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 1px 5px rgba(5, 142, 207, 0.12);
   border-radius: 7px;
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
+  background-color: #058ecf;
+}
+
+.header-box .heading-contain:first-child {
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+}
+.header-box .heading-contain:last-child {
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
 }
 
 .header-box span {
@@ -521,7 +533,8 @@ h6 {
   font-size: 15px;
   line-height: 19px;
   /* color: #777777; */
-  color: #969696;
+  color: #fff;
+  /* color: #969696; */
 }
 
 .filter-input {
@@ -563,27 +576,34 @@ h6 {
 }
 /*Proposal Templates Styles*/
 
-.proposaldisplay .table td, .proposaldisplay .table th {
+.proposaldisplay .table td,
+.proposaldisplay .table th {
   vertical-align: middle;
 }
-.proposaldisplay .table td, .proposaldisplay .table th, .proposaldisplay .no-top-border-table>.table>tbody>tr:first-child>td {
-  padding: .75rem;
+.proposaldisplay .table td,
+.proposaldisplay .table th,
+.proposaldisplay .no-top-border-table > .table > tbody > tr:first-child > td {
+  padding: 0.75rem;
   vertical-align: middle !important;
 }
-.proposaldisplay .form-control:disabled, .proposaldisplay .form-control[readonly], .choices.is-disabled .choices__item {
+.proposaldisplay .form-control:disabled,
+.proposaldisplay .form-control[readonly],
+.choices.is-disabled .choices__item {
   font-size: 13px !important;
 }
 .proposaldisplay .col-form-label {
   font-weight: 500 !important;
 }
-.table-responsive>.table-bordered{border:initial;}
-.formio-component-textfield input{
+.table-responsive > .table-bordered {
+  border: initial;
+}
+.formio-component-textfield input {
   width: 100%;
-  width: -moz-available;          /* WebKit-based browsers will ignore this. */
-  width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+  width: -moz-available; /* WebKit-based browsers will ignore this. */
+  width: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
   width: stretch;
 }
-.image-style-align-center img{
+.image-style-align-center img {
   display: inherit;
   margin: 0 auto;
 }

@@ -68,7 +68,7 @@ export class GrantDisbursmentsService {
 
 
   approveInitialAdvance(disbursmentId) {
-    const url = `${AppConfig.apiUrl}/grant-disbursement/${disbursmentId}/initial-advance/approve`;
+    const url = `${AppConfig.apiUrl}/grant-disbursement/${disbursmentId}/initial-advance/approve?status=APPROVED`;
     return this._httpClient.put(
       url,
       null
