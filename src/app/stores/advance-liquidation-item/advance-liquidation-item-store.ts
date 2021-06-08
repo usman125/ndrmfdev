@@ -25,6 +25,19 @@ export class AdvanceLiquidationItemStore extends Store<AdvanceLiquidationItemSta
     })
   }
 
+  submitLiquidation(ndrmfSoes, fipSoes) {
+    this.setState({
+      ...this.state,
+      data: {
+        ...this.state.data,
+        ndrmfSoes: ndrmfSoes,
+        fipSoes: fipSoes,
+        status: 'Under Review'
+      }
+    })
+  }
+
+
   addAdvanceLiquidationItemTotalCost(amount) {
     this.setState({
       ...this.state,

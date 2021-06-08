@@ -4,7 +4,14 @@ const QPR = {
   "amount": null,
   "comments": null,
   "status": "Not Initiated",
-  "subStatus": null
+  "subStatus": null,
+  "payeesName": null,
+  "payeesAddress": null,
+  "bankName": null,
+  "bankAddress": null,
+  "payeesAccount": null,
+  "swiftCode": null,
+  "specialPaymentInstruction": null,
 }
 
 export class AdvanceLiquidationItemState {
@@ -15,5 +22,32 @@ export class AdvanceLiquidationItemState {
     "comments": any,
     "status": any,
     "subStatus": any,
+    "payeesName": any,
+    "payeesAddress": any,
+    "bankName": any,
+    "bankAddress": any,
+    "payeesAccount": any,
+    "swiftCode": any,
+    "specialPaymentInstruction": any,
+    "fipSoes": {
+      "activityId": string,
+      "vendorName": string,
+      "invoiceAmount": number,
+      "dateOfPayment": string,
+      "paidAmount": number,
+      "chequeNumber": string,
+      "remarks": string,
+      "soeType": string,
+    },
+    "ndrmfSoes": {
+      "activityId": string,
+      "vendorName": string,
+      "invoiceAmount": number,
+      "dateOfPayment": string,
+      "paidAmount": number,
+      "chequeNumber": string,
+      "remarks": string,
+      "soeType": string,
+    },
   } = null;
 }

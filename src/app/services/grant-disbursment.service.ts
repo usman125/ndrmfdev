@@ -83,4 +83,12 @@ export class GrantDisbursmentsService {
     );
   }
 
+  submitInitialAdvanceLiquidationWithSoes(liquidationId, body) {
+    const url = `${AppConfig.apiUrl}/grant-disbursement/initial-advance/${liquidationId}/liquidation/submit`;
+    return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
 }
