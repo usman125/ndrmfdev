@@ -75,8 +75,17 @@ export class GrantDisbursmentsService {
     );
   }
 
+
   approveQuarterAdvance(advanceId) {
-    const url = `${AppConfig.apiUrl}/grant-disbursement/${advanceId}/quarter-advance/approve`;
+    const url = `${AppConfig.apiUrl}/grant-disbursement/${advanceId}/quarter-advance/approve?status=APPROVED`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
+  approveAdvanceLiquidation(liquidationId) {
+    const url = `${AppConfig.apiUrl}/grant-disbursement/advance-liquidation/${liquidationId}/approve`;
     return this._httpClient.put(
       url,
       null
