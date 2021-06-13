@@ -10,6 +10,13 @@ export class SingleGrantDisbursmentsState {
       data: any,
       id: any,
       initialAdvanceReviewsList: any
+      payeesName: any,
+      payeesAddress: any,
+      bankName: any,
+      bankAddress: any,
+      payeesAccount: any,
+      swiftCode: any,
+      specialPaymentInstruction: any,
     },
     quarterAdvanceList: any,
     assigned: any,

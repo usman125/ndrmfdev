@@ -499,7 +499,8 @@ h6 {
 }
 
 .heading-contain {
-  background: #058ecf;
+  /* background: #058ecf; */
+  background: #039be5;
   /* background: #f9f9f9; */
   padding: 10px 10px;
 }
@@ -515,7 +516,8 @@ h6 {
   box-shadow: 0px 1px 5px rgba(5, 142, 207, 0.12);
   border-radius: 7px;
   /* background-color: #f9f9f9; */
-  background-color: #058ecf;
+  /* background-color: #058ecf; */
+  background-color: #039be5;
 }
 
 .header-box .heading-contain:first-child {
@@ -530,7 +532,7 @@ h6 {
 .header-box span {
   font-style: normal;
   font-weight: 450;
-  font-size: 15px;
+  font-size: 13px;
   line-height: 19px;
   /* color: #777777; */
   color: #fff;

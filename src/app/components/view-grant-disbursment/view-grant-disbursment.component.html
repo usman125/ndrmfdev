@@ -21,16 +21,13 @@
             Initial Advance
           </mat-panel-title>
           <mat-panel-description>
-            <span *ngIf="selectedRequest?.initialAdvance.status === 'Completed'" id="comment">
-              Submitted
+            <span id="comment">
+              {{selectedRequest?.initialAdvance?.status}}
             </span>
-            <span *ngIf="selectedRequest?.initialAdvance.status === 'Pending'" id="comment">
-              {{selectedRequest ? selectedRequest.initialAdvance.status : ''}}
+            <span id="comment">
+              {{selectedRequest?.initialAdvance?.subStatus}}
             </span>
 
-            <span id="answer">
-              {{selectedRequest ? selectedRequest.status : ''}}
-            </span>
             <mat-icon *ngIf="selectedRequest !== null">
               {{'unfold_more'}}
             </mat-icon>
@@ -187,8 +184,14 @@
             <div class="col-md-6">
               <mat-form-field appearance="outline">
                 <mat-label>Amount</mat-label>
-                <input [disabled]="selectedAdvanceItem?.subStatus === 'Approved'" matInput type="number"
-                  placeholder="Enter Amount..." [(ngModel)]="item.amount">
+                <input [disabled]="(selectedAdvanceItem?.status === 'Approved' || 
+                  selectedAdvanceItem?.status === 'Under Review' ||
+                  selectedAdvanceItem?.status === 'Completed' ||
+                  selectedAdvanceItem?.status === 'Review Pending' ||
+                  selectedAdvanceItem?.status === 'Review Completed' ||
+                  selectedAdvanceItem?.status === 'Marked To PO' ||
+                  selectedAdvanceItem?.subStatus === 'Approved')" matInput type="number" placeholder="Enter Amount..."
+                  [(ngModel)]="item.amount">
               </mat-form-field>
             </div>
           </div>
@@ -196,36 +199,93 @@
 
         <!-- SELECTED ADVANCE COSTS FOR OTHERS SUBMITTED BY FIP -->
         <div class="row">
-          <div class="col-md-7">
-            <ng-container *ngIf="loggedUser?.role !== 'fip'">
-              <div class="row d-flex align-items-center header-box">
-                <div class="col-md-6 heading-contain">
-                  <span>Title</span>
+          <ng-container *ngIf="loggedUser?.role !== 'fip'">
+            <div class="col-md-7">
+              <div class="row" *ngIf="selectedAdvanceItem !== null">
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Payees Name</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.payeesName" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
                 </div>
-                <div class="col-md-6 heading-contain">
-                  <span>Amount</span>
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Payees Address</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.payeesAddress" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Bank Name</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.bankName" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Bank Address</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.bankAddress" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Payees Account #</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.payeesAccount" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Swift Code</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.swiftCode" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Special Payment Instruction</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.specialPaymentInstruction" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
                 </div>
               </div>
-              <div *ngIf="selectedRequest?.initialAdvance.data">
+              <div class="pr-3 pl-3 mt-3">
+                <div class="row d-flex align-items-center header-box">
+                  <div class="col-md-6 heading-contain">
+                    <span>Title</span>
+                  </div>
+                  <div class="col-md-6 heading-contain">
+                    <span>Amount</span>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-3 pl-3" *ngIf="selectedRequest?.initialAdvance.data">
                 <div class="row d-flex cost-box align-items-center mt-2" *ngFor="let item of apiCosts; let i = index;">
                   <div class="col-md-6">
                     <span>{{item.title}}</span>
                   </div>
                   <div class="col-md-6">
-                    <span>{{item.amount}}</span>
+                    <span>{{item.amount | number}}</span>
                   </div>
                 </div>
               </div>
-              <div class="row d-flex align-items-center header-box mt-2">
-                <div class="col-md-6 heading-contain">
-                  <span class="pl-2">Total</span>
-                </div>
-                <div class="col-md-6 heading-contain">
-                  <span *ngIf="selectedRequest !== null" class="pl-2">{{selectedRequest.initialAdvance.amount}}</span>
+              <div class="mt-2 pr-3 pl-3">
+                <div class="row d-flex align-items-center header-box">
+                  <div class="col-md-6 heading-contain">
+                    <span class="pl-2">Total</span>
+                  </div>
+                  <div class="col-md-6 heading-contain">
+                    <span *ngIf="selectedRequest !== null" class="pl-2">
+                      {{selectedRequest.initialAdvance.amount | number}}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </ng-container>
-          </div>
+            </div>
+          </ng-container>
           <!-- TOOL BOX FOR PROCESS OWNER DISBURSEMENT -->
           <div class="col-md-5">
             <ng-container *ngIf="selectedRequest?.assigned">
@@ -355,7 +415,7 @@
         </div>
 
         <!-- LIQUIDATION PRINT BOX -->
-        <div class="row mb-2">
+        <div class="row mb-2" *ngIf="selectedAdvanceItem?.subStatus === 'Approved'">
           <div class="col-md-12 mb-3">
             <div class="d-flex flex-fill justify-content-between align-items-center">
               <div class="d-flex align-items-center" style="width: 33%;">
@@ -397,7 +457,8 @@
         </div>
 
         <!-- LIQUIDATION EXTRA FROM FIELDS -->
-        <div class="row mt-3 mb-3" *ngIf="selectedAdvanceLiquidation !== null">
+        <div class="row mt-3 mb-3"
+          *ngIf="selectedAdvanceLiquidation !== null && selectedAdvanceItem?.subStatus === 'Approved'">
           <div class="col-md-12">
             <mat-form-field appearance="outline">
               <mat-label>Payees Name</mat-label>
@@ -462,6 +523,9 @@
           <p id="answer" class="p-2">Summary Budget Utilization (NDRMF Share)</p>
           <div class="d-flex align-items-center justify-content-between rag-div table-header">
             <span>
+              Parent Tree
+            </span>
+            <span>
               Budget Category
             </span>
             <span>
@@ -479,13 +543,23 @@
             <span>
               Remaining Budget (g = c-f)
             </span>
-            <span>
+            <!-- <span>
               Remarks
-            </span>
+            </span> -->
           </div>
 
           <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
             <div class="d-flex rag-div justify-content-between align-items-center table-row">
+              <span>
+                <div *ngIf="item?.parentCosts">
+                  <div *ngFor="let _ of item?.parentCosts; let i = index">
+                    <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                      <small>{{name}}</small>
+                      <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                    </ng-container>
+                  </div>
+                </div>
+              </span>
               <span>{{item.title}}</span>
               <span>{{getNdrmfTotalBudgetAllocation(item) | number}}</span>
               <span>{{'&nbsp;'}}</span>
@@ -493,7 +567,7 @@
               <span>{{(0 + getNdrmfExpenditureCurrentQuarter(item, 'initial')) | number}}</span>
               <span>{{(getNdrmfTotalBudgetAllocation(item) - getNdrmfExpenditureCurrentQuarter(item, 'initial')) |
                 number}}</span>
-              <span>&nbsp;</span>
+              <!-- <span>&nbsp;</span> -->
             </div>
           </div>
 
@@ -503,6 +577,9 @@
         <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
           <p id="answer" class="p-2">Summary of SOE (NDRMF Share)</p>
           <div class="d-flex align-items-center justify-content-between rag-div table-header">
+            <span>
+              Parent Tree
+            </span>
             <span>
               Budget Category
             </span>
@@ -518,27 +595,37 @@
             <span>
               % Variance
             </span>
-            <span>
+            <!-- <span>
               Remarks
-            </span>
+            </span> -->
           </div>
 
           <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
             <div class="d-flex rag-div justify-content-between align-items-center table-row">
+              <span>
+                <div *ngIf="item?.parentCosts">
+                  <div *ngFor="let _ of item?.parentCosts; let i = index">
+                    <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                      <small>{{name}}</small>
+                      <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                    </ng-container>
+                  </div>
+                </div>
+              </span>
               <span>{{item.title}}</span>
               <span>{{getNdrmfQuarterBudgetAllocation(item) | number}}</span>
               <span>{{getNdrmfExpenditureCurrentQuarter(item, 'initial') | number}}</span>
               <span>{{(getNdrmfQuarterBudgetAllocation(item) - getNdrmfExpenditureCurrentQuarter(item, 'initial')) |
                 number}}</span>
               <span>{{'&nbsp;'}}</span>
-              <span>{{'&nbsp;'}}</span>
+              <!-- <span>{{'&nbsp;'}}</span> -->
             </div>
           </div>
 
         </div>
 
         <!-- NDRMF SOEs -->
-        <div class="mb-3">
+        <div class="mb-3" *ngIf="selectedAdvanceItem?.subStatus === 'Approved'">
           <div class="d-flex justify-content-between mt-2 mb-2">
             <p id="answer" class="p-2">SOEs for NDRMF</p>
             <!-- <button mat-mini-fab color="accent" (click)="addNdrmfSoes();">
@@ -561,9 +648,8 @@
                 <span class="">
                   <mat-form-field appearance="outline">
                     <mat-label>Select Activity</mat-label>
-                    <mat-select
-                      [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                      matNativeControl [(ngModel)]="item.activityId">
+                    <mat-select [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" matNativeControl [(ngModel)]="item.activityId">
                       <mat-option *ngFor="let obj of selectedAdvanceLiquidation?.data" [value]="obj._id">{{obj.title
                         | titlecase}}</mat-option>
                     </mat-select>
@@ -572,58 +658,64 @@
                 <span class="">
                   <mat-form-field appearance="outline">
                     <mat-label>Vendor Name</mat-label>
-                    <input
-                      [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                      type="text" [(ngModel)]="item.vendorName" placeholder="enter here..." matInput>
+                    <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.vendorName"
+                      placeholder="enter here..." matInput>
                   </mat-form-field>
                 </span>
                 <span class="">
                   <mat-form-field appearance="outline">
                     <mat-label>Total Bill / Invoice amount</mat-label>
-                    <input
-                      [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                      type="number" [(ngModel)]="item.invoiceAmount" placeholder="enter here..." matInput>
+                    <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="number" [(ngModel)]="item.invoiceAmount"
+                      placeholder="enter here..." matInput>
                   </mat-form-field>
                 </span>
                 <span class="">
-                  <mat-form-field appearance="outline">
+                  <mat-form-field appearance="outline"
+                    *ngIf="loggedUser.role === 'fip' || (selectedAdvanceLiquidation?.status === 'Re Assigned' ||
+                                                        selectedAdvanceLiquidation?.status === 'Not Initiated') || item.dateOfPayment === null">
                     <mat-label>Date of Payment</mat-label>
-                    <input
-                      [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                      matInput [matDatepicker]="picker" [value]="item.dateOfPayment">
+                    <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                                    selectedAdvanceLiquidation?.status === 'Under Review')" matInput
+                      [matDatepicker]="picker" [(ngModel)]="item.dateOfPayment">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
+                  <small id="date-field" *ngIf="loggedUser.role !== 'fip' && item.dateOfPayment !== null">
+                    {{item.dateOfPayment |
+                    date:'shortDate'}}</small>
                 </span>
                 <span class="">
                   <mat-form-field appearance="outline">
                     <mat-label>Paid Amount</mat-label>
-                    <input
-                      [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                      type="number" [(ngModel)]="item.paidAmount" placeholder="enter here..." matInput>
+                    <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="number" [(ngModel)]="item.paidAmount"
+                      placeholder="enter here..." matInput>
                   </mat-form-field>
                 </span>
                 <span class="">
                   <mat-form-field appearance="outline">
                     <mat-label>Cheque #</mat-label>
-                    <input
-                      [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                      type="text" [(ngModel)]="item.chequeNumber" placeholder="enter here..." matInput>
+                    <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.chequeNumber"
+                      placeholder="enter here..." matInput>
                   </mat-form-field>
                 </span>
                 <span class="">
                   <mat-form-field appearance="outline">
                     <mat-label>Remarks</mat-label>
-                    <input
-                      [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                      type="text" [(ngModel)]="item.remarks" placeholder="enter here..." matInput>
+                    <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.remarks"
+                      placeholder="enter here..." matInput>
                   </mat-form-field>
                 </span>
               </div>
             </div>
           </div>
           <div class="d-flex justify-content-end mt-2 mb-2" *ngIf="loggedUser?.role === 'fip'">
-            <button [disabled]="selectedAdvanceLiquidation?.status !== 'Not Initiated'" mat-flat-button color="accent"
+            <button [disabled]="selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review'" mat-flat-button color="accent"
               (click)="addNdrmfSoes();">
               <mat-icon>add</mat-icon> Add SOE
             </button>
@@ -636,6 +728,9 @@
         <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
           <p id="answer" class="p-2">Summary Budget Utilization (FIP Share)</p>
           <div class="d-flex align-items-center justify-content-between rag-div table-header">
+            <span>
+              Parent Tree
+            </span>
             <span>
               Budget Category
             </span>
@@ -654,20 +749,30 @@
             <span>
               Remaining Budget (g = c-f)
             </span>
-            <span>
+            <!-- <span>
               Remarks
-            </span>
+            </span> -->
           </div>
 
           <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
             <div class="d-flex rag-div justify-content-between align-items-center table-row">
+              <span>
+                <div *ngIf="item?.parentCosts">
+                  <div *ngFor="let _ of item?.parentCosts; let i = index">
+                    <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                      <small>{{name}}</small>
+                      <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                    </ng-container>
+                  </div>
+                </div>
+              </span>
               <span>{{item.title}}</span>
               <span>{{getFipTotalBudgetAllocation(item) | number}}</span>
               <span>{{'&nbsp;'}}</span>
               <span>{{getFipExpenditureCurrentQuarter(item) | number}}</span>
               <span>{{(0 + getFipExpenditureCurrentQuarter(item)) | number}}</span>
               <span>{{(getFipTotalBudgetAllocation(item) - getFipExpenditureCurrentQuarter(item)) | number}}</span>
-              <span>&nbsp;</span>
+              <!-- <span>&nbsp;</span> -->
             </div>
           </div>
 
@@ -677,6 +782,9 @@
         <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
           <p id="answer" class="p-2">Summary of SOE (FIP Share)</p>
           <div class="d-flex align-items-center justify-content-between rag-div table-header">
+            <span>
+              Parent Tree
+            </span>
             <span>
               Budget Category
             </span>
@@ -692,27 +800,37 @@
             <span>
               % Variance
             </span>
-            <span>
+            <!-- <span>
               Remarks
-            </span>
+            </span> -->
           </div>
 
           <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
             <div class="d-flex rag-div justify-content-between align-items-center table-row">
+              <span>
+                <div *ngIf="item?.parentCosts">
+                  <div *ngFor="let _ of item?.parentCosts; let i = index">
+                    <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                      <small>{{name}}</small>
+                      <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                    </ng-container>
+                  </div>
+                </div>
+              </span>
               <span>{{item.title}}</span>
               <span>{{getFipQuarterBudgetAllocation(item) | number}}</span>
               <span>{{getFipExpenditureCurrentQuarter(item) | number}}</span>
               <span>{{(getFipQuarterBudgetAllocation(item) - getFipExpenditureCurrentQuarter(item)) |
                 number}}</span>
               <span>{{'&nbsp;'}}</span>
-              <span>{{'&nbsp;'}}</span>
+              <!-- <span>{{'&nbsp;'}}</span> -->
             </div>
           </div>
 
         </div>
 
         <!-- FIP SOEs -->
-        <ng-container>
+        <ng-container *ngIf="selectedAdvanceItem?.subStatus === 'Approved'">
           <div class="mb-3">
             <div class="d-flex justify-content-between mt-2 mb-2">
               <p id="answer" class="p-2">SOEs for FIP</p>
@@ -736,9 +854,8 @@
                   <span class="">
                     <mat-form-field appearance="outline">
                       <mat-label>Select Activity</mat-label>
-                      <mat-select
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        matNativeControl [(ngModel)]="item.activityId">
+                      <mat-select [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" matNativeControl [(ngModel)]="item.activityId">
                         <mat-option *ngFor="let obj of selectedAdvanceLiquidation?.data" [value]="obj._id">{{obj.title
                           | titlecase}}</mat-option>
                       </mat-select>
@@ -747,51 +864,56 @@
                   <span class="">
                     <mat-form-field appearance="outline">
                       <mat-label>Vendor Name</mat-label>
-                      <input
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        type="text" [(ngModel)]="item.vendorName" placeholder="enter here..." matInput>
+                      <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.vendorName"
+                        placeholder="enter here..." matInput>
                     </mat-form-field>
                   </span>
                   <span class="">
                     <mat-form-field appearance="outline">
                       <mat-label>Total Bill / Invoice amount</mat-label>
-                      <input
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        type="text" [(ngModel)]="item.invoiceAmount" placeholder="enter here..." matInput>
+                      <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.invoiceAmount"
+                        placeholder="enter here..." matInput>
                     </mat-form-field>
                   </span>
                   <span class="">
-                    <mat-form-field appearance="outline">
+                    <mat-form-field appearance="outline"
+                      *ngIf="loggedUser.role === 'fip' || (selectedAdvanceLiquidation?.status === 'Re Assigned' ||
+                                                        selectedAdvanceLiquidation?.status === 'Not Initiated') || item.dateOfPayment === null">
                       <mat-label>Date of Payment</mat-label>
-                      <input
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        matInput [matDatepicker]="picker" [(ngModel)]="item.dateOfPayment">
-                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                      <mat-datepicker #picker></mat-datepicker>
+                      <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                                    selectedAdvanceLiquidation?.status === 'Under Review')" matInput
+                        [matDatepicker]="picker2" [(ngModel)]="item.dateOfPayment">
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
                     </mat-form-field>
+                    <small id="date-field" *ngIf="loggedUser.role !== 'fip' && item.dateOfPayment !== null">
+                      {{item.dateOfPayment |
+                      date:'shortDate'}}</small>
                   </span>
                   <span class="">
                     <mat-form-field appearance="outline">
                       <mat-label>Paid Amount</mat-label>
-                      <input
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        type="text" [(ngModel)]="item.paidAmount" placeholder="enter here..." matInput>
+                      <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.paidAmount"
+                        placeholder="enter here..." matInput>
                     </mat-form-field>
                   </span>
                   <span class="">
                     <mat-form-field appearance="outline">
                       <mat-label>Cheque #</mat-label>
-                      <input
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        type="text" [(ngModel)]="item.chequeNumber" placeholder="enter here..." matInput>
+                      <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.chequeNumber"
+                        placeholder="enter here..." matInput>
                     </mat-form-field>
                   </span>
                   <span class="">
                     <mat-form-field appearance="outline">
                       <mat-label>Remarks</mat-label>
-                      <input
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        type="text" [(ngModel)]="item.remarks" placeholder="enter here..." matInput>
+                      <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.remarks"
+                        placeholder="enter here..." matInput>
                     </mat-form-field>
                   </span>
                 </div>
@@ -800,7 +922,8 @@
 
             <div class="d-flex justify-content-end mt-2 mb-2" *ngIf="loggedUser?.role === 'fip'">
 
-              <button [disabled]="selectedAdvanceLiquidation?.status !== 'Not Initiated'" mat-flat-button color="accent"
+              <button [disabled]="selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review'" mat-flat-button color="accent"
                 (click)="addFipSoes();">
                 <mat-icon>add</mat-icon> Add SOE
               </button>
@@ -815,7 +938,7 @@
             <div class="d-flex flex-column">
               <div class="mb-2">
                 <span id="answer">Advance Status:</span>
-                {{selectedRequest?.initialAdvance.subStatus}}
+                {{selectedRequest?.initialAdvance.status}}
               </div>
               <div>
                 <span id="answer">Liquidation Status:</span>
@@ -824,18 +947,32 @@
             </div>
             <div class="d-flex flex-column">
               <button class="mb-2" [disabled]="apiCosts === null || 
-            selectedAdvanceItem?.subStatus === 'Approved' || approveLoading" mat-raised-button color="accent"
+            (selectedAdvanceItem?.status === 'Approved' || 
+                  selectedAdvanceItem?.status === 'Completed' ||
+                  selectedAdvanceItem?.status === 'Under Review' ||
+                  selectedAdvanceItem?.status === 'Review Pending' ||
+                  selectedAdvanceItem?.status === 'Review Completed' ||
+                  selectedAdvanceItem?.status === 'Marked To PO' ||
+                  selectedAdvanceItem?.subStatus === 'Approved') || approveLoading" mat-raised-button color="accent"
                 (click)="submitInitalAdvance();">Submit Initial Advance</button>
-              <button [disabled]="selectedAdvanceLiquidation?.status !== 'Not Initiated' || approveLoading"
-                mat-raised-button color="accent" (click)="submitAdvanceLiquidation();">Submit Advance
-                Liquidation</button>
+              <div>
+                <button *ngIf="!approveLoading && selectedAdvanceItem?.subStatus === 'Approved'"
+                  [disabled]="(selectedAdvanceLiquidation?.status === 'Approved' ||
+                              selectedAdvanceLiquidation?.status === 'Under Review' || selectedAdvanceItem?.status === 'Re Assigned')" mat-raised-button color="accent"
+                  (click)="submitAdvanceLiquidation()">
+                  {{ (selectedAdvanceItem?.status === null ||
+                  selectedAdvanceLiquidation?.status === 'Not Initiated') ?
+                  'Submit Quarter Liquidation' : 'Update Quarter Liquidation'}}
+                </button>
+                <mat-progress-spinner *ngIf="approveLoading" mode="indeterminate" diameter="20"></mat-progress-spinner>
+              </div>
             </div>
           </div>
           <div *ngIf="selectedRequest?.assigned" class="d-flex align-items-center flex-fill justify-content-between">
             <div class="d-flex flex-column">
               <div class="mb-2">
                 <span id="answer">Advance Status:</span>
-                {{selectedRequest?.initialAdvance.subStatus}}
+                {{selectedRequest?.initialAdvance.status}}
               </div>
               <div>
                 <span id="answer">Liquidation Status:</span>
@@ -843,7 +980,7 @@
               </div>
             </div>
             <div class="d-flex flex-column">
-              <button [disabled]="approveLoading" class="mb-2" (click)="(selectedRequest?.initialAdvance.subStatus === null ||
+              <button [disabled]="selectedAdvanceItem?.status === 'Re Assigned' || approveLoading" class="mb-2" (click)="(selectedRequest?.initialAdvance.subStatus === null ||
                                 selectedRequest?.initialAdvance.subStatus === 'Pending') ?
                                 approveInitialAdvance(selectedRequest, 'Approve Advance') : 
                                 rejectInitialAdvance(selectedRequest, 'Reject Advance')" [color]="(selectedRequest?.initialAdvance.subStatus === null ||
@@ -851,10 +988,30 @@
                                 'accent' : 'warn'" mat-raised-button>
                 {{(selectedRequest?.initialAdvance.subStatus === null ||
                 selectedRequest?.initialAdvance.subStatus === 'Pending') ?
-                'Approve Initial Advance' : 'Reject Initial Advance'}}</button>
-              <button color="accent" *ngIf="selectedRequest?.initialAdvance.subStatus === 'Approved' || approveLoading"
-                mat-raised-button>
-                {{'Approve Liquidation'}}</button>
+                'Approve Initial Advance' : 'Reject Initial Advance'}}
+              </button>
+              <button class="mb-2" [disabled]="(selectedAdvanceItem?.status === 'Re Assigned') || approveLoading"
+                color="accent" mat-raised-button (click)="reassignInitialAdvance(selectedRequest)">
+                {{'Re-assign Initial Advance'}}
+              </button>
+              <div class="mb-2">
+                <mat-divider></mat-divider>
+              </div>
+              <button class="mb-2" [disabled]="selectedAdvanceLiquidation?.status === 'Not Initiated' ||
+                             selectedAdvanceLiquidation?.status === 'Approved' || selectedAdvanceLiquidation?.status === 'Re Assigned'
+                             || approveLoading || selectedAdvanceItem?.data === null || 
+                             selectedAdvanceLiquidation === null || selectedAdvanceItem?.status === 'Re Assigned'
+                             || selectedAdvanceItem?.status === 'Completed'" mat-raised-button color="accent"
+                (click)="approveQuarterLiquidation()">
+                Approve Advance Liquidation
+              </button>
+              <button [disabled]="selectedAdvanceLiquidation?.status === 'Re Assigned' || 
+                            selectedAdvanceLiquidation?.status === 'Not Initiated' || approveLoading || 
+                            selectedAdvanceLiquidation === null || selectedAdvanceItem?.status === 'Re Assigned'
+                            || selectedAdvanceItem?.status === 'Completed'" mat-raised-button color="accent"
+                (click)="reassignQuarterLiquidation()">
+                Reassign Advance Liquidation
+              </button>
             </div>
           </div>
         </mat-action-row>
@@ -899,15 +1056,18 @@
             <div class="col-md-12 mb-3">
               <div class="d-flex flex-fill justify-content-between align-items-center">
                 <div class="d-flex align-items-center" style="width: 33%;">
-                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span
+                    style="text-align: center;border: 1px solid;padding: 5px 0px;margin-right:10px;width:15%;">&nbsp;</span>
                   <span>Initial Advance</span>
                 </div>
                 <div class="d-flex align-items-center" style="width: 33%;">
-                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span
+                    style="text-align: center;border: 1px solid;padding: 5px 0px;margin-right:10px;width:15%;">&nbsp;</span>
                   <span>Liquidation Only</span>
                 </div>
                 <div class="d-flex align-items-center" style="width: 33%;">
-                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span
+                    style="text-align: center;border: 1px solid;padding: 5px 0px;margin-right:10px;width:15%;">&nbsp;</span>
                   <span>Liquidation & Replenishment</span>
                 </div>
               </div>
@@ -915,15 +1075,18 @@
             <div class="col-md-12 mb-3">
               <div class="d-flex flex-fill justify-content-between align-items-center">
                 <div class="d-flex align-items-center" style="width: 33%;">
-                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span
+                    style="text-align: center;border: 1px solid;padding: 5px 0px;margin-right:10px;width:15%;">X</span>
                   <span>Advance</span>
                 </div>
                 <div class="d-flex align-items-center" style="width: 33%;">
-                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span
+                    style="text-align: center;border: 1px solid;padding: 5px 0px;margin-right:10px;width:15%;">&nbsp;</span>
                   <span>Replenishment</span>
                 </div>
                 <div class="d-flex align-items-center" style="width: 33%;">
-                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span
+                    style="text-align: center;border: 1px solid;padding: 5px 0px;margin-right:10px;width:15%;">&nbsp;</span>
                   <span>Direct Payment</span>
                 </div>
               </div>
@@ -1023,7 +1186,9 @@
 
             </div>
             <div class="col-md-2">
-              <button [disabled]="selectedRequest.quarterAdvanceList[step]?.status !== 'Pending'" mat-raised-button
+              <button [disabled]="selectedRequest.quarterAdvanceList[step]?.status === 'Approved' ||
+              selectedRequest.quarterAdvanceList[step]?.status === 'Under Review' ||
+              selectedRequest.quarterAdvanceList[step]?.status === 'Completed' || !costsData.valid" mat-raised-button
                 color="primary" (click)="addQuarterData();">Add Costs</button>
             </div>
           </div>
@@ -1031,134 +1196,185 @@
         <!-- FIP SUBMITTED DATA TABLE -->
         <ng-container *ngIf="loggedUser?.role === 'fip' && selectedRequest?.quarterAdvanceList[step]?.data !== null">
           <div class="row d-flex align-items-center header-box">
-            <div class="col-md-6 heading-contain">
+            <div class="col-md-4 heading-contain">
+              <span class="pl-2">Parent Tree</span>
+            </div>
+            <div class="col-md-4 heading-contain">
               <span class="pl-2">Title</span>
             </div>
-            <div class="col-md-6 heading-contain">
+            <div class="col-md-4 heading-contain">
               <span class="pl-2">Amount</span>
             </div>
           </div>
           <div *ngIf="selectedRequest !== null && selectedRequest.quarterAdvanceList[step]">
             <div class="row cost-box d-flex align-items-center mt-2"
               *ngFor="let item of selectedRequest.quarterAdvanceList[step].data; let i = index;">
-              <div class="col-md-6">
+              <div class="col-md-4">
+                <span>
+                  <div *ngIf="item?.parentCosts">
+                    <div *ngFor="let _ of item?.parentCosts; let i = index">
+                      <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                        <small>{{name}}</small>
+                        <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                      </ng-container>
+                    </div>
+                  </div>
+                </span>
+              </div>
+              <div class="col-md-4">
                 <span>{{item.title}}</span>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <mat-form-field appearance="outline">
                   <mat-label>Amount</mat-label>
-                  <input [disabled]="selectedRequest.quarterAdvanceList[step].status !== 'Pending'" matInput
-                    type="number" placeholder="Enter Amount..." [(ngModel)]="item.amount">
+                  <input [disabled]="(selectedAdvanceItem?.status === 'Approved' || 
+                  selectedAdvanceItem?.status === 'Under Review' ||
+                  selectedAdvanceItem?.status === 'Completed' ||
+                  selectedAdvanceItem?.status === 'Review Pending' ||
+                  selectedAdvanceItem?.status === 'Review Completed' ||
+                  selectedAdvanceItem?.status === 'Marked To PO' ||
+                  selectedAdvanceItem?.subStatus === 'Approved')" matInput type="number" placeholder="Enter Amount..."
+                    [(ngModel)]="item.amount">
                 </mat-form-field>
               </div>
             </div>
           </div>
           <div class="d-flex justify-content-end">
-            <button [disabled]="selectedRequest.quarterAdvanceList[step].status !== 'Pending'" color="accent"
-              mat-raised-button class="mt-3" (click)="submitQuarterAdvance();">
-              Submit Quarter Advance
+            <button [disabled]="(selectedAdvanceItem?.status === 'Approved' || 
+                  selectedAdvanceItem?.status === 'Completed' ||
+                  selectedAdvanceItem?.status === 'Under Review' ||
+                  selectedAdvanceItem?.status === 'Review Pending' ||
+                  selectedAdvanceItem?.status === 'Review Completed' ||
+                  selectedAdvanceItem?.status === 'Marked To PO' ||
+                  selectedAdvanceItem?.subStatus === 'Approved') || approveLoading" color="accent" mat-raised-button
+              class="mt-3" (click)="submitQuarterAdvance();">
+              {{!approveLoading ? 'Submit Quarter Advance' : '&nbsp;'}}
+              <mat-progress-spinner *ngIf="approveLoading" mode="indeterminate" diameter="20"></mat-progress-spinner>
             </button>
           </div>
         </ng-container>
         <!-- NOT FIP SUBMITTED DATA TABLE -->
         <ng-container *ngIf="loggedUser?.role !== 'fip'">
           <div class="row">
-            <div class="col-md-7">
-              <div class="row d-flex align-items-center header-box">
-                <div class="col-md-6 heading-contain">
-                  <span>Title</span>
+            <div class="col-md-12 mb-3">
+              <div class="row" *ngIf="selectedAdvanceItem !== null">
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Payees Name</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.payeesName" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
                 </div>
-                <div class="col-md-6 heading-contain">
-                  <span>Amount</span>
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Payees Address</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.payeesAddress" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Bank Name</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.bankName" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Bank Address</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.bankAddress" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Payees Account #</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.payeesAccount" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Swift Code</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.swiftCode" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Special Payment Instruction</mat-label>
+                    <input disabled [(ngModel)]="selectedAdvanceItem.specialPaymentInstruction" matInput type="text"
+                      placeholder="enter here...">
+                  </mat-form-field>
                 </div>
               </div>
-              <div *ngIf="selectedRequest.quarterAdvanceList[step]?.data !== null">
-                <div class="row d-flex cost-box align-items-center mt-2"
-                  *ngFor="let item of selectedRequest.quarterAdvanceList[step].data; let i = index;">
-                  <div class="col-md-6">
-                    <span>{{item.title}}</span>
+              <div class="p-3">
+                <div class="row d-flex align-items-center header-box mt-2">
+                  <div class="col-md-4 heading-contain">
+                    <span>Parent Tree</span>
                   </div>
-                  <div class="col-md-6">
-                    <span>{{item.amount}}</span>
+                  <div class="col-md-4 heading-contain">
+                    <span>Title</span>
+                  </div>
+                  <div class="col-md-4 heading-contain">
+                    <span>Amount</span>
                   </div>
                 </div>
-              </div>
-              <div class="row d-flex align-items-center header-box mt-2">
-                <div class="col-md-6 heading-contain">
-                  <span class="pl-2">Total</span>
+                <div *ngIf="selectedRequest.quarterAdvanceList[step]?.data !== null">
+                  <div class="row d-flex cost-box align-items-center mt-2"
+                    *ngFor="let item of selectedRequest.quarterAdvanceList[step].data; let i = index;">
+                    <div class="col-md-4">
+                      <span>
+                        <div *ngIf="item?.parentCosts">
+                          <div *ngFor="let _ of item?.parentCosts; let i = index">
+                            <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                              <small>{{name}}</small>
+                              <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </span>
+                    </div>
+                    <div class="col-md-4">
+                      <span>{{item.title}}</span>
+                    </div>
+                    <div class="col-md-4">
+                      <span>{{item.amount | number}}</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-md-6 heading-contain">
-                  <span *ngIf="selectedRequest !== null" class="pl-2">
-                    {{selectedRequest.selectionType ?
-                    selectedRequest.quarterAdvanceList[step] ?
-                    selectedRequest.quarterAdvanceList[step].amount : '' :
-                    ''}}
-                  </span>
+                <div class="row d-flex align-items-center header-box mt-2">
+                  <div class="col-md-6 heading-contain">
+                    <span class="pl-2">Total</span>
+                  </div>
+                  <div class="col-md-6 heading-contain">
+                    <span *ngIf="selectedRequest !== null" class="pl-2">
+                      {{selectedRequest.selectionType ?
+                      selectedRequest.quarterAdvanceList[step] ?
+                      (selectedRequest.quarterAdvanceList[step].amount | number) : '' :
+                      ''}}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
             <!-- PROCESS OWNER FOR DISBURSEMENT -->
-            <ng-container *ngIf="selectedRequest?.assigned">
-              <div class="col-md-5">
-                <div class="d-flex align-items-center heading-contain header-box">
-                  <mat-icon>
-                    settings_applications
-                  </mat-icon>
-                  <span class="pl-2">
-                    Toolbox
-                  </span>
-                </div>
-                <mat-form-field appearance="outline" class="mt-2">
-                  <mat-label>Select User(s) For Reviews</mat-label>
-                  <mat-select matNativeControl [compareWith]="compareSmeObjects" [formControl]="reviewUsers" multiple>
-                    <mat-form-field class="p-3 filter-input" appearance="outline">
-                      <mat-label>Filter By Department</mat-label>
-                      <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
-                    </mat-form-field>
-                    <mat-select-trigger>
-                      <span *ngFor="let item of reviewUsers.value; let i=index">
-                        <span *ngIf="i===0">{{item.name}}</span>
-                      </span>
-                      <span *ngIf="reviewUsers.value?.length > 1">
-                        (+{{reviewUsers.value.length - 1}} others)
-                      </span>
-                    </mat-select-trigger>
-                    <mat-optgroup *ngFor="let user of allUsers | depUserFilter:filterQuery" [label]="user.name">
-                      <mat-option [hidden]="loggedUser.id === item.id || checkQuarterUserDisabled(item)"
-                        *ngFor="let item of user.users" [value]="item">
-                        {{item.name}}
-                      </mat-option>
-                    </mat-optgroup>
-                  </mat-select>
-                </mat-form-field>
-                <div class="d-flex justify-content-end">
-                  <button [disabled]="!reviewUsers.valid" class="mt-2 mb-2" mat-raised-button color="primary"
-                    (click)="assignUsersForReviews('quarter')">
-                    Assign For Reviews
-                  </button>
-                </div>
-                <mat-chip-list *ngIf="controlReviewUserForm?.stats?.pendingCount || 
-                controlReviewUserForm?.stats?.completedCount" class="mt-3 review-chip">
-                  <mat-chip (click)="getReviewsList(controlReviewUserForm.quarterAdvanceReviewsList);"
-                    *ngIf="controlReviewUserForm?.stats?.pendingCount !== 0" class="mt-2" color="warn" selected>
-                    {{controlReviewUserForm.stats ?
-                    controlReviewUserForm.stats.pendingCount : '&nbsp;'}} Reviews Pending
-                  </mat-chip>
-                  <mat-chip (click)="getReviewsList(controlReviewUserForm.quarterAdvanceReviewsList);"
-                    *ngIf="controlReviewUserForm?.stats?.completedCount !== 0" class="mt-2" color="accent" selected>
-                    {{controlReviewUserForm.stats ?
-                    controlReviewUserForm.stats.completedCount : '&nbsp;'}} Reviews Submitted
-                  </mat-chip>
-                </mat-chip-list>
-              </div>
-            </ng-container>
-            <!-- SUBMIT YOUR REVIEW -->
             <ng-container>
-              <div class="col-md-5">
-                <div *ngIf="selectedRequest !== null && controlReviewUserForm">
+              <div class="row d-flex justify-content-between flex-fill p-3">
+                <!-- SUBMIT YOUR REVIEW -->
+                <div class="col-md-6" *ngIf="selectedRequest !== null && controlReviewUserForm">
                   <div *ngFor="let item of controlReviewUserForm.quarterAdvanceReviewsList">
                     <div *ngIf="item.assignee.id === loggedUser.id">
-                      <p>{{item.assignee.name}} please submit your review</p>
+                      <p style="border-radius:5px;background-color: #f9f9f9;color: #151515;padding: 10px;">
+                        <small>
+                          <small id="answer" class="mr-1">
+                            Comments from assigneer:
+                          </small>
+                          <small>
+                            {{item.assignee.name}} please submit your review
+                          </small>
+                        </small>
+                      </p>
                       <mat-form-field appearance="outline">
                         <mat-label>Your Reviews</mat-label>
                         <textarea [disabled]="item.status === 'Completed'" placeholder="Enter text here..."
@@ -1173,14 +1389,66 @@
                           <span id="warn-comment">{{'Rejected' | uppercase}}</span>
                         </mat-radio-button>
                       </mat-radio-group>
-                      <div class="mb-2 d-flex justify-content-end">
-                        <button color="primary" (click)="submitReview(item)"
-                          [disabled]="!item.comments || item.status === 'Completed'" mat-raised-button>
-                          Submit
-                        </button>
-                      </div>
+                      <button style="width: 100%;" class="d-flex flex-fill align-items-center justify-content-center"
+                        color="primary" (click)="submitReview(item)"
+                        [disabled]="!item.comments || item.status === 'Completed'" mat-raised-button>
+                        Submit
+                      </button>
                     </div>
                   </div>
+                </div>
+                <!-- ASSIGN USER FORM USERS -->
+                <div class="col-md-6" *ngIf="selectedRequest?.assigned">
+                  <div class="d-flex align-items-center heading-contain header-box">
+                    <mat-icon>
+                      settings_applications
+                    </mat-icon>
+                    <span class="pl-2">
+                      Toolbox
+                    </span>
+                  </div>
+                  <mat-form-field appearance="outline" class="mt-2">
+                    <mat-label>Select User(s) For Reviews</mat-label>
+                    <mat-select matNativeControl [compareWith]="compareSmeObjects" [formControl]="reviewUsers" multiple>
+                      <mat-form-field class="p-3 filter-input" appearance="outline">
+                        <mat-label>Filter By Department</mat-label>
+                        <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
+                      </mat-form-field>
+                      <mat-select-trigger>
+                        <span *ngFor="let item of reviewUsers.value; let i=index">
+                          <span *ngIf="i===0">{{item.name}}</span>
+                        </span>
+                        <span *ngIf="reviewUsers.value?.length > 1">
+                          (+{{reviewUsers.value.length - 1}} others)
+                        </span>
+                      </mat-select-trigger>
+                      <mat-optgroup *ngFor="let user of allUsers | depUserFilter:filterQuery" [label]="user.name">
+                        <mat-option [hidden]="loggedUser.id === item.id || checkQuarterUserDisabled(item)"
+                          *ngFor="let item of user.users" [value]="item">
+                          {{item.name}}
+                        </mat-option>
+                      </mat-optgroup>
+                    </mat-select>
+                  </mat-form-field>
+                  <div class="d-flex flex-fill justify-content-start">
+                    <button style="width: 100%;" [disabled]="!reviewUsers.valid" class="mt-2 mb-2" mat-raised-button
+                      color="primary" (click)="assignUsersForReviews('quarter')">
+                      Assign For Reviews
+                    </button>
+                  </div>
+                  <mat-chip-list *ngIf="controlReviewUserForm?.stats?.pendingCount || 
+                                controlReviewUserForm?.stats?.completedCount" class="mt-3 review-chip">
+                    <mat-chip (click)="getReviewsList(controlReviewUserForm.quarterAdvanceReviewsList);"
+                      *ngIf="controlReviewUserForm?.stats?.pendingCount !== 0" class="mt-2" color="warn" selected>
+                      {{controlReviewUserForm.stats ?
+                      controlReviewUserForm.stats.pendingCount : '&nbsp;'}} Reviews Pending
+                    </mat-chip>
+                    <mat-chip (click)="getReviewsList(controlReviewUserForm.quarterAdvanceReviewsList);"
+                      *ngIf="controlReviewUserForm?.stats?.completedCount !== 0" class="mt-2" color="accent" selected>
+                      {{controlReviewUserForm.stats ?
+                      controlReviewUserForm.stats.completedCount : '&nbsp;'}} Reviews Submitted
+                    </mat-chip>
+                  </mat-chip-list>
                 </div>
               </div>
             </ng-container>
@@ -1227,6 +1495,7 @@
         </div>
 
         <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'">
+
           <!-- LIQUIDATION PRINT BOX -->
           <div class="row mb-2">
             <div class="col-md-12 mb-3">
@@ -1274,14 +1543,16 @@
             <div class="col-md-12">
               <mat-form-field appearance="outline">
                 <mat-label>Payees Name</mat-label>
-                <input [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+                <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                   [(ngModel)]="selectedAdvanceLiquidation.payeesName" matInput type="text" placeholder="enter here...">
               </mat-form-field>
             </div>
             <div class="col-md-12">
               <mat-form-field appearance="outline">
                 <mat-label>Payees Address</mat-label>
-                <input [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+                <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                   [(ngModel)]="selectedAdvanceLiquidation.payeesAddress" matInput type="text"
                   placeholder="enter here...">
               </mat-form-field>
@@ -1289,21 +1560,24 @@
             <div class="col-md-12">
               <mat-form-field appearance="outline">
                 <mat-label>Bank Name</mat-label>
-                <input [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+                <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                   [(ngModel)]="selectedAdvanceLiquidation.bankName" matInput type="text" placeholder="enter here...">
               </mat-form-field>
             </div>
             <div class="col-md-12">
               <mat-form-field appearance="outline">
                 <mat-label>Bank Address</mat-label>
-                <input [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+                <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                   [(ngModel)]="selectedAdvanceLiquidation.bankAddress" matInput type="text" placeholder="enter here...">
               </mat-form-field>
             </div>
             <div class="col-md-6">
               <mat-form-field appearance="outline">
                 <mat-label>Payees Account #</mat-label>
-                <input [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+                <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                   [(ngModel)]="selectedAdvanceLiquidation.payeesAccount" matInput type="text"
                   placeholder="enter here...">
               </mat-form-field>
@@ -1311,14 +1585,16 @@
             <div class="col-md-6">
               <mat-form-field appearance="outline">
                 <mat-label>Swift Code</mat-label>
-                <input [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+                <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                   [(ngModel)]="selectedAdvanceLiquidation.swiftCode" matInput type="text" placeholder="enter here...">
               </mat-form-field>
             </div>
             <div class="col-md-12">
               <mat-form-field appearance="outline">
                 <mat-label>Special Payment Instruction</mat-label>
-                <input [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+                <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                   [(ngModel)]="selectedAdvanceLiquidation.specialPaymentInstruction" matInput type="text"
                   placeholder="enter here...">
               </mat-form-field>
@@ -1329,6 +1605,9 @@
           <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
             <p id="answer" class="p-2">Summary Budget Utilization (NDRMF Share)</p>
             <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Parent Tree
+              </span>
               <span>
                 Budget Category
               </span>
@@ -1354,6 +1633,16 @@
 
             <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
               <div class="d-flex rag-div justify-content-between align-items-center table-row">
+                <span>
+                  <div *ngIf="item?.parentCosts">
+                    <div *ngFor="let _ of item?.parentCosts; let i = index">
+                      <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                        <small>{{name}}</small>
+                        <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                      </ng-container>
+                    </div>
+                  </div>
+                </span>
                 <span>{{item.title}}</span>
                 <span>{{getNdrmfTotalBudgetAllocation(item) | number}}</span>
                 <span>{{'&nbsp;'}}</span>
@@ -1371,6 +1660,9 @@
           <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
             <p id="answer" class="p-2">Summary of SOE (NDRMF Share)</p>
             <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Parent Tree
+              </span>
               <span>
                 Budget Category
               </span>
@@ -1393,6 +1685,16 @@
 
             <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
               <div class="d-flex rag-div justify-content-between align-items-center table-row">
+                <span>
+                  <div *ngIf="item?.parentCosts">
+                    <div *ngFor="let _ of item?.parentCosts; let i = index">
+                      <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                        <small>{{name}}</small>
+                        <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                      </ng-container>
+                    </div>
+                  </div>
+                </span>
                 <span>{{item.title}}</span>
                 <span>{{getNdrmfQuarterBudgetAllocation(item) | number}}</span>
                 <span>{{getNdrmfExpenditureCurrentQuarter(item, 'quarter') | number}}</span>
@@ -1429,9 +1731,8 @@
                   <span class="">
                     <mat-form-field appearance="outline">
                       <mat-label>Select Activity</mat-label>
-                      <mat-select
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        matNativeControl [(ngModel)]="item.activityId">
+                      <mat-select [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" matNativeControl [(ngModel)]="item.activityId">
                         <mat-option *ngFor="let obj of selectedAdvanceLiquidation?.data" [value]="obj._id">{{obj.title
                           | titlecase}}</mat-option>
                       </mat-select>
@@ -1440,58 +1741,64 @@
                   <span class="">
                     <mat-form-field appearance="outline">
                       <mat-label>Vendor Name</mat-label>
-                      <input
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        type="text" [(ngModel)]="item.vendorName" placeholder="enter here..." matInput>
+                      <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.vendorName"
+                        placeholder="enter here..." matInput>
                     </mat-form-field>
                   </span>
                   <span class="">
                     <mat-form-field appearance="outline">
                       <mat-label>Total Bill / Invoice amount</mat-label>
-                      <input
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        type="number" [(ngModel)]="item.invoiceAmount" placeholder="enter here..." matInput>
+                      <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="number" [(ngModel)]="item.invoiceAmount"
+                        placeholder="enter here..." matInput>
                     </mat-form-field>
                   </span>
                   <span class="">
-                    <mat-form-field appearance="outline">
+                    <mat-form-field appearance="outline"
+                      *ngIf="loggedUser.role === 'fip' || (selectedAdvanceLiquidation?.status === 'Re Assigned' ||
+                                    selectedAdvanceLiquidation?.status === 'Not Initiated') || item.dateOfPayment === null">
                       <mat-label>Date of Payment</mat-label>
-                      <input
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        matInput [matDatepicker]="picker" [value]="item.dateOfPayment">
-                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                      <mat-datepicker #picker></mat-datepicker>
+                      <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" matInput [matDatepicker]="picker3"
+                        [(ngModel)]="item.dateOfPayment">
+                      <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                      <mat-datepicker #picker3></mat-datepicker>
                     </mat-form-field>
+                    <small id="date-field" *ngIf="loggedUser.role !== 'fip' && item.dateOfPayment !== null">
+                      {{item.dateOfPayment |
+                      date:'shortDate'}}</small>
                   </span>
                   <span class="">
                     <mat-form-field appearance="outline">
                       <mat-label>Paid Amount</mat-label>
-                      <input
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        type="number" [(ngModel)]="item.paidAmount" placeholder="enter here..." matInput>
+                      <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="number" [(ngModel)]="item.paidAmount"
+                        placeholder="enter here..." matInput>
                     </mat-form-field>
                   </span>
                   <span class="">
                     <mat-form-field appearance="outline">
                       <mat-label>Cheque #</mat-label>
-                      <input
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        type="text" [(ngModel)]="item.chequeNumber" placeholder="enter here..." matInput>
+                      <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.chequeNumber"
+                        placeholder="enter here..." matInput>
                     </mat-form-field>
                   </span>
                   <span class="">
                     <mat-form-field appearance="outline">
                       <mat-label>Remarks</mat-label>
-                      <input
-                        [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                        type="text" [(ngModel)]="item.remarks" placeholder="enter here..." matInput>
+                      <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.remarks"
+                        placeholder="enter here..." matInput>
                     </mat-form-field>
                   </span>
                 </div>
               </div>
             </div>
             <div class="d-flex justify-content-end mt-2 mb-2" *ngIf="loggedUser?.role === 'fip'">
-              <button [disabled]="selectedAdvanceLiquidation?.status !== 'Not Initiated'" mat-flat-button color="accent"
+              <button [disabled]="selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review'" mat-flat-button color="accent"
                 (click)="addNdrmfSoes();">
                 <mat-icon>add</mat-icon> Add SOE
               </button>
@@ -1504,6 +1811,9 @@
           <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
             <p id="answer" class="p-2">Summary Budget Utilization (FIP Share)</p>
             <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Parent Tree
+              </span>
               <span>
                 Budget Category
               </span>
@@ -1529,6 +1839,16 @@
 
             <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
               <div class="d-flex rag-div justify-content-between align-items-center table-row">
+                <span>
+                  <div *ngIf="item?.parentCosts">
+                    <div *ngFor="let _ of item?.parentCosts; let i = index">
+                      <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                        <small>{{name}}</small>
+                        <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                      </ng-container>
+                    </div>
+                  </div>
+                </span>
                 <span>{{item.title}}</span>
                 <span>{{getFipTotalBudgetAllocation(item) | number}}</span>
                 <span>{{'&nbsp;'}}</span>
@@ -1545,6 +1865,9 @@
           <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
             <p id="answer" class="p-2">Summary of SOE (FIP Share)</p>
             <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Parent Tree
+              </span>
               <span>
                 Budget Category
               </span>
@@ -1567,6 +1890,16 @@
 
             <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
               <div class="d-flex rag-div justify-content-between align-items-center table-row">
+                <span>
+                  <div *ngIf="item?.parentCosts">
+                    <div *ngFor="let _ of item?.parentCosts; let i = index">
+                      <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                        <small>{{name}}</small>
+                        <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                      </ng-container>
+                    </div>
+                  </div>
+                </span>
                 <span>{{item.title}}</span>
                 <span>{{getFipQuarterBudgetAllocation(item) | number}}</span>
                 <span>{{getFipExpenditureCurrentQuarter(item) | number}}</span>
@@ -1604,9 +1937,8 @@
                     <span class="">
                       <mat-form-field appearance="outline">
                         <mat-label>Select Activity</mat-label>
-                        <mat-select
-                          [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                          matNativeControl [(ngModel)]="item.activityId">
+                        <mat-select [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" matNativeControl [(ngModel)]="item.activityId">
                           <mat-option *ngFor="let obj of selectedAdvanceLiquidation?.data" [value]="obj._id">{{obj.title
                             | titlecase}}</mat-option>
                         </mat-select>
@@ -1615,51 +1947,55 @@
                     <span class="">
                       <mat-form-field appearance="outline">
                         <mat-label>Vendor Name</mat-label>
-                        <input
-                          [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                          type="text" [(ngModel)]="item.vendorName" placeholder="enter here..." matInput>
+                        <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.vendorName"
+                          placeholder="enter here..." matInput>
                       </mat-form-field>
                     </span>
                     <span class="">
                       <mat-form-field appearance="outline">
                         <mat-label>Total Bill / Invoice amount</mat-label>
-                        <input
-                          [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                          type="text" [(ngModel)]="item.invoiceAmount" placeholder="enter here..." matInput>
+                        <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.invoiceAmount"
+                          placeholder="enter here..." matInput>
                       </mat-form-field>
                     </span>
                     <span class="">
-                      <mat-form-field appearance="outline">
+                      <mat-form-field appearance="outline" *ngIf="loggedUser.role === 'fip' || (selectedAdvanceLiquidation?.status === 'Re Assigned' ||
+                selectedAdvanceLiquidation?.status === 'Not Initiated') || item.dateOfPayment === null">
                         <mat-label>Date of Payment</mat-label>
-                        <input
-                          [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                          matInput [matDatepicker]="picker" [(ngModel)]="item.dateOfPayment">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
+                        <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" matInput [matDatepicker]="picker42"
+                          [(ngModel)]="item.dateOfPayment">
+                        <mat-datepicker-toggle matSuffix [for]="picker42"></mat-datepicker-toggle>
+                        <mat-datepicker #picker42></mat-datepicker>
                       </mat-form-field>
+                      <small id="date-field" *ngIf="loggedUser.role !== 'fip' && item.dateOfPayment !== null">
+                        {{item.dateOfPayment |
+                        date:'shortDate'}}</small>
                     </span>
                     <span class="">
                       <mat-form-field appearance="outline">
                         <mat-label>Paid Amount</mat-label>
-                        <input
-                          [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                          type="text" [(ngModel)]="item.paidAmount" placeholder="enter here..." matInput>
+                        <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.paidAmount"
+                          placeholder="enter here..." matInput>
                       </mat-form-field>
                     </span>
                     <span class="">
                       <mat-form-field appearance="outline">
                         <mat-label>Cheque #</mat-label>
-                        <input
-                          [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                          type="text" [(ngModel)]="item.chequeNumber" placeholder="enter here..." matInput>
+                        <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.chequeNumber"
+                          placeholder="enter here..." matInput>
                       </mat-form-field>
                     </span>
                     <span class="">
                       <mat-form-field appearance="outline">
                         <mat-label>Remarks</mat-label>
-                        <input
-                          [disabled]="loggedUser.role !== 'fip' || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
-                          type="text" [(ngModel)]="item.remarks" placeholder="enter here..." matInput>
+                        <input [disabled]="loggedUser.role !== 'fip' || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.remarks"
+                          placeholder="enter here..." matInput>
                       </mat-form-field>
                     </span>
                   </div>
@@ -1668,8 +2004,9 @@
 
               <div class="d-flex justify-content-end mt-2 mb-2" *ngIf="loggedUser?.role === 'fip'">
 
-                <button [disabled]="selectedAdvanceLiquidation?.status !== 'Not Initiated'" mat-flat-button
-                  color="accent" (click)="addFipSoes();">
+                <button [disabled]="selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review'" mat-flat-button color="accent"
+                  (click)="addFipSoes();">
                   <mat-icon>add</mat-icon> Add SOE
                 </button>
               </div>
@@ -1694,21 +2031,50 @@
               </div>
             </div>
             <div *ngIf="selectedRequest?.assigned" class="d-flex flex-column">
-              <button class="mb-2" [disabled]="selectedAdvanceItem?.subStatus === 'Approved' || approveLoading"
+
+              <button class="mb-2"
+                [disabled]="(selectedAdvanceItem?.subStatus === 'Approved' ||
+              selectedAdvanceItem?.subStatus === null || selectedAdvanceItem?.status === 'Re Assigned') || approveLoading"
                 mat-raised-button color="accent" (click)="approveQuarterAdvance()">
                 Approve Quarter Advance
               </button>
-              <button [disabled]="selectedAdvanceLiquidation?.status === 'Not Initiated' ||
-               selectedAdvanceItem?.subStatus !== 'Approved' || approveLoading" mat-raised-button color="accent"
-                (click)="approveQuarterLiquidation()">
+              <button class="mb-2" [disabled]="selectedAdvanceItem?.status === 'Re Assigned' || 
+            selectedAdvanceItem?.status === null || selectedAdvanceItem?.status === 'Approved' 
+            || selectedAdvanceLiquidation?.subStatus === 'Approved' || 
+            approveLoading" mat-raised-button color="warn" (click)="reassignQuarterAdvance()">
+                Reassign Quarter Advance
+              </button>
+              <!-- <button class="mb-2" mat-raised-button color="accent" (click)="approveQuarterAdvance()">
+                Approve Quarter Advance
+              </button> -->
+              <div class="mb-2">
+                <mat-divider></mat-divider>
+              </div>
+              <button class="mb-2" [disabled]="selectedAdvanceLiquidation?.status === 'Not Initiated' ||
+               selectedAdvanceLiquidation?.status === 'Approved' || selectedAdvanceLiquidation?.status === 'Re Assigned'
+               || approveLoading || selectedAdvanceItem?.data === null || 
+               selectedAdvanceLiquidation === null || selectedAdvanceItem?.status === 'Re Assigned'" mat-raised-button
+                color="accent" (click)="approveQuarterLiquidation()">
                 Approve Quarter Liquidation
+              </button>
+              <button [disabled]="selectedAdvanceLiquidation?.status === 'Re Assigned' || 
+              selectedAdvanceLiquidation?.status === 'Not Initiated' || approveLoading || 
+              selectedAdvanceLiquidation === null || selectedAdvanceItem?.status === 'Re Assigned'" mat-raised-button
+                color="accent" (click)="reassignQuarterLiquidation()">
+                Reassign Quarter Liquidation
               </button>
             </div>
             <div *ngIf="loggedUser?.role === 'fip'">
-              <button [disabled]="selectedAdvanceLiquidation?.status !== 'Not Initiated' || approveLoading"
-                mat-raised-button color="accent" (click)="submitAdvanceLiquidation()">
-                Submit Quarter Liquidation
-              </button>
+              <div>
+                <button *ngIf="!approveLoading && selectedAdvanceItem?.subStatus === 'Approved'"
+                  [disabled]="(selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review' || selectedAdvanceItem?.status === 'Re Assigned')" mat-raised-button color="accent" (click)="submitAdvanceLiquidation()">
+                  {{ (selectedAdvanceItem?.status === null ||
+                  selectedAdvanceLiquidation?.status === 'Not Initiated') ?
+                  'Submit Quarter Liquidation' : 'Update Quarter Liquidation'}}
+                </button>
+                <mat-progress-spinner *ngIf="approveLoading" mode="indeterminate" diameter="20"></mat-progress-spinner>
+              </div>
             </div>
           </div>
         </mat-action-row>

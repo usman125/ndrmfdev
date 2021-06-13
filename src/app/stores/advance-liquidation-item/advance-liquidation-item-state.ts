@@ -38,6 +38,7 @@ export class AdvanceLiquidationItemState {
       "chequeNumber": string,
       "remarks": string,
       "soeType": string,
+      "id": string,
     },
     "ndrmfSoes": {
       "activityId": string,
@@ -48,6 +49,7 @@ export class AdvanceLiquidationItemState {
       "chequeNumber": string,
       "remarks": string,
       "soeType": string,
+      "id": string,
     },
   } = null;
 }

@@ -13,6 +13,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 
@@ -38,6 +40,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatRadioModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatProgressSpinnerModule,
+    MatDividerModule
   ]
 })
 export class ViewGrantDisbursmentModule { }

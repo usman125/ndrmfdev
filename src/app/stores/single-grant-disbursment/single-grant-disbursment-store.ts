@@ -106,7 +106,16 @@ export class SingleGrantDisbursmentsStore extends Store<SingleGrantDisbursmentsS
     });
   }
 
-  submitQuarterAdvance(id) {
+  submitQuarterAdvance(
+    id,
+    payeesName,
+    payeesAddress,
+    bankName,
+    bankAddress,
+    payeesAccount,
+    swiftCode,
+    specialPaymentInstruction
+  ) {
     this.setState({
       ...this.state,
       disbursment: {
@@ -116,6 +125,13 @@ export class SingleGrantDisbursmentsStore extends Store<SingleGrantDisbursmentsS
             return {
               ...c,
               status: 'Completed',
+              payeesName: payeesName,
+              payeesAddress: payeesAddress,
+              bankName: bankName,
+              bankAddress: bankAddress,
+              payeesAccount: payeesAccount,
+              swiftCode: swiftCode,
+              specialPaymentInstruction: specialPaymentInstruction
             }
           }
           return c;

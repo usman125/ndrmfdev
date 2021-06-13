@@ -20,7 +20,41 @@ export class AdvanceLiquidationItemStore extends Store<AdvanceLiquidationItemSta
       ...this.state,
       data: {
         ...this.state.data,
-        data: data
+        data: data.map((c) => {
+          return {
+            ...c,
+            // parentCosts: [],
+          }
+        })
+      }
+    })
+  }
+
+  setDataParents(activity, data) {
+    this.setState({
+      ...this.state,
+      data: {
+        ...this.state.data,
+        data: this.state.data.data.map((c) => {
+          if (activity._id === c._id) {
+            return {
+              ...c,
+              parentCosts: data,
+            }
+          }
+          return c;
+        })
+      }
+    })
+  }
+
+  setAdvanceLiquidationStatus(status) {
+    this.setState({
+      ...this.state,
+      data: {
+        ...this.state.data,
+        status: status,
+        subStatus: 'Pending',
       }
     })
   }

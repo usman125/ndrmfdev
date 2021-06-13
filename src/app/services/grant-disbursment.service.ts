@@ -75,6 +75,14 @@ export class GrantDisbursmentsService {
     );
   }
 
+  reassignInitialAdvance(disbursmentId) {
+    const url = `${AppConfig.apiUrl}/grant-disbursement/${disbursmentId}/initial-advance/reassign`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
 
   approveQuarterAdvance(advanceId) {
     const url = `${AppConfig.apiUrl}/grant-disbursement/${advanceId}/quarter-advance/approve?status=APPROVED`;
@@ -92,9 +100,33 @@ export class GrantDisbursmentsService {
     );
   }
 
+  reassignAdvanceLiquidation(liquidationId) {
+    const url = `${AppConfig.apiUrl}/grant-disbursement/advance-liquidation/${liquidationId}/reassign`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
+  reassignQuarterAdvance(advanceId) {
+    const url = `${AppConfig.apiUrl}/grant-disbursement/advance/${advanceId}/reassign`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
   submitInitialAdvanceLiquidationWithSoes(liquidationId, body) {
     const url = `${AppConfig.apiUrl}/grant-disbursement/initial-advance/${liquidationId}/liquidation/submit`;
     return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
+  updateInitialAdvanceLiquidationWithSoes(liquidationId, body) {
+    const url = `${AppConfig.apiUrl}/grant-disbursement/initial-advance/${liquidationId}/liquidation/update`;
+    return this._httpClient.put(
       url,
       body
     );

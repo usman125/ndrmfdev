@@ -20,10 +20,13 @@
 }
 .cost-box span {
   font-weight: normal;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 33px;
   text-align: right;
   color: #333333;
+}
+.cost-box mat-form-field input {
+  font-size: 12px;
 }
 .example-radio-group {
   display: flex;
@@ -65,4 +68,14 @@
   color: #474b56;
   /* color: #919191; */
   text-align: center;
+}
+
+small#date-field {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 12px 0px;
+  border-radius: 5px;
+  margin-bottom: 2px;
+  display: block;
+  color: rgba(0, 0, 0, 0.38);
+  font-size: 12px;
 }
