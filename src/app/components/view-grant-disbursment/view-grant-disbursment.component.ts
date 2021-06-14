@@ -100,7 +100,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       this._singleGrantDisbursmentsStore.state$.subscribe(
         data => {
           if (data.disbursment) {
-            // console.log("REQUEST IN VIEW*********:---", data.disbursment,)
+            console.log("REQUEST IN VIEW*********:---", data.disbursment);
             this.selectedRequest = data.disbursment;
 
             // if (this.selectedRequest.initialAdvance.status === 'Completed' ||
@@ -347,6 +347,8 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         this.approveLoading = false;
         console.log("RESULT AFTER SUBMITTEING:---", result);
         this.selectedAdvanceItem.status = "Under Review";
+        this.advanceForm.disable({ onlySelf: true });
+        this.costsData.disable({ onlySelf: true });
         const options = {
           title: result.message,
           message: '',
@@ -657,10 +659,13 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       (result: any) => {
         console.log("RESULT AFTER APPROVE:---", result);
         this.approveLoading = false;
-        this.selectedAdvanceItem.status === 'Approved';
-        this.selectedAdvanceItem.subStatus === 'Approved';
+        // this.selectedAdvanceItem.status === 'Approved';
+        // this.selectedAdvanceItem.subStatus === 'Approved';
+        // this.selectedRequest.initialAdvance.status === 'Approved';
+        // this.selectedRequest.initialAdvance.subStatus === 'Approved';
         options.title = result.message;
         this._confirmModelService.open(options);
+        this._singleGrantDisbursmentsStore.approveInitialAdvance();
       },
       error => {
         console.log("RESULT AFTER APPROVE:---", error);

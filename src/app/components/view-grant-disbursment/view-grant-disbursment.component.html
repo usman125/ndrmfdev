@@ -25,7 +25,7 @@
               {{selectedRequest?.initialAdvance?.status}}
             </span>
             <span id="comment">
-              {{selectedRequest?.initialAdvance?.subStatus}}
+              {{selectedRequest?.initialAdvance?.advanceLiquidationItem?.status}}
             </span>
 
             <mat-icon *ngIf="selectedRequest !== null">
@@ -410,12 +410,12 @@
         </ng-container>
 
         <!-- LIQUIDATION FOR ADVANCE -->
-        <div class="border-heading mt-5" *ngIf="selectedAdvanceItem?.subStatus === 'Approved'">
+        <div class="border-heading mt-5" *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'">
           <span>Advance Liquidation</span>
         </div>
 
         <!-- LIQUIDATION PRINT BOX -->
-        <div class="row mb-2" *ngIf="selectedAdvanceItem?.subStatus === 'Approved'">
+        <div class="row mb-2" *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'">
           <div class="col-md-12 mb-3">
             <div class="d-flex flex-fill justify-content-between align-items-center">
               <div class="d-flex align-items-center" style="width: 33%;">
@@ -463,7 +463,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Payees Name</mat-label>
               <input [disabled]="loggedUser.role !== 'fip' 
-              || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+              || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                 [(ngModel)]="selectedAdvanceLiquidation.payeesName" matInput type="text" placeholder="enter here...">
             </mat-form-field>
           </div>
@@ -471,7 +472,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Payees Address</mat-label>
               <input [disabled]="loggedUser.role !== 'fip' 
-              || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+              || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                 [(ngModel)]="selectedAdvanceLiquidation.payeesAddress" matInput type="text" placeholder="enter here...">
             </mat-form-field>
           </div>
@@ -479,7 +481,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Bank Name</mat-label>
               <input [disabled]="loggedUser.role !== 'fip' 
-              || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+              || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                 [(ngModel)]="selectedAdvanceLiquidation.bankName" matInput type="text" placeholder="enter here...">
             </mat-form-field>
           </div>
@@ -487,7 +490,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Bank Address</mat-label>
               <input [disabled]="loggedUser.role !== 'fip' 
-              || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+              || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                 [(ngModel)]="selectedAdvanceLiquidation.bankAddress" matInput type="text" placeholder="enter here...">
             </mat-form-field>
           </div>
@@ -495,7 +499,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Payees Account #</mat-label>
               <input [disabled]="loggedUser.role !== 'fip' 
-              || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+              || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                 [(ngModel)]="selectedAdvanceLiquidation.payeesAccount" matInput type="text" placeholder="enter here...">
             </mat-form-field>
           </div>
@@ -503,7 +508,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Swift Code</mat-label>
               <input [disabled]="loggedUser.role !== 'fip' 
-              || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+              || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                 [(ngModel)]="selectedAdvanceLiquidation.swiftCode" matInput type="text" placeholder="enter here...">
             </mat-form-field>
           </div>
@@ -511,7 +517,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Special Payment Instruction</mat-label>
               <input [disabled]="loggedUser.role !== 'fip' 
-              || selectedAdvanceLiquidation?.status !== 'Not Initiated'"
+              || (selectedAdvanceLiquidation?.status === 'Approved' ||
+                selectedAdvanceLiquidation?.status === 'Under Review')"
                 [(ngModel)]="selectedAdvanceLiquidation.specialPaymentInstruction" matInput type="text"
                 placeholder="enter here...">
             </mat-form-field>
@@ -519,7 +526,7 @@
         </div>
 
         <!-- BUDGET UTILIZATION NDRMF -->
-        <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
+        <div *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'" class="mb-3">
           <p id="answer" class="p-2">Summary Budget Utilization (NDRMF Share)</p>
           <div class="d-flex align-items-center justify-content-between rag-div table-header">
             <span>
@@ -574,7 +581,7 @@
         </div>
 
         <!-- SUMMARY SOEs NDRMF -->
-        <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
+        <div *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'" class="mb-3">
           <p id="answer" class="p-2">Summary of SOE (NDRMF Share)</p>
           <div class="d-flex align-items-center justify-content-between rag-div table-header">
             <span>
@@ -625,7 +632,7 @@
         </div>
 
         <!-- NDRMF SOEs -->
-        <div class="mb-3" *ngIf="selectedAdvanceItem?.subStatus === 'Approved'">
+        <div class="mb-3" *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'">
           <div class="d-flex justify-content-between mt-2 mb-2">
             <p id="answer" class="p-2">SOEs for NDRMF</p>
             <!-- <button mat-mini-fab color="accent" (click)="addNdrmfSoes();">
@@ -725,7 +732,7 @@
 
 
         <!-- SUMMARY SOEs FIP -->
-        <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
+        <div *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'" class="mb-3">
           <p id="answer" class="p-2">Summary Budget Utilization (FIP Share)</p>
           <div class="d-flex align-items-center justify-content-between rag-div table-header">
             <span>
@@ -779,7 +786,7 @@
         </div>
 
         <!-- SUMMARY SOEs FIP -->
-        <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
+        <div *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'" class="mb-3">
           <p id="answer" class="p-2">Summary of SOE (FIP Share)</p>
           <div class="d-flex align-items-center justify-content-between rag-div table-header">
             <span>
@@ -830,7 +837,7 @@
         </div>
 
         <!-- FIP SOEs -->
-        <ng-container *ngIf="selectedAdvanceItem?.subStatus === 'Approved'">
+        <ng-container *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'">
           <div class="mb-3">
             <div class="d-flex justify-content-between mt-2 mb-2">
               <p id="answer" class="p-2">SOEs for FIP</p>
@@ -997,19 +1004,21 @@
               <div class="mb-2">
                 <mat-divider></mat-divider>
               </div>
-              <button class="mb-2" [disabled]="selectedAdvanceLiquidation?.status === 'Not Initiated' ||
-                             selectedAdvanceLiquidation?.status === 'Approved' || selectedAdvanceLiquidation?.status === 'Re Assigned'
-                             || approveLoading || selectedAdvanceItem?.data === null || 
-                             selectedAdvanceLiquidation === null || selectedAdvanceItem?.status === 'Re Assigned'
-                             || selectedAdvanceItem?.status === 'Completed'" mat-raised-button color="accent"
-                (click)="approveQuarterLiquidation()">
+              <button class="mb-2" [disabled]="(selectedAdvanceLiquidation?.status === 'Not Initiated' ||
+                             selectedAdvanceLiquidation?.status === 'Approved' || 
+                             selectedAdvanceLiquidation?.status === 'Re Assigned'
+                              || selectedAdvanceLiquidation === null) || 
+                             (selectedRequest?.initialAdvance?.data === null || 
+                             selectedRequest?.initialAdvance?.status === 'Re Assigned'
+                             || selectedRequest?.initialAdvance?.status === 'Completed') || approveLoading"
+                mat-raised-button color="accent" (click)="approveQuarterLiquidation()">
                 Approve Advance Liquidation
               </button>
-              <button [disabled]="selectedAdvanceLiquidation?.status === 'Re Assigned' || 
-                            selectedAdvanceLiquidation?.status === 'Not Initiated' || approveLoading || 
-                            selectedAdvanceLiquidation === null || selectedAdvanceItem?.status === 'Re Assigned'
-                            || selectedAdvanceItem?.status === 'Completed'" mat-raised-button color="accent"
-                (click)="reassignQuarterLiquidation()">
+              <button [disabled]="(selectedAdvanceLiquidation?.status === 'Re Assigned' || 
+                            selectedAdvanceLiquidation?.status === 'Not Initiated' || 
+                            selectedAdvanceLiquidation === null) || (selectedRequest?.initialAdvance?.status === 'Re Assigned'
+                            || selectedRequest?.initialAdvance?.status === 'Completed') || approveLoading"
+                mat-raised-button color="accent" (click)="reassignQuarterLiquidation()">
                 Reassign Advance Liquidation
               </button>
             </div>
@@ -1038,8 +1047,8 @@
               item.status : '&nbsp;' }}
             </span>
             <span id="answer" class="responsive-text">
-              {{item.subStatus ?
-              item.subStatus : '&nbsp;' }}
+              {{item.advanceLiquidationItem !== null ?
+              item.advanceLiquidationItem.status : '&nbsp;' }}
             </span>
             <mat-icon>
               unfold_more
@@ -2022,7 +2031,7 @@
               <div class="d-flex flex-column">
                 <div class="mb-2">
                   <span id="answer">Advance Status:</span>
-                  {{selectedAdvanceItem?.subStatus}}
+                  {{selectedAdvanceItem?.status}}
                 </div>
                 <div>
                   <span id="answer">Liquidation Status:</span>
@@ -2038,10 +2047,9 @@
                 mat-raised-button color="accent" (click)="approveQuarterAdvance()">
                 Approve Quarter Advance
               </button>
-              <button class="mb-2" [disabled]="selectedAdvanceItem?.status === 'Re Assigned' || 
-            selectedAdvanceItem?.status === null || selectedAdvanceItem?.status === 'Approved' 
-            || selectedAdvanceLiquidation?.subStatus === 'Approved' || 
-            approveLoading" mat-raised-button color="warn" (click)="reassignQuarterAdvance()">
+              <button class="mb-2" [disabled]="(selectedAdvanceItem?.status === 'Re Assigned' || 
+            selectedAdvanceItem?.status === null) 
+            || approveLoading" mat-raised-button color="warn" (click)="reassignQuarterAdvance()">
                 Reassign Quarter Advance
               </button>
               <!-- <button class="mb-2" mat-raised-button color="accent" (click)="approveQuarterAdvance()">

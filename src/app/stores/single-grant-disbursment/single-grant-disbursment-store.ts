@@ -83,6 +83,20 @@ export class SingleGrantDisbursmentsStore extends Store<SingleGrantDisbursmentsS
     }
   }
 
+  approveInitialAdvance() {
+    this.setState({
+      ...this.state,
+      disbursment: {
+        ...this.state.disbursment,
+        initialAdvance: {
+          ...this.state.disbursment.initialAdvance,
+          status: 'Approved',
+          subStatus: "Approved",
+        }
+      }
+    })
+  }
+
   addDataToQuarterAdvance(id, data) {
     this.setState({
       ...this.state,
