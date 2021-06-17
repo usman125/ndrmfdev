@@ -34,10 +34,66 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
 
-        <!-- FORM CONTROLS FOR FIP -->
+        <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+        <div class="row mt-5 mb-3">
+          <div class="col-md-6">
+            <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+              <span style="font-size: 18px;">
+                {{'Withdrawal application' | uppercase}}
+              </span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex flex-column justify-content-end align-items-end">
+              <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+              <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                National Disaster
+                Risk Management
+                Fund</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- WA ADDRESS PRINT BOX -->
+        <div class="row mt-3 mb-3 d-flex justify-content-end">
+          <div class="d-flex flex-column align-items-start col-md-6">
+            <span style="font-size: 14px;">
+              {{'National Disaster Risk Management Fund (NDRMF)' | titlecase}}
+            </span>
+            <span style="font-size: 14px;">
+              {{'5th Floor EOBI Building, Block 33-34, Service Road South,' | titlecase}}
+            </span>
+            <span style="font-size: 14px;">
+              {{'Mauve Area, G-10/4, Islamabad' | titlecase}}
+            </span>
+          </div>
+          <div class="d-flex flex-column col-md-6">
+            <div class="d-flex align-items-center">
+              <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                NDRMF GD Ref</span>
+              <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                {{'&nbsp;'}}</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                Withdrawal Application #
+              </span>
+              <span
+                style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                {{ selectedRequest !== null ?
+                (selectedRequest.initialAdvance.quarter | number) :
+                '&nbsp;' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORM CONTROLS BOX FOR FIP -->
         <ng-container *ngIf="loggedUser?.role === 'fip'">
 
+          <!-- PRINT BOX -->
           <div class="row">
+            <p id="answer" class="p-2">1. Type of Disbursment (indicated with an 'X')</p>
             <div class="col-md-12 mb-3">
               <div class="d-flex flex-fill justify-content-between align-items-center">
                 <div class="d-flex align-items-center" style="width: 33%;">
@@ -68,6 +124,39 @@
                   <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
                   <span>Direct Payment</span>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AMOUN IN WORDS PRINT BOX -->
+          <div class="row">
+            <div class="col-md-12 pl-0 pr-0">
+              <p *ngIf="selectedAdvanceItem !== null" id="answer" class="p-2 mb-0">
+                2. In connection with Grant Implementation Agreement, please pay/adjust
+                from the NDRMF account
+              </p>
+            </div>
+            <div class="row d-flex align-items-center justify-conetnt-between flex-fill p-3">
+              <div class="col-md-2 d-flex flex-column flex-fill">
+                <span class="d-flex flex-column justify-content-center"
+                  style="text-align: left;font-size: 11px;height: 50px;">Application Currency</span>
+                <span
+                  style="height:70px;font-size: 12px;background-color: #f9f9f9;color: #151515;padding: 10px;">PKR</span>
+              </div>
+              <div class="col-md-2 d-flex flex-column flex-fill">
+                <span class="d-flex flex-column justify-content-center"
+                  style="font-size: 11px;height: 50px;">Application
+                  Amount</span>
+                <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                  {{selectedRequest !== null ? (selectedRequest.initialAdvance.amount | number) : '&nbsp;'}}
+                </span>
+              </div>
+              <div class="col-md-8 d-flex flex-column flex-fill">
+                <span class="d-flex flex-column justify-content-center"
+                  style="text-align: left;font-size: 11px;height: 50px;">Application Amount (in words)</span>
+                <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                  {{selectedRequest !== null ? (selectedRequest.initialAdvance.amount | amountToWord) : '&nbsp;'}}
+                </span>
               </div>
             </div>
           </div>
@@ -165,10 +254,201 @@
             </div>
           </div>
 
-        </ng-container>
+          <!-- ADVANCE CONSISTS OF SECTION 4 PRINT BOX -->
+          <div class="row">
+            <p id="answer" class="p-2 mb-3 mt-3">
+              4. This application consists of [indicate an 'x' in the appropriate box(es)];
+            </p>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Summary of Estimates for the Quarter</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Certificates for Force Account for Works (FAW)</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Detail of Estimates for the Quarter</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Bank Reconciliation Statement - NDRMF</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Summary of Budget Vs Actual - NDRMF Share</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Certified Bank Statement (Photocopy)</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Summary & Statement of Expenditures (SOE) - NDRMF Share</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Quarterly Statement of Project Receipts & Payments</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Summary of Budget Vs Actual - FIP Share</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Advance Account Reconciliation Statement (AARS)</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Summary & Statement of Expenditures (SOE) - FIP Share</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>&nbsp;</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <!-- SELECTED ADVANCE COSTS FOR FIP -->
-        <ng-container *ngIf="loggedUser?.role === 'fip'">
+          <!-- CONTACT DETAILS PRINT BOX -->
+          <div class="row d-flex align-items-center justify-conetnt-between flex-fill p-3">
+            <div class="col-md-6 pl-0 d-flex flex-column flex-fill">
+              <span class="d-flex flex-column justify-content-center"
+                style="text-align: left;font-size: 11px;height: 30px;">By
+                (Name of recipient)</span>
+              <span
+                style="height:70px;font-size: 12px;background-color: #f9f9f9;color: #151515;padding: 10px;">&nbsp;</span>
+            </div>
+            <div class="col-md-6 pr-0 d-flex flex-column flex-fill">
+              <span class="d-flex flex-column justify-content-center" style="font-size: 11px;height: 30px;">Date
+                Issued</span>
+              <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                {{'&nbsp;'}}
+              </span>
+            </div>
+          </div>
+
+          <!-- SIGNATURE BOX -->
+          <div class="row d-flex align-items-center justify-conetnt-between flex-fill pb-3 pr-3 pl-3 pt-0">
+            <div class="col-md-6 pl-0 d-flex flex-column flex-fill">
+              <span class="d-flex flex-column justify-content-center"
+                style="text-align: left;font-size: 11px;height: 30px;">Print
+                name(s) of signatory authority</span>
+              <span
+                style="height:70px;font-size: 12px;background-color: #f9f9f9;color: #151515;padding: 10px;">&nbsp;</span>
+            </div>
+            <div class="col-md-6 pr-0 d-flex flex-column flex-fill">
+              <span class="d-flex flex-column justify-content-center"
+                style="font-size: 11px;height: 30px;">Signature</span>
+              <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                {{'&nbsp;'}}
+              </span>
+            </div>
+          </div>
+
+          <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+          <div class="row mt-5 mb-3">
+            <div class="col-md-6">
+              <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                  {{selectedRequest !== null ?
+                  (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                </span>
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                  <ul>
+                    <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                    <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                  </ul>
+                </span>
+                <span style="font-size: 18px;">
+                  {{'to be financed from NDRMF account' | uppercase}}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex flex-column justify-content-end align-items-end">
+                <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+                <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                  National Disaster
+                  Risk Management
+                  Fund</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROJECT COSTING DETAILS PRINT BOX -->
+          <div class="row mt-3 mb-3 d-flex justify-content-end">
+            <div class="d-flex flex-column align-items-start col-md-6">
+              <span>
+                Withdrawl Application #:
+                {{ selectedRequest !== null ?
+                (selectedRequest.initialAdvance.quarter | number) :
+                null }}
+              </span>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  Total Project Cost</span>
+                <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{totalProjectCost | number}}</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  NDRMF Share
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{ndrmfTotalProjectCost | number}}
+                </span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  FIP Share
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{fipTotalProjectCost | number}}
+                </span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  Required this WA
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{ selectedRequest !== null ?
+                  (selectedRequest.initialAdvance.amount | number) :
+                  null }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- FIP COSTS ACTIVITY TABLE HEAD -->
           <div class="row d-flex header-box align-items-center mt-3">
             <div class="col-md-6 heading-contain">
               <span class="pl-2">Title</span>
@@ -177,6 +457,8 @@
               <span class="pl-2">Amount</span>
             </div>
           </div>
+
+          <!-- FIP COSTS DATA TABLE ROW -->
           <div class="row d-flex cost-box align-items-center mt-2" *ngFor="let item of apiCosts; let i = index;">
             <div class="col-md-6">
               <span>{{item.title}}</span>
@@ -185,23 +467,100 @@
               <mat-form-field appearance="outline">
                 <mat-label>Amount</mat-label>
                 <input [disabled]="(selectedAdvanceItem?.status === 'Approved' || 
-                  selectedAdvanceItem?.status === 'Under Review' ||
-                  selectedAdvanceItem?.status === 'Completed' ||
-                  selectedAdvanceItem?.status === 'Review Pending' ||
-                  selectedAdvanceItem?.status === 'Review Completed' ||
-                  selectedAdvanceItem?.status === 'Marked To PO' ||
-                  selectedAdvanceItem?.subStatus === 'Approved')" matInput type="number" placeholder="Enter Amount..."
-                  [(ngModel)]="item.amount">
+                            selectedAdvanceItem?.status === 'Under Review' ||
+                            selectedAdvanceItem?.status === 'Completed' ||
+                            selectedAdvanceItem?.status === 'Review Pending' ||
+                            selectedAdvanceItem?.status === 'Review Completed' ||
+                            selectedAdvanceItem?.status === 'Marked To PO' ||
+                            selectedAdvanceItem?.subStatus === 'Approved')" matInput type="number"
+                  placeholder="Enter Amount..." [(ngModel)]="item.amount">
               </mat-form-field>
             </div>
           </div>
+
         </ng-container>
 
         <!-- SELECTED ADVANCE COSTS FOR OTHERS SUBMITTED BY FIP -->
-        <div class="row">
-          <ng-container *ngIf="loggedUser?.role !== 'fip'">
-            <div class="col-md-7">
-              <div class="row" *ngIf="selectedAdvanceItem !== null">
+        <ng-container *ngIf="loggedUser?.role !== 'fip'">
+          <div class="row mb-3">
+            <div class="col-md-12">
+
+              <!-- PRINT BOX -->
+              <div class="row">
+                <p id="answer" class="p-2">1. Type of Disbursment (indicated with an 'X')</p>
+                <div class="col-md-12 mb-3">
+                  <div class="d-flex flex-fill justify-content-between align-items-center">
+                    <div class="d-flex align-items-center" style="width: 33%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                      <span>Initial Advance</span>
+                    </div>
+                    <div class="d-flex align-items-center" style="width: 33%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                      <span>Liquidation Only</span>
+                    </div>
+                    <div class="d-flex align-items-center" style="width: 33%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                      <span>Liquidation & Replenishment</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                  <div class="d-flex flex-fill justify-content-between align-items-center">
+                    <div class="d-flex align-items-center" style="width: 33%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                      <span>Advance</span>
+                    </div>
+                    <div class="d-flex align-items-center" style="width: 33%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                      <span>Replenishment</span>
+                    </div>
+                    <div class="d-flex align-items-center" style="width: 33%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                      <span>Direct Payment</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- AMOUN IN WORDS PRINT BOX -->
+              <div class="row">
+                <div class="col-md-12 pl-0 pr-0">
+                  <p *ngIf="selectedAdvanceItem !== null" id="answer" class="p-2 mb-0">
+                    2. In connection with Grant Implementation Agreement, please pay/adjust
+                    from the NDRMF account
+                  </p>
+                </div>
+                <div class="row d-flex align-items-center justify-conetnt-between flex-fill p-3">
+                  <div class="col-md-2 d-flex flex-column flex-fill">
+                    <span class="d-flex flex-column justify-content-center"
+                      style="text-align: left;font-size: 11px;height: 50px;">Application Currency</span>
+                    <span
+                      style="height:70px;font-size: 12px;background-color: #f9f9f9;color: #151515;padding: 10px;">PKR</span>
+                  </div>
+                  <div class="col-md-2 d-flex flex-column flex-fill">
+                    <span class="d-flex flex-column justify-content-center"
+                      style="font-size: 11px;height: 50px;">Application Amount</span>
+                    <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                      {{selectedRequest !== null ? (selectedRequest.initialAdvance.amount | number) : '&nbsp;'}}
+                    </span>
+                  </div>
+                  <div class="col-md-8 d-flex flex-column flex-fill">
+                    <span class="d-flex flex-column justify-content-center"
+                      style="text-align: left;font-size: 11px;height: 50px;">Application Amount (in words)</span>
+                    <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                      {{selectedRequest !== null ? (selectedRequest.initialAdvance.amount | amountToWord) : '&nbsp;'}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- EXTRA FORM FIRLDS PAYEE NAME ETC. -->
+              <div class="row mt-2" *ngIf="selectedAdvanceItem !== null">
+                <div class="col-md-12 pl-0 pr-0 mb-3">
+                  <p *ngIf="selectedAdvanceItem !== null" id="answer" class="p-2 mb-0">
+                    3. Payment Instructions
+                  </p>
+                </div>
                 <div class="col-md-12">
                   <mat-form-field appearance="outline">
                     <mat-label>Payees Name</mat-label>
@@ -252,6 +611,201 @@
                   </mat-form-field>
                 </div>
               </div>
+
+              <!-- ADVANCE CONSISTS OF SECTION 4 PRINT BOX -->
+              <div class="row">
+                <p id="answer" class="p-2 mb-3 mt-3">
+                  4. This application consists of [indicate an 'x' in the appropriate box(es)];
+                </p>
+                <div class="col-md-12 mb-3">
+                  <div class="d-flex flex-fill justify-content-between align-items-center">
+                    <div class="d-flex align-items-center" style="width: 50%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                      <span>Summary of Estimates for the Quarter</span>
+                    </div>
+                    <div class="d-flex align-items-center" style="width: 50%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                      <span>Certificates for Force Account for Works (FAW)</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                  <div class="d-flex flex-fill justify-content-between align-items-center">
+                    <div class="d-flex align-items-center" style="width: 50%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                      <span>Detail of Estimates for the Quarter</span>
+                    </div>
+                    <div class="d-flex align-items-center" style="width: 50%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                      <span>Bank Reconciliation Statement - NDRMF</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                  <div class="d-flex flex-fill justify-content-between align-items-center">
+                    <div class="d-flex align-items-center" style="width: 50%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                      <span>Summary of Budget Vs Actual - NDRMF Share</span>
+                    </div>
+                    <div class="d-flex align-items-center" style="width: 50%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                      <span>Certified Bank Statement (Photocopy)</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                  <div class="d-flex flex-fill justify-content-between align-items-center">
+                    <div class="d-flex align-items-center" style="width: 50%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                      <span>Summary & Statement of Expenditures (SOE) - NDRMF Share</span>
+                    </div>
+                    <div class="d-flex align-items-center" style="width: 50%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                      <span>Quarterly Statement of Project Receipts & Payments</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                  <div class="d-flex flex-fill justify-content-between align-items-center">
+                    <div class="d-flex align-items-center" style="width: 50%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                      <span>Summary of Budget Vs Actual - FIP Share</span>
+                    </div>
+                    <div class="d-flex align-items-center" style="width: 50%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                      <span>Advance Account Reconciliation Statement (AARS)</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                  <div class="d-flex flex-fill justify-content-between align-items-center">
+                    <div class="d-flex align-items-center" style="width: 50%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                      <span>Summary & Statement of Expenditures (SOE) - FIP Share</span>
+                    </div>
+                    <div class="d-flex align-items-center" style="width: 50%;">
+                      <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                      <span>&nbsp;</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CONTACT DETAILS PRINT BOX -->
+              <div class="row d-flex align-items-center justify-conetnt-between flex-fill p-3">
+                <div class="col-md-6 pl-0 d-flex flex-column flex-fill">
+                  <span class="d-flex flex-column justify-content-center"
+                    style="text-align: left;font-size: 11px;height: 30px;">By (Name of recipient)</span>
+                  <span
+                    style="height:70px;font-size: 12px;background-color: #f9f9f9;color: #151515;padding: 10px;">&nbsp;</span>
+                </div>
+                <div class="col-md-6 pr-0 d-flex flex-column flex-fill">
+                  <span class="d-flex flex-column justify-content-center" style="font-size: 11px;height: 30px;">Date
+                    Issued</span>
+                  <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                    {{'&nbsp;'}}
+                  </span>
+                </div>
+              </div>
+
+              <!-- SIGNATURE BOX -->
+              <div class="row d-flex align-items-center justify-conetnt-between flex-fill pb-3 pr-3 pl-3 pt-0">
+                <div class="col-md-6 pl-0 d-flex flex-column flex-fill">
+                  <span class="d-flex flex-column justify-content-center"
+                    style="text-align: left;font-size: 11px;height: 30px;">Print name(s) of signatory authority</span>
+                  <span
+                    style="height:70px;font-size: 12px;background-color: #f9f9f9;color: #151515;padding: 10px;">&nbsp;</span>
+                </div>
+                <div class="col-md-6 pr-0 d-flex flex-column flex-fill">
+                  <span class="d-flex flex-column justify-content-center"
+                    style="font-size: 11px;height: 30px;">Signature</span>
+                  <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                    {{'&nbsp;'}}
+                  </span>
+                </div>
+              </div>
+
+              <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+              <div class="row mt-5 mb-3">
+                <div class="col-md-6">
+                  <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                    <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                      {{selectedRequest !== null ?
+                      (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                    </span>
+                    <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                      <ul>
+                        <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                        <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                      </ul>
+                    </span>
+                    <span style="font-size: 18px;">
+                      {{'to be financed from NDRMF account' | uppercase}}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="d-flex flex-column justify-content-end align-items-end">
+                    <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png"
+                      alt="">
+                    <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                      National Disaster
+                      Risk Management
+                      Fund</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PROJECT COSTING DETAILS PRINT BOX -->
+              <div class="row mt-3 mb-3 d-flex justify-content-end">
+                <div class="d-flex flex-column align-items-start col-md-6">
+                  <span>
+                    Withdrawl Application #:
+                    {{ selectedRequest !== null ?
+                    (selectedRequest.initialAdvance.quarter | number) :
+                    null }}
+                  </span>
+                </div>
+                <div class="d-flex flex-column col-md-6">
+                  <div class="d-flex align-items-center">
+                    <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                      Total Project Cost</span>
+                    <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                      {{totalProjectCost | number}}</span>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                      NDRMF Share
+                    </span>
+                    <span
+                      style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                      {{ndrmfTotalProjectCost | number}}
+                    </span>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                      FIP Share
+                    </span>
+                    <span
+                      style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                      {{fipTotalProjectCost | number}}
+                    </span>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                      Required this WA
+                    </span>
+                    <span
+                      style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                      {{ selectedRequest !== null ?
+                      (selectedRequest.initialAdvance.amount | number) :
+                      null }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- FIP COSTS TREE HEAD -->
               <div class="pr-3 pl-3 mt-3">
                 <div class="row d-flex align-items-center header-box">
                   <div class="col-md-6 heading-contain">
@@ -262,6 +816,8 @@
                   </div>
                 </div>
               </div>
+
+              <!-- FIP COSTS DATA TABLE -->
               <div class="pr-3 pl-3" *ngIf="selectedRequest?.initialAdvance.data">
                 <div class="row d-flex cost-box align-items-center mt-2" *ngFor="let item of apiCosts; let i = index;">
                   <div class="col-md-6">
@@ -272,6 +828,8 @@
                   </div>
                 </div>
               </div>
+
+              <!-- TOTAL AMOUNT FIP COSTS -->
               <div class="mt-2 pr-3 pl-3">
                 <div class="row d-flex align-items-center header-box">
                   <div class="col-md-6 heading-contain">
@@ -284,9 +842,358 @@
                   </div>
                 </div>
               </div>
+
+              <!-- BUDGET UTILIZATION NDRMF -->
+              <div class="mb-3">
+
+                <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+                <div class="row mt-5 mb-3">
+                  <div class="col-md-6">
+                    <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                      <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                        {{selectedRequest !== null ?
+                        (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                      </span>
+                      <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                        <ul>
+                          <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                          <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                        </ul>
+                      </span>
+                      <span style="font-size: 18px;">
+                        {{'summary of budget Utilization - ndrmf share' | uppercase}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="d-flex flex-column justify-content-end align-items-end">
+                      <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png"
+                        alt="">
+                      <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                        National Disaster
+                        Risk Management
+                        Fund</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- PROJECT COSTING DETAILS PRINT BOX -->
+                <div class="row mt-3 mb-3 d-flex justify-content-end">
+                  <div class="d-flex flex-column align-items-start col-md-6">
+                    <span>
+                      Withdrawl Application #:
+                      {{ selectedRequest !== null ?
+                      (selectedRequest.initialAdvance.quarter | number) :
+                      null }}
+                    </span>
+                  </div>
+                  <div class="d-flex flex-column col-md-6">
+                    <div class="d-flex align-items-center">
+                      <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        Total Project Cost</span>
+                      <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        {{totalProjectCost | number}}</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        NDRMF Share
+                      </span>
+                      <span
+                        style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        {{ndrmfTotalProjectCost | number}}
+                      </span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        FIP Share
+                      </span>
+                      <span
+                        style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        {{fipTotalProjectCost | number}}
+                      </span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        Required this WA
+                      </span>
+                      <span
+                        style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        {{ selectedRequest !== null ?
+                        (selectedRequest.initialAdvance.amount | number) :
+                        null }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ACTIVITY TABLE HEADER -->
+                <div class="d-flex align-items-center justify-content-between rag-div table-header">
+                  <span>
+                    Parent Tree
+                  </span>
+                  <span>
+                    Budget Category
+                  </span>
+                  <span>
+                    Total Project Budget Allocation (c)
+                  </span>
+                  <span>
+                    Expenditure upto last quarter (d)
+                  </span>
+                  <span>
+                    Expenditure for the current quarter (e)
+                  </span>
+                  <span>
+                    Expenditure till date (f = d+e)
+                  </span>
+                  <span>
+                    Remaining Budget (g = c-f)
+                  </span>
+                  <!-- <span>
+                            Remarks
+                          </span> -->
+                </div>
+
+                <!-- ACTIVITY TABLE ROW -->
+                <div *ngFor="let item of selectedAdvanceItem?.data; let i = index;">
+                  <div class="d-flex rag-div justify-content-between align-items-center table-row">
+                    <span>
+                      <div *ngIf="item?.parentCosts">
+                        <div *ngFor="let _ of item?.parentCosts; let i = index">
+                          <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                            <small>{{name}}</small>
+                            <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </span>
+                    <span>{{(item.title) || '&nbsp;'}}</span>
+                    <span>{{(item.ndrmfTotalBudgetAllocation | number) || '&nbsp;'}}</span>
+                    <span>{{'&nbsp;'}}</span>
+                    <span>{{(item.ndrmfExpenditureCurrentQuarter | number) || '&nbsp;'}}</span>
+                    <span>{{((0 + item.ndrmfExpenditureCurrentQuarter) | number) || '&nbsp;'}}</span>
+                    <span>{{((item.ndrmfTotalBudgetAllocation - item.ndrmfExpenditureCurrentQuarter) |
+                      number) || '&nbsp;'}}</span>
+                    <!-- <span>&nbsp;</span> -->
+                  </div>
+                </div>
+
+                <!-- ACTIVITY TABLE TOTALS -->
+                <div class="d-flex align-items-center justify-content-between rag-div table-header">
+                  <span>
+                    Total
+                  </span>
+                  <span>
+                    &nbsp;
+                  </span>
+                  <span>
+                    {{selectedAdvanceItem !== null ?
+                    ((selectedAdvanceItem.data | sum:'ndrmfTotalBudgetAllocation') | number) :
+                    '&nbsp;'}}
+                  </span>
+                  <span>
+                    {{'&nbsp;'}}
+                  </span>
+                  <span>
+                    {{selectedAdvanceItem !== null ?
+                    ((selectedAdvanceItem.data | sum:'ndrmfExpenditureCurrentQuarter') | number) :
+                    '&nbsp;'}}
+                  </span>
+                  <span>
+                    {{selectedAdvanceItem !== null ?
+                    ((selectedAdvanceItem.data | sum:'ndrmfExpenditureTillDate') | number) :
+                    '&nbsp;'}}
+                  </span>
+                  <span>
+                    {{selectedAdvanceItem !== null ?
+                    ((selectedAdvanceItem.data | sum:'ndrmfRemainingBudget') | number) :
+                    '&nbsp;'}}
+                  </span>
+                  <!-- <span>
+                                                          Remarks
+                                                        </span> -->
+                </div>
+
+              </div>
+
+              <!-- BUDGET UTILIZATION FIP -->
+              <div class="mb-3">
+
+                <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+                <div class="row mt-5 mb-3">
+                  <div class="col-md-6">
+                    <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                      <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                        {{selectedRequest !== null ?
+                        (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                      </span>
+                      <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                        <ul>
+                          <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                          <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                        </ul>
+                      </span>
+                      <span style="font-size: 18px;">
+                        {{'summary of budget Utilization - fip share' | uppercase}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="d-flex flex-column justify-content-end align-items-end">
+                      <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png"
+                        alt="">
+                      <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                        National Disaster
+                        Risk Management
+                        Fund</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- PROJECT COSTING DETAILS PRINT BOX -->
+                <div class="row mt-3 mb-3 d-flex justify-content-end">
+                  <div class="d-flex flex-column align-items-start col-md-6">
+                    <span>
+                      Withdrawl Application #:
+                      {{ selectedRequest !== null ?
+                      (selectedRequest.initialAdvance.quarter | number) :
+                      null }}
+                    </span>
+                  </div>
+                  <div class="d-flex flex-column col-md-6">
+                    <div class="d-flex align-items-center">
+                      <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        Total Project Cost</span>
+                      <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        {{totalProjectCost | number}}</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        NDRMF Share
+                      </span>
+                      <span
+                        style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        {{ndrmfTotalProjectCost | number}}
+                      </span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        FIP Share
+                      </span>
+                      <span
+                        style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        {{fipTotalProjectCost | number}}
+                      </span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        Required this WA
+                      </span>
+                      <span
+                        style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                        {{ selectedRequest !== null ?
+                        (selectedRequest.initialAdvance.amount | number) :
+                        null }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ACTIVITY TABLE HEADER -->
+                <div class="d-flex align-items-center justify-content-between rag-div table-header">
+                  <span>
+                    Parent Tree
+                  </span>
+                  <span>
+                    Budget Category
+                  </span>
+                  <span>
+                    Total Project Budget Allocation (c)
+                  </span>
+                  <span>
+                    Expenditure upto last quarter (d)
+                  </span>
+                  <span>
+                    Expenditure for the current quarter (e)
+                  </span>
+                  <span>
+                    Expenditure till date (f = d+e)
+                  </span>
+                  <span>
+                    Remaining Budget (g = c-f)
+                  </span>
+                  <!-- <span>
+                                          Remarks
+                                        </span> -->
+                </div>
+
+                <!-- ACTIVITY TABLE ROW -->
+                <div *ngFor="let item of selectedAdvanceItem?.data; let i = index;">
+                  <div class="d-flex rag-div justify-content-between align-items-center table-row">
+                    <span>
+                      <div *ngIf="item?.parentCosts">
+                        <div *ngFor="let _ of item?.parentCosts; let i = index">
+                          <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                            <small>{{name}}</small>
+                            <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </span>
+                    <span>{{(item.title) || '&nbsp;'}}</span>
+                    <span>{{(item.fipTotalBudgetAllocation | number) || '&nbsp;'}}</span>
+                    <span>{{'&nbsp;'}}</span>
+                    <span>{{(item.fipExpenditureCurrentQuarter | number) || '&nbsp;'}}</span>
+                    <span>{{(item.fipExpenditureTillDate | number) || '&nbsp;'}}</span>
+                    <span>{{(item.fipRemainingBudget |
+                      number) || '&nbsp;'}}</span>
+                    <!-- <span>&nbsp;</span> -->
+                  </div>
+                </div>
+
+                <!-- ACTIVITY TABLE TOTALS -->
+                <div class="d-flex align-items-center justify-content-between rag-div table-header">
+                  <span>
+                    Total
+                  </span>
+                  <span>
+                    &nbsp;
+                  </span>
+                  <span>
+                    {{selectedAdvanceItem !== null ?
+                    ((selectedAdvanceItem.data | sum:'fipTotalBudgetAllocation') | number) :
+                    '&nbsp;'}}
+                  </span>
+                  <span>
+                    {{'&nbsp;'}}
+                  </span>
+                  <span>
+                    {{selectedAdvanceItem !== null ?
+                    ((selectedAdvanceItem.data | sum:'fipExpenditureCurrentQuarter') | number) :
+                    '&nbsp;'}}
+                  </span>
+                  <span>
+                    {{selectedAdvanceItem !== null ?
+                    ((selectedAdvanceItem.data | sum:'fipExpenditureTillDate') | number) :
+                    '&nbsp;'}}
+                  </span>
+                  <span>
+                    {{selectedAdvanceItem !== null ?
+                    ((selectedAdvanceItem.data | sum:'fipRemainingBudget') | number) :
+                    '&nbsp;'}}
+                  </span>
+                  <!-- <span>
+                                                          Remarks
+                                                        </span> -->
+                </div>
+
+              </div>
+
             </div>
-          </ng-container>
-          <!-- TOOL BOX FOR PROCESS OWNER DISBURSEMENT -->
+          </div>
+        </ng-container>
+
+        <!-- TOOL BOX FOR PROCESS OWNER DISBURSEMENT -->
+        <div class="row">
           <div class="col-md-5">
             <ng-container *ngIf="selectedRequest?.assigned">
               <div class="d-flex flex-column flex-fill">
@@ -409,7 +1316,7 @@
           </div>
         </ng-container>
 
-        <!-- LIQUIDATION FOR ADVANCE -->
+        <!-- ******************** LIQUIDATION FOR ADVANCE ************************** -->
         <div class="border-heading mt-5" *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'">
           <span>Advance Liquidation</span>
         </div>
@@ -525,7 +1432,7 @@
           </div>
         </div>
 
-        <!-- BUDGET UTILIZATION NDRMF -->
+        <!-- BUDGET UTILIZATION NDRMF SHARE -->
         <div *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'" class="mb-3">
           <p id="answer" class="p-2">Summary Budget Utilization (NDRMF Share)</p>
           <div class="d-flex align-items-center justify-content-between rag-div table-header">
@@ -568,19 +1475,53 @@
                 </div>
               </span>
               <span>{{item.title}}</span>
-              <span>{{getNdrmfTotalBudgetAllocation(item) | number}}</span>
-              <span>{{'&nbsp;'}}</span>
-              <span>{{getNdrmfExpenditureCurrentQuarter(item, 'initial') | number}}</span>
-              <span>{{(0 + getNdrmfExpenditureCurrentQuarter(item, 'initial')) | number}}</span>
-              <span>{{(getNdrmfTotalBudgetAllocation(item) - getNdrmfExpenditureCurrentQuarter(item, 'initial')) |
-                number}}</span>
+              <span>{{(item.ndrmfTotalBudgetAllocation) | number}}</span>
+              <span>{{(item.ndrmfExpenditureLastQuarter) | number}}</span>
+              <span>{{(item.ndrmfExpenditureCurrentQuarter) | number}}</span>
+              <span>{{(item.ndrmfExpenditureTillDate) | number}}</span>
+              <span>{{(item.ndrmfRemainingBudget) | number}}</span>
               <!-- <span>&nbsp;</span> -->
             </div>
           </div>
 
+          <div class="d-flex align-items-center justify-content-between rag-div table-header">
+            <span>
+              Total
+            </span>
+            <span>
+              &nbsp;
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'ndrmfTotalBudgetAllocation') | number) :
+              '&nbsp;'}}
+            </span>
+            <span>
+              {{'&nbsp;'}}
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'ndrmfExpenditureCurrentQuarter') | number) :
+              '&nbsp;'}}
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'ndrmfExpenditureTillDate') | number) :
+              '&nbsp;'}}
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'ndrmfRemainingBudget') | number) :
+              '&nbsp;'}}
+            </span>
+            <!-- <span>
+                                                                    Remarks
+                                                                  </span> -->
+          </div>
+
         </div>
 
-        <!-- SUMMARY SOEs NDRMF -->
+        <!-- SUMMARY OF SOEs NDRMF SHARE -->
         <div *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'" class="mb-3">
           <p id="answer" class="p-2">Summary of SOE (NDRMF Share)</p>
           <div class="d-flex align-items-center justify-content-between rag-div table-header">
@@ -620,13 +1561,42 @@
                 </div>
               </span>
               <span>{{item.title}}</span>
-              <span>{{getNdrmfQuarterBudgetAllocation(item) | number}}</span>
-              <span>{{getNdrmfExpenditureCurrentQuarter(item, 'initial') | number}}</span>
-              <span>{{(getNdrmfQuarterBudgetAllocation(item) - getNdrmfExpenditureCurrentQuarter(item, 'initial')) |
-                number}}</span>
+              <span>{{(item.ndrmfQuarterBudgetAllocation) | number}}</span>
+              <span>{{(item.ndrmfExpenditureCurrentQuarter) | number}}</span>
+              <span>{{(item.ndrmfVarience) | number}}</span>
               <span>{{'&nbsp;'}}</span>
               <!-- <span>{{'&nbsp;'}}</span> -->
             </div>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-between rag-div table-header">
+            <span>
+              Total
+            </span>
+            <span>
+              &nbsp;
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'ndrmfQuarterBudgetAllocation') | number) :
+              '&nbsp;'}}
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'ndrmfExpenditureCurrentQuarter') | number) :
+              '&nbsp;'}}
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'ndrmfVarience') | number) :
+              '&nbsp;'}}
+            </span>
+            <span>
+              {{'&nbsp;'}}
+            </span>
+            <!-- <span>
+                                                                                        Remarks
+                                                                                      </span> -->
           </div>
 
         </div>
@@ -639,6 +1609,8 @@
                                   <mat-icon>add</mat-icon>
                                 </button> -->
           </div>
+
+          <!-- TABLE HEADER -->
           <div class="table-header rag-div d-flex align-items-center">
             <span class="p-2">Categories</span>
             <span class="p-2">Vendor Name</span>
@@ -649,6 +1621,7 @@
             <span class="p-2">Remarks</span>
           </div>
 
+          <!-- TABLE ROWS -->
           <div>
             <div *ngFor="let item of ndrmfLiquidationSoes; let i = index;">
               <div class="d-flex rag-div justify-content-between align-items-center table-row">
@@ -720,6 +1693,32 @@
               </div>
             </div>
           </div>
+
+          <!-- TABLE TOTALS ROW -->
+          <div class="d-flex align-items-center justify-content-between rag-div table-header">
+            <span>
+              Total
+            </span>
+            <span>
+              &nbsp;
+            </span>
+            <span>
+              {{(ndrmfLiquidationSoes | sum:'invoiceAmount') | number}}
+            </span>
+            <span>
+              {{'&nbsp;'}}
+            </span>
+            <span>
+              {{(ndrmfLiquidationSoes | sum:'paidAmount') | number}}
+            </span>
+            <span>
+              {{'&nbsp;'}}
+            </span>
+            <span>
+              {{'&nbsp;'}}
+            </span>
+          </div>
+
           <div class="d-flex justify-content-end mt-2 mb-2" *ngIf="loggedUser?.role === 'fip'">
             <button [disabled]="selectedAdvanceLiquidation?.status === 'Approved' ||
                 selectedAdvanceLiquidation?.status === 'Under Review'" mat-flat-button color="accent"
@@ -730,10 +1729,11 @@
 
         </div>
 
-
-        <!-- SUMMARY SOEs FIP -->
+        <!-- SUMMARY SOEs FIP SHARE -->
         <div *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'" class="mb-3">
           <p id="answer" class="p-2">Summary Budget Utilization (FIP Share)</p>
+
+          <!-- TABLE HEADER -->
           <div class="d-flex align-items-center justify-content-between rag-div table-header">
             <span>
               Parent Tree
@@ -761,6 +1761,7 @@
             </span> -->
           </div>
 
+          <!-- TABLE ROWS -->
           <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
             <div class="d-flex rag-div justify-content-between align-items-center table-row">
               <span>
@@ -774,20 +1775,58 @@
                 </div>
               </span>
               <span>{{item.title}}</span>
-              <span>{{getFipTotalBudgetAllocation(item) | number}}</span>
-              <span>{{'&nbsp;'}}</span>
-              <span>{{getFipExpenditureCurrentQuarter(item) | number}}</span>
-              <span>{{(0 + getFipExpenditureCurrentQuarter(item)) | number}}</span>
-              <span>{{(getFipTotalBudgetAllocation(item) - getFipExpenditureCurrentQuarter(item)) | number}}</span>
+              <span>{{(item.fipTotalBudgetAllocation) | number}}</span>
+              <span>{{item.fipExpenditureLastQuarter}}</span>
+              <span>{{(item.fipExpenditureCurrentQuarter) | number}}</span>
+              <span>{{(item.fipExpenditureTillDate) | number}}</span>
+              <span>{{(item.fipRemainingBudget) | number}}</span>
               <!-- <span>&nbsp;</span> -->
             </div>
           </div>
 
+          <!-- TABLE TOTALS ROW -->
+          <div class="d-flex align-items-center justify-content-between rag-div table-header">
+            <span>
+              Total
+            </span>
+            <span>
+              &nbsp;
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'fipTotalBudgetAllocation') | number) :
+              '&nbsp;'}}
+            </span>
+            <span>
+              {{'&nbsp;'}}
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'fipExpenditureCurrentQuarter') | number) :
+              '&nbsp;'}}
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'fipExpenditureTillDate') | number) :
+              '&nbsp;'}}
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'fipRemainingBudget') | number) :
+              '&nbsp;'}}
+            </span>
+            <!-- <span>
+                                                                    Remarks
+                                                                  </span> -->
+          </div>
+
         </div>
 
-        <!-- SUMMARY SOEs FIP -->
+        <!-- SUMMARY SOEs FIP SHARE -->
         <div *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'" class="mb-3">
           <p id="answer" class="p-2">Summary of SOE (FIP Share)</p>
+
+          <!-- TABLE HEADER -->
           <div class="d-flex align-items-center justify-content-between rag-div table-header">
             <span>
               Parent Tree
@@ -812,6 +1851,7 @@
             </span> -->
           </div>
 
+          <!-- TABLE ROWS -->
           <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
             <div class="d-flex rag-div justify-content-between align-items-center table-row">
               <span>
@@ -825,13 +1865,43 @@
                 </div>
               </span>
               <span>{{item.title}}</span>
-              <span>{{getFipQuarterBudgetAllocation(item) | number}}</span>
-              <span>{{getFipExpenditureCurrentQuarter(item) | number}}</span>
-              <span>{{(getFipQuarterBudgetAllocation(item) - getFipExpenditureCurrentQuarter(item)) |
-                number}}</span>
+              <span>{{(item.fipQuarterBudgetAllocation) | number}}</span>
+              <span>{{(item.fipExpenditureCurrentQuarter) | number}}</span>
+              <span>{{(item.fipVarience) | number}}</span>
               <span>{{'&nbsp;'}}</span>
               <!-- <span>{{'&nbsp;'}}</span> -->
             </div>
+          </div>
+
+          <!-- TABLE TOTALS ROW -->
+          <div class="d-flex align-items-center justify-content-between rag-div table-header">
+            <span>
+              Total
+            </span>
+            <span>
+              &nbsp;
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'fipQuarterBudgetAllocation') | number) :
+              '&nbsp;'}}
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'fipExpenditureCurrentQuarter') | number) :
+              '&nbsp;'}}
+            </span>
+            <span>
+              {{selectedAdvanceItem !== null ?
+              ((selectedAdvanceItem.data | sum:'fipVarience') | number) :
+              '&nbsp;'}}
+            </span>
+            <span>
+              {{'&nbsp;'}}
+            </span>
+            <!-- <span>
+                                                                              Remarks
+                                                                            </span> -->
           </div>
 
         </div>
@@ -845,6 +1915,8 @@
                 <mat-icon>add</mat-icon>
               </button> -->
             </div>
+
+            <!-- TABLE HEADER -->
             <div class="table-header rag-div d-flex align-items-center">
               <span class="p-2">Categories</span>
               <span class="p-2">Vendor Name</span>
@@ -855,6 +1927,7 @@
               <span class="p-2">Remarks</span>
             </div>
 
+            <!-- TABLE ROWS -->
             <div>
               <div *ngFor="let item of fipLiquidationSoes; let i = index;">
                 <div class="d-flex rag-div justify-content-between align-items-center table-row">
@@ -927,6 +2000,31 @@
               </div>
             </div>
 
+            <!-- TABLE TOTALS ROW -->
+            <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Total
+              </span>
+              <span>
+                &nbsp;
+              </span>
+              <span>
+                {{(fipLiquidationSoes | sum:'invoiceAmount') | number}}
+              </span>
+              <span>
+                {{'&nbsp;'}}
+              </span>
+              <span>
+                {{(fipLiquidationSoes | sum:'paidAmount') | number}}
+              </span>
+              <span>
+                {{'&nbsp;'}}
+              </span>
+              <span>
+                {{'&nbsp;'}}
+              </span>
+            </div>
+
             <div class="d-flex justify-content-end mt-2 mb-2" *ngIf="loggedUser?.role === 'fip'">
 
               <button [disabled]="selectedAdvanceLiquidation?.status === 'Approved' ||
@@ -938,7 +2036,6 @@
 
           </div>
         </ng-container>
-
 
         <mat-action-row>
           <div *ngIf="loggedUser?.role === 'fip'" class="d-flex align-items-center flex-fill justify-content-between">
@@ -1029,7 +2126,7 @@
     </mat-accordion>
   </ng-container>
 
-  <!-- QUARTER ADVANCES -->
+  <!-- *********************** QUARTER ADVANCES ***************************** -->
   <div class="box-heading">
     <span class="pl-0">Quarter Advance(s)</span>
   </div>
@@ -1056,27 +2153,78 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
 
+        <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+        <div class="row mt-5 mb-3">
+          <div class="col-md-6">
+            <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+              <span style="font-size: 18px;">
+                {{'Withdrawal application' | uppercase}}
+              </span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="d-flex flex-column justify-content-end align-items-end">
+              <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+              <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                National Disaster
+                Risk Management
+                Fund</span>
+            </div>
+          </div>
+        </div>
 
+        <!-- WA ADDRESS PRINT BOX -->
+        <div class="row mt-3 mb-3 d-flex justify-content-end">
+          <div class="d-flex flex-column align-items-start col-md-6">
+            <span style="font-size: 14px;">
+              {{'National Disaster Risk Management Fund (NDRMF)' | titlecase}}
+            </span>
+            <span style="font-size: 14px;">
+              {{'5th Floor EOBI Building, Block 33-34, Service Road South,' | titlecase}}
+            </span>
+            <span style="font-size: 14px;">
+              {{'Mauve Area, G-10/4, Islamabad' | titlecase}}
+            </span>
+          </div>
+          <div class="d-flex flex-column col-md-6">
+            <div class="d-flex align-items-center">
+              <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                NDRMF GD Ref</span>
+              <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                {{'&nbsp;'}}</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                Withdrawal Application #
+              </span>
+              <span
+                style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                (selectedRequest.quarterAdvanceList[step].quarter | number) :
+                '&nbsp;' }}
+              </span>
+            </div>
+          </div>
+        </div>
 
-        <!-- TOP FORM FIELDS -->
+        <!-- FIP BOX & TOP FORM FIELDS -->
         <ng-container *ngIf="loggedUser?.role === 'fip'">
 
-          <div class="row">
+          <!-- PRINT BOX -->
+          <div class="row p-3">
+            <p id="answer" class="p-2">1. Type of Disbursment (indicated with an 'X')</p>
             <div class="col-md-12 mb-3">
               <div class="d-flex flex-fill justify-content-between align-items-center">
                 <div class="d-flex align-items-center" style="width: 33%;">
-                  <span
-                    style="text-align: center;border: 1px solid;padding: 5px 0px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
                   <span>Initial Advance</span>
                 </div>
                 <div class="d-flex align-items-center" style="width: 33%;">
-                  <span
-                    style="text-align: center;border: 1px solid;padding: 5px 0px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
                   <span>Liquidation Only</span>
                 </div>
                 <div class="d-flex align-items-center" style="width: 33%;">
-                  <span
-                    style="text-align: center;border: 1px solid;padding: 5px 0px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
                   <span>Liquidation & Replenishment</span>
                 </div>
               </div>
@@ -1084,20 +2232,52 @@
             <div class="col-md-12 mb-3">
               <div class="d-flex flex-fill justify-content-between align-items-center">
                 <div class="d-flex align-items-center" style="width: 33%;">
-                  <span
-                    style="text-align: center;border: 1px solid;padding: 5px 0px;margin-right:10px;width:15%;">X</span>
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
                   <span>Advance</span>
                 </div>
                 <div class="d-flex align-items-center" style="width: 33%;">
-                  <span
-                    style="text-align: center;border: 1px solid;padding: 5px 0px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
                   <span>Replenishment</span>
                 </div>
                 <div class="d-flex align-items-center" style="width: 33%;">
-                  <span
-                    style="text-align: center;border: 1px solid;padding: 5px 0px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
                   <span>Direct Payment</span>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AMOUN IN WORDS PRINT BOX -->
+          <div class="row">
+            <div class="col-md-12 pl-0 pr-0">
+              <p *ngIf="selectedAdvanceItem !== null" id="answer" class="p-2 mb-0">
+                2. In connection with Grant Implementation Agreement, please pay/adjust
+                from the NDRMF account
+              </p>
+            </div>
+            <div class="row d-flex align-items-center justify-conetnt-between flex-fill p-3">
+              <div class="col-md-2 d-flex flex-column flex-fill">
+                <span class="d-flex flex-column justify-content-center"
+                  style="text-align: left;font-size: 11px;height: 50px;">Application Currency</span>
+                <span
+                  style="height:70px;font-size: 12px;background-color: #f9f9f9;color: #151515;padding: 10px;">PKR</span>
+              </div>
+              <div class="col-md-2 d-flex flex-column flex-fill">
+                <span class="d-flex flex-column justify-content-center"
+                  style="font-size: 11px;height: 50px;">Application
+                  Amount</span>
+                <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                  {{selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                  (selectedRequest.quarterAdvanceList[step].amount | number) : '&nbsp;'}}
+                </span>
+              </div>
+              <div class="col-md-8 d-flex flex-column flex-fill">
+                <span class="d-flex flex-column justify-content-center"
+                  style="text-align: left;font-size: 11px;height: 50px;">Application Amount (in words)</span>
+                <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                  {{selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                  (selectedRequest.quarterAdvanceList[step].amount | amountToWord) : '&nbsp;'}}
+                </span>
               </div>
             </div>
           </div>
@@ -1150,6 +2330,199 @@
             </div>
           </form>
 
+          <!-- ADVANCE CONSISTS OF SECTION 4 PRINT BOX -->
+          <div class="row">
+            <p id="answer" class="p-2 mb-3 mt-3">
+              4. This application consists of [indicate an 'x' in the appropriate box(es)];
+            </p>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Summary of Estimates for the Quarter</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Certificates for Force Account for Works (FAW)</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Detail of Estimates for the Quarter</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Bank Reconciliation Statement - NDRMF</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Summary of Budget Vs Actual - NDRMF Share</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Certified Bank Statement (Photocopy)</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Summary & Statement of Expenditures (SOE) - NDRMF Share</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Quarterly Statement of Project Receipts & Payments</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Summary of Budget Vs Actual - FIP Share</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Advance Account Reconciliation Statement (AARS)</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Summary & Statement of Expenditures (SOE) - FIP Share</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>&nbsp;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTACT DETAILS PRINT BOX -->
+          <div class="row d-flex align-items-center justify-conetnt-between flex-fill p-3">
+            <div class="col-md-6 pl-0 d-flex flex-column flex-fill">
+              <span class="d-flex flex-column justify-content-center"
+                style="text-align: left;font-size: 11px;height: 30px;">By
+                (Name of recipient)</span>
+              <span
+                style="height:70px;font-size: 12px;background-color: #f9f9f9;color: #151515;padding: 10px;">&nbsp;</span>
+            </div>
+            <div class="col-md-6 pr-0 d-flex flex-column flex-fill">
+              <span class="d-flex flex-column justify-content-center" style="font-size: 11px;height: 30px;">Date
+                Issued</span>
+              <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                {{'&nbsp;'}}
+              </span>
+            </div>
+          </div>
+
+          <!-- SIGNATURE BOX -->
+          <div class="row d-flex align-items-center justify-conetnt-between flex-fill pb-3 pr-3 pl-3 pt-0">
+            <div class="col-md-6 pl-0 d-flex flex-column flex-fill">
+              <span class="d-flex flex-column justify-content-center"
+                style="text-align: left;font-size: 11px;height: 30px;">Print
+                name(s) of signatory authority</span>
+              <span
+                style="height:70px;font-size: 12px;background-color: #f9f9f9;color: #151515;padding: 10px;">&nbsp;</span>
+            </div>
+            <div class="col-md-6 pr-0 d-flex flex-column flex-fill">
+              <span class="d-flex flex-column justify-content-center"
+                style="font-size: 11px;height: 30px;">Signature</span>
+              <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                {{'&nbsp;'}}
+              </span>
+            </div>
+          </div>
+
+          <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+          <div class="row mt-5 mb-3">
+            <div class="col-md-6">
+              <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                  {{selectedRequest !== null ?
+                  (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                </span>
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                  <ul>
+                    <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                    <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                  </ul>
+                </span>
+                <span style="font-size: 18px;">
+                  {{'to be financed from NDRMF account' | uppercase}}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex flex-column justify-content-end align-items-end">
+                <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+                <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                  National Disaster
+                  Risk Management
+                  Fund</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROJECT COSTING DETAILS PRINT BOX -->
+          <div class="row mt-3 mb-3 d-flex justify-content-end">
+            <div class="d-flex flex-column align-items-start col-md-6">
+              <span>
+                Withdrawl Application #:
+                {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                (selectedRequest.quarterAdvanceList[step].quarter | number) :
+                null }}
+              </span>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  Total Project Cost</span>
+                <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(totalProjectCost | number) || '&nbsp;'}}</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  NDRMF Share
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(ndrmfTotalProjectCost | number) || '&nbsp;'}}
+                </span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  FIP Share
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(fipTotalProjectCost | number) || '&nbsp;'}}
+                </span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  Required this WA
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                  (selectedRequest.quarterAdvanceList[step].amount | number) :
+                  '&nbsp;' }}
+                </span>
+              </div>
+            </div>
+          </div>
 
           <!-- SELECT COSTS FORM FIELD -->
           <div class="row d-flex align-items-center mb-3">
@@ -1196,14 +2569,13 @@
             </div>
             <div class="col-md-2">
               <button [disabled]="selectedRequest.quarterAdvanceList[step]?.status === 'Approved' ||
-              selectedRequest.quarterAdvanceList[step]?.status === 'Under Review' ||
-              selectedRequest.quarterAdvanceList[step]?.status === 'Completed' || !costsData.valid" mat-raised-button
-                color="primary" (click)="addQuarterData();">Add Costs</button>
+                                  selectedRequest.quarterAdvanceList[step]?.status === 'Under Review' ||
+                                  selectedRequest.quarterAdvanceList[step]?.status === 'Completed' || !costsData.valid"
+                mat-raised-button color="primary" (click)="addQuarterData();">Add Costs</button>
             </div>
           </div>
-        </ng-container>
-        <!-- FIP SUBMITTED DATA TABLE -->
-        <ng-container *ngIf="loggedUser?.role === 'fip' && selectedRequest?.quarterAdvanceList[step]?.data !== null">
+
+          <!-- ACTIVITY TABLE HEADER -->
           <div class="row d-flex align-items-center header-box">
             <div class="col-md-4 heading-contain">
               <span class="pl-2">Parent Tree</span>
@@ -1215,6 +2587,8 @@
               <span class="pl-2">Amount</span>
             </div>
           </div>
+
+          <!-- ACTIVITY TABLE ROWS -->
           <div *ngIf="selectedRequest !== null && selectedRequest.quarterAdvanceList[step]">
             <div class="row cost-box d-flex align-items-center mt-2"
               *ngFor="let item of selectedRequest.quarterAdvanceList[step].data; let i = index;">
@@ -1237,231 +2611,810 @@
                 <mat-form-field appearance="outline">
                   <mat-label>Amount</mat-label>
                   <input [disabled]="(selectedAdvanceItem?.status === 'Approved' || 
-                  selectedAdvanceItem?.status === 'Under Review' ||
-                  selectedAdvanceItem?.status === 'Completed' ||
-                  selectedAdvanceItem?.status === 'Review Pending' ||
-                  selectedAdvanceItem?.status === 'Review Completed' ||
-                  selectedAdvanceItem?.status === 'Marked To PO' ||
-                  selectedAdvanceItem?.subStatus === 'Approved')" matInput type="number" placeholder="Enter Amount..."
-                    [(ngModel)]="item.amount">
+                            selectedAdvanceItem?.status === 'Under Review' ||
+                            selectedAdvanceItem?.status === 'Completed' ||
+                            selectedAdvanceItem?.status === 'Review Pending' ||
+                            selectedAdvanceItem?.status === 'Review Completed' ||
+                            selectedAdvanceItem?.status === 'Marked To PO' ||
+                            selectedAdvanceItem?.subStatus === 'Approved')" matInput type="number"
+                    placeholder="Enter Amount..." (keydown)="numberCheck(item, $event)"
+                    (keyup)="CommaFormatted(item, $event)" [(ngModel)]="item.amount">
                 </mat-form-field>
               </div>
             </div>
           </div>
+
+          <!-- SUBMIT ADVANCE BUTTON -->
           <div class="d-flex justify-content-end">
             <button [disabled]="(selectedAdvanceItem?.status === 'Approved' || 
-                  selectedAdvanceItem?.status === 'Completed' ||
-                  selectedAdvanceItem?.status === 'Under Review' ||
-                  selectedAdvanceItem?.status === 'Review Pending' ||
-                  selectedAdvanceItem?.status === 'Review Completed' ||
-                  selectedAdvanceItem?.status === 'Marked To PO' ||
-                  selectedAdvanceItem?.subStatus === 'Approved') || approveLoading" color="accent" mat-raised-button
-              class="mt-3" (click)="submitQuarterAdvance();">
+                            selectedAdvanceItem?.status === 'Completed' ||
+                            selectedAdvanceItem?.status === 'Under Review' ||
+                            selectedAdvanceItem?.status === 'Review Pending' ||
+                            selectedAdvanceItem?.status === 'Review Completed' ||
+                            selectedAdvanceItem?.status === 'Marked To PO' ||
+                            selectedAdvanceItem?.subStatus === 'Approved') || approveLoading" color="accent"
+              mat-raised-button class="mt-3" (click)="submitQuarterAdvance();">
               {{!approveLoading ? 'Submit Quarter Advance' : '&nbsp;'}}
               <mat-progress-spinner *ngIf="approveLoading" mode="indeterminate" diameter="20"></mat-progress-spinner>
             </button>
           </div>
+
         </ng-container>
+
         <!-- NOT FIP SUBMITTED DATA TABLE -->
         <ng-container *ngIf="loggedUser?.role !== 'fip'">
+
+          <!-- PRINT BOX -->
           <div class="row">
+            <p id="answer" class="p-2">1. Type of Disbursment (indicated with an 'X')</p>
             <div class="col-md-12 mb-3">
-              <div class="row" *ngIf="selectedAdvanceItem !== null">
-                <div class="col-md-12">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Payees Name</mat-label>
-                    <input disabled [(ngModel)]="selectedAdvanceItem.payeesName" matInput type="text"
-                      placeholder="enter here...">
-                  </mat-form-field>
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 33%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Initial Advance</span>
                 </div>
-                <div class="col-md-12">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Payees Address</mat-label>
-                    <input disabled [(ngModel)]="selectedAdvanceItem.payeesAddress" matInput type="text"
-                      placeholder="enter here...">
-                  </mat-form-field>
+                <div class="d-flex align-items-center" style="width: 33%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Liquidation Only</span>
                 </div>
-                <div class="col-md-12">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Bank Name</mat-label>
-                    <input disabled [(ngModel)]="selectedAdvanceItem.bankName" matInput type="text"
-                      placeholder="enter here...">
-                  </mat-form-field>
-                </div>
-                <div class="col-md-12">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Bank Address</mat-label>
-                    <input disabled [(ngModel)]="selectedAdvanceItem.bankAddress" matInput type="text"
-                      placeholder="enter here...">
-                  </mat-form-field>
-                </div>
-                <div class="col-md-6">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Payees Account #</mat-label>
-                    <input disabled [(ngModel)]="selectedAdvanceItem.payeesAccount" matInput type="text"
-                      placeholder="enter here...">
-                  </mat-form-field>
-                </div>
-                <div class="col-md-6">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Swift Code</mat-label>
-                    <input disabled [(ngModel)]="selectedAdvanceItem.swiftCode" matInput type="text"
-                      placeholder="enter here...">
-                  </mat-form-field>
-                </div>
-                <div class="col-md-12">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Special Payment Instruction</mat-label>
-                    <input disabled [(ngModel)]="selectedAdvanceItem.specialPaymentInstruction" matInput type="text"
-                      placeholder="enter here...">
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="p-3">
-                <div class="row d-flex align-items-center header-box mt-2">
-                  <div class="col-md-4 heading-contain">
-                    <span>Parent Tree</span>
-                  </div>
-                  <div class="col-md-4 heading-contain">
-                    <span>Title</span>
-                  </div>
-                  <div class="col-md-4 heading-contain">
-                    <span>Amount</span>
-                  </div>
-                </div>
-                <div *ngIf="selectedRequest.quarterAdvanceList[step]?.data !== null">
-                  <div class="row d-flex cost-box align-items-center mt-2"
-                    *ngFor="let item of selectedRequest.quarterAdvanceList[step].data; let i = index;">
-                    <div class="col-md-4">
-                      <span>
-                        <div *ngIf="item?.parentCosts">
-                          <div *ngFor="let _ of item?.parentCosts; let i = index">
-                            <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
-                              <small>{{name}}</small>
-                              <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
-                            </ng-container>
-                          </div>
-                        </div>
-                      </span>
-                    </div>
-                    <div class="col-md-4">
-                      <span>{{item.title}}</span>
-                    </div>
-                    <div class="col-md-4">
-                      <span>{{item.amount | number}}</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="row d-flex align-items-center header-box mt-2">
-                  <div class="col-md-6 heading-contain">
-                    <span class="pl-2">Total</span>
-                  </div>
-                  <div class="col-md-6 heading-contain">
-                    <span *ngIf="selectedRequest !== null" class="pl-2">
-                      {{selectedRequest.selectionType ?
-                      selectedRequest.quarterAdvanceList[step] ?
-                      (selectedRequest.quarterAdvanceList[step].amount | number) : '' :
-                      ''}}
-                    </span>
-                  </div>
+                <div class="d-flex align-items-center" style="width: 33%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Liquidation & Replenishment</span>
                 </div>
               </div>
             </div>
-            <!-- PROCESS OWNER FOR DISBURSEMENT -->
-            <ng-container>
-              <div class="row d-flex justify-content-between flex-fill p-3">
-                <!-- SUBMIT YOUR REVIEW -->
-                <div class="col-md-6" *ngIf="selectedRequest !== null && controlReviewUserForm">
-                  <div *ngFor="let item of controlReviewUserForm.quarterAdvanceReviewsList">
-                    <div *ngIf="item.assignee.id === loggedUser.id">
-                      <p style="border-radius:5px;background-color: #f9f9f9;color: #151515;padding: 10px;">
-                        <small>
-                          <small id="answer" class="mr-1">
-                            Comments from assigneer:
-                          </small>
-                          <small>
-                            {{item.assignee.name}} please submit your review
-                          </small>
-                        </small>
-                      </p>
-                      <mat-form-field appearance="outline">
-                        <mat-label>Your Reviews</mat-label>
-                        <textarea [disabled]="item.status === 'Completed'" placeholder="Enter text here..."
-                          [(ngModel)]="item.comments" matInput cols="30" rows="10"></textarea>
-                      </mat-form-field>
-                      <mat-radio-group class="mt-2 example-radio-group" [disabled]="item.status === 'Completed'"
-                        [(ngModel)]="item.subStatus">
-                        <mat-radio-button class="example-radio-button" value="Approve">
-                          <span id="comment">{{'Approved' | uppercase}}</span>
-                        </mat-radio-button>
-                        <mat-radio-button class="example-radio-button" value="Reject">
-                          <span id="warn-comment">{{'Rejected' | uppercase}}</span>
-                        </mat-radio-button>
-                      </mat-radio-group>
-                      <button style="width: 100%;" class="d-flex flex-fill align-items-center justify-content-center"
-                        color="primary" (click)="submitReview(item)"
-                        [disabled]="!item.comments || item.status === 'Completed'" mat-raised-button>
-                        Submit
-                      </button>
-                    </div>
-                  </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 33%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Advance</span>
                 </div>
-                <!-- ASSIGN USER FORM USERS -->
-                <div class="col-md-6" *ngIf="selectedRequest?.assigned">
-                  <div class="d-flex align-items-center heading-contain header-box">
-                    <mat-icon>
-                      settings_applications
-                    </mat-icon>
-                    <span class="pl-2">
-                      Toolbox
-                    </span>
-                  </div>
-                  <mat-form-field appearance="outline" class="mt-2">
-                    <mat-label>Select User(s) For Reviews</mat-label>
-                    <mat-select matNativeControl [compareWith]="compareSmeObjects" [formControl]="reviewUsers" multiple>
-                      <mat-form-field class="p-3 filter-input" appearance="outline">
-                        <mat-label>Filter By Department</mat-label>
-                        <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
-                      </mat-form-field>
-                      <mat-select-trigger>
-                        <span *ngFor="let item of reviewUsers.value; let i=index">
-                          <span *ngIf="i===0">{{item.name}}</span>
-                        </span>
-                        <span *ngIf="reviewUsers.value?.length > 1">
-                          (+{{reviewUsers.value.length - 1}} others)
-                        </span>
-                      </mat-select-trigger>
-                      <mat-optgroup *ngFor="let user of allUsers | depUserFilter:filterQuery" [label]="user.name">
-                        <mat-option [hidden]="loggedUser.id === item.id || checkQuarterUserDisabled(item)"
-                          *ngFor="let item of user.users" [value]="item">
-                          {{item.name}}
-                        </mat-option>
-                      </mat-optgroup>
-                    </mat-select>
-                  </mat-form-field>
-                  <div class="d-flex flex-fill justify-content-start">
-                    <button style="width: 100%;" [disabled]="!reviewUsers.valid" class="mt-2 mb-2" mat-raised-button
-                      color="primary" (click)="assignUsersForReviews('quarter')">
-                      Assign For Reviews
-                    </button>
-                  </div>
-                  <mat-chip-list *ngIf="controlReviewUserForm?.stats?.pendingCount || 
-                                controlReviewUserForm?.stats?.completedCount" class="mt-3 review-chip">
-                    <mat-chip (click)="getReviewsList(controlReviewUserForm.quarterAdvanceReviewsList);"
-                      *ngIf="controlReviewUserForm?.stats?.pendingCount !== 0" class="mt-2" color="warn" selected>
-                      {{controlReviewUserForm.stats ?
-                      controlReviewUserForm.stats.pendingCount : '&nbsp;'}} Reviews Pending
-                    </mat-chip>
-                    <mat-chip (click)="getReviewsList(controlReviewUserForm.quarterAdvanceReviewsList);"
-                      *ngIf="controlReviewUserForm?.stats?.completedCount !== 0" class="mt-2" color="accent" selected>
-                      {{controlReviewUserForm.stats ?
-                      controlReviewUserForm.stats.completedCount : '&nbsp;'}} Reviews Submitted
-                    </mat-chip>
-                  </mat-chip-list>
+                <div class="d-flex align-items-center" style="width: 33%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Replenishment</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 33%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Direct Payment</span>
                 </div>
               </div>
-            </ng-container>
+            </div>
           </div>
+
+          <!-- AMOUN IN WORDS PRINT BOX -->
+          <div class="row">
+            <div class="col-md-12 pl-0 pr-0">
+              <p *ngIf="selectedAdvanceItem !== null" id="answer" class="p-2 mb-0">
+                2. In connection with Grant Implementation Agreement, please pay/adjust
+                from the NDRMF account
+              </p>
+            </div>
+            <div class="row d-flex align-items-center justify-conetnt-between flex-fill p-3">
+              <div class="col-md-2 d-flex flex-column flex-fill">
+                <span class="d-flex flex-column justify-content-center"
+                  style="text-align: left;font-size: 11px;height: 50px;">Application Currency</span>
+                <span
+                  style="height:70px;font-size: 12px;background-color: #f9f9f9;color: #151515;padding: 10px;">PKR</span>
+              </div>
+              <div class="col-md-2 d-flex flex-column flex-fill">
+                <span class="d-flex flex-column justify-content-center"
+                  style="font-size: 11px;height: 50px;">Application
+                  Amount</span>
+                <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                  {{selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                  (selectedRequest.quarterAdvanceList[step].amount | number) : '&nbsp;'}}
+                </span>
+              </div>
+              <div class="col-md-8 d-flex flex-column flex-fill">
+                <span class="d-flex flex-column justify-content-center"
+                  style="text-align: left;font-size: 11px;height: 50px;">Application Amount (in words)</span>
+                <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                  {{selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                  (selectedRequest.quarterAdvanceList[step].amount | amountToWord) : '&nbsp;'}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOP FORM FIELDS -->
+          <div class="row" *ngIf="selectedAdvanceItem !== null">
+            <div class="col-md-12">
+              <mat-form-field appearance="outline">
+                <mat-label>Payees Name</mat-label>
+                <input disabled [(ngModel)]="selectedAdvanceItem.payeesName" matInput type="text"
+                  placeholder="enter here...">
+              </mat-form-field>
+            </div>
+            <div class="col-md-12">
+              <mat-form-field appearance="outline">
+                <mat-label>Payees Address</mat-label>
+                <input disabled [(ngModel)]="selectedAdvanceItem.payeesAddress" matInput type="text"
+                  placeholder="enter here...">
+              </mat-form-field>
+            </div>
+            <div class="col-md-12">
+              <mat-form-field appearance="outline">
+                <mat-label>Bank Name</mat-label>
+                <input disabled [(ngModel)]="selectedAdvanceItem.bankName" matInput type="text"
+                  placeholder="enter here...">
+              </mat-form-field>
+            </div>
+            <div class="col-md-12">
+              <mat-form-field appearance="outline">
+                <mat-label>Bank Address</mat-label>
+                <input disabled [(ngModel)]="selectedAdvanceItem.bankAddress" matInput type="text"
+                  placeholder="enter here...">
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Payees Account #</mat-label>
+                <input disabled [(ngModel)]="selectedAdvanceItem.payeesAccount" matInput type="text"
+                  placeholder="enter here...">
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Swift Code</mat-label>
+                <input disabled [(ngModel)]="selectedAdvanceItem.swiftCode" matInput type="text"
+                  placeholder="enter here...">
+              </mat-form-field>
+            </div>
+            <div class="col-md-12">
+              <mat-form-field appearance="outline">
+                <mat-label>Special Payment Instruction</mat-label>
+                <input disabled [(ngModel)]="selectedAdvanceItem.specialPaymentInstruction" matInput type="text"
+                  placeholder="enter here...">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- ADVANCE CONSISTS OF SECTION 4 PRINT BOX -->
+          <div class="row">
+            <p id="answer" class="p-2 mb-3 mt-3">
+              4. This application consists of [indicate an 'x' in the appropriate box(es)];
+            </p>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Summary of Estimates for the Quarter</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Certificates for Force Account for Works (FAW)</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Detail of Estimates for the Quarter</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Bank Reconciliation Statement - NDRMF</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Summary of Budget Vs Actual - NDRMF Share</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Certified Bank Statement (Photocopy)</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Summary & Statement of Expenditures (SOE) - NDRMF Share</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Quarterly Statement of Project Receipts & Payments</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Summary of Budget Vs Actual - FIP Share</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">X</span>
+                  <span>Advance Account Reconciliation Statement (AARS)</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-fill justify-content-between align-items-center">
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>Summary & Statement of Expenditures (SOE) - FIP Share</span>
+                </div>
+                <div class="d-flex align-items-center" style="width: 50%;">
+                  <span style="border: 1px solid;padding: 2px 10px;margin-right:10px;width:15%;">&nbsp;</span>
+                  <span>&nbsp;</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTACT DETAILS PRINT BOX -->
+          <div class="row d-flex align-items-center justify-conetnt-between flex-fill p-3">
+            <div class="col-md-6 pl-0 d-flex flex-column flex-fill">
+              <span class="d-flex flex-column justify-content-center"
+                style="text-align: left;font-size: 11px;height: 30px;">By
+                (Name of recipient)</span>
+              <span
+                style="height:70px;font-size: 12px;background-color: #f9f9f9;color: #151515;padding: 10px;">&nbsp;</span>
+            </div>
+            <div class="col-md-6 pr-0 d-flex flex-column flex-fill">
+              <span class="d-flex flex-column justify-content-center" style="font-size: 11px;height: 30px;">Date
+                Issued</span>
+              <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                {{'&nbsp;'}}
+              </span>
+            </div>
+          </div>
+
+          <!-- SIGNATURE BOX -->
+          <div class="row d-flex align-items-center justify-conetnt-between flex-fill pb-3 pr-3 pl-3 pt-0">
+            <div class="col-md-6 pl-0 d-flex flex-column flex-fill">
+              <span class="d-flex flex-column justify-content-center"
+                style="text-align: left;font-size: 11px;height: 30px;">Print
+                name(s) of signatory authority</span>
+              <span
+                style="height:70px;font-size: 12px;background-color: #f9f9f9;color: #151515;padding: 10px;">&nbsp;</span>
+            </div>
+            <div class="col-md-6 pr-0 d-flex flex-column flex-fill">
+              <span class="d-flex flex-column justify-content-center"
+                style="font-size: 11px;height: 30px;">Signature</span>
+              <span style="height:70px;font-size: 12px;padding:10px;background-color: #f9f9f9;color: #151515;">
+                {{'&nbsp;'}}
+              </span>
+            </div>
+          </div>
+
+          <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+          <div class="row mt-5 mb-3">
+            <div class="col-md-6">
+              <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                  {{selectedRequest !== null ?
+                  (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                </span>
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                  <ul>
+                    <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                    <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                  </ul>
+                </span>
+                <span style="font-size: 18px;">
+                  {{'to be financed from NDRMF account' | uppercase}}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex flex-column justify-content-end align-items-end">
+                <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+                <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                  National Disaster
+                  Risk Management
+                  Fund</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROJECT COSTING DETAILS PRINT BOX -->
+          <div class="row mt-3 mb-3 d-flex justify-content-end">
+            <div class="d-flex flex-column align-items-start col-md-6">
+              <span>
+                Withdrawl Application #:
+                {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                (selectedRequest.quarterAdvanceList[step].quarter | number) :
+                null }}
+              </span>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  Total Project Cost</span>
+                <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(totalProjectCost | number) || '&nbsp;'}}</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  NDRMF Share
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(ndrmfTotalProjectCost | number) || '&nbsp;'}}
+                </span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  FIP Share
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(fipTotalProjectCost | number) || '&nbsp;'}}
+                </span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  Required this WA
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                  (selectedRequest.quarterAdvanceList[step].amount | number) :
+                  '&nbsp;' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- FIP SUBMMITED ACTIVITIES -->
+          <div class="p-3">
+            <!-- ACTIVTY TABLE HEADER -->
+            <div class="row d-flex align-items-center header-box mt-2">
+              <div class="col-md-4 heading-contain">
+                <span>Parent Tree</span>
+              </div>
+              <div class="col-md-4 heading-contain">
+                <span>Title</span>
+              </div>
+              <div class="col-md-4 heading-contain">
+                <span>Amount</span>
+              </div>
+            </div>
+            <!-- ACTIVITY TABLE ROW -->
+            <div *ngIf="selectedRequest.quarterAdvanceList[step]?.data !== null">
+              <div class="row d-flex cost-box align-items-center mt-2"
+                *ngFor="let item of selectedRequest.quarterAdvanceList[step].data; let i = index;">
+                <div class="col-md-4">
+                  <span>
+                    <div *ngIf="item?.parentCosts">
+                      <div *ngFor="let _ of item?.parentCosts; let i = index">
+                        <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                          <small>{{name}}</small>
+                          <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </span>
+                </div>
+                <div class="col-md-4">
+                  <span>{{item.title}}</span>
+                </div>
+                <div class="col-md-4">
+                  <span>{{item.amount | number}}</span>
+                </div>
+              </div>
+            </div>
+            <!-- ACTIVITIES TOTAL ROW -->
+            <div class="row d-flex align-items-center header-box mt-2">
+              <div class="col-md-4 heading-contain">
+                <span class="pl-2">Total</span>
+              </div>
+              <div class="col-md-4 heading-contain">
+                <span class="pl-2">&nbsp;</span>
+              </div>
+              <div class="col-md-4 heading-contain">
+                <span *ngIf="selectedRequest !== null" class="pl-2">
+                  {{selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                  (selectedRequest.quarterAdvanceList[step].amount | number) : ''}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- BUDGET UTILIZATION NDRMF -->
+          <div class="mb-3">
+
+            <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+            <div class="row mt-5 mb-3">
+              <div class="col-md-6">
+                <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                  <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                    {{selectedRequest !== null ?
+                    (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                  </span>
+                  <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                    <ul>
+                      <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                      <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                    </ul>
+                  </span>
+                  <span style="font-size: 18px;">
+                    {{'summary of budget Utilization - ndrmf share' | uppercase}}
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex flex-column justify-content-end align-items-end">
+                  <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+                  <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                    National Disaster
+                    Risk Management
+                    Fund</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- PROJECT COSTING DETAILS PRINT BOX -->
+            <div class="row mt-3 mb-3 d-flex justify-content-end">
+              <div class="d-flex flex-column align-items-start col-md-6">
+                <span>
+                  Withdrawl Application #:
+                  {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step]?
+                  (selectedRequest.quarterAdvanceList[step].quarter | number) :
+                  null }}
+                </span>
+              </div>
+              <div class="d-flex flex-column col-md-6">
+                <div class="d-flex align-items-center">
+                  <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                    Total Project Cost</span>
+                  <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                    {{(totalProjectCost | number) || '&nbsp;'}}</span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                    NDRMF Share
+                  </span>
+                  <span
+                    style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                    {{(ndrmfTotalProjectCost | number) || '&nbsp;'}}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ACTIVITY TABLE HEADER -->
+            <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Parent Tree
+              </span>
+              <span>
+                Budget Category
+              </span>
+              <span>
+                Total Project Budget Allocation (c)
+              </span>
+              <span>
+                Expenditure upto last quarter (d)
+              </span>
+              <span>
+                Expenditure for the current quarter (e)
+              </span>
+              <span>
+                Expenditure till date (f = d+e)
+              </span>
+              <span>
+                Remaining Budget (g = c-f)
+              </span>
+              <!-- <span>
+                                        Remarks
+                                      </span> -->
+            </div>
+
+            <!-- ACTIVITY TABLE ROW -->
+            <div *ngFor="let item of selectedAdvanceItem?.data; let i = index;">
+              <div class="d-flex rag-div justify-content-between align-items-center table-row">
+                <span>
+                  <div *ngIf="item?.parentCosts">
+                    <div *ngFor="let _ of item?.parentCosts; let i = index">
+                      <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                        <small>{{name}}</small>
+                        <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                      </ng-container>
+                    </div>
+                  </div>
+                </span>
+                <span>{{(item.title) || '&nbsp;'}}</span>
+                <span>{{(item.ndrmfTotalBudgetAllocation | number) || '&nbsp;'}}</span>
+                <span>{{'&nbsp;'}}</span>
+                <span>{{(item.ndrmfExpenditureCurrentQuarter | number) || '&nbsp;'}}</span>
+                <span>{{((0 + item.ndrmfExpenditureCurrentQuarter) | number) || '&nbsp;'}}</span>
+                <span>{{((item.ndrmfTotalBudgetAllocation - item.ndrmfExpenditureCurrentQuarter) |
+                  number) || '&nbsp;'}}</span>
+                <!-- <span>&nbsp;</span> -->
+              </div>
+            </div>
+
+            <!-- ACTIVITY TABLE TOTALS -->
+            <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Total
+              </span>
+              <span>
+                &nbsp;
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'ndrmfTotalBudgetAllocation') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{'&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'ndrmfExpenditureCurrentQuarter') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'ndrmfExpenditureTillDate') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'ndrmfRemainingBudget') | number) :
+                '&nbsp;'}}
+              </span>
+              <!-- <span>
+                                                                      Remarks
+                                                                    </span> -->
+            </div>
+
+          </div>
+
+          <!-- BUDGET UTILIZATION FIP -->
+          <div class="mb-3">
+
+            <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+            <div class="row mt-5 mb-3">
+              <div class="col-md-6">
+                <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                  <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                    {{selectedRequest !== null ?
+                    (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                  </span>
+                  <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                    <ul>
+                      <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                      <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                    </ul>
+                  </span>
+                  <span style="font-size: 18px;">
+                    {{'summary of budget Utilization - fip share' | uppercase}}
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex flex-column justify-content-end align-items-end">
+                  <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+                  <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                    National Disaster
+                    Risk Management
+                    Fund</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- PROJECT COSTING DETAILS PRINT BOX -->
+            <div class="row mt-3 mb-3 d-flex justify-content-end">
+              <div class="d-flex flex-column align-items-start col-md-6">
+                <span>
+                  Withdrawl Application #:
+                  {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                  (selectedRequest.quarterAdvanceList[step].quarter | number) :
+                  null }}
+                </span>
+              </div>
+              <div class="d-flex flex-column col-md-6">
+                <div class="d-flex align-items-center">
+                  <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                    Total Project Cost</span>
+                  <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                    {{(totalProjectCost | number) || '&nbsp;'}}</span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                    FIP Share
+                  </span>
+                  <span
+                    style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                    {{(fipTotalProjectCost | number) || '&nbsp;'}}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ACTIVITY TABLE HEADER -->
+            <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Parent Tree
+              </span>
+              <span>
+                Budget Category
+              </span>
+              <span>
+                Total Project Budget Allocation (c)
+              </span>
+              <span>
+                Expenditure upto last quarter (d)
+              </span>
+              <span>
+                Expenditure for the current quarter (e)
+              </span>
+              <span>
+                Expenditure till date (f = d+e)
+              </span>
+              <span>
+                Remaining Budget (g = c-f)
+              </span>
+              <!-- <span>
+                                                      Remarks
+                                                    </span> -->
+            </div>
+
+            <!-- ACTIVITY TABLE ROW -->
+            <div *ngFor="let item of selectedAdvanceItem?.data; let i = index;">
+              <div class="d-flex rag-div justify-content-between align-items-center table-row">
+                <span>
+                  <div *ngIf="item?.parentCosts">
+                    <div *ngFor="let _ of item?.parentCosts; let i = index">
+                      <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                        <small>{{name}}</small>
+                        <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                      </ng-container>
+                    </div>
+                  </div>
+                </span>
+                <span>{{(item.title) || '&nbsp;'}}</span>
+                <span>{{(item.fipTotalBudgetAllocation | number) || '&nbsp;'}}</span>
+                <span>{{'&nbsp;'}}</span>
+                <span>{{(item.fipExpenditureCurrentQuarter | number) || '&nbsp;'}}</span>
+                <span>{{(item.fipExpenditureTillDate | number) || '&nbsp;'}}</span>
+                <span>{{(item.fipRemainingBudget |
+                  number) || '&nbsp;'}}</span>
+                <!-- <span>&nbsp;</span> -->
+              </div>
+            </div>
+
+            <!-- ACTIVITY TABLE TOTALS -->
+            <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Total
+              </span>
+              <span>
+                &nbsp;
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'fipTotalBudgetAllocation') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{'&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'fipExpenditureCurrentQuarter') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'fipExpenditureTillDate') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'fipRemainingBudget') | number) :
+                '&nbsp;'}}
+              </span>
+              <!-- <span>
+                                                                      Remarks
+                                                                    </span> -->
+            </div>
+
+          </div>
+
+          <!-- PROCESS OWNER FOR DISBURSEMENT -->
+          <div class="row d-flex justify-content-between flex-fill p-3">
+            <!-- SUBMIT YOUR REVIEW -->
+            <div class="col-md-6" *ngIf="selectedRequest !== null && controlReviewUserForm">
+              <div *ngFor="let item of controlReviewUserForm.quarterAdvanceReviewsList">
+                <div *ngIf="item.assignee.id === loggedUser.id">
+                  <p style="border-radius:5px;background-color: #f9f9f9;color: #151515;padding: 10px;">
+                    <small>
+                      <small id="answer" class="mr-1">
+                        Comments from assigneer:
+                      </small>
+                      <small>
+                        {{item.assignee.name}} please submit your review
+                      </small>
+                    </small>
+                  </p>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Your Reviews</mat-label>
+                    <textarea [disabled]="item.status === 'Completed'" placeholder="Enter text here..."
+                      [(ngModel)]="item.comments" matInput cols="30" rows="10"></textarea>
+                  </mat-form-field>
+                  <mat-radio-group class="mt-2 example-radio-group" [disabled]="item.status === 'Completed'"
+                    [(ngModel)]="item.subStatus">
+                    <mat-radio-button class="example-radio-button" value="Approve">
+                      <span id="comment">{{'Approved' | uppercase}}</span>
+                    </mat-radio-button>
+                    <mat-radio-button class="example-radio-button" value="Reject">
+                      <span id="warn-comment">{{'Rejected' | uppercase}}</span>
+                    </mat-radio-button>
+                  </mat-radio-group>
+                  <button style="width: 100%;" class="d-flex flex-fill align-items-center justify-content-center"
+                    color="primary" (click)="submitReview(item)"
+                    [disabled]="!item.comments || item.status === 'Completed'" mat-raised-button>
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- ASSIGN USER FORM USERS -->
+            <div class="col-md-6" *ngIf="selectedRequest?.assigned">
+              <div class="d-flex align-items-center heading-contain header-box">
+                <mat-icon>
+                  settings_applications
+                </mat-icon>
+                <span class="pl-2">
+                  Toolbox
+                </span>
+              </div>
+              <mat-form-field appearance="outline" class="mt-2">
+                <mat-label>Select User(s) For Reviews</mat-label>
+                <mat-select matNativeControl [compareWith]="compareSmeObjects" [formControl]="reviewUsers" multiple>
+                  <mat-form-field class="p-3 filter-input" appearance="outline">
+                    <mat-label>Filter By Department</mat-label>
+                    <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
+                  </mat-form-field>
+                  <mat-select-trigger>
+                    <span *ngFor="let item of reviewUsers.value; let i=index">
+                      <span *ngIf="i===0">{{item.name}}</span>
+                    </span>
+                    <span *ngIf="reviewUsers.value?.length > 1">
+                      (+{{reviewUsers.value.length - 1}} others)
+                    </span>
+                  </mat-select-trigger>
+                  <mat-optgroup *ngFor="let user of allUsers | depUserFilter:filterQuery" [label]="user.name">
+                    <mat-option [hidden]="loggedUser.id === item.id || checkQuarterUserDisabled(item)"
+                      *ngFor="let item of user.users" [value]="item">
+                      {{item.name}}
+                    </mat-option>
+                  </mat-optgroup>
+                </mat-select>
+              </mat-form-field>
+              <div class="d-flex flex-fill justify-content-start">
+                <button style="width: 100%;" [disabled]="!reviewUsers.valid" class="mt-2 mb-2" mat-raised-button
+                  color="primary" (click)="assignUsersForReviews('quarter')">
+                  Assign For Reviews
+                </button>
+              </div>
+              <mat-chip-list *ngIf="controlReviewUserForm?.stats?.pendingCount || 
+                                controlReviewUserForm?.stats?.completedCount" class="mt-3 review-chip">
+                <mat-chip (click)="getReviewsList(controlReviewUserForm.quarterAdvanceReviewsList);"
+                  *ngIf="controlReviewUserForm?.stats?.pendingCount !== 0" class="mt-2" color="warn" selected>
+                  {{controlReviewUserForm.stats ?
+                  controlReviewUserForm.stats.pendingCount : '&nbsp;'}} Reviews Pending
+                </mat-chip>
+                <mat-chip (click)="getReviewsList(controlReviewUserForm.quarterAdvanceReviewsList);"
+                  *ngIf="controlReviewUserForm?.stats?.completedCount !== 0" class="mt-2" color="accent" selected>
+                  {{controlReviewUserForm.stats ?
+                  controlReviewUserForm.stats.completedCount : '&nbsp;'}} Reviews Submitted
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
+
         </ng-container>
 
         <!-- ASSIGNED REVIEWS LIST -->
@@ -1498,12 +3451,66 @@
           </div>
         </ng-container>
 
-        <!-- LIQUIDATION FOR ADVANCE -->
+        <!-- ******************** LIQUIDATION FOR ADVANCE ************************** -->
         <div class="border-heading mt-5" *ngIf="selectedAdvanceItem?.subStatus === 'Approved'">
           <span>Advance Liquidation</span>
         </div>
 
         <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'">
+
+          <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+          <div class="row mt-5 mb-3">
+            <div class="col-md-6">
+              <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                <span style="font-size: 18px;">
+                  {{'Withdrawal application' | uppercase}}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex flex-column justify-content-end align-items-end">
+                <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+                <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                  National Disaster
+                  Risk Management
+                  Fund</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- WA ADDRESS PRINT BOX -->
+          <div class="row mt-3 mb-3 d-flex justify-content-end">
+            <div class="d-flex flex-column align-items-start col-md-6">
+              <span style="font-size: 14px;">
+                {{'National Disaster Risk Management Fund (NDRMF)' | titlecase}}
+              </span>
+              <span style="font-size: 14px;">
+                {{'5th Floor EOBI Building, Block 33-34, Service Road South,' | titlecase}}
+              </span>
+              <span style="font-size: 14px;">
+                {{'Mauve Area, G-10/4, Islamabad' | titlecase}}
+              </span>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  NDRMF GD Ref</span>
+                <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{'&nbsp;'}}</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  Withdrawal Application #
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                  (selectedRequest.quarterAdvanceList[step].quarter | number) :
+                  '&nbsp;' }}
+                </span>
+              </div>
+            </div>
+          </div>
 
           <!-- LIQUIDATION PRINT BOX -->
           <div class="row mb-2">
@@ -1610,9 +3617,70 @@
             </div>
           </div>
 
-          <!-- BUDGET UTILIZATION NDRMF -->
+          <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+          <div class="row mt-5 mb-3">
+            <div class="col-md-6">
+              <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                  {{selectedRequest !== null ?
+                  (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                </span>
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                  <ul>
+                    <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                    <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                  </ul>
+                </span>
+                <span style="font-size: 18px;">
+                  {{'summary of budget Utilization - ndrmf share' | uppercase}}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex flex-column justify-content-end align-items-end">
+                <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+                <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                  National Disaster
+                  Risk Management
+                  Fund</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROJECT COSTING DETAILS PRINT BOX -->
+          <div class="row mt-3 mb-3 d-flex justify-content-end">
+            <div class="d-flex flex-column align-items-start col-md-6">
+              <span>
+                Withdrawl Application #:
+                {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step]?
+                (selectedRequest.quarterAdvanceList[step].quarter | number) :
+                null }}
+              </span>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  Total Project Cost</span>
+                <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(totalProjectCost | number) || '&nbsp;'}}</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  NDRMF Share
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(ndrmfTotalProjectCost | number) || '&nbsp;'}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- BUDGET UTILIZATION NDRMF SHARE -->
           <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
             <p id="answer" class="p-2">Summary Budget Utilization (NDRMF Share)</p>
+
+            <!-- TABLE HEADER -->
             <div class="d-flex align-items-center justify-content-between rag-div table-header">
               <span>
                 Parent Tree
@@ -1640,6 +3708,7 @@
               </span>
             </div>
 
+            <!-- TABLE ROWS -->
             <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
               <div class="d-flex rag-div justify-content-between align-items-center table-row">
                 <span>
@@ -1652,22 +3721,132 @@
                     </div>
                   </div>
                 </span>
-                <span>{{item.title}}</span>
-                <span>{{getNdrmfTotalBudgetAllocation(item) | number}}</span>
-                <span>{{'&nbsp;'}}</span>
-                <span>{{getNdrmfExpenditureCurrentQuarter(item, 'quarter') | number}}</span>
-                <span>{{(0 + getNdrmfExpenditureCurrentQuarter(item, 'quarter')) | number}}</span>
-                <span>{{(getNdrmfTotalBudgetAllocation(item) - getNdrmfExpenditureCurrentQuarter(item, 'quarter')) |
-                  number}}</span>
-                <span>&nbsp;</span>
+                <span>
+                  {{item.title}}
+                </span>
+                <span>
+                  {{(item.ndrmfTotalBudgetAllocation) | number}}
+                </span>
+                <span>
+                  {{(item.ndrmfExpenditureLastQuarter)}}
+                </span>
+                <span>
+                  {{(item.ndrmfExpenditureCurrentQuarter) | number}}
+                </span>
+                <span>
+                  {{(item.ndrmfExpenditureTillDate) | number}}
+                </span>
+                <span>
+                  {{(item.ndrmfRemainingBudget) | number}}
+                </span>
+                <span>
+                  &nbsp;
+                </span>
               </div>
+            </div>
+
+            <!-- TABLE TOTALS ROW -->
+            <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Total
+              </span>
+              <span>
+                &nbsp;
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'ndrmfTotalBudgetAllocation') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{'&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'ndrmfExpenditureCurrentQuarter') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'ndrmfExpenditureTillDate') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'ndrmfRemainingBudget') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                &nbsp;
+              </span>
             </div>
 
           </div>
 
-          <!-- SUMMARY SOEs NDRMF -->
+          <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+          <div class="row mt-5 mb-3">
+            <div class="col-md-6">
+              <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                  {{selectedRequest !== null ?
+                  (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                </span>
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                  <ul>
+                    <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                    <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                  </ul>
+                </span>
+                <span style="font-size: 18px;">
+                  {{'SUMMARY OF STATEMENT OF EXPENDITURES (SOE)- NDRMF SHARE' | uppercase}}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex flex-column justify-content-end align-items-end">
+                <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+                <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                  National Disaster
+                  Risk Management
+                  Fund</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROJECT COSTING DETAILS PRINT BOX -->
+          <div class="row mt-3 mb-3 d-flex justify-content-end">
+            <div class="d-flex flex-column align-items-start col-md-6">
+              <span>
+                Withdrawl Application #:
+                {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step]?
+                (selectedRequest.quarterAdvanceList[step].quarter | number) :
+                null }}
+              </span>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  Total Project Cost</span>
+                <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(totalProjectCost | number) || '&nbsp;'}}</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  NDRMF Share
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(ndrmfTotalProjectCost | number) || '&nbsp;'}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUMMARY OF SOEs NDRMF SHARE -->
           <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
             <p id="answer" class="p-2">Summary of SOE (NDRMF Share)</p>
+
+            <!-- TABLE HEADER -->
             <div class="d-flex align-items-center justify-content-between rag-div table-header">
               <span>
                 Parent Tree
@@ -1692,6 +3871,7 @@
               </span>
             </div>
 
+            <!-- TABLE ROWS -->
             <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
               <div class="d-flex rag-div justify-content-between align-items-center table-row">
                 <span>
@@ -1705,15 +3885,104 @@
                   </div>
                 </span>
                 <span>{{item.title}}</span>
-                <span>{{getNdrmfQuarterBudgetAllocation(item) | number}}</span>
-                <span>{{getNdrmfExpenditureCurrentQuarter(item, 'quarter') | number}}</span>
-                <span>{{(getNdrmfQuarterBudgetAllocation(item) - getNdrmfExpenditureCurrentQuarter(item, 'quarter')) |
-                  number}}</span>
+                <span>{{item.ndrmfQuarterBudgetAllocation | number}}</span>
+                <span>{{(item.ndrmfExpenditureCurrentQuarter) | number}}</span>
+                <span>{{(item.ndrmfVarience) | number}}</span>
                 <span>{{'&nbsp;'}}</span>
                 <span>{{'&nbsp;'}}</span>
               </div>
             </div>
 
+            <!-- TABLES TOTALS ROW -->
+            <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Total
+              </span>
+              <span>
+                &nbsp;
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'ndrmfQuarterBudgetAllocation') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'ndrmfExpenditureCurrentQuarter') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'ndrmfVarience') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{'&nbsp;'}}
+              </span>
+              <span>
+                &nbsp;
+              </span>
+            </div>
+
+          </div>
+
+          <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+          <div class="row mt-5 mb-3">
+            <div class="col-md-6">
+              <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                  {{selectedRequest !== null ?
+                  (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                </span>
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                  <ul>
+                    <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                    <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                  </ul>
+                </span>
+                <span style="font-size: 18px;">
+                  {{'STATEMENT OF EXPENDITURES (SOE)- NDRMF SHARE' | uppercase}}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex flex-column justify-content-end align-items-end">
+                <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+                <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                  National Disaster
+                  Risk Management
+                  Fund</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROJECT COSTING DETAILS PRINT BOX -->
+          <div class="row mt-3 mb-3 d-flex justify-content-end">
+            <div class="d-flex flex-column align-items-start col-md-6">
+              <span>
+                Withdrawl Application #:
+                {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step]?
+                (selectedRequest.quarterAdvanceList[step].quarter | number) :
+                null }}
+              </span>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  Total Project Cost</span>
+                <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(totalProjectCost | number) || '&nbsp;'}}</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  NDRMF Share
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(ndrmfTotalProjectCost | number) || '&nbsp;'}}
+                </span>
+              </div>
+            </div>
           </div>
 
           <!-- NDRMF SOEs -->
@@ -1724,6 +3993,8 @@
                                           <mat-icon>add</mat-icon>
                                         </button> -->
             </div>
+
+            <!-- TABLE HEADER -->
             <div class="table-header rag-div d-flex align-items-center">
               <span class="p-2">Categories</span>
               <span class="p-2">Vendor Name</span>
@@ -1734,6 +4005,7 @@
               <span class="p-2">Remarks</span>
             </div>
 
+            <!-- TABLE ROWS -->
             <div>
               <div *ngFor="let item of ndrmfLiquidationSoes; let i = index;">
                 <div class="d-flex rag-div justify-content-between align-items-center table-row">
@@ -1805,6 +4077,32 @@
                 </div>
               </div>
             </div>
+
+            <!-- TABLE TOTALS ROW -->
+            <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Total
+              </span>
+              <span>
+                &nbsp;
+              </span>
+              <span>
+                {{(ndrmfLiquidationSoes | sum:'invoiceAmount') | number}}
+              </span>
+              <span>
+                {{'&nbsp;'}}
+              </span>
+              <span>
+                {{(ndrmfLiquidationSoes | sum:'paidAmount') | number}}
+              </span>
+              <span>
+                {{'&nbsp;'}}
+              </span>
+              <span>
+                {{'&nbsp;'}}
+              </span>
+            </div>
+
             <div class="d-flex justify-content-end mt-2 mb-2" *ngIf="loggedUser?.role === 'fip'">
               <button [disabled]="selectedAdvanceLiquidation?.status === 'Approved' ||
                 selectedAdvanceLiquidation?.status === 'Under Review'" mat-flat-button color="accent"
@@ -1815,10 +4113,70 @@
 
           </div>
 
+          <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+          <div class="row mt-5 mb-3">
+            <div class="col-md-6">
+              <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                  {{selectedRequest !== null ?
+                  (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                </span>
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                  <ul>
+                    <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                    <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                  </ul>
+                </span>
+                <span style="font-size: 18px;">
+                  {{'SUMMARY OF BUDGET UTILIZATION - FIP SHARE' | uppercase}}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex flex-column justify-content-end align-items-end">
+                <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+                <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                  National Disaster
+                  Risk Management
+                  Fund</span>
+              </div>
+            </div>
+          </div>
 
-          <!-- SUMMARY SOEs FIP -->
+          <!-- PROJECT COSTING DETAILS PRINT BOX -->
+          <div class="row mt-3 mb-3 d-flex justify-content-end">
+            <div class="d-flex flex-column align-items-start col-md-6">
+              <span>
+                Withdrawl Application #:
+                {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                (selectedRequest.quarterAdvanceList[step].quarter | number) :
+                null }}
+              </span>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  Total Project Cost</span>
+                <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(totalProjectCost | number) || '&nbsp;'}}</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  FIP Share
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(fipTotalProjectCost | number) || '&nbsp;'}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUMMARY OF BUDGET UTILIZATION FIP SHARE -->
           <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
-            <p id="answer" class="p-2">Summary Budget Utilization (FIP Share)</p>
+            <p id="answer" class="p-2">Summary of Budget Utilization (FIP Share)</p>
+
+            <!-- TABLE HEADER -->
             <div class="d-flex align-items-center justify-content-between rag-div table-header">
               <span>
                 Parent Tree
@@ -1846,6 +4204,7 @@
               </span>
             </div>
 
+            <!-- TABLE ROWS -->
             <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
               <div class="d-flex rag-div justify-content-between align-items-center table-row">
                 <span>
@@ -1858,21 +4217,132 @@
                     </div>
                   </div>
                 </span>
-                <span>{{item.title}}</span>
-                <span>{{getFipTotalBudgetAllocation(item) | number}}</span>
-                <span>{{'&nbsp;'}}</span>
-                <span>{{getFipExpenditureCurrentQuarter(item) | number}}</span>
-                <span>{{(0 + getFipExpenditureCurrentQuarter(item)) | number}}</span>
-                <span>{{(getFipTotalBudgetAllocation(item) - getFipExpenditureCurrentQuarter(item)) | number}}</span>
-                <span>&nbsp;</span>
+                <span>
+                  {{item.title}}
+                </span>
+                <span>
+                  {{(item.fipTotalBudgetAllocation) | number}}
+                </span>
+                <span>
+                  {{(item.fipExpenditureLastQuarter)}}
+                </span>
+                <span>
+                  {{(item.fipExpenditureCurrentQuarter) | number}}
+                </span>
+                <span>
+                  {{(item.fipExpenditureTillDate) | number}}
+                </span>
+                <span>
+                  {{(item.fipRemainingBudget) | number}}
+                </span>
+                <span>
+                  &nbsp;
+                </span>
               </div>
+            </div>
+
+            <!-- TABLE TOTALS ROW -->
+            <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Total
+              </span>
+              <span>
+                &nbsp;
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'fipTotalBudgetAllocation') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{'&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'fipExpenditureCurrentQuarter') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'fipExpenditureTillDate') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'fipRemainingBudget') | number) :
+                '&nbsp;'}}
+              </span>
+              <!-- <span>
+                                                                                Remarks
+                                                                              </span> -->
             </div>
 
           </div>
 
-          <!-- SUMMARY SOEs FIP -->
+          <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+          <div class="row mt-5 mb-3">
+            <div class="col-md-6">
+              <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                  {{selectedRequest !== null ?
+                  (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                </span>
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                  <ul>
+                    <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                    <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                  </ul>
+                </span>
+                <span style="font-size: 18px;">
+                  {{'SUMMARY OF STATEMENT OF EXPENDITURES (SOE)- FIP SHARE' | uppercase}}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex flex-column justify-content-end align-items-end">
+                <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+                <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                  National Disaster
+                  Risk Management
+                  Fund</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROJECT COSTING DETAILS PRINT BOX -->
+          <div class="row mt-3 mb-3 d-flex justify-content-end">
+            <div class="d-flex flex-column align-items-start col-md-6">
+              <span>
+                Withdrawl Application #:
+                {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                (selectedRequest.quarterAdvanceList[step].quarter | number) :
+                null }}
+              </span>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  Total Project Cost</span>
+                <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(totalProjectCost | number) || '&nbsp;'}}</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  FIP Share
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(fipTotalProjectCost | number) || '&nbsp;'}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUMMARY OF SOEs FIP SHARE -->
           <div *ngIf="selectedAdvanceItem?.subStatus === 'Approved'" class="mb-3">
             <p id="answer" class="p-2">Summary of SOE (FIP Share)</p>
+
+            <!-- TABEL HEADER -->
             <div class="d-flex align-items-center justify-content-between rag-div table-header">
               <span>
                 Parent Tree
@@ -1897,6 +4367,7 @@
               </span>
             </div>
 
+            <!-- TABLE ROWS -->
             <div *ngFor="let item of selectedAdvanceLiquidation?.data; let i = index;">
               <div class="d-flex rag-div justify-content-between align-items-center table-row">
                 <span>
@@ -1910,26 +4381,117 @@
                   </div>
                 </span>
                 <span>{{item.title}}</span>
-                <span>{{getFipQuarterBudgetAllocation(item) | number}}</span>
-                <span>{{getFipExpenditureCurrentQuarter(item) | number}}</span>
-                <span>{{(getFipQuarterBudgetAllocation(item) - getFipExpenditureCurrentQuarter(item)) |
-                  number}}</span>
+                <span>{{item.fipQuarterBudgetAllocation | number}}</span>
+                <span>{{(item.fipExpenditureCurrentQuarter) | number}}</span>
+                <span>{{(item.fipVarience) | number}}</span>
                 <span>{{'&nbsp;'}}</span>
                 <span>{{'&nbsp;'}}</span>
               </div>
             </div>
 
+            <!-- TABLE TOTALS ROW -->
+            <div class="d-flex align-items-center justify-content-between rag-div table-header">
+              <span>
+                Total
+              </span>
+              <span>
+                &nbsp;
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'fipQuarterBudgetAllocation') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'fipExpenditureCurrentQuarter') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{selectedAdvanceItem !== null ?
+                ((selectedAdvanceItem.data | sum:'fipVarience') | number) :
+                '&nbsp;'}}
+              </span>
+              <span>
+                {{'&nbsp;'}}
+              </span>
+              <span>
+                &nbsp;
+              </span>
+            </div>
+
+          </div>
+
+          <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
+          <div class="row mt-5 mb-3">
+            <div class="col-md-6">
+              <div class="d-flex flex-column flex-column justify-content-end align-items-start">
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'single'">
+                  {{selectedRequest !== null ?
+                  (selectedRequest.initiatedBy.name | titlecase) : '&nbsp;'}}
+                </span>
+                <span style="font-size: 18px;" *ngIf="selectedRequest?.initiatedBy?.type === 'jv'">
+                  <ul>
+                    <ol>(selectedRequest.initiatedBy.name | titlecase) (Lead Partner)</ol>
+                    <ol>(selectedRequest.initiatedBy.jvUsername | titlecase) (Second Partner)</ol>
+                  </ul>
+                </span>
+                <span style="font-size: 18px;">
+                  {{'STATEMENT OF EXPENDITURES (SOE) - FIP SHARE' | uppercase}}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex flex-column justify-content-end align-items-end">
+                <img style="width:80px;" class="img-fluid img-responsive" src="../../../assets/ndrmflogo.png" alt="">
+                <span style="font-weight: 550;font-size: 12px;color: #151515;text-align: right;margin-top: 2px;">
+                  National Disaster
+                  Risk Management
+                  Fund</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROJECT COSTING DETAILS PRINT BOX -->
+          <div class="row mt-3 mb-3 d-flex justify-content-end">
+            <div class="d-flex flex-column align-items-start col-md-6">
+              <span>
+                Withdrawl Application #:
+                {{ selectedRequest !== null && selectedRequest.quarterAdvanceList[step] ?
+                (selectedRequest.quarterAdvanceList[step].quarter | number) :
+                null }}
+              </span>
+            </div>
+            <div class="d-flex flex-column col-md-6">
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  Total Project Cost</span>
+                <span style="padding:10px;margin-left:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(totalProjectCost | number) || '&nbsp;'}}</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span style="padding:10px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  FIP Share
+                </span>
+                <span
+                  style="padding:10px;margin-left:-1px;margin-top:-1px;width:50%;font-size:12px;border: 1px solid #151515;">
+                  {{(fipTotalProjectCost | number) || '&nbsp;'}}
+                </span>
+              </div>
+            </div>
           </div>
 
           <!-- FIP SOEs -->
           <ng-container>
             <div class="mb-3">
               <div class="d-flex justify-content-between mt-2 mb-2">
-                <p id="answer" class="p-2">SOEs for FIP</p>
+                <p id="answer" class="p-2">SOEs - FIP Share</p>
                 <!-- <button mat-mini-fab color="accent" (click)="addFipSoes();">
                         <mat-icon>add</mat-icon>
                       </button> -->
               </div>
+
+              <!-- TABLE HEADER -->
               <div class="table-header rag-div d-flex align-items-center">
                 <span class="p-2">Categories</span>
                 <span class="p-2">Vendor Name</span>
@@ -1940,6 +4502,7 @@
                 <span class="p-2">Remarks</span>
               </div>
 
+              <!-- TABLE ROWS -->
               <div>
                 <div *ngFor="let item of fipLiquidationSoes; let i = index;">
                   <div class="d-flex rag-div justify-content-between align-items-center table-row">
@@ -2011,6 +4574,31 @@
                 </div>
               </div>
 
+              <!-- TABLE TOTALS ROW -->
+              <div class="d-flex align-items-center justify-content-between rag-div table-header">
+                <span>
+                  Total
+                </span>
+                <span>
+                  &nbsp;
+                </span>
+                <span>
+                  {{(fipLiquidationSoes | sum:'invoiceAmount') | number}}
+                </span>
+                <span>
+                  {{'&nbsp;'}}
+                </span>
+                <span>
+                  {{(fipLiquidationSoes | sum:'paidAmount') | number}}
+                </span>
+                <span>
+                  {{'&nbsp;'}}
+                </span>
+                <span>
+                  {{'&nbsp;'}}
+                </span>
+              </div>
+
               <div class="d-flex justify-content-end mt-2 mb-2" *ngIf="loggedUser?.role === 'fip'">
 
                 <button [disabled]="selectedAdvanceLiquidation?.status === 'Approved' ||
@@ -2022,6 +4610,7 @@
 
             </div>
           </ng-container>
+
         </div>
 
         <mat-action-row>

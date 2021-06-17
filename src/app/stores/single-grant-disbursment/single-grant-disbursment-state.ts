@@ -4,6 +4,7 @@ export class SingleGrantDisbursmentsState {
   disbursment: {
     proposalName: string,
     implementationPlan: any,
+    initiatedBy: any,
     initialAdvance: {
       status: any,
       subStatus: any,

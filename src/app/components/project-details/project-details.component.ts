@@ -239,7 +239,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
         this.selectedProject = data.selectedProject;
 
-        console.log("***********************SELECTED PROJECT MONTHS***********************", this.selectedProject, this.selectedProject ? this.selectedProject.implementationPlan ? JSON.parse(this.selectedProject.implementationPlan) : null : null);
+        console.log("***********************SELECTED PROJECT MONTHS***********************", this.selectedProject);
         if (this.selectedProject && this.selectedProject.commentsMatrix) {
           this._accreditationCommentsMatrixStore.addCommentsArray(this.selectedProject.commentsMatrix);
         }
@@ -318,7 +318,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             ...c,
             data: c.data ? JSON.parse(c.data) : null,
             template: c.template ? JSON.parse(c.template) : null,
-            projectStatus: this.selectedProject.status,
+            projectStatus: this.selectedProject !== null ? this.selectedProject.status : null,
           }
         })
         if (this.selectedProject !== null) {

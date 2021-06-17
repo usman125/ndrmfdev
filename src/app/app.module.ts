@@ -82,6 +82,8 @@ import { GrievanceRegistrationComponent } from './grievance-registration/grievan
 import { ConcernedPersonDialogComponent } from './components/concerned-person-dialog/concerned-person-dialog.component';
 import { QprSingleRequestStore } from './stores/qpr-single-request/qpr-single-request-store';
 import { AdvanceLiquidationItemStore } from './stores/advance-liquidation-item/advance-liquidation-item-store';
+// import { SumPipe } from './pipes/sum-columns.pipe';
+// import { AmountToWordPipe } from './pipes/amount-to-word.pipe';
 
 
 export function tokenGetter() {
@@ -101,6 +103,8 @@ export function tokenGetter() {
     ActivityDetailsComponent,
     GrievanceRegistrationComponent,
     ConcernedPersonDialogComponent,
+    // SumPipe,
+    // AmountToWordPipe,
   ],
   imports: [
     BrowserModule,

@@ -57,6 +57,10 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   projectActualCosts: any = [];
   parentCosts: any = [];
 
+  totalProjectCost: any = null;
+  fipTotalProjectCost: any = null;
+  ndrmfTotalProjectCost: any = null;
+
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _grantDisbursmentsService: GrantDisbursmentsService,
@@ -232,18 +236,35 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
 
   getCostSelection(implementationPlan) {
     let pip = null;
-    this.projectActualCosts = [];
+    let totalProjectCost = 0;
+    let fipTotalProjectCost = 0;
+    let ndrmfTotalProjectCost = 0;
     typeof (implementationPlan) === 'string' ?
       pip = JSON.parse(implementationPlan).costs :
       pip = implementationPlan.costs;
-    typeof (implementationPlan) === 'string' ?
-      this.projectActualCosts = JSON.parse(implementationPlan).costs :
-      this.projectActualCosts = implementationPlan.costs;
+    this.projectActualCosts = pip;
     this.costSelections = pip.filter((c) => {
       c.parentCosts = this.search(c);
+      if (!c.children) {
+        for (let i = 0; i < c.quarters.length; i++) {
+          if (c.quarters[i].data !== null && c.quarters[i].value === true) {
+            totalProjectCost = totalProjectCost + (c.quarters[i].data.ndrmfShare + c.quarters[i].data.fipShare);
+            fipTotalProjectCost = fipTotalProjectCost + (c.quarters[i].data.fipShare);
+            ndrmfTotalProjectCost = ndrmfTotalProjectCost + (c.quarters[i].data.ndrmfShare);
+          }
+        }
+      }
       return !c.children;
     });
-    console.log("PROJECT ACTUAL COSTS:---", this.projectActualCosts, this.costSelections);
+    this.totalProjectCost = totalProjectCost;
+    this.fipTotalProjectCost = fipTotalProjectCost;
+    this.ndrmfTotalProjectCost = ndrmfTotalProjectCost;
+    console.log("PROJECT ACTUAL COSTS:---",
+      this.projectActualCosts,
+      this.costSelections,
+      totalProjectCost,
+      fipTotalProjectCost,
+      ndrmfTotalProjectCost);
   }
 
   getDisbursmentDetails(id) {
@@ -261,6 +282,9 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
           }
         });
         result.initialAdvance.data = result.initialAdvance.data ? JSON.parse(result.initialAdvance.data) : result.initialAdvance.data;
+        if (result.quarterAdvanceList !== null || result.quarterAdvanceList.length !== 0) {
+          result.quarterAdvanceList.sort((a, b) => (a.quarter > b.quarter) ? 1 : ((b.quarter > a.quarter) ? -1 : 0))
+        }
         this._singleGrantDisbursmentsStore.addGrantDisbursment(result);
       },
       error => {
@@ -297,10 +321,18 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   addQuarterData() {
+    let amount = 0;
     if (this.selectedRequest.quarterAdvanceList[this.step].data === null) {
+      for (let i = 0; i < this.costsData.value.length; i++) {
+        let obj = this.costsData.value[i];
+        console.log("AMOUNT FOR COSTS:---", obj);
+        amount = amount + obj.totalCost;
+      }
+      console.log("AMOUNT FOR COSTS:---", amount);
       this._singleGrantDisbursmentsStore.addDataToQuarterAdvance(
         this.selectedRequest.quarterAdvanceList[this.step].id,
-        this.costsData.value
+        this.costsData.value,
+        amount
       );
     } else {
       let flag = false;
@@ -312,9 +344,16 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         }
       }
       if (!flag) {
+        for (let i = 0; i < this.selectedRequest.quarterAdvanceList[this.step].data.length; i++) {
+          let obj = this.selectedRequest.quarterAdvanceList[this.step].data[i];
+          amount = amount + obj.amount;
+        }
+        amount = amount + this.costsData.value.totalCost;
+        console.log("AMOUNT FOR COSTS:---", amount, this.costsData.value);
         this._singleGrantDisbursmentsStore.addEntryToQuarterAdvance(
           this.selectedRequest.quarterAdvanceList[this.step].id,
-          this.costsData.value
+          this.costsData.value,
+          amount
         );
       }
     }
@@ -871,7 +910,8 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   setStep(item, id, selectionType) {
-    console.log("CURRENT STEP:---", item, id);
+    console.log("CURRENT STEP:---", item, id, typeof (id));
+    this.step = id;
     // @setTimeout(() => {})
     this.currentReviewsList = [];
     this.fipLiquidationSoes = [];
@@ -889,7 +929,76 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
               item.data[j].quarters = JSON.parse(JSON.stringify(obj.quarters));
             }
             this.parentCosts = [];
+
             item.data[j].parentCosts = this.search(item.data[j]);
+
+            item.data[j].ndrmfExpenditureLastQuarter = 0;
+            item.data[j].fipExpenditureLastQuarter = 0;
+            item.data[j].ndrmfExpenditureCurrentQuarter = 0;
+            item.data[j].fipExpenditureCurrentQuarter = 0;
+            item.data[j].ndrmfTotalBudgetAllocation = 0;
+            item.data[j].fipTotalBudgetAllocation = 0;
+            item.data[j].fipQuarterBudgetAllocation = 0;
+            item.data[j].ndrmfQuarterBudgetAllocation = 0;
+            item.data[j].fipExpenditureTillDate = 0;
+            item.data[j].ndrmfExpenditureTillDate = 0;
+            item.data[j].totalRequirementForTheProject = 0;
+            item.data[j].ndrmfVarience = 0;
+            item.data[j].fipVarience = 0;
+
+            for (let k = 0; k < item.data[j].quarters.length; k++) {
+              let y = item.data[j].quarters[k];
+              if (y.value === true && y.data !== null) {
+                item.data[j].ndrmfTotalBudgetAllocation = item.data[j].ndrmfTotalBudgetAllocation + y.data.ndrmfShare;
+                item.data[j].fipTotalBudgetAllocation = item.data[j].fipTotalBudgetAllocation + y.data.fipShare;
+                item.data[j].totalRequirementForTheProject = item.data[j].totalRequirementForTheProject + (y.data.ndrmfShare + y.data.fipShare);
+              }
+            }
+
+            if (typeof (id) === 'string') {
+
+              if (item.data[j].quarters[0].value === true && item.data[j].quarters[0].progress) {
+                item.data[j].fipQuarterBudgetAllocation = item.data[j].quarters[0].data.fipShare;
+                item.data[j].ndrmfQuarterBudgetAllocation = item.data[j].quarters[0].data.ndrmfShare;
+              }
+              if (item.data[j].quarters[0].value === true && item.data[j].quarters[0].progress) {
+                item.data[j].ndrmfExpenditureCurrentQuarter = item.data[j].quarters[0].progress.expenditureNdrmf;
+                item.data[j].fipExpenditureCurrentQuarter = item.data[j].quarters[0].progress.expenditureFip;
+              }
+
+              item.data[j].ndrmfVarience = item.data[j].ndrmfQuarterBudgetAllocation - item.data[j].ndrmfExpenditureCurrentQuarter;
+              item.data[j].fipVarience = item.data[j].fipQuarterBudgetAllocation - item.data[j].fipExpenditureCurrentQuarter;
+
+              item.data[j].fipExpenditureTillDate = 0 + item.data[j].fipExpenditureCurrentQuarter;
+              item.data[j].ndrmfExpenditureTillDate = 0 + item.data[j].ndrmfExpenditureCurrentQuarter;
+
+              item.data[j].ndrmfRemainingBudget = item.data[j].ndrmfTotalBudgetAllocation - item.data[j].ndrmfExpenditureTillDate;
+              item.data[j].fipRemainingBudget = item.data[j].fipTotalBudgetAllocation - item.data[j].fipExpenditureTillDate;
+            } else {
+              if (item.data[j].quarters[item.quarter - 1].value === true && item.data[j].quarters[item.quarter - 1].progress) {
+                item.data[j].fipQuarterBudgetAllocation = item.data[j].quarters[item.quarter - 1].data.fipShare;
+                item.data[j].ndrmfQuarterBudgetAllocation = item.data[j].quarters[item.quarter - 1].data.ndrmfShare;
+              }
+              if (item.data[j].quarters[item.quarter - 1].value === true && item.data[j].quarters[item.quarter - 1].progress) {
+                item.data[j].ndrmfExpenditureCurrentQuarter = item.data[j].quarters[item.quarter - 1].progress.expenditureNdrmf;
+                item.data[j].fipExpenditureCurrentQuarter = item.data[j].quarters[item.quarter - 1].progress.expenditureFip;
+              }
+              console.log("HAVE PROGRESS*************", item.quarter, (item.quarter - 2), item.data[j].quarters[item.quarter - 2].progress)
+              if (item.data[j].quarters[item.quarter - 2].value === true && item.data[j].quarters[item.quarter - 2].progress) {
+                item.data[j].ndrmfExpenditureLastQuarter = item.data[j].quarters[item.quarter - 2].progress.expenditureNdrmf;
+                item.data[j].fipExpenditureLastQuarter = item.data[j].quarters[item.quarter - 2].progress.expenditureFip;
+              }
+
+              item.data[j].ndrmfVarience = item.data[j].ndrmfQuarterBudgetAllocation - item.data[j].ndrmfExpenditureCurrentQuarter;
+              item.data[j].fipVarience = item.data[j].fipQuarterBudgetAllocation - item.data[j].fipExpenditureCurrentQuarter;
+
+              item.data[j].fipExpenditureTillDate = item.data[j].fipExpenditureLastQuarter + item.data[j].fipExpenditureCurrentQuarter;
+              item.data[j].ndrmfExpenditureTillDate = item.data[j].ndrmfExpenditureLastQuarter + item.data[j].ndrmfExpenditureCurrentQuarter;
+
+              item.data[j].ndrmfRemainingBudget = item.data[j].ndrmfTotalBudgetAllocation - item.data[j].ndrmfExpenditureTillDate;
+              item.data[j].fipRemainingBudget = item.data[j].fipTotalBudgetAllocation - item.data[j].fipExpenditureTillDate;
+            }
+
           }
         }
       }
@@ -901,15 +1010,15 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         // this._advanceLiquidationItemStore.addAdvanceLiquidationItemData(JSON.parse(JSON.stringify(item.data)));
       }
     }
-    this.step = id;
-    if (this.step !== null) {
-      if (selectionType === 'quarter') {
-        this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: id })
-      }
-      if (selectionType === 'initial') {
-        this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: id })
-      }
-    }
+
+    // if (this.step !== null) {
+    //   if (selectionType === 'quarter') {
+    //     this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: id })
+    //   }
+    //   if (selectionType === 'initial') {
+    //     this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: id })
+    //   }
+    // }
   }
 
   nextStep(selectionType) {
@@ -986,8 +1095,9 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         return item.quarters[0].progress.expenditureNdrmf;
       }
     } else {
-      if (item.quarters[(this.step + 2) - 1] && item.quarters[(this.step + 2) - 1].value === true && item.quarters[(this.step + 2) - 1].progress) {
-        return item.quarters[(this.step + 2) - 1].progress.expenditureNdrmf;
+      if (item.quarters[this.step - 1] && item.quarters[this.step - 1].value === true && item.quarters[this.step - 1].progress) {
+        // console.log("HAVE PROGRESS*************", this.step, (this.step - 1), item.quarters[this.step - 1].progress.expenditureNdrmf)
+        return item.quarters[this.step - 1].progress.expenditureNdrmf;
       }
     }
     return count;
@@ -1151,6 +1261,25 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         }
         i++;
       }
+    }
+  }
+
+  CommaFormatted(item, event) {
+    // skip for arrow keys
+    if (event.which >= 37 && event.which <= 40) return;
+
+    // format number
+    if (item.amount) {
+      item.amount = item.amount.replace(/\D/g, "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+  }
+
+  numberCheck(item, args) {
+    if (args.key === 'e' || args.key === '+' || args.key === '-') {
+      return false;
+    } else {
+      return true;
     }
   }
 

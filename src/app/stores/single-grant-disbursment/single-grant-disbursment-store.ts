@@ -97,7 +97,7 @@ export class SingleGrantDisbursmentsStore extends Store<SingleGrantDisbursmentsS
     })
   }
 
-  addDataToQuarterAdvance(id, data) {
+  addDataToQuarterAdvance(id, data, amount) {
     this.setState({
       ...this.state,
       disbursment: {
@@ -112,6 +112,7 @@ export class SingleGrantDisbursmentsStore extends Store<SingleGrantDisbursmentsS
                   amount: c.totalCost,
                 }
               }),
+              amount: amount,
             }
           }
           return c;
@@ -185,7 +186,7 @@ export class SingleGrantDisbursmentsStore extends Store<SingleGrantDisbursmentsS
     });
   }
 
-  addEntryToQuarterAdvance(id, data) {
+  addEntryToQuarterAdvance(id, data, amount) {
     this.setState({
       ...this.state,
       disbursment: {
@@ -201,6 +202,7 @@ export class SingleGrantDisbursmentsStore extends Store<SingleGrantDisbursmentsS
                   amount: data.totalCost,
                 }
               ],
+              amount: amount,
             }
           }
           return c;

@@ -15,6 +15,8 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
+import { AmountToWordPipe } from '../../pipes/amount-to-word.pipe';
+import { SumPipe } from '../../pipes/sum-columns.pipe';
 
 
 
@@ -22,7 +24,9 @@ import { MatDividerModule } from '@angular/material/divider';
   declarations: [
     ViewGrantDisbursmentComponent,
     CostsFilterPipe,
-    DepUserFilterPipe
+    DepUserFilterPipe,
+    AmountToWordPipe,
+    SumPipe
     // DataFilterPipe
   ],
   imports: [
