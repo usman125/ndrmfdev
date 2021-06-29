@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -8,7 +8,49 @@ import { UserService } from 'src/app/services/user.service';
 import { SingleGrantDisbursmentsStore } from 'src/app/stores/single-grant-disbursment/single-grant-disbursment-store';
 import { MatAccordion } from '@angular/material/expansion';
 import { AdvanceLiquidationItemStore } from 'src/app/stores/advance-liquidation-item/advance-liquidation-item-store';
-import { options } from 'src/proc';
+// import { options } from 'src/proc';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+import * as _ from 'lodash';
+
+import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { FileUploadService } from 'src/app/services/file-upload-service.service';
+
+
+/**
+ * Food data with nested structure.
+ * Each node has a name and an optional list of children.
+ */
+interface ParentNode {
+  title: string;
+  clubbed: boolean;
+  clubId: string;
+  _id: string;
+  children?: ParentNode[];
+  addRf: boolean;
+  totalCost: number;
+  amount: number;
+  quarters: number;
+  parentCosts: any;
+}
+/** Flat node with expandable and level information */
+interface ChildFlatNode {
+  expandable: boolean;
+  clubbed: boolean;
+  clubId: string;
+  title: string;
+  level: number;
+  _id: string;
+  addRf: boolean;
+  totalCost: number;
+  amount: number;
+  quarters: number;
+  parentCosts: any;
+}
+
 
 @Component({
   selector: 'app-view-grant-disbursment',
@@ -18,7 +60,30 @@ import { options } from 'src/proc';
 })
 export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
 
+  // ****** MAT TREE CONTROLS ***********
 
+  private _transformer = (node: ParentNode, level: number) => {
+    return {
+      expandable: !!node.children && node.children.length > 0,
+      title: node.title,
+      level: level,
+      clubbed: node.clubbed,
+      clubId: node.clubId,
+      _id: node._id,
+      addRf: node.addRf,
+      totalCost: node.totalCost,
+      amount: node.amount,
+      quarters: node.quarters,
+      parentCosts: node.parentCosts,
+    };
+  }
+  treeControl = new FlatTreeControl<ChildFlatNode>(
+    node => node.level, node => node.expandable);
+  treeFlattener = new MatTreeFlattener(
+    this._transformer, node => node.level, node => node.expandable, node => node.children);
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+  // ********* OTHER COMPONENT CONTROLS ***********
 
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
@@ -61,6 +126,22 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   fipTotalProjectCost: any = null;
   ndrmfTotalProjectCost: any = null;
 
+  durationInSeconds = 5;
+
+  apiLoading: boolean = false;
+
+  selectedFiles?: FileList;
+  progressInfos: any[] = [];
+  message: string[] = [];
+
+  fileInfos?: Observable<any>;
+
+  @Input() accept = '*/*';
+
+  advanceFiles: any = [];
+
+  panelOpenState = false;
+
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _grantDisbursmentsService: GrantDisbursmentsService,
@@ -68,7 +149,9 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     private _confirmModelService: ConfirmModelService,
     private _userService: UserService,
     private _formBuilder: FormBuilder,
+    private _snackBar: MatSnackBar,
     private _advanceLiquidationItemStore: AdvanceLiquidationItemStore,
+    private _fileUploadService: FileUploadService,
   ) {
     this.advanceForm = this._formBuilder.group({
       'payeesName': [null],
@@ -90,6 +173,8 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     });
   }
 
+  hasChild = (_: number, node: ChildFlatNode) => node.expandable;
+
   ngOnInit(): void {
     this.reviewUsers.setValidators([Validators.required]);
     this.costsData.setValidators([Validators.required]);
@@ -104,7 +189,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       this._singleGrantDisbursmentsStore.state$.subscribe(
         data => {
           if (data.disbursment) {
-            console.log("REQUEST IN VIEW*********:---", data.disbursment);
+            // console.log("REQUEST IN VIEW*********:---", data.disbursment);
             this.selectedRequest = data.disbursment;
 
             // if (this.selectedRequest.initialAdvance.status === 'Completed' ||
@@ -177,13 +262,36 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
               else
                 this.reviewUsers.enable({ onlySelf: true });
             }
+
+            // if (this.loggedUser.role === 'sme') {
+            for (let i = 0; i < this.selectedRequest.quarterAdvanceList.length; i++) {
+              let element = this.selectedRequest.quarterAdvanceList[i];
+              if (element.quarterAdvanceReviewsList !== null) {
+                for (let j = 0; j < element.quarterAdvanceReviewsList.length; j++) {
+                  let obj = element.quarterAdvanceReviewsList[j];
+                  if (obj.assigned) {
+                    if (obj.status === 'Pending') {
+                      element.showNoti = true;
+                    }
+                    if (obj.status === 'Completed') {
+                      element.showNoti = false;
+                    }
+                  }
+                }
+              }
+            }
+            // .forEach(element => {
+            //   .forEach(obj => {
+            //   });
+            // });
+            // }
           }
-          // console.log("RESULT SINGLE GRANT DISBURSMENT:---", this.selectedRequest,
-          //   this.costSelections,
-          //   this.loggedUser,
-          //   this.initialAdvanceStats,
-          //   this.controlReviewUserForm
-          // );
+          console.log("RESULT SINGLE GRANT DISBURSMENT:---", this.selectedRequest,
+            this.costSelections,
+            this.loggedUser,
+            this.initialAdvanceStats,
+            this.controlReviewUserForm
+          );
         }
       )
     );
@@ -235,36 +343,72 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   getCostSelection(implementationPlan) {
+
+    let allCosts = [];
+
     let pip = null;
+    let allSubCosts = [];
     let totalProjectCost = 0;
     let fipTotalProjectCost = 0;
     let ndrmfTotalProjectCost = 0;
+
     typeof (implementationPlan) === 'string' ?
       pip = JSON.parse(implementationPlan).costs :
       pip = implementationPlan.costs;
+
     this.projectActualCosts = pip;
-    this.costSelections = pip.filter((c) => {
-      c.parentCosts = this.search(c);
+
+    for (let i = 0; i < this.projectActualCosts.length; i++) {
+      let c = this.projectActualCosts[i];
+      this.parentCosts = [];
+      delete c.children;
       if (!c.children) {
-        for (let i = 0; i < c.quarters.length; i++) {
-          if (c.quarters[i].data !== null && c.quarters[i].value === true) {
-            totalProjectCost = totalProjectCost + (c.quarters[i].data.ndrmfShare + c.quarters[i].data.fipShare);
-            fipTotalProjectCost = fipTotalProjectCost + (c.quarters[i].data.fipShare);
-            ndrmfTotalProjectCost = ndrmfTotalProjectCost + (c.quarters[i].data.ndrmfShare);
+        for (let j = 0; j < c.quarters.length; j++) {
+          if (c.quarters[j].data !== null && c.quarters[j].value === true) {
+            totalProjectCost = totalProjectCost + (c.quarters[j].data.ndrmfShare + c.quarters[j].data.fipShare);
+            fipTotalProjectCost = fipTotalProjectCost + (c.quarters[j].data.fipShare);
+            ndrmfTotalProjectCost = ndrmfTotalProjectCost + (c.quarters[j].data.ndrmfShare);
           }
         }
       }
-      return !c.children;
-    });
+      if (c.mainCostId !== null) {
+        c.parentCosts = this.search(c);
+        allSubCosts.push(c);
+      }
+    }
+
+    var test = _.chain(allSubCosts)
+      .groupBy('mainCostId')
+      .map((val, _id) => {
+        return {
+          val: val,
+          _id: _id,
+        }
+      })
+      .value();
+    for (let i = 0; i < this.projectActualCosts.length; i++) {
+      for (let j = 0; j < test.length; j++) {
+        if (this.projectActualCosts[i]._id === test[j]._id) {
+          this.projectActualCosts[i].children = test[j].val;
+        }
+      }
+    }
+    var test2 = _.filter(this.projectActualCosts, { mainCostId: null })
+
     this.totalProjectCost = totalProjectCost;
     this.fipTotalProjectCost = fipTotalProjectCost;
     this.ndrmfTotalProjectCost = ndrmfTotalProjectCost;
+
+    this.dataSource.data = test2;
+
     console.log("PROJECT ACTUAL COSTS:---",
       this.projectActualCosts,
+      this.dataSource.data,
       this.costSelections,
       totalProjectCost,
       fipTotalProjectCost,
-      ndrmfTotalProjectCost);
+      ndrmfTotalProjectCost,
+    );
   }
 
   getDisbursmentDetails(id) {
@@ -294,70 +438,64 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     // this._router.navigate(['view-grant-disbursment', element.id]);
   }
 
-  addDataCosts() {
-    if (this.apiCosts === null) {
-      this.apiCosts = this.costsData.value.map((c) => {
-        // delete c.children;
-        return {
-          ...c,
-          amount: c.totalCost ? c.totalCost : null,
-        };
-      });
-    } else {
-      let flag = false;
-      for (let i = 0; i < this.apiCosts.length; i++) {
-        var key = this.apiCosts[i];
-        if (key._id === this.costsData.value._id) {
-          flag = true;
-          break;
-        }
+  addDataCosts(item) {
+    let flag = false;
+    let total = 0;
+    for (let i = 0; i < this.apiCosts.length; i++) {
+      var key = this.apiCosts[i];
+      if (key._id === item._id) {
+        flag = true;
+        break;
       }
-      if (!flag) {
-        // console.log("DO NOT MATCH:---", this.costsData.value);
-        this.apiCosts.push(this.costsData.value);
-      }
+      total = total + key.amount;
     }
-    this.costsData.reset();
+    if (!flag) {
+      item.amount = item.totalCost;
+      // console.log("DO NOT MATCH:---", item, total);
+      this.apiCosts.push(item);
+      this._singleGrantDisbursmentsStore.addInitialAdvanceAmount(
+        this.selectedRequest.initialAdvance.amount + item.amount
+      );
+      this.openSnackBar('ACTIVITY ADDED!', 'Exit');
+    } else {
+      this.openSnackBar('ALREADY IN LIST!', 'Exit');
+    }
   }
 
-  addQuarterData() {
-    let amount = 0;
-    if (this.selectedRequest.quarterAdvanceList[this.step].data === null) {
-      for (let i = 0; i < this.costsData.value.length; i++) {
-        let obj = this.costsData.value[i];
-        console.log("AMOUNT FOR COSTS:---", obj);
-        amount = amount + obj.totalCost;
+  addQuarterData(item) {
+
+    let flag = false;
+    for (let i = 0; i < this.selectedRequest.quarterAdvanceList[this.step].data.length; i++) {
+      var key = this.selectedRequest.quarterAdvanceList[this.step].data[i];
+      if (key._id === item._id) {
+        flag = true;
+        break;
       }
-      console.log("AMOUNT FOR COSTS:---", amount);
-      this._singleGrantDisbursmentsStore.addDataToQuarterAdvance(
-        this.selectedRequest.quarterAdvanceList[this.step].id,
-        this.costsData.value,
-        amount
-      );
-    } else {
-      let flag = false;
-      for (let i = 0; i < this.selectedRequest.quarterAdvanceList[this.step].data.length; i++) {
-        var key = this.selectedRequest.quarterAdvanceList[this.step].data[i];
-        if (key._id === this.costsData.value._id) {
-          flag = true;
+    }
+    if (!flag) {
+      // for (let i = 0; i < this.selectedRequest.quarterAdvanceList[this.step].data.length; i++) {
+      //   let obj = this.selectedRequest.quarterAdvanceList[this.step].data[i];
+      //   amount = amount + obj.amount;
+      // }
+      // amount = amount + item.totalCost;
+
+      let costToAdd = null;
+      for (let i = 0; i < this.projectActualCosts.length; i++) {
+        if (this.projectActualCosts[i]._id === item._id) {
+          costToAdd = this.projectActualCosts[i];
           break;
         }
       }
-      if (!flag) {
-        for (let i = 0; i < this.selectedRequest.quarterAdvanceList[this.step].data.length; i++) {
-          let obj = this.selectedRequest.quarterAdvanceList[this.step].data[i];
-          amount = amount + obj.amount;
-        }
-        amount = amount + this.costsData.value.totalCost;
-        console.log("AMOUNT FOR COSTS:---", amount, this.costsData.value);
-        this._singleGrantDisbursmentsStore.addEntryToQuarterAdvance(
-          this.selectedRequest.quarterAdvanceList[this.step].id,
-          this.costsData.value,
-          amount
-        );
-      }
+
+      // console.log("AMOUNT FOR COSTS:---", amount, item, costToAdd);
+      this._singleGrantDisbursmentsStore.addEntryToQuarterAdvance(
+        this.selectedRequest.quarterAdvanceList[this.step].id,
+        costToAdd,
+      );
+      this.openSnackBar('ACTIVITY ADDED!', 'Exit');
+    } else {
+      this.openSnackBar('ALREADY IN LIST!', 'Exit');
     }
-    this.costsData.reset();
   }
 
   submitInitalAdvance() {
@@ -667,17 +805,51 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  submitReview(item) {
+  submitReview(item, type) {
     // console.log("REVIEW TO SUBMIT FOR ITEM:----", item);
+    this.apiLoading = true;
+    let body = null;
+    if (type === 'initial') {
+      body = {
+        id: item.id,
+        qaId: null,
+        comments: item.comments,
+        type: type
+      }
+    } else {
+      body = {
+        id: item.id,
+        qaId: this.controlReviewUserForm.id,
+        comments: item.comments,
+        type: type
+      }
+    }
     this._grantDisbursmentsService.submitInitialAdvanceReview(
       this.selectedRequest.id,
-      {
-        id: item.id,
-        comments: item.comments,
-      }
+      body
     ).subscribe((result: any) => {
-      // console.log("RESULT AFTER REVIEW SUBMIT:----", result);
-      this._singleGrantDisbursmentsStore.submitInitialAdvanceReview(item.id);
+      if (type === 'initial') {
+        this._singleGrantDisbursmentsStore.submitInitialAdvanceReview(item.id);
+        this.apiLoading = false;
+      } else {
+        let flag = false;
+        let status = null;
+        for (let i = 0; i < this.controlReviewUserForm.quarterAdvanceReviewsList.length; i++) {
+          let key = this.controlReviewUserForm.quarterAdvanceReviewsList[i];
+          if (key.status === 'Pending' && key.id !== item.id) {
+            flag = true;
+            break;
+          }
+        }
+        if (flag) {
+          status = 'Review Pending'
+        } else {
+          status = 'Review Completed'
+        }
+        this._singleGrantDisbursmentsStore.submitQuarterAdvanceReview(item.id, this.controlReviewUserForm.id, status);
+        this.apiLoading = false;
+        console.log("RESULT AFTER REVIEW SUBMIT:----", status, flag, result);
+      }
     }, error => {
       console.log("RESULT AFTER REVIEW SUBMIT:----", error);
     });
@@ -723,39 +895,55 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   reassignInitialAdvance(request) {
-    this.approveLoading = true;
     const options = {
-      title: '',
+      title: 'Please enter your remarks for FIP!',
       message: '',
       cancelText: 'CANCEL',
-      confirmText: 'OK',
-      add: true,
+      confirmText: 'Re-Assign',
+      add: false,
       confirm: false,
+      commentField: true,
+      comments: null,
     };
-    console.log("APPROVE INTIAL ADVANCE********", request);
-    this._grantDisbursmentsService.reassignInitialAdvance(request.id).subscribe(
-      (result: any) => {
-        console.log("RESULT AFTER REASSIGN:---", result);
-        this.approveLoading = false;
-        this.selectedAdvanceItem.status = 'Re Assigned';
-        this.selectedAdvanceItem.subStatus = 'Pending';
-        options.title = result.message;
-        this._confirmModelService.open(options);
-      },
-      error => {
-        console.log("RESULT AFTER REASSIGN:---", error);
-        this.approveLoading = false;
-        const options = {
-          title: 'Error Doing Operation!',
-          message: 'Please contact system administrator',
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(data => {
+      if (data) {
+        this.approveLoading = true;
+        const options2 = {
+          title: '',
+          message: '',
           cancelText: 'CANCEL',
           confirmText: 'OK',
           add: true,
           confirm: false,
         };
-        this._confirmModelService.open(options);
+        console.log("APPROVE INTIAL ADVANCE********", request);
+        this._grantDisbursmentsService.reassignInitialAdvance(request.id, data.comments).subscribe(
+          (result: any) => {
+            console.log("RESULT AFTER REASSIGN:---", result);
+            this.approveLoading = false;
+            this.selectedAdvanceItem.status = 'Re Assigned';
+            this.selectedAdvanceItem.subStatus = 'Pending';
+            options2.title = result.message;
+            this._confirmModelService.open(options2);
+          },
+          error => {
+            console.log("RESULT AFTER REASSIGN:---", error);
+            this.approveLoading = false;
+            const options3 = {
+              title: 'Error Doing Operation!',
+              message: 'Please contact system administrator',
+              cancelText: 'CANCEL',
+              confirmText: 'OK',
+              add: true,
+              confirm: false,
+            };
+            this._confirmModelService.open(options3);
+          }
+        );
       }
-    );
+    })
   }
 
   approveQuarterAdvance() {
@@ -834,74 +1022,109 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   reassignQuarterLiquidation() {
-    this.approveLoading = true;
     const options = {
-      title: '',
+      title: 'Please enter your remarks for FIP!',
       message: '',
       cancelText: 'CANCEL',
-      confirmText: 'OK',
-      add: true,
+      confirmText: 'Re-Assign',
+      add: false,
       confirm: false,
+      commentField: true,
+      comments: null,
     };
-    this._grantDisbursmentsService.reassignAdvanceLiquidation(this.selectedAdvanceLiquidation.id).subscribe(
-      (result: any) => {
-        this.approveLoading = false;
-        options.title = result.message;
-        this._confirmModelService.open(options);
-        this._advanceLiquidationItemStore.setAdvanceLiquidationStatus('Re Assigned');
-        // this.selectedAdvanceItem.subStatus = 'Approved';
-        console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", result);
-      },
-      error => {
-        this.approveLoading = false;
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      if (confirmed) {
+        console.log("DATA FROM MODAL:---", confirmed);
+        this.approveLoading = true;
         const options = {
-          title: 'Error Doing Operation!',
-          message: 'Please contact system administrator',
+          title: '',
+          message: '',
           cancelText: 'CANCEL',
           confirmText: 'OK',
           add: true,
           confirm: false,
         };
-        this._confirmModelService.open(options);
-        console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", error);
+        this._grantDisbursmentsService.reassignAdvanceLiquidation(
+          this.selectedAdvanceLiquidation.id, confirmed.comments).subscribe(
+            (result: any) => {
+              this.approveLoading = false;
+              options.title = result.message;
+              this._confirmModelService.open(options);
+              this._advanceLiquidationItemStore.setAdvanceLiquidationStatus('Re Assigned');
+              // this.selectedAdvanceItem.subStatus = 'Approved';
+              console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", result);
+            },
+            error => {
+              this.approveLoading = false;
+              const options = {
+                title: 'Error Doing Operation!',
+                message: 'Please contact system administrator',
+                cancelText: 'CANCEL',
+                confirmText: 'OK',
+                add: true,
+                confirm: false,
+              };
+              this._confirmModelService.open(options);
+              console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", error);
+            }
+          )
       }
-    )
+    })
   }
 
   reassignQuarterAdvance() {
-    this.approveLoading = true;
     const options = {
-      title: '',
+      title: 'Please enter your remarks for FIP!',
       message: '',
       cancelText: 'CANCEL',
-      confirmText: 'OK',
-      add: true,
+      confirmText: 'Re-Assign',
+      add: false,
       confirm: false,
+      commentField: true,
+      comments: null,
     };
-    this._grantDisbursmentsService.reassignQuarterAdvance(this.selectedAdvanceItem.id).subscribe(
-      (result: any) => {
-        this.approveLoading = false;
-        options.title = result.message;
-        this._confirmModelService.open(options);
-        this.selectedAdvanceItem.status = 'Re Assigned';
-        this.selectedAdvanceItem.subStatus = 'Pending';
-        // this.selectedAdvanceItem.subStatus = 'Approved';
-        console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", result);
-      },
-      error => {
-        this.approveLoading = false;
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(data => {
+      if (data) {
+        this.approveLoading = true;
         const options = {
-          title: 'Error Doing Operation!',
-          message: 'Please contact system administrator',
+          title: '',
+          message: '',
           cancelText: 'CANCEL',
           confirmText: 'OK',
           add: true,
           confirm: false,
         };
-        this._confirmModelService.open(options);
-        console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", error);
+        this._grantDisbursmentsService.reassignQuarterAdvance(
+          this.selectedAdvanceItem.id, data.comments).subscribe(
+            (result: any) => {
+              this.approveLoading = false;
+              options.title = result.message;
+              this._confirmModelService.open(options);
+              this.selectedAdvanceItem.status = 'Re Assigned';
+              this.selectedAdvanceItem.subStatus = 'Pending';
+              // this.selectedAdvanceItem.subStatus = 'Approved';
+              console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", result);
+            },
+            error => {
+              this.approveLoading = false;
+              const options = {
+                title: 'Error Doing Operation!',
+                message: 'Please contact system administrator',
+                cancelText: 'CANCEL',
+                confirmText: 'OK',
+                add: true,
+                confirm: false,
+              };
+              this._confirmModelService.open(options);
+              console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", error);
+            }
+          )
       }
-    )
+    })
   }
 
   ngOnDestroy() {
@@ -910,7 +1133,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   setStep(item, id, selectionType) {
-    console.log("CURRENT STEP:---", item, id, typeof (id));
+    // console.log("CURRENT STEP:---", item, id, typeof (id));
     this.step = id;
     // @setTimeout(() => {})
     this.currentReviewsList = [];
@@ -920,16 +1143,15 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     if (item !== null) {
       // this.selectedStepData.advanceLiquidationItem.data = item.data;
       this.selectedAdvanceItem = item;
-      for (let i = 0; i < this.costSelections.length; i++) {
-        let obj = this.costSelections[i];
+      this.getAdvanceFiles();
+      for (let i = 0; i < this.projectActualCosts.length; i++) {
+        let obj = this.projectActualCosts[i];
         if (item.data !== null) {
           for (let j = 0; j < item.data.length; j++) {
             if (item.data[j]._id === obj._id) {
-              console.log("**********ID MATCHED:---", item.data[j], obj);
               item.data[j].quarters = JSON.parse(JSON.stringify(obj.quarters));
             }
             this.parentCosts = [];
-
             item.data[j].parentCosts = this.search(item.data[j]);
 
             item.data[j].ndrmfExpenditureLastQuarter = 0;
@@ -945,6 +1167,11 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
             item.data[j].totalRequirementForTheProject = 0;
             item.data[j].ndrmfVarience = 0;
             item.data[j].fipVarience = 0;
+
+            // console.log("**********ID MATCHED:---", item.data[j], obj, item.data[j].parentCosts);
+
+            // if (!item.data[j].parentCosts)
+            //   item.data[j].parentCosts = obj.parentCosts;
 
             for (let k = 0; k < item.data[j].quarters.length; k++) {
               let y = item.data[j].quarters[k];
@@ -983,7 +1210,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
                 item.data[j].ndrmfExpenditureCurrentQuarter = item.data[j].quarters[item.quarter - 1].progress.expenditureNdrmf;
                 item.data[j].fipExpenditureCurrentQuarter = item.data[j].quarters[item.quarter - 1].progress.expenditureFip;
               }
-              console.log("HAVE PROGRESS*************", item.quarter, (item.quarter - 2), item.data[j].quarters[item.quarter - 2].progress)
+              // console.log("HAVE PROGRESS*************", item.quarter, (item.quarter - 2), item.data[j].quarters[item.quarter - 2].progress)
               if (item.data[j].quarters[item.quarter - 2].value === true && item.data[j].quarters[item.quarter - 2].progress) {
                 item.data[j].ndrmfExpenditureLastQuarter = item.data[j].quarters[item.quarter - 2].progress.expenditureNdrmf;
                 item.data[j].fipExpenditureLastQuarter = item.data[j].quarters[item.quarter - 2].progress.expenditureFip;
@@ -1011,14 +1238,14 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       }
     }
 
-    // if (this.step !== null) {
-    //   if (selectionType === 'quarter') {
-    //     this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: id })
-    //   }
-    //   if (selectionType === 'initial') {
-    //     this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: id })
-    //   }
-    // }
+    if (this.step !== null) {
+      if (selectionType === 'quarter') {
+        this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: id })
+      }
+      if (selectionType === 'initial') {
+        this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: id })
+      }
+    }
   }
 
   nextStep(selectionType) {
@@ -1281,6 +1508,89 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     } else {
       return true;
     }
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: this.durationInSeconds * 200,
+    });
+  }
+
+  iaAmountChanged(item, $event) {
+    // console.log("AMOUNT CHANGED:--", $event.srcElement.value);
+    if ($event.srcElement.value > item.totalCost) {
+      item.amount = item.totalCost;
+    }
+  }
+
+  // ******** FIEL UPLOAD CODE ************
+
+  selectFiles(event): void {
+    this.message = [];
+    this.progressInfos = [];
+    this.selectedFiles = event.target.files;
+  }
+
+  uploadFiles(quarter): void {
+    this.message = [];
+
+    if (this.selectedFiles) {
+
+      for (let i = 0; i < this.selectedFiles.length; i++) {
+        this.upload(i, this.selectedFiles[i], quarter);
+        if (i === this.selectedFiles.length + 1)
+          this.selectedFiles['item'] = null;
+      }
+    }
+
+  }
+
+  upload(idx: number, file: File, type): void {
+    this.progressInfos[idx] = { value: 0, fileName: file.name };
+    if (file) {
+      this._fileUploadService.upload(file, this.selectedAdvanceItem.id, type).subscribe(
+        (event: any) => {
+          if (event.type === HttpEventType.UploadProgress) {
+            this.progressInfos[idx].value = Math.round(100 * event.loaded / event.total);
+          } else if (event instanceof HttpResponse) {
+            const msg = 'Uploaded the file successfully: ' + file.name;
+            this.message.push(msg);
+            // this.fileInfos = this._fileUploadService.getFiles();
+          }
+        },
+        (err: any) => {
+          this.progressInfos[idx].value = 0;
+          const msg = 'Could not upload the file: ' + file.name;
+          this.message.push(msg);
+          // this.fileInfos = this._fileUploadService.getFiles();
+        });
+    }
+  }
+
+  uploadFile() {
+    const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
+    fileUpload.onchange = () => {
+      // for (let index = 0; index < fileUpload.files.length; index++) {
+      //   const file: File = fileUpload.files[index];
+      //   this.selectedFiles;
+      // }
+      // this.uploadFiles();
+      this.selectedFiles = fileUpload.files;
+      console.log("THIS SELECUED FILES ARE:---", this.selectedFiles);
+    };
+    fileUpload.click();
+
+  }
+
+  getAdvanceFiles() {
+    this._grantDisbursmentsService.getFilesForAdvance(
+      this.selectedAdvanceItem.id
+    ).subscribe((result: any) => {
+      console.log("RESULT GETTING FILES:--", result);
+      this.advanceFiles = result;
+    }, error => {
+      console.log("RESULT GETTING FILES:--", error);
+    });
   }
 
 }

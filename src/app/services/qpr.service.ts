@@ -75,6 +75,14 @@ export class QprService {
     );
   }
 
+  extendQprTimeline(qprId, body) {
+    const url = `${AppConfig.apiUrl}/qpr/${qprId}/extend/timeline`;
+    return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
 
 
 

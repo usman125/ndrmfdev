@@ -17,6 +17,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { AmountToWordPipe } from '../../pipes/amount-to-word.pipe';
 import { SumPipe } from '../../pipes/sum-columns.pipe';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NgxPrintModule } from 'ngx-print';
 
 
 
@@ -45,7 +49,11 @@ import { SumPipe } from '../../pipes/sum-columns.pipe';
     MatDatepickerModule,
     MatNativeDateModule,
     MatProgressSpinnerModule,
-    MatDividerModule
+    MatDividerModule,
+    MatTreeModule,
+    MatTooltipModule,
+    MatSnackBarModule,
+    NgxPrintModule
   ]
 })
 export class ViewGrantDisbursmentModule { }

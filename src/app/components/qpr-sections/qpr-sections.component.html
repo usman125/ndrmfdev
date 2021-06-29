@@ -3,21 +3,8 @@
     <mat-toolbar-row>
       <span>Quarterly Progress Report</span>
       <div class="example-spacer"></div>
-      <!-- <div *ngIf="selectedProject?.status !== 'Upload PC1' && selectedProject?.status !== 'Upload PDRMC Mins'">
-        <button matTooltip="Submitted Details!"
-        (click)="myTopElement.scrollIntoView({ behavior: 'smooth', block: 'start' })" class="m-1" mat-button>
-        <mat-icon class="mr-2">view_list</mat-icon>
-      </button>
-      <button matTooltip="Viem Implementation Plan!"
-      (click)="myTopElement3.scrollIntoView({ behavior: 'smooth', block: 'start' })" class="m-1" mat-button>
-      <mat-icon class="mr-2">fact_check</mat-icon>
-    </button>
-  </div> -->
       <small>{{selectedQpr?.fipName}}</small>
       <div class="example-spacer"></div>
-      <!-- <button mat-icon-button color="warn">
-        <mat-icon>print</mat-icon>
-      </button> -->
       <button [useExistingCss]="true" printSectionId="print-qpr" ngxPrint color="primary" mat-icon-button>
         <mat-icon>print</mat-icon>
       </button>
@@ -27,28 +14,40 @@
 <ng-container>
   <div class="row pt-3">
     <div class="col-md-7 pr-0">
+
       <mat-card class="m-20" *ngIf="loggedUser?.role === 'process owner' && 
-          loggedUser?.processNames.indexOf('QPR') > -1">
+            loggedUser?.processNames.indexOf('QPR') > -1">
         <mat-card-content>
           <mat-list>
             <mat-list-item>
-              <mat-icon mat-list-icon>alarm</mat-icon>
+              <mat-icon mat-list-icon>book</mat-icon>
               <div mat-line>{{'Selected Quarter'}}</div>
               <div mat-line>{{selectedQpr?.quarter}}</div>
             </mat-list-item>
             <mat-list-item>
-              <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
+              <mat-icon mat-list-icon>info</mat-icon>
+              <div mat-line>{{'Status'}}</div>
+              <div mat-line>{{selectedQpr?.status}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>alarm_on</mat-icon>
+              <div mat-line>{{'Due Date'}}</div>
+              <div mat-line>{{selectedQpr?.dueDate | date:'fullDate'}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>pending_actions</mat-icon>
               <div mat-line>{{'Assigned Tasks'}}</div>
               <div mat-line>{{qprSectionStats?.pendingCount}}</div>
             </mat-list-item>
             <mat-list-item>
-              <mat-icon mat-list-icon>assignment_late</mat-icon>
+              <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
               <div mat-line>{{'Unassigned Tasks'}}</div>
               <div mat-line>{{qprSectionStats?.completedCount}}</div>
             </mat-list-item>
           </mat-list>
         </mat-card-content>
       </mat-card>
+
       <mat-card class="m-20" *ngIf="myAssginedTasks.length !== 0">
         <mat-card-content>
           <div class="d-flex flex-column justify-content-center flex-fill">
@@ -59,7 +58,7 @@
             <mat-form-field appearance="outline" class="mb-2">
               <mat-label>Select your remarks</mat-label>
               <select *ngIf="myAssginedTasks[0]?.assignee.roles?.indexOf('PROCESS OWNER') > -1 ||
-                myAssginedTasks[0]?.assignee.roles?.indexOf('SME') > -1"
+                  myAssginedTasks[0]?.assignee.roles?.indexOf('SME') > -1"
                 [disabled]="myAssginedTasks[0].status === 'Completed'" [(ngModel)]="myAssginedTasks[0].othersDecision"
                 matNativeControl required>
                 <option value="Unsatisfactory">Unsatisfactory</option>
@@ -67,7 +66,7 @@
                 <option value="Satisfactory">Satisfactory</option>
               </select>
               <select *ngIf="myAssginedTasks[0]?.assignee.roles?.indexOf('GM') > -1 ||
-                myAssginedTasks[0]?.assignee.roles?.indexOf('CEO') > -1"
+                  myAssginedTasks[0]?.assignee.roles?.indexOf('CEO') > -1"
                 [disabled]="myAssginedTasks[0].status === 'Completed'" [(ngModel)]="myAssginedTasks[0].othersDecision"
                 matNativeControl required>
                 <option value="Approved">Approved</option>
@@ -81,42 +80,17 @@
                 placeholder="your comments here..."></textarea>
             </mat-form-field>
             <button (click)="addReviewForQprTask(myAssginedTasks[0])" [disabled]="!myAssginedTasks[0].othersRemarks || 
-            myAssginedTasks[0].status === 'Completed'" mat-raised-button color="primary">Submit</button>
+              myAssginedTasks[0].status === 'Completed'" mat-raised-button color="primary">Submit</button>
           </div>
         </mat-card-content>
       </mat-card>
-    </div>
-    <div class="col-md-5">
-      <mat-card class="m-20 ml-0 mr-0" *ngIf="loggedUser?.role === 'fip'">
-        <mat-card-content>
 
-          <div class="d-flex flex-column" *ngIf="loggedUser?.role === 'fip'">
-            <p>Before submitting please make sure to fill the selected Quarter progress and cross check the correct data
-              in follwoing report.
-              Selected Quarter is {{currentQuarter}}.
-            </p>
-            <button (click)="submitQpr()" [disabled]="allLoading" mat-raised-button color="primary">
-              Submit Qpr
-            </button>
-          </div>
-        </mat-card-content>
-      </mat-card>
-      <mat-card class="m-20 ml-0" *ngIf="loggedUser?.role === 'sme' && assignedQprSections.length !== 0">
-        <mat-card-content>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="d-flex flex-fill flex-column align-items-center">
-                <button *ngIf="loggedUser?.role === 'sme'" [disabled]="allLoading" mat-raised-button color="primary">
-                  Filter Current Task
-                </button>
-              </div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-      <!-- ASSIGN CEO & GM FOR REVIEWS -->
+    </div>
+
+    <!-- ASSIGN CEO & GM FOR REVIEWS -->
+    <div class="col-md-5 pl-0">
       <mat-card class="m-20 ml-0" *ngIf="loggedUser?.role === 'process owner' && 
-        loggedUser?.processNames.indexOf('QPR') > -1">
+                loggedUser?.processNames.indexOf('QPR') > -1">
         <mat-card-content>
           <div class="d-flex flex-column flex-fill">
             <mat-form-field appearance="outline" class="mt-2">
@@ -154,28 +128,88 @@
               Assign All Task(s)
             </button>
 
-            <button *ngIf="loggedUser?.role === 'process owner'" mat-raised-button color="accent"
-              (click)="assignTasks(null, 'all');">
+            <button *ngIf="loggedUser?.role === 'process owner'" mat-raised-button color="accent">
               View All Remarks
             </button>
 
+            <button mat-raised-button color="warn" class="mt-2"
+              [disabled]="canEditQpr || extendTimeLoader || selectedQpr === null" (click)="extendQprTimeline()">
+              <!-- <mat-icon class="mr-1">alarm</mat-icon> -->
+              {{'extend QPR timeline' | titlecase}}
+            </button>
 
           </div>
         </mat-card-content>
       </mat-card>
+
+      <mat-card class="m-20 ml-0">
+        <mat-card-content>
+          <div class="d-flex flex-column">
+            <span id="answer" class="mb-3">{{'Comments from NDRMF' | uppercase}}</span>
+            <span style="background-color: rgba(235, 235, 235, 0.5);padding: 15px;">{{selectedQpr.assignedComments ||
+              '&nbsp;'}}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-7 pr-0">
+      <mat-card class="m-20" *ngIf="loggedUser?.role === 'fip'">
+        <mat-card-content>
+          <div class="d-flex flex-column">
+            <span id="answer" class="mb-3">{{'Comments from NDRMF' | uppercase}}</span>
+            <span style="background-color: #f9f9f9;padding: 15px;">{{selectedQpr.assignedComments || '&nbsp;'}}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-5">
+      <mat-card class="m-20 ml-0" *ngIf="loggedUser?.role === 'fip'">
+        <mat-card-content>
+
+          <div class="d-flex flex-column" *ngIf="loggedUser?.role === 'fip'">
+            <p>Before submitting please make sure to fill the selected Quarter progress and cross check the correct
+              data
+              in follwoing report.
+              Selected Quarter is {{currentQuarter}}.
+            </p>
+            <button *ngIf="!commenceQprLoader" (click)="submitQpr()" [disabled]="allLoading || !canEditQpr"
+              mat-raised-button color="primary">
+              Submit Qpr
+            </button>
+            <mat-progress-spinner *ngIf="commenceQprLoader" mode="indeterminate" diameter="30"></mat-progress-spinner>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="m-20 ml-0" *ngIf="loggedUser?.role === 'sme' && assignedQprSections.length !== 0">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="d-flex flex-fill flex-column align-items-center">
+                <button *ngIf="loggedUser?.role === 'sme'" [disabled]="allLoading" mat-raised-button color="primary">
+                  Filter Current Task
+                </button>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
     </div>
   </div>
 
+
+  <!-- QPR PRINTING STARTS HERE -->
   <div id="print-qpr">
+    <!-- REVIEWS BY OTHER DEPARTMENTS -->
     <div class="row">
       <div class="col-md-12">
         <mat-card class="m-20" *ngIf="othersAssginedTasks.length !== 0">
           <mat-card-content>
             <div *ngFor="let task of othersAssginedTasks; let i = index;">
               <div class="d-flex flex-column justify-content-center" *ngIf="task.status === 'Completed'">
-                <!-- <mat-form-field appeareance="outline">
-                <textarea disabled matInput [(ngModel)]="task.othersRemarks" cols="30" rows="5"></textarea>
-              </mat-form-field> -->
                 <h5 style="text-decoration: none;">REVIEW BY {{task.assignee.department | uppercase}}
                   {{task.assignee.roles.indexOf('GM') > -1 ?
                   'GM' : task.assignee.roles.indexOf('CEO') > -1 ? 'CEO' : ''}} SECTION</h5>
@@ -241,6 +275,7 @@
       </div>
     </div>
 
+    <!-- QPR SECTIONS INFO & DATA -->
     <div class="row pt-3">
       <div class="col-md-12">
         <mat-card class="m-20">
@@ -263,8 +298,8 @@
                         'Completed: ' + (item.reviewCompletedDate | date:'shortDate') : null}}</small>
                     </div>
                   </span>
-                  <button *ngIf="loggedUser?.role === 'process owner' && 
-      loggedUser?.processNames.indexOf('QPR') > -1" (click)="assignTasks(item.id, 'single')" mat-button
+                  <button *ngIf="loggedUser?.role === 'process owner' && loggedUser?.processNames.indexOf('QPR') > -1"
+                    (click)="assignTasks(item.id, 'single')" mat-button
                     [disabled]="item.reviewStatus === 'Pending' || allLoading || singleLoading" color="primary">
                     <mat-icon>{{(item.reviewStatus === null) ?
                       'assignment' : 'redo'}}</mat-icon>
@@ -286,6 +321,7 @@
                 </formio>
                 <formio class="margin-5" *ngIf="loggedUser?.role !== 'fip'" readOnly="true"
                   [submission]="{data:item.data}" [form]="item.template"></formio>
+
                 <!-- SECTION REVIEW SME FORM FIELDS -->
                 <div *ngIf="item.assigned" class="d-flex align-items-center justify-content-between mt-2 mb-3">
                   <mat-form-field appearance="outline" class="mr-1">
@@ -300,14 +336,14 @@
                       *ngIf="item.reviewStatus === 'Completed' && item.review !== null" matInput cols="30"
                       placeholder="Write comments here..." rows="3"></textarea>
                   </mat-form-field>
-                  <button *ngIf="item.review === null && 
-                (item.reviewStatus === null || item.reviewStatus === 'Pending')" (click)="addQprSectionReview(item)"
+                  <button *ngIf="item.review === null && (item.reviewStatus === null || 
+                  item.reviewStatus === 'Pending')" (click)="addQprSectionReview(item)"
                     [disabled]="!comments || allLoading" mat-mini-fab color="accent">
                     <mat-icon>send</mat-icon>
                   </button>
-                  <button *ngIf="item.review !== null && 
-                (item.reviewStatus === 'Pending')" (click)="addQprSectionReview(item)"
-                    [disabled]="!item.review.comments || allLoading" mat-mini-fab color="accent">
+                  <button *ngIf="item.review !== null && (item.reviewStatus === 'Pending')"
+                    (click)="addQprSectionReview(item)" [disabled]="!item.review.comments || allLoading" mat-mini-fab
+                    color="accent">
                     <mat-icon>send</mat-icon>
                   </button>
                 </div>
@@ -328,11 +364,12 @@
 
     </div>
 
-
+    <!-- 2. QUARTERLY PROGRESS -->
     <mat-card class="m-20">
       <mat-card-content>
         <p id="answer" class="p-2">2 Section – II: Quarterly Progress</p>
         <div class="d-flex align-items-center rag-div table-header">
+          <span>Activity Head</span>
           <span>Activity</span>
           <span>
             Deviation from Plan (if any)
@@ -342,25 +379,38 @@
           </span>
         </div>
         <div class="d-flex align-items-center rag-div table-row" *ngFor="let item of quarterCosts; let j = index;">
+          <span>
+            <div *ngIf="item?.parentCosts">
+              <div *ngFor="let _ of item?.parentCosts; let i = index">
+                <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                  <small>{{name}}</small>
+                  <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                </ng-container>
+              </div>
+            </div>
+          </span>
           <span>{{item.title}}</span>
           <span>
             <mat-form-field appearance="outline">
               <mat-label>Your Comments</mat-label>
-              <textarea [disabled]="loggedUser?.role !== 'fip'" rows="5" cols="30" placeholder="Write Here..."
-                type="text" matInput [(ngModel)]="item?.quarters[currentQuarter - 1].data.planDeviation"></textarea>
+              <textarea [disabled]="(loggedUser?.role !== 'fip') || (!canEditQpr)" rows="5" cols="30"
+                placeholder="Write Here..." type="text" matInput
+                [(ngModel)]="item?.quarters[currentQuarter - 1].data.planDeviation"></textarea>
             </mat-form-field>
           </span>
           <span>
             <mat-form-field appearance="outline">
               <mat-label>Your Comments</mat-label>
-              <textarea [disabled]="loggedUser?.role !== 'fip'" rows="5" cols="30" placeholder="Write Here..."
-                type="text" matInput [(ngModel)]="item?.quarters[currentQuarter - 1].data.overallConclusion"></textarea>
+              <textarea [disabled]="(loggedUser?.role !== 'fip') || (!canEditQpr)" rows="5" cols="30"
+                placeholder="Write Here..." type="text" matInput
+                [(ngModel)]="item?.quarters[currentQuarter - 1].data.overallConclusion"></textarea>
             </mat-form-field>
           </span>
         </div>
       </mat-card-content>
     </mat-card>
 
+    <!-- 3. FINANCIAL PROGRESS -->
     <mat-card class="m-20">
       <mat-card-content>
         <p id="answer" class="p-2">3 Section – III: Financial progress</p>
@@ -399,15 +449,15 @@
         </div>
         <div class="d-flex align-items-center rag-div table-row">
           <span>Q-{{currentQuarter}}</span>
-          <span>{{ndrmfAllocation}}</span>
+          <span>{{ndrmfAllocation | number}}</span>
           <span>
-            {{ndrmfDisbursment}}
+            {{ndrmfDisbursment | number}}
           </span>
           <span>
             {{(ndrmfDisbursment/ndrmfAllocation) | percent}}
           </span>
           <span>
-            {{ndrmfExpenditure}}
+            {{ndrmfExpenditure | number}}
           </span>
           <span>
             {{(ndrmfExpenditure/ndrmfDisbursment) | percent}}
@@ -434,15 +484,15 @@
         </div>
         <div class="d-flex align-items-center rag-div table-row">
           <span>Q-{{currentQuarter}}</span>
-          <span>{{fipAllocation}}</span>
+          <span>{{fipAllocation | number}}</span>
           <span>
-            {{fipContributed}}
+            {{fipContributed | number}}
           </span>
           <span>
             {{(fipContributed/fipAllocation) | percent}}
           </span>
           <span>
-            {{fipExpenditure}}
+            {{fipExpenditure | number}}
           </span>
           <span>
             {{(fipExpenditure/fipContributed) | percent}}
@@ -455,10 +505,12 @@
       </mat-card-content>
     </mat-card>
 
+    <!-- 5. TABLE TRACKING PERFORMANCE INDICATORS -->
     <mat-card class="m-20" *ngIf="rfCosts">
       <mat-card-content>
         <p id="answer" class="p-2">5 Section – V: Tracking Table for Key Performance Indicators</p>
         <div class="table-header rag-div justify-content-between d-flex align-items-center">
+          <span>Activity Head</span>
           <span>Activity Name</span>
           <span>
             Outputs
@@ -477,6 +529,16 @@
 
         <div class="d-flex rag-div justify-content-between align-items-center table-row"
           *ngFor="let item of rfCosts; let j = index;">
+          <span>
+            <div *ngIf="item?.parentCosts">
+              <div *ngFor="let _ of item?.parentCosts; let i = index">
+                <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                  <small>{{name}}</small>
+                  <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                </ng-container>
+              </div>
+            </div>
+          </span>
           <span>{{item.title}}</span>
           <span>{{item.rfSubmitData.type}}</span>
           <span>{{item.indicatorValue}}</span>
@@ -487,9 +549,20 @@
             1]?.progress?.generalTotalAchieved)}}</span>
         </div>
 
+        <div class="d-flex table-header rag-div justify-content-between align-items-center">
+          <span>&nbsp;</span>
+          <span>&nbsp;</span>
+          <span>&nbsp;</span>
+          <span>Total</span>
+          <span>{{(rfCosts | qprSum:'piPrevious') || '&nbsp;'}}</span>
+          <span>{{(rfCosts | qprSum:'piCurrent') || '&nbsp;'}}</span>
+          <span>{{(rfCosts | qprSum:'piTotal') || '&nbsp;'}}</span>
+        </div>
+
       </mat-card-content>
     </mat-card>
 
+    <!-- 6. SUMMARY OF PROCUREMENT -->
     <mat-card class="m-20" *ngIf="procCosts">
       <mat-card-content>
         <p id="answer" class="p-2">6 Section – VI: Administration & Management</p>
@@ -500,6 +573,7 @@
         </div>
         <div class="d-flex rag-div justify-content-between align-items-center table-header">
 
+          <span>Activity Head</span>
           <span>Activity Name</span>
           <span>
             Estimated Amount (PKR)
@@ -520,6 +594,16 @@
           <span style="font-weight: 500; padding: 5px;display:block;" id="comment">{{getProcLabel(obj)}}</span>
           <div class="d-flex rag-div justify-content-between align-items-center table-row"
             *ngFor="let item of obj.children; let j = index;">
+            <span>
+              <div *ngIf="item?.parentCosts">
+                <div *ngFor="let _ of item?.parentCosts; let i = index">
+                  <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                    <small>{{name}}</small>
+                    <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                  </ng-container>
+                </div>
+              </div>
+            </span>
             <span>{{item.title}}</span>
             <span>{{item.ndrmfShare + item.fipShare}}</span>
             <span>{{item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf + item?.quarters[currentQuarter -
@@ -544,6 +628,7 @@
       </mat-card-content>
     </mat-card>
 
+    <!-- ANNEX 1. RAG SHEET FOR ACTIVITIES -->
     <mat-card class="m-20" *ngIf="allProjectCosts">
       <mat-card-content>
         <p id="answer" class="p-2">Annex – 1: Implementation Plan Tracking Sheet (RAG Status)</p>
@@ -576,6 +661,7 @@
         </div>
 
         <div class="d-flex align-items-center rag-div table-header">
+          <span>Activity Head</span>
           <span>Activity Name</span>
           <span>
             Start Date
@@ -599,6 +685,16 @@
 
 
         <div class="d-flex align-items-center rag-div table-row" *ngFor="let item of allProjectCosts; let j = index;">
+          <span>
+            <div *ngIf="item?.parentCosts">
+              <div *ngFor="let _ of item?.parentCosts; let i = index">
+                <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                  <small>{{name}}</small>
+                  <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                </ng-container>
+              </div>
+            </div>
+          </span>
           <span>{{item.title}}</span>
           <span>{{item?.quarters[currentQuarter - 1]?.data?.startDate | date:'shortDate'}}</span>
           <span>{{item?.quarters[currentQuarter - 1]?.data?.endDate | date:'shortDate'}}</span>
@@ -657,6 +753,7 @@
       </mat-card-content>
     </mat-card>
 
+    <!-- ANNEX 2. FINANCIAL REPORT TABLE 1-->
     <mat-card class="m-20">
       <mat-card-content>
         <p id="answer" class="p-2">Annex 2: Financial reports: Table 1</p>
@@ -666,6 +763,9 @@
           </span>
         </div>
         <div class="d-flex align-items-center rag-div table-header">
+          <span>
+            Components Head
+          </span>
           <span>
             Expenditure by Components
           </span>
@@ -692,35 +792,61 @@
 
         <div *ngFor="let item of quarterCosts; let i = index;">
           <div class="d-flex rag-div justify-content-between align-items-center table-row">
+            <span>
+              <div *ngIf="item?.parentCosts">
+                <div *ngFor="let _ of item?.parentCosts; let i = index">
+                  <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                    <small>{{name}}</small>
+                    <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                  </ng-container>
+                </div>
+              </div>
+            </span>
             <span>{{item.title}}</span>
-            <span>{{item.quarters[currentQuarter - 1]?.data.ndrmfShare + item.quarters[currentQuarter -
-              1]?.data.fipShare}}</span>
-            <span>{{getFipLastQuarter(item, 'NDRMF')}}</span>
-            <span>{{item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf}}</span>
-            <span>{{getFipLastQuarter(item, 'NDRMF') +
-              item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf}}</span>
+            <span>{{(item.quarters[currentQuarter - 1]?.data.ndrmfShare | number)}}</span>
+            <span>{{getFipLastQuarter(item, 'NDRMF') | number}}</span>
+            <span>{{(item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf | number)}}</span>
+            <span>{{(getFipLastQuarter(item, 'NDRMF') +
+              item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf) | number}}</span>
             <span>{{(getFipLastQuarter(item, 'NDRMF') +
               item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf)/(item.quarters[currentQuarter -
-              1]?.data.ndrmfShare + item.quarters[currentQuarter -
-              1]?.data.fipShare) | percent}}</span>
-            <span>{{(item.quarters[currentQuarter - 1]?.data.ndrmfShare + item.quarters[currentQuarter -
-              1]?.data.fipShare) - (getFipLastQuarter(item, 'NDRMF') +
-              item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf)}}</span>
+              1]?.data.ndrmfShare) | percent}}</span>
+            <span>{{((item.quarters[currentQuarter - 1]?.data.ndrmfShare) - (getFipLastQuarter(item, 'NDRMF') +
+              item?.quarters[currentQuarter - 1]?.progress?.expenditureNdrmf)) | number}}</span>
           </div>
         </div>
 
         <div class="d-flex align-items-center rag-div table-header">
           <span>
+            &nbsp;
+          </span>
+          <span>
             Total
           </span>
           <span>
-            {{ndrmfExpenditure}}
+            {{ndrmfAllocation | number}}
+          </span>
+          <span>
+            {{ (quarterCosts | qprSum:'lastExpenditureNdrmf') | number }}
+          </span>
+          <span>
+            {{ (quarterCosts | qprSum:'expenditureNdrmf') | number }}
+          </span>
+          <span>
+            {{ (quarterCosts | qprSum:'cummulativeExpenditureNdrmf') | number }}
+          </span>
+          <span>
+            &nbsp;
+          </span>
+          <span>
+            {{ (quarterCosts | qprSum:'closingBalanceNdrmf') | number }}
           </span>
         </div>
         <small> <small class="warn-comment">*</small> Includes categories to be financed by NDRMF Share</small>
       </mat-card-content>
     </mat-card>
 
+    <!-- ANNEX 2. FINANCIAL REPORT TABLE 2-->
     <mat-card class="m-20">
       <mat-card-content>
         <p id="answer" class="p-2">Annex 2: Financial reports: Table 2</p>
@@ -731,6 +857,9 @@
         </div>
 
         <div class="d-flex align-items-center rag-div table-header">
+          <span>
+            Components Head
+          </span>
           <span>
             Expenditure by Components
           </span>
@@ -756,28 +885,54 @@
         </div>
         <div *ngFor="let item of quarterCosts; let i = index;">
           <div class="d-flex rag-div justify-content-between align-items-center table-row">
+            <span>
+              <div *ngIf="item?.parentCosts">
+                <div *ngFor="let _ of item?.parentCosts; let i = index">
+                  <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                    <small>{{name}}</small>
+                    <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                  </ng-container>
+                </div>
+              </div>
+            </span>
             <span>{{item.title}}</span>
-            <span>{{item.quarters[currentQuarter - 1]?.data.ndrmfShare + item.quarters[currentQuarter -
-              1]?.data.fipShare}}</span>
+            <span>{{item.quarters[currentQuarter - 1]?.data.fipShare | number}}</span>
             <span>{{getFipLastQuarter(item, 'FIP')}}</span>
-            <span>{{item?.quarters[currentQuarter - 1]?.progress?.expenditureFip}}</span>
-            <span>{{item?.quarters[currentQuarter - 1]?.progress?.expenditureFip +
-              getFipLastQuarter(item, 'FIP')}}</span>
+            <span>{{item?.quarters[currentQuarter - 1]?.progress?.expenditureFip | number}}</span>
+            <span>{{(item?.quarters[currentQuarter - 1]?.progress?.expenditureFip +
+              getFipLastQuarter(item, 'FIP')) | number}}</span>
             <span>{{((item?.quarters[currentQuarter - 1]?.progress?.expenditureFip +
-              getFipLastQuarter(item, 'FIP'))/(item.quarters[currentQuarter - 1]?.data.ndrmfShare +
-              item.quarters[currentQuarter -
+              getFipLastQuarter(item, 'FIP'))/(item.quarters[currentQuarter -
               1]?.data.fipShare)) | percent}}</span>
-            <span>{{(item.quarters[currentQuarter - 1]?.data.ndrmfShare + item.quarters[currentQuarter -
-              1]?.data.fipShare) - (item?.quarters[currentQuarter - 1]?.progress?.expenditureFip +
-              getFipLastQuarter(item, 'FIP'))}}</span>
+            <span>{{((item.quarters[currentQuarter - 1]?.data.fipShare) - (item?.quarters[currentQuarter -
+              1]?.progress?.expenditureFip +
+              getFipLastQuarter(item, 'FIP'))) | number}}</span>
           </div>
         </div>
         <div class="d-flex align-items-center rag-div table-header">
           <span>
+            &nbsp;
+          </span>
+          <span>
             Total
           </span>
           <span>
-            {{fipExpenditure}}
+            {{ fipAllocation | number }}
+          </span>
+          <span>
+            {{ (quarterCosts | qprSum:'lastExpenditureFip') | number }}
+          </span>
+          <span>
+            {{ (quarterCosts | qprSum:'expenditureFip') | number }}
+          </span>
+          <span>
+            {{ (quarterCosts | qprSum:'cummulativeExpenditureFip') | number }}
+          </span>
+          <span>
+            &nbsp;
+          </span>
+          <span>
+            {{ (quarterCosts | qprSum:'closingBalanceFip') | number }}
           </span>
         </div>
         <small> <small class="warn-comment">*</small> Includes categories to be financed by FIP Share</small>

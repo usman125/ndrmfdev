@@ -612,3 +612,8 @@ h6 {
 .appraisal-box table tr td {
   padding: 10px !important;
 }
+
+table tbody tr td {
+  font-size: 12px !important;
+  /* text-align: center !important; */
+}

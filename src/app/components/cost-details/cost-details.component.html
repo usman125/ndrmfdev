@@ -326,6 +326,32 @@
               Details
             </span>
           </div>
+
+          <div class="row mb-3">
+            <div class="col-md-3 general-info">
+              <span id="title">Total Achieved</span>
+              <span id="value" style="width: 100%;">{{progressData.generalTotalAchieved || '&nbsp;'}}</span>
+            </div>
+            <div class="col-md-3" *ngIf="selectedQuarter?.targetType === 'beneficiary'">
+              <div class="general-info">
+                <span id="title">Male Achieved</span>
+                <span id="value" style="width: 100%;">{{progressData.generalMaleAchieved || '&nbsp;'}}</span>
+              </div>
+            </div>
+            <div class="col-md-3" *ngIf="selectedQuarter?.targetType === 'beneficiary'">
+              <div class="general-info">
+                <span id="title">Female Achieved</span>
+                <span id="value" style="width: 100%;">{{progressData.generalFemaleAchieved || '&nbsp;'}}</span>
+              </div>
+            </div>
+            <div class="col-md-3" *ngIf="selectedQuarter?.targetType === 'land'">
+              <div class="general-info">
+                <span id="title">Hectare Achieved</span>
+                <span id="value" style="width: 100%;">{{progressData.heactareAchieved || '&nbsp;'}}</span>
+              </div>
+            </div>
+          </div>
+
           <div class="row">
             <div class="col-md-6 mb-3">
               <div class="general-info">
@@ -338,6 +364,8 @@
                 </span>
               </div>
             </div>
+
+
             <div class="col-md-8">
               <div class="row">
                 <div class="col-md-6">
@@ -443,14 +471,15 @@
           </div>
         </div>
       </mat-tab>
+      <!-- FINANCIAL PROGRESS -->
       <mat-tab label="Financials">
         <div class="m-4">
-          <!-- PROGRESS FORM FIELDS -->
           <div class="mt-3 mb-3 d-flex align-items-center border-heading">
             <span class="pl-2">
               Progress
             </span>
           </div>
+          <!-- PROGRESS FORM FIELDS -->
           <div class="row mb-3" *ngIf="loggedUser?.role === 'fip'">
             <div class="col-md-4">
               <mat-form-field appearance="outline">
@@ -500,6 +529,49 @@
               </mat-form-field>
             </div>
           </div>
+
+          <!-- PROGRESS DETAIL FOR VIEW -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="general-info">
+                <span id="title">Status</span>
+                <span id="value" style="width: 100%;">{{progressData.financialProgressStatus || '&nbsp;'}}</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="general-info">
+                <span id="title">Progress</span>
+                <span id="value" style="width: 100%;">{{progressData.financialProgress || '&nbsp;'}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-3">
+              <div class="general-info">
+                <span id="title">{{'Expenditure Fip' | titlecase}}</span>
+                <span id="value" style="width: 100%;">{{(progressData.expenditureFip | number) || '&nbsp;'}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="general-info">
+                <span id="title">{{'Expenditure NDRMF' | titlecase}}</span>
+                <span id="value" style="width: 100%;">{{(progressData.expenditureNdrmf | number) || '&nbsp;'}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="general-info">
+                <span id="title">{{'contributed Fip' | titlecase}}</span>
+                <span id="value" style="width: 100%;">{{(progressData.contributedFip | number) || '&nbsp;'}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="general-info">
+                <span id="title">{{'Disbursed Ndrmf' | titlecase}}</span>
+                <span id="value" style="width: 100%;">{{(progressData.disbursedNdrmf | number) || '&nbsp;'}}</span>
+              </div>
+            </div>
+          </div>
+
           <!-- SUBMITTED DETAILS -->
           <div class="mt-4 mb-3 d-flex align-items-center border-heading">
             <span class="pl-2">
@@ -528,6 +600,7 @@
           </div>
         </div>
       </mat-tab>
+      <!-- PROCUREMENT PROGRESS DETAILS -->
       <mat-tab label="Procurement">
         <div class="m-3">
           <div class="mt-3 mb-3 d-flex align-items-center border-heading">

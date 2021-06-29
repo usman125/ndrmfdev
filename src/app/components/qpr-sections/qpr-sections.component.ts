@@ -67,6 +67,11 @@ export class QprSectionsComponent implements OnInit {
   selectedRequestId: any = null;
 
   aurLoader: boolean = false;
+  commenceQprLoader: boolean = false;
+  extendTimeLoader: boolean = false;
+
+  canEditQpr: any = null;
+  parentCosts: any = [];
 
   constructor(
     public _qprSectionsStore: QprSectionsStore,
@@ -126,7 +131,8 @@ export class QprSectionsComponent implements OnInit {
         let pendingCount = 0;
         let completedCount = 0;
         this.qprSections = data.sections.map((c) => {
-          if (c.reviewStatus === null || c.reviewStatus === 'Pending')
+          // if (c.reviewStatus === null || c.reviewStatus === 'Pending')
+          if (c.reviewStatus === 'Pending')
             pendingCount = pendingCount + 1;
           if (c.reviewStatus === 'Completed')
             completedCount = completedCount + 1;
@@ -165,7 +171,15 @@ export class QprSectionsComponent implements OnInit {
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
         if (data.selectedProject !== null && data.selectedProject !== undefined) {
           this.selectedProject = data.selectedProject;
-          this.makeDisbursmentPerformanceData(data.selectedProject);
+          if (this.selectedProject.implementationPlan.costs) {
+            for (let i = 0; i < this.selectedProject.implementationPlan.costs.length; i++) {
+              let x = this.selectedProject.implementationPlan.costs[i];
+              this.parentCosts = [];
+              x.parentCosts = this.search(x);
+            }
+            this.makeDisbursmentPerformanceData(data.selectedProject);
+            this.canEditQpr = data.selectedProject.canEditQpr;
+          }
         }
       })
     );
@@ -201,6 +215,25 @@ export class QprSectionsComponent implements OnInit {
     }
   }
 
+  search(activity) {
+    let parentCosts = [];
+    const stack = [this.selectedProject.implementationPlan.costs];
+    // console.log("***********SEARCH CALLED*********************", activity);
+    while (stack.length) {
+      const node = stack.pop();
+      // console.log("***********SEARCH CALLED*********************", node);
+      let i = 0;
+      while (i < node.length) {
+        if (node[i]._id === activity.mainCostId) {
+          this.parentCosts.push(node[i].title);
+          // console.log("***********SHOW PARENTS FOR THE ACTIVITY*********************", activity['parentCosts'], this.parentCosts, node[i].title);
+          return node[i].mainCostId === null ? this.parentCosts : this.search(node[i]);
+        }
+        i++;
+      }
+    }
+  }
+
   makeDisbursmentPerformanceData(selectedProject) {
     let clubCosts = [];
     let soloCosts = [];
@@ -220,6 +253,39 @@ export class QprSectionsComponent implements OnInit {
         if (x.quarters[this.currentQuarter - 1] &&
           x.quarters[this.currentQuarter - 1].value &&
           x.quarters[this.currentQuarter - 1].data !== null) {
+
+          x.procPlannedDate = 0;
+          x.procEstimatedDate = 0;
+          x.procReason = 0;
+
+          // x.piCurrent = 0;
+          // x.piPrevious = 0;
+          // x.piTotal = 0;
+          // x.expenditureNdrmf = 0;
+          // x.expenditureFip = 0;
+          // x.actualContratAmount = 0;
+
+          x.piCurrent = (x.quarters[this.currentQuarter - 1]?.progress?.generalTotalAchieved) || 0;
+          x.piPrevious = (this.getFipLastQuarter(x, 'RF')) || 0;
+          x.piTotal = (this.getFipLastQuarter(x, 'RF') || 0) + (x.quarters[this.currentQuarter - 1]?.progress?.generalTotalAchieved || 0);
+
+          x.expenditureNdrmf = (x.quarters[this.currentQuarter - 1]?.progress?.expenditureNdrmf) || 0;
+          x.expenditureFip = (x.quarters[this.currentQuarter - 1]?.progress?.expenditureFip) || 0;
+
+          x.lastExpenditureNdrmf = this.getFipLastQuarter(x, 'NDRMF') || 0;
+          x.lastExpenditureFip = this.getFipLastQuarter(x, 'FIP') || 0;
+
+          x.cummulativeExpenditureNdrmf = x.lastExpenditureNdrmf + x.expenditureNdrmf;
+          x.cummulativeExpenditureFip = x.lastExpenditureFip + x.expenditureFip;
+
+          x.closingBalanceNdrmf = x.quarters[this.currentQuarter - 1]?.data.ndrmfShare - x.cummulativeExpenditureNdrmf;
+          x.closingBalanceFip = x.quarters[this.currentQuarter - 1]?.data.fipShare - x.cummulativeExpenditureFip;
+
+          x.percentageClosingNdrmf = (x.cummulativeExpenditureNdrmf / x.quarters[this.currentQuarter - 1]?.data.ndrmfShare);
+          x.percentageClosingFip = (x.cummulativeExpenditureFip / x.quarters[this.currentQuarter - 1]?.data.fipShare);
+
+          x.actualContratAmount = (x.quarters[this.currentQuarter - 1]?.progress?.expenditureNdrmf + x.quarters[this.currentQuarter - 1]?.progress?.expenditureFip) || 0;
+
           if (x.clubbed && !x.children) {
             clubCosts.push(x);
             quarterCosts.push(x);
@@ -228,6 +294,7 @@ export class QprSectionsComponent implements OnInit {
             soloCosts.push(x);
             quarterCosts.push(x);
           }
+
         }
         if (!x.children) {
           for (let j = 0; j < x.quarters.length; j++) {
@@ -238,6 +305,7 @@ export class QprSectionsComponent implements OnInit {
           }
           allProjectCosts.push(x);
         }
+
       }
 
       clubCosts = _.chain(clubCosts)
@@ -264,6 +332,14 @@ export class QprSectionsComponent implements OnInit {
           key.procurementOptions = key.quarters[this.currentQuarter - 1].data.procurementOptions;
           key.ndrmfShare = key.quarters[this.currentQuarter - 1].data.ndrmfShare;
           key.fipShare = key.quarters[this.currentQuarter - 1].data.fipShare;
+
+          // key.getProcEstimates(key.children[j].quarters[this.currentQuarter - 1].data.procurementOptions, 'actual').date;
+
+          key.procPlannedDate = this.getProcEstimates(key.quarters[this.currentQuarter - 1].data.procurementOptions, 'planned').date;
+          key.procEstimatedDate = this.getProcEstimates(key.quarters[this.currentQuarter - 1].data.procurementOptions, 'actual').date;
+          key.procReason = this.getProcEstimates(key.quarters[this.currentQuarter - 1].data.procurementOptions, 'actual').reason;
+          key.totalFinance = key.fipShare + key.ndrmfShare;
+
           procTestCosts.push(key);
         }
       }
@@ -281,6 +357,12 @@ export class QprSectionsComponent implements OnInit {
             key.children[j].procurementOptions = key.clubData.procurementOptions;
             key.children[j].ndrmfShare = key.clubData.ndrmfShare;
             key.children[j].fipShare = key.clubData.fipShare;
+
+            key.children[j].procPlannedDate = this.getProcEstimates(key.children[j].quarters[this.currentQuarter - 1].data.procurementOptions, 'planned').date;
+            key.children[j].procEstimatedDate = this.getProcEstimates(key.children[j].quarters[this.currentQuarter - 1].data.procurementOptions, 'actual').date;
+            key.children[j].procReason = this.getProcEstimates(key.children[j].quarters[this.currentQuarter - 1].data.procurementOptions, 'actual').reason;
+            key.children[j].totalFinance = key.children[j].fipShare + key.children[j].ndrmfShare;
+
             procTestCosts.push(key.children[j]);
           }
         }
@@ -308,6 +390,11 @@ export class QprSectionsComponent implements OnInit {
             indicatorValue = indicator ? x.rfSubmitData['indicator' + indicator] : 'Unknown-Kpi';
           }
           x.indicatorValue = indicatorValue;
+
+
+
+
+
           rfCosts.push(x);
         }
       }
@@ -339,22 +426,22 @@ export class QprSectionsComponent implements OnInit {
 
       // this.procCosts = procCosts;
 
-      // console.log(
-      //   "SELECTED PROJECT IS:---", selectedProject,
-      //   "\QUARTER COSTS ARE:---", quarterCosts,
-      //   "\nSOLO COSTS ARE:---", soloCosts,
-      //   "\nCLUBBED COSTS ARE:---", clubCosts,
-      //   "\nPROCUREMENT COSTS ARE:---", this.procCosts,
-      //   "\nRESULT FRAMEWORK COSTS ARE:---", rfCosts,
-      //   "\nALL PROJECT COSTS ARE:---", allProjectCosts,
-      //   "\nCURRENT QUARTER:---", this.currentQuarter,
-      //   "\nNDRMF ALLOCATION IS:---", ndrmfAllocation,
-      //   "\nNDRMF DISBURSED IS:---", ndrmfDisbursment,
-      //   "\nNDRMF EXPENDITURE IS:---", ndrmfExpenditure,
-      //   "\nFIP ALLOCATION IS:---", fipAllocation,
-      //   "\nFIP CONTRIBUTION IS:---", fipContributed,
-      //   "\nFIP EXPENDITURE IS:---", fipExpenditure,
-      // );
+      console.log(
+        "SELECTED PROJECT IS:---", selectedProject,
+        "\QUARTER COSTS ARE:---", quarterCosts,
+        "\nSOLO COSTS ARE:---", soloCosts,
+        "\nCLUBBED COSTS ARE:---", clubCosts,
+        "\nPROCUREMENT COSTS ARE:---", this.procCosts,
+        "\nRESULT FRAMEWORK COSTS ARE:---", rfCosts,
+        "\nALL PROJECT COSTS ARE:---", allProjectCosts,
+        "\nCURRENT QUARTER:---", this.currentQuarter,
+        "\nNDRMF ALLOCATION IS:---", ndrmfAllocation,
+        "\nNDRMF DISBURSED IS:---", ndrmfDisbursment,
+        "\nNDRMF EXPENDITURE IS:---", ndrmfExpenditure,
+        "\nFIP ALLOCATION IS:---", fipAllocation,
+        "\nFIP CONTRIBUTION IS:---", fipContributed,
+        "\nFIP EXPENDITURE IS:---", fipExpenditure,
+      );
     }
 
   }
@@ -733,6 +820,60 @@ export class QprSectionsComponent implements OnInit {
         console.log("RESULT ADDING REVIEW:--", error);
       }
     );
+
+  }
+
+  extendQprTimeline() {
+    const options = {
+      title: 'Select a due date & give your remarks!',
+      message: '',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      add: false,
+      confirm: false,
+      setStatus: false,
+      assignToGm: false,
+      offerLetter: true,
+    };
+
+    this._confirmModelService.open(options);
+
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      console.log("EXTEND QPR TIMELINE", confirmed, this.selectedRequestId);
+      if (confirmed) {
+        this.extendTimeLoader = true;
+        this._qprService.extendQprTimeline(this.selectedRequestId,
+          {
+            dueDate: confirmed.endDate,
+            comments: confirmed.comments
+          }).subscribe(
+            (result: any) => {
+              this.extendTimeLoader = false;
+              const options = {
+                title: result.message,
+                message: '',
+                cancelText: 'CANCEL',
+                confirmText: 'OK',
+                add: true,
+              };
+              this._confirmModelService.open(options);
+              console.log("RESULT EXTENDING TIMELINE:--", result);
+            },
+            error => {
+              this.extendTimeLoader = false;
+              const options = {
+                title: error.error.message,
+                message: '',
+                cancelText: 'CANCEL',
+                confirmText: 'OK',
+                add: true,
+              };
+              this._confirmModelService.open(options);
+              console.log("ERROR EXTENDING TIMELINE:--", error);
+            }
+          )
+      }
+    });
 
   }
 

@@ -17,12 +17,13 @@
   box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.12);
   border-radius: 7px;
   padding: 5px 0px;
+  text-align: center;
 }
 .cost-box span {
   font-weight: normal;
   font-size: 12px;
   line-height: 33px;
-  text-align: right;
+  text-align: center;
   color: #333333;
 }
 .cost-box mat-form-field input {
@@ -68,6 +69,10 @@
   color: #474b56;
   /* color: #919191; */
   text-align: center;
+}
+
+.header-box .heading-contain {
+  text-align: center !important;
 }
 
 small#date-field {

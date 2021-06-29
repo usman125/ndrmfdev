@@ -368,11 +368,11 @@ export class ProjectService {
     );
   }
 
-  commenceQPR(proposalId) {
+  commenceQPR(proposalId, body) {
     const url = `${AppConfig.apiUrl}/qpr/commence/?proposalId=${proposalId}`;
     return this._httpClient.post(
       url,
-      null
+      body
     );
   }
 

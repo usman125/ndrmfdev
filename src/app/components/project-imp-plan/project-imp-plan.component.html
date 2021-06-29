@@ -314,7 +314,8 @@
       <div class="all-tree">
         <div class="top-head">
           <div class="title" [ngClass]="{'po': loggedUser?.role !== 'fip'}">Activities</div>
-          <div *ngIf="filterType !== 'M & E'" class="top-quarters" [ngClass]="{'mne-quarters': filterType === 'M & E'}">
+          <div [ngStyle]="{'margin-left': loggedUser?.role !== 'fip' ? '0px' : '50px'}" *ngIf="filterType !== 'M & E'"
+            class="top-quarters" [ngClass]="{'mne-quarters': filterType === 'M & E'}">
             <div [matTooltip]="'Q '+object.quarter" class="item" *ngFor="let object of quarters">
               <span>{{object.quarter}}</span>
             </div>

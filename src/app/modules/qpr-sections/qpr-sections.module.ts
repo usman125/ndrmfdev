@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QprSectionsRoutingModule } from './qpr-sections-routing.module';
-import { DepUserFilterPipe2, QprSectionsComponent } from '../../components/component-index';
+import { DepUserFilterPipe2, QprSectionsComponent, QprSumPipe } from '../../components/component-index';
 import { FormioModule } from 'angular-formio';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,7 +21,8 @@ import { NgxPrintModule } from 'ngx-print';
 @NgModule({
   declarations: [
     QprSectionsComponent,
-    DepUserFilterPipe2
+    DepUserFilterPipe2,
+    QprSumPipe,
   ],
   imports: [
     CommonModule,
@@ -41,6 +42,7 @@ import { NgxPrintModule } from 'ngx-print';
     MatDividerModule,
     MatToolbarModule,
     NgxPrintModule,
+    MatProgressSpinnerModule,
   ],
   exports: [QprSectionsComponent]
 })

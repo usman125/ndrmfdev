@@ -16,6 +16,7 @@
   color: #fff !important;
   font-weight: 600;
   font-size: 14px;
+  text-align: center;
 }
 
 .table-row {
@@ -53,15 +54,17 @@
 }
 
 .rag-div {
-  margin-bottom: 8px;
+  margin-bottom: 5px;
+  border-radius: 5px;
 }
 
 .rag-div span {
-  width: 100%;
+  width: 25%;
   padding: 12px 5px;
   font-size: 12px;
   color: #474b56;
   /* color: #919191; */
+  text-align: center;
 }
 
 span.notstart {

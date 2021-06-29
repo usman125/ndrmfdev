@@ -16,6 +16,7 @@ import {
   methods,
   options
 } from '../../../proc';
+import { PrimaryAppraisalFormsStore } from '../../stores/primary-appraisal-forms/primary-appraisal-forms-store';
 
 
 @Component({
@@ -81,11 +82,14 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
   @Output() costUpdated: EventEmitter<any> = new EventEmitter();
   @Output() rfUpdated: EventEmitter<any> = new EventEmitter();
 
+  canEditQpr: any = null;
+
   constructor(
     private fb: FormBuilder,
     private _settingsService: SettingsService,
     private _costDetailsStore: CostDetailsStore,
     private _authStore: AuthStore,
+    private _primaryAppraisalFormsStore: PrimaryAppraisalFormsStore,
     private _changeDetectorRef: ChangeDetectorRef,
   ) {
     this._buildForm();
@@ -148,6 +152,13 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     this.loggedUser = JSON.parse(localStorage.getItem('user'));
     this.heads = heads;
     this.options = options;
+    this.Subscription.add(
+      this._primaryAppraisalFormsStore.state$.subscribe(data => {
+        console.log("DATA FROM PRIMARY APPRAISAL FORM STORE:--", data.selectedProject);
+        if (data.selectedProject !== null)
+          this.canEditQpr = data.selectedProject.canEditQpr;
+      })
+    );
     this.Subscription.add(
       this._costDetailsStore.state$.subscribe(result => {
         setTimeout(() => { this.selectedIndex = 0; }, 0);
@@ -233,7 +244,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
           this._authStore.state$.subscribe(data => {
             // console.log("CURRENT QUARTER:--", data.auth.currentQuarter);
             this.currentQuarter = data.auth.currentQuarter;
-            if ((this.quarter !== this.currentQuarter) && this.currentQuarter) {
+            if (((this.quarter !== this.currentQuarter) || (!this.canEditQpr)) && this.currentQuarter) {
               this._form.disable({ onlySelf: true });
               this.disableOptions = true;
             } else {
@@ -285,8 +296,8 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
 
 
         }
+        // FILTER PROCUREMENT HEADS
         if (this.selectedQuarter !== null) {
-
           this.methods = methods.filter(c => {
             if (c.h_id === (this.selectedQuarter.procurementHeads !== null &&
               this.selectedQuarter.procurementHeads !== undefined && this.selectedQuarter.procurementHeads.h_id))
@@ -348,7 +359,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
           this._authStore.state$.subscribe(data => {
             // console.log("CURRENT QUARTER:--", data.auth.currentQuarter);
             this.currentQuarter = data.auth.currentQuarter;
-            if ((this.quarter !== this.currentQuarter) && this.currentQuarter) {
+            if (((this.quarter !== this.currentQuarter) || (!this.canEditQpr)) && this.currentQuarter) {
               this.progressForm.disable({ onlySelf: true });
             } else {
               this.progressForm.enable({ onlySelf: true });
@@ -402,6 +413,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
         }
       })
     );
+
   }
 
   getRfMeta() {

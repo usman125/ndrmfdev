@@ -101,6 +101,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
 
   commenceGdLoader: boolean = false;
+  commenceQprLoader: boolean = false;
 
   constructor(
     private _proposalSectionsStore: ProposalSectionsStore,
@@ -1540,22 +1541,41 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   commenceQPR() {
     const options = {
+      title: 'Select due date and give remarks!!',
+      message: '',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      offerLetter: true,
+    };
+    const options2 = {
       title: 'QPR commenced success!!',
       message: 'OK to exit',
       cancelText: 'CANCEL',
       confirmText: 'OK',
       add: true,
     };
-    this._projectService.commenceQPR(this.selectedProjectId).subscribe(
-      result => {
-        this._confirmModelService.open(options);
-      },
-      error => {
-        options.title = error.error.message;
-        this._confirmModelService.open(options);
-        console.log('QPR COMMENCED SUCCEFFULLY:--', error);
+    this._confirmModelService.open(options);
+    this._confirmModelService.confirmed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.commenceQprLoader = true;
+        this._projectService.commenceQPR(this.selectedProjectId,
+          { dueDate: confirmed.endDate, comments: confirmed.comments }
+        ).subscribe(
+          (result: any) => {
+            console.log('CONFIRM MODEL STARTS:--', confirmed, result);
+            this.commenceQprLoader = false;
+            this._confirmModelService.open(options2);
+          },
+          error => {
+            this.commenceQprLoader = false;
+            options.title = error.error.message;
+            this._confirmModelService.open(options2);
+            console.log('QPR COMMENCED SUCCEFFULLY:--', error);
+          }
+        );
+
       }
-    )
+    })
   }
 
   goToPDRMC(flag) {

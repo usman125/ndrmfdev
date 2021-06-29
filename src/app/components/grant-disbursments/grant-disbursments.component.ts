@@ -27,6 +27,8 @@ export class GrantDisbursmentsComponent implements OnInit, OnDestroy {
   @ViewChild('sort') sort: MatSort;
   // @ViewChild('sort2') sort2: MatSort;
 
+  // apiLoading: boolean = false;
+
   constructor(
     public _grantDisbursmentsStore: GrantDisbursmentsStore,
     public _authStore: AuthStore,

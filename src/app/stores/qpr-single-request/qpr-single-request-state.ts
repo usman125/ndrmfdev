@@ -11,6 +11,7 @@ const QPR = {
   sections: null,
   reassignmentTask: null,
   tasksForOthers: null,
+  assignedComments: null,
 }
 
 export class QprSingleRequestState {
@@ -26,6 +27,7 @@ export class QprSingleRequestState {
     quarter: any,
     sections: any,
     reassignmentTask: any,
+    assignedComments: any,
     tasksForOthers: any,
   } = QPR;
 }

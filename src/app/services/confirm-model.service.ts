@@ -38,6 +38,7 @@ export class ConfirmModelService {
         taSelectionType: options.taSelectionType,
         enableGia: options.enableGia,
         enableLoading: options.enableLoading,
+        commentField: options.commentField,
       };
       this.dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     } else {
@@ -65,6 +66,7 @@ export class ConfirmModelService {
           taSelectionType: options.taSelectionType,
           enableGia: options.enableGia,
           enableLoading: options.enableLoading,
+          commentField: options.commentField,
         }
       });
     }

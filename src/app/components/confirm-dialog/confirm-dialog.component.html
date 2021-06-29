@@ -170,8 +170,14 @@
       </mat-form-field>
     </div>
 
+    <div class="controls" *ngIf="data?.commentField">
+      <mat-form-field style="width: 100%;" appearance="outline">
+        <textarea cols="10" [(ngModel)]="data.comments" matInput placeholder="Your comments..." rows="6"></textarea>
+      </mat-form-field>
+    </div>
+
     <div class="controls" *ngIf="data?.enableLoading">
-      
+
       <mat-progress-spinner diameter="35" mode="indeterminate"></mat-progress-spinner>
     </div>
 
@@ -262,6 +268,14 @@
     <button [disabled]="data.markUnEligibleReason === ''" mat-raised-button *ngIf="data?.markUnEligible"
       (click)="closeMarkUnEligible()" color="primary">
       {{'update' | uppercase}}
+    </button>
+
+    <button mat-raised-button *ngIf="data?.commentField" (click)="cancel()" color="warn">
+      {{data.cancelText | uppercase}}
+    </button>
+    <button [disabled]="data.commentField === null || data.commentField === ''" mat-raised-button
+      *ngIf="data?.commentField" (click)="closeCommentField()" color="primary">
+      {{data.confirmText | uppercase}}
     </button>
 
     <button mat-raised-button *ngIf="data?.enableGia" (click)="enableGia('GIA')" color="accent">

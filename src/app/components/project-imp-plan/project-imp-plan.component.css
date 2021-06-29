@@ -235,7 +235,7 @@ mat-tree-node.active + mat-tree-node.active {
   align-items: center;
   flex: 1;
   height: 30px;
-  margin-left: 50px;
+  /* margin-left: 50px; */
 }
 
 .top-quarters .item span {

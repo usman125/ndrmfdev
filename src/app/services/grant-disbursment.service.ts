@@ -75,11 +75,13 @@ export class GrantDisbursmentsService {
     );
   }
 
-  reassignInitialAdvance(disbursmentId) {
+  reassignInitialAdvance(disbursmentId, comments) {
     const url = `${AppConfig.apiUrl}/grant-disbursement/${disbursmentId}/initial-advance/reassign`;
     return this._httpClient.put(
       url,
-      null
+      {
+        comment: comments
+      }
     );
   }
 
@@ -100,19 +102,23 @@ export class GrantDisbursmentsService {
     );
   }
 
-  reassignAdvanceLiquidation(liquidationId) {
+  reassignAdvanceLiquidation(liquidationId, comments) {
     const url = `${AppConfig.apiUrl}/grant-disbursement/advance-liquidation/${liquidationId}/reassign`;
     return this._httpClient.put(
       url,
-      null
+      {
+        comment: comments
+      }
     );
   }
 
-  reassignQuarterAdvance(advanceId) {
+  reassignQuarterAdvance(advanceId, comments) {
     const url = `${AppConfig.apiUrl}/grant-disbursement/advance/${advanceId}/reassign`;
     return this._httpClient.put(
       url,
-      null
+      {
+        comment: comments
+      }
     );
   }
 
@@ -129,6 +135,13 @@ export class GrantDisbursmentsService {
     return this._httpClient.put(
       url,
       body
+    );
+  }
+
+  getFilesForAdvance(advanceId) {
+    const url = `${AppConfig.apiUrl}/grant-disbursement/advance/${advanceId}/files`;
+    return this._httpClient.get(
+      url
     );
   }
 

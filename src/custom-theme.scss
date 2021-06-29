@@ -1,10 +1,21 @@
 @import "~@angular/material/theming";
 // Plus imports for other components in your app.
 
+// Define a custom typography config that overrides the font-family as well as the
+// `headlines` and `body-1` levels.
+$custom-typography: mat-typography-config(
+  $font-family: "Helvetica Neue",
+  $headline: mat-typography-level(32px, 48px, 700),
+  $body-1: mat-typography-level(15px, 23px, 500),
+);
+
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // **Be sure that you only ever include this mixin once!**
-@include mat-core();
+@include mat-core($custom-typography);
+
+// Override the typography in the core CSS.
+// @include mat-core();
 
 // Define the default theme (same as the example above).
 $candy-app-primary: mat-palette($mat-light-blue, 600, 500, 400);
@@ -321,7 +332,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
     .mat-list-base
     .mat-list-item:active
     .mat-list-item-content {
-    color:  #0070b1;
+    color: #0070b1;
     background-color: rgba(102, 103, 103, 0.04);
   }
   .hero
@@ -331,7 +342,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
     .mat-list-base
     .mat-list-item.active-menu-item
     .mat-list-item-content {
-    color:  #0070b1;
+    color: #0070b1;
   }
 
   a:hover {
@@ -628,12 +639,12 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 }
 
 .quali-sections .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
-    display: flex !important;
-    align-items: center !important;
-    white-space: normal !important;
-    padding: 10px !important;
-    text-align: left !important;
-    line-height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  white-space: normal !important;
+  padding: 10px !important;
+  text-align: left !important;
+  line-height: 20px !important;
 }
 
 // .mat-button-toggle-checked {

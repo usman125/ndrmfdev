@@ -32,6 +32,7 @@ export interface ConfirmData {
   taSelectionType: any;
   enableGia: any;
   enableLoading: any;
+  commentField: any;
 }
 
 @Component({
@@ -167,6 +168,12 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
   closeMarkUnEligible() {
     this.close({
       comments: this.data.markUnEligibleReason
+    })
+  }
+
+  closeCommentField() {
+    this.close({
+      comments: this.data.comments
     })
   }
 

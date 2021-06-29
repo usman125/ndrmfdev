@@ -62,10 +62,12 @@ export class FillQprComponent implements OnInit {
         this._qprSingleRequestStore.addQpr(result);
         this.quarter = this.selectedRequest.quarter;
         this._authStore.setCurrentQuarter(this.quarter);
+        this._authStore.setProjectMonths((JSON.parse(result.implementationPlan).costs[0].quarters.length - 3) * 3);
         this._qprSectionsStore.addAllSections(result.sections);
         this._primaryAppraisalFormsStore.addSelectedProject({
           id: result.proposalRef,
-          implementationPlan: JSON.parse(result.implementationPlan)
+          implementationPlan: JSON.parse(result.implementationPlan),
+          canEditQpr: this.calculateDaysDifference(result.dueDate) > 0 ? true : false,
         });
       },
       error => {
@@ -135,10 +137,10 @@ export class FillQprComponent implements OnInit {
     var Difference_In_Time = date2.getTime() - date1.getTime();
     // To calculate the no. of days between two dates 
     var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-    if (Math.trunc(Difference_In_Days) < 0) {
-      return Math.trunc(Difference_In_Days);
-    } else {
-      return Math.trunc(Difference_In_Days);
-    }
+    // if (Math.trunc(Difference_In_Days) < 0) {
+    //   return Math.trunc(Difference_In_Days);
+    // } else {
+    return Math.trunc(Difference_In_Days);
+    // }
   }
 }

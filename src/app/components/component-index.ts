@@ -70,10 +70,11 @@ export { PoHomeComponent } from './po-home/po-home.component';
 export { SmeHomeComponent } from './sme-home/sme-home.component';
 export { AdminHomeComponent } from './admin-home/admin-home.component';
 export { AssignThematicAreaComponent } from './assign-thematic-area/assign-thematic-area.component';
-export { DataFilterPipe } from '../pipes/data-filter.pipe'
-export { CostsFilterPipe } from '../pipes/costs-filter.pipe'
-export { DepUserFilterPipe } from '../pipes/dep-user-filter.pipe'
-export { DepUserFilterPipe2 } from '../pipes/dep-user-filter.pipe2'
+export { DataFilterPipe } from '../pipes/data-filter.pipe';
+export { CostsFilterPipe } from '../pipes/costs-filter.pipe';
+export { DepUserFilterPipe } from '../pipes/dep-user-filter.pipe';
+export { DepUserFilterPipe2 } from '../pipes/dep-user-filter.pipe2';
+export { QprSumPipe } from '../pipes/qpr-sum-columns.pipe';
 
 export { CeoHomeComponent } from './ceo-home/ceo-home.component';
 export { CeoProposalComponent } from './ceo-proposal/ceo-proposal.component';

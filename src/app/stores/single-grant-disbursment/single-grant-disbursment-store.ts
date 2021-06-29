@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { iif } from 'rxjs';
 import { Store } from '../store';
 import { SingleGrantDisbursmentsState } from './single-grant-disbursment-state';
 
@@ -39,6 +40,33 @@ export class SingleGrantDisbursmentsStore extends Store<SingleGrantDisbursmentsS
             return c;
           })
         }
+      }
+    });
+  }
+
+  submitQuarterAdvanceReview(id, qaId, status) {
+    this.setState({
+      ...this.state,
+      disbursment: {
+        ...this.state.disbursment,
+        quarterAdvanceList: this.state.disbursment.quarterAdvanceList.map((c) =>{
+          if (c.id === qaId){
+            return {
+              ...c,
+              quarterAdvanceReviewsList: c.quarterAdvanceReviewsList.map((d) => {
+                if (d.id === id){
+                  return {
+                    ...d,
+                    status: 'Completed'
+                  }
+                }
+                return d;
+              }),
+              status: status
+            }
+          }
+          return c;
+        })
       }
     });
   }
@@ -92,6 +120,19 @@ export class SingleGrantDisbursmentsStore extends Store<SingleGrantDisbursmentsS
           ...this.state.disbursment.initialAdvance,
           status: 'Approved',
           subStatus: "Approved",
+        }
+      }
+    })
+  }
+
+  addInitialAdvanceAmount(amount) {
+    this.setState({
+      ...this.state.disbursment,
+      disbursment: {
+        ...this.state.disbursment,
+        initialAdvance: {
+          ...this.state.disbursment.initialAdvance,
+          amount: amount,
         }
       }
     })
@@ -186,7 +227,8 @@ export class SingleGrantDisbursmentsStore extends Store<SingleGrantDisbursmentsS
     });
   }
 
-  addEntryToQuarterAdvance(id, data, amount) {
+  addEntryToQuarterAdvance(id, data) {
+    console.log("QUARTER DATA IN STORE****************:----", data);
     this.setState({
       ...this.state,
       disbursment: {
@@ -200,9 +242,10 @@ export class SingleGrantDisbursmentsStore extends Store<SingleGrantDisbursmentsS
                 {
                   ...data,
                   amount: data.totalCost,
+                  parentCosts: data.parentCosts
                 }
               ],
-              amount: amount,
+              amount: c.amount + data.totalCost,
             }
           }
           return c;
