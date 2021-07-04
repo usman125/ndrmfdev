@@ -582,7 +582,21 @@ const routes: Routes = [
     path: 'sme-qpr-requests',
     loadChildren: () => import('./modules/sme-qpr-requests/sme-qpr-requests.module').then(m => m.SmeQprRequestsModule),
     canActivate: [AuthGuard],
-    data: {roles: [Role.Sme, Role.Po, Role.Ceo, Role.Gm]}
+    data: { roles: [Role.Sme, Role.Po, Role.Ceo, Role.Gm] }
+    // component: ProjectWorkPlanComponent
+  },
+  {
+    path: 'qpr-to-donor',
+    loadChildren: () => import('./modules/qpr-to-donor/qpr-to-donor.module').then(m => m.QprToDonorModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Sme, Role.Po, Role.Ceo, Role.Gm] }
+    // component: ProjectWorkPlanComponent
+  },
+  {
+    path: 'qpr-to-donor/:requestId',
+    loadChildren: () => import('./modules/qpr-to-donor-request/qpr-to-donor-request.module').then(m => m.QprToDonorRequestModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Sme, Role.Po, Role.Ceo, Role.Gm] }
     // component: ProjectWorkPlanComponent
   },
 ];

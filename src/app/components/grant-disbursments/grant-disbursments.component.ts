@@ -37,7 +37,6 @@ export class GrantDisbursmentsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.getAllDisbursments();
     this.Subscription.add(
       this._grantDisbursmentsStore.state$.subscribe(
         data => {
@@ -58,6 +57,7 @@ export class GrantDisbursmentsComponent implements OnInit, OnDestroy {
         }
       )
     );
+    this.getAllDisbursments();
   }
 
   getAllDisbursments() {

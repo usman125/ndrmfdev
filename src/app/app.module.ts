@@ -82,6 +82,9 @@ import { GrievanceRegistrationComponent } from './grievance-registration/grievan
 import { ConcernedPersonDialogComponent } from './components/concerned-person-dialog/concerned-person-dialog.component';
 import { QprSingleRequestStore } from './stores/qpr-single-request/qpr-single-request-store';
 import { AdvanceLiquidationItemStore } from './stores/advance-liquidation-item/advance-liquidation-item-store';
+import { QprToDonorRequestStore } from './stores/qpr-to-donor-request/qpr-to-donor-request-store';
+// import { QprToDonorRequestComponent } from './components/qpr-to-donor-request/qpr-to-donor-request.component';
+// import { QprToDonorComponent } from './components/qpr-to-donor/qpr-to-donor.component';
 // import { SumPipe } from './pipes/sum-columns.pipe';
 // import { AmountToWordPipe } from './pipes/amount-to-word.pipe';
 
@@ -103,6 +106,8 @@ export function tokenGetter() {
     ActivityDetailsComponent,
     GrievanceRegistrationComponent,
     ConcernedPersonDialogComponent,
+    // QprToDonorRequestComponent,
+    // QprToDonorComponent,
     // SumPipe,
     // AmountToWordPipe,
   ],
@@ -202,6 +207,7 @@ export function tokenGetter() {
     AccreditationRequestReplayStore,
     QprSingleRequestStore,
     AdvanceLiquidationItemStore,
+    QprToDonorRequestStore,
   ],
   bootstrap: [AppComponent],
   exports: [FlexLayoutModule],

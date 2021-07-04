@@ -824,22 +824,22 @@
             Total
           </span>
           <span>
-            {{ndrmfAllocation | number}}
+            {{ (ndrmfAllocation | number) || '&nbsp;' }}
           </span>
           <span>
-            {{ (quarterCosts | qprSum:'lastExpenditureNdrmf') | number }}
+            {{ ((quarterCosts | qprSum:'lastExpenditureNdrmf') | number) || '&nbsp;' }}
           </span>
           <span>
-            {{ (quarterCosts | qprSum:'expenditureNdrmf') | number }}
+            {{ ((quarterCosts | qprSum:'expenditureNdrmf') | number) || '&nbsp;' }}
           </span>
           <span>
-            {{ (quarterCosts | qprSum:'cummulativeExpenditureNdrmf') | number }}
+            {{ ((quarterCosts | qprSum:'cummulativeExpenditureNdrmf') | number ) || '&nbsp;' }}
           </span>
           <span>
             &nbsp;
           </span>
           <span>
-            {{ (quarterCosts | qprSum:'closingBalanceNdrmf') | number }}
+            {{ ((quarterCosts | qprSum:'closingBalanceNdrmf') | number) || '&nbsp;' }}
           </span>
         </div>
         <small> <small class="warn-comment">*</small> Includes categories to be financed by NDRMF Share</small>
@@ -917,22 +917,22 @@
             Total
           </span>
           <span>
-            {{ fipAllocation | number }}
+            {{ (fipAllocation | number) || '&nbsp;' }}
           </span>
           <span>
-            {{ (quarterCosts | qprSum:'lastExpenditureFip') | number }}
+            {{ ((quarterCosts | qprSum:'lastExpenditureFip') | number) || '&nbsp;' }}
           </span>
           <span>
-            {{ (quarterCosts | qprSum:'expenditureFip') | number }}
+            {{ ((quarterCosts | qprSum:'expenditureFip') | number) || '&nbsp;' }}
           </span>
           <span>
-            {{ (quarterCosts | qprSum:'cummulativeExpenditureFip') | number }}
+            {{ ((quarterCosts | qprSum:'cummulativeExpenditureFip') | number) || '&nbsp;' }}
           </span>
           <span>
             &nbsp;
           </span>
           <span>
-            {{ (quarterCosts | qprSum:'closingBalanceFip') | number }}
+            {{ ((quarterCosts | qprSum:'closingBalanceFip') | number) || '&nbsp;' }}
           </span>
         </div>
         <small> <small class="warn-comment">*</small> Includes categories to be financed by FIP Share</small>

@@ -268,6 +268,8 @@ export class AssignSectionsProcessComponent implements OnInit {
         return 'GIA Checklist';
       case 'SUB_PROJECT_DOCUMENT':
         return 'Sub Project Document';
+      case 'QPR_TO_DONOR':
+        return 'Qpr To Donor';
       default:
         return name;
     }

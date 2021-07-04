@@ -1,0 +1,7 @@
+.mat-list-item {
+  background: rgba(235, 235, 235, 0.5);
+  margin-bottom: 5px;
+  height: 80px !important;
+  width: 100%;
+  font-size: 13px;
+}

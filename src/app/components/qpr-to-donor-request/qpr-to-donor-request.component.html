@@ -1,0 +1,94 @@
+<mat-toolbar style="margin-bottom:20px;padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span>QPR to Donor Request</span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button (click)="goBack()" color="warn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div class="row m-20">
+  <div class="col-md-7 pl-0">
+    <mat-card>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item>
+            <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
+            <div mat-line>{{'Submitted tasks' | titlecase}}</div>
+            <div mat-line>{{sectionStats?.pendingCount}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>assignment_late</mat-icon>
+            <div mat-line>{{'Pending Tasks' | titlecase}}</div>
+            <div mat-line>{{sectionStats?.completedCount}}</div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-md-5 pr-0">
+    <mat-card>
+      <mat-card-content>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<mat-card class="m-20">
+  <mat-card-content>
+
+    <div *ngFor="let obj of assignedSections; let i = index;">
+      <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
+        <div class="d-flex justify-content-between align-items-center flex-fill p-3"
+          style="background-color: rgba(243, 243, 243, 0.8);">
+          <div class="d-flex align-items-center">
+            <mat-icon color="primary" class="mr-2">person</mat-icon>
+            <span>{{obj.sme.name | titlecase}}</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <mat-icon color="primary">info</mat-icon>
+            <span>{{(obj.reassignmentStatus | titlecase) || '&nbsp;'}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="forms-sections">
+        <formio *ngIf="obj.data === null && 
+        (obj.reassignmentStatus === null || obj.reassignmentStatus === 'Pending')" [form]="obj.template"
+          (submit)="onSubmit($event, obj.id)" [submission]="{data: obj.data}"></formio>
+        <formio *ngIf="obj.data !== null && 
+        (obj.reassignmentStatus === null || obj.reassignmentStatus === 'Completed')" [form]="obj.template"
+          (submit)="onSubmit($event, obj.id)" readOnly="true" [submission]="{data: obj.data}"></formio>
+      </div>
+
+    </div>
+
+    <div class="mb-3 mt-3 d-flex" *ngIf="assignedSections.length">
+      <mat-divider></mat-divider>
+    </div>
+
+    <div *ngFor="let obj of unAssignedSections; let i = index;">
+      <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
+        <div class="d-flex justify-content-between align-items-center flex-fill p-3"
+          style="background-color: rgba(243, 243, 243, 0.8);">
+          <div class="d-flex align-items-center">
+            <mat-icon color="primary" class="mr-2">person</mat-icon>
+            <span>{{obj.sme.name | titlecase}}</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <mat-icon color="primary">info</mat-icon>
+            <span>{{(obj.reassignmentStatus | titlecase) || '&nbsp;'}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="forms-sections margin-5">
+        <formio [form]="obj.template" readOnly="true" [submission]="{data: obj.data}"></formio>
+      </div>
+
+    </div>
+
+  </mat-card-content>
+</mat-card>

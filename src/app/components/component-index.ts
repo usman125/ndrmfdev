@@ -127,3 +127,6 @@ export { KpiProjectStatsComponent } from './kpi-project-stats/kpi-project-stats.
 export { SmeQprRequestsComponent } from './sme-qpr-requests/sme-qpr-requests.component';
 
 export { DesignationsComponent } from './designations/designations.component';
+
+export { QprToDonorComponent } from './qpr-to-donor/qpr-to-donor.component'
+export { QprToDonorRequestComponent } from './qpr-to-donor-request/qpr-to-donor-request.component'
