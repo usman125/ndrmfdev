@@ -109,6 +109,9 @@
         <formio *ngIf="obj.data === null && 
         obj.reassignmentStatus === null" [form]="obj.template" (submit)="onSubmit($event, obj.id)"
           [submission]="{data: obj.data}"></formio>
+        <formio *ngIf="obj.data !== null && 
+        obj.reassignmentStatus === null" [form]="obj.template" (submit)="onSubmit($event, obj.id)"
+          [submission]="{data: obj.data}" readOnly="true"></formio>
         <formio *ngIf="obj.data !== null && obj.reassignmentStatus === 'Pending'" [form]="obj.template"
           (submit)="onSubmit($event, obj.id)" [submission]="{data: obj.data}"></formio>
         <formio *ngIf="obj.data !== null && 
