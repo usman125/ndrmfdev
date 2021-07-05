@@ -40,4 +40,12 @@ export class QprToDonorService {
       data
     );
   }
+
+  reassignQprToDonorSections(qprtodonorId, sectionIds) {
+    const url = `${AppConfig.apiUrl}/qpr-to-donor/${qprtodonorId}/reassign`;
+    return this._httpClient.post(
+      url,
+      sectionIds
+    );
+  }
 }

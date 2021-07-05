@@ -11,6 +11,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormioModule } from 'angular-formio';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -31,6 +33,8 @@ import { MatListModule } from '@angular/material/list';
     FormioModule,
     MatDividerModule,
     MatListModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
   ]
 })
 export class QprToDonorRequestModule { }

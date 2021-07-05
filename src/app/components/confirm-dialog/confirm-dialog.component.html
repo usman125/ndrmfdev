@@ -144,7 +144,7 @@
     </div>
 
     <div class="controls" *ngIf="data?.proposal_initmation">
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-select (selectionChange)="proposalSectionChanged($event)" placeholder="Select Sections"
           [formControl]="proposalSections" multiple>
           <mat-select-trigger>

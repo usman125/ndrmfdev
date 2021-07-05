@@ -2,25 +2,28 @@
   <mat-toolbar-row>
     <span>QPR to Donor Request</span>
     <span class="example-spacer"></span>
+    <small id="answer">{{selectedRequest?.status}}</small>
+    <span class="example-spacer"></span>
     <button mat-icon-button (click)="goBack()" color="warn">
       <mat-icon>close</mat-icon>
     </button>
   </mat-toolbar-row>
 </mat-toolbar>
 
-<div class="row m-20">
+<div class="row m-20" *ngIf="loggedUser?.role === 'process owner' && 
+      loggedUser?.processNames.indexOf('QPR_TO_DONOR') > -1">
   <div class="col-md-7 pl-0">
-    <mat-card>
+    <mat-card class="mat-elevation-z2">
       <mat-card-content>
         <mat-list>
           <mat-list-item>
-            <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
-            <div mat-line>{{'Submitted tasks' | titlecase}}</div>
+            <mat-icon mat-list-icon>assignment_late</mat-icon>
+            <div mat-line>{{'Pending Submissions' | titlecase}}</div>
             <div mat-line>{{sectionStats?.pendingCount}}</div>
           </mat-list-item>
           <mat-list-item>
-            <mat-icon mat-list-icon>assignment_late</mat-icon>
-            <div mat-line>{{'Pending Tasks' | titlecase}}</div>
+            <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
+            <div mat-line>{{'Completed Submissions' | titlecase}}</div>
             <div mat-line>{{sectionStats?.completedCount}}</div>
           </mat-list-item>
         </mat-list>
@@ -28,39 +31,89 @@
     </mat-card>
   </div>
   <div class="col-md-5 pr-0">
-    <mat-card>
+    <mat-card class="mat-elevation-z2">
       <mat-card-content>
+        <mat-list class="mb-3">
+          <mat-list-item>
+            <mat-icon mat-list-icon>assignment_late</mat-icon>
+            <div mat-line>{{'Pending Re-Assigned Submissions' | titlecase}}</div>
+            <div mat-line>{{sectionStats?.reAssignPendingCount}}</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
+            <div mat-line>{{'Completed Re-Assigned Submissions' | titlecase}}</div>
+            <div mat-line>{{sectionStats?.reAssignCompletedCount}}</div>
+          </mat-list-item>
+        </mat-list>
 
+        <div class="d-flex flex-fill flex-column">
+          <button [hidden]="apiLoading" mat-raised-button color="accent" (click)="fipIntimation()">Reassign
+            Task(s)</button>
+          <mat-progress-spinner mode="indeterminate" diameter="25" [hidden]="!apiLoading"></mat-progress-spinner>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
 </div>
 
-<mat-card class="m-20">
+<mat-card class="m-20 mat-elevation-z2">
   <mat-card-content>
 
     <div *ngFor="let obj of assignedSections; let i = index;">
       <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
         <div class="d-flex justify-content-between align-items-center flex-fill p-3"
-          style="background-color: rgba(243, 243, 243, 0.8);">
-          <div class="d-flex align-items-center">
-            <mat-icon color="primary" class="mr-2">person</mat-icon>
-            <span>{{obj.sme.name | titlecase}}</span>
+          style="background-color: rgba(235, 235, 235, 0.8);">
+          <div matTooltip="Sme!" class="d-flex align-items-center">
+            <mat-icon color="primary" class="mr-2">account_circle</mat-icon>
+            <span style="font-weight: 600;">{{obj.sme.name | titlecase}}</span>
           </div>
           <div class="d-flex align-items-center">
-            <mat-icon color="primary">info</mat-icon>
-            <span>{{(obj.reassignmentStatus | titlecase) || '&nbsp;'}}</span>
+            <mat-icon matTooltip="Pending Task!" color="warn"
+              *ngIf="obj.data === null && obj.reassignmentStatus === null">
+              pending_actions
+            </mat-icon>
+            <span style="font-weight: 600;margin-left:5px;" matTooltip="Pending Task!" color="warn"
+              *ngIf="obj.data === null && obj.reassignmentStatus === null">Pending
+              Actions
+            </span>
+            <mat-icon matTooltip="Completed Task!" color="primary"
+              *ngIf="obj.data !== null && obj.reassignmentStatus === null">task
+            </mat-icon>
+            <span style="font-weight: 600;margin-left:5px;" matTooltip="Completed Task!" color="primary"
+              *ngIf="obj.data !== null && obj.reassignmentStatus === null">Completed Actions</span>
+            <mat-icon matTooltip="Pending Task!" color="warn"
+              *ngIf="obj.data !== null && obj.reassignmentStatus === 'Pending'">
+              pending_actions
+            </mat-icon>
+            <span style="font-weight: 600;margin-left:5px;" matTooltip="Pending Task!" color="warn"
+              *ngIf="obj.data !== null && obj.reassignmentStatus === 'Pending'">Pending
+              Actions
+            </span>
+            <mat-icon matTooltip="Completed Task!" color="primary"
+              *ngIf="obj.data !== null && obj.reassignmentStatus === 'Completed'">task
+            </mat-icon>
+            <span style="font-weight: 600;margin-left:5px;" matTooltip="Completed Task!" color="primary"
+              *ngIf="obj.data !== null && obj.reassignmentStatus === 'Completed'">Completed Actions
+            </span>
+            <!-- <span>{{(obj.reassignmentStatus | titlecase) || '&nbsp;'}}</span> -->
           </div>
         </div>
       </div>
 
+      <div class="d-flex flex-column">
+        <span class="p-2" id="answer">{{'Commnets from manager' | uppercase}}</span>
+        <p class="p-3" style="background-color: rgba(235, 235, 235, 0.5);">{{obj.reassignmentComments || '&nbsp;'}}</p>
+      </div>
+
       <div class="forms-sections">
         <formio *ngIf="obj.data === null && 
-        (obj.reassignmentStatus === null || obj.reassignmentStatus === 'Pending')" [form]="obj.template"
+        obj.reassignmentStatus === null" [form]="obj.template" (submit)="onSubmit($event, obj.id)"
+          [submission]="{data: obj.data}"></formio>
+        <formio *ngIf="obj.data !== null && obj.reassignmentStatus === 'Pending'" [form]="obj.template"
           (submit)="onSubmit($event, obj.id)" [submission]="{data: obj.data}"></formio>
         <formio *ngIf="obj.data !== null && 
-        (obj.reassignmentStatus === null || obj.reassignmentStatus === 'Completed')" [form]="obj.template"
-          (submit)="onSubmit($event, obj.id)" readOnly="true" [submission]="{data: obj.data}"></formio>
+        obj.reassignmentStatus === 'Completed'" [form]="obj.template" (submit)="onSubmit($event, obj.id)"
+          readOnly="true" [submission]="{data: obj.data}"></formio>
       </div>
 
     </div>
@@ -72,14 +125,35 @@
     <div *ngFor="let obj of unAssignedSections; let i = index;">
       <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
         <div class="d-flex justify-content-between align-items-center flex-fill p-3"
-          style="background-color: rgba(243, 243, 243, 0.8);">
-          <div class="d-flex align-items-center">
-            <mat-icon color="primary" class="mr-2">person</mat-icon>
-            <span>{{obj.sme.name | titlecase}}</span>
+          style="background-color: rgba(235, 235, 235, 0.8);">
+          <div matTooltip="Sme!" class="d-flex align-items-center">
+            <mat-icon color="primary" class="mr-2">account_circle</mat-icon>
+            <span style="font-weight: 600;">{{obj.sme.name | titlecase}}</span>
           </div>
           <div class="d-flex align-items-center">
-            <mat-icon color="primary">info</mat-icon>
-            <span>{{(obj.reassignmentStatus | titlecase) || '&nbsp;'}}</span>
+            <mat-icon matTooltip="Pending Task!" color="warn"
+              *ngIf="obj.data === null && obj.reassignmentStatus === null">pending_actions
+            </mat-icon>
+            <span style="font-weight: 600;margin-left:5px;" matTooltip="Pending Task!" color="warn"
+              *ngIf="obj.data === null && obj.reassignmentStatus === null">Pending Actions
+            </span>
+            <mat-icon matTooltip="Completed Task!" color="primary"
+              *ngIf="obj.data !== null && obj.reassignmentStatus === null">task</mat-icon>
+            <span style="font-weight: 600;margin-left:5px;" matTooltip="Completed Task!" color="primary"
+              *ngIf="obj.data !== null && obj.reassignmentStatus === null">Completed Actions</span>
+            <mat-icon matTooltip="Pending Task!" color="warn"
+              *ngIf="obj.data !== null && obj.reassignmentStatus === 'Pending'">pending_actions
+            </mat-icon>
+            <span style="font-weight: 600;margin-left:5px;" matTooltip="Pending Task!" color="warn"
+              *ngIf="obj.data !== null && obj.reassignmentStatus === 'Pending'">Pending Actions
+            </span>
+            <mat-icon matTooltip="Completed Task!" color="primary"
+              *ngIf="obj.data !== null && obj.reassignmentStatus === 'Completed'">task
+            </mat-icon>
+            <span style="font-weight: 600;margin-left:5px;" matTooltip="Completed Task!" color="primary"
+              *ngIf="obj.data !== null && obj.reassignmentStatus === 'Completed'">Completed Actions
+            </span>
+            <!-- <span>{{(obj.reassignmentStatus | titlecase) || '&nbsp;'}}</span> -->
           </div>
         </div>
       </div>

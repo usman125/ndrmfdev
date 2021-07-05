@@ -38,6 +38,8 @@ export class QprToDonorComponent implements OnInit, AfterViewInit {
 
   apiLoading: boolean = false;
 
+  loggedUser: any = JSON.parse(localStorage.getItem('user'));
+
   constructor(
     private _qprToDonorService: QprToDonorService,
     private _router: Router,

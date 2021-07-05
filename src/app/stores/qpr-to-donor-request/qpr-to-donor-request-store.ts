@@ -34,4 +34,22 @@ export class QprToDonorRequestStore extends Store<QprToDonorRequestState> {
       }
     })
   }
+
+  reassignQprToDonorSections(sectionIds, comments) {
+    this.setState({
+      ...this.state,
+      request: {
+        ...this.state.request,
+        sections: this.state.request.sections.map((c) => {
+          sectionIds.forEach(element => {
+            if (element == c.id) {
+              c.reassignmentStatus = 'Pending';
+              c.reassignmentComments = comments;
+            }
+          });
+          return c;
+        })
+      }
+    })
+  }
 }
