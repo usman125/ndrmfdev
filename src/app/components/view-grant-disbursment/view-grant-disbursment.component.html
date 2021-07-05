@@ -3460,8 +3460,7 @@
                               selectedAdvanceItem?.status === 'Review Completed' ||
                               selectedAdvanceItem?.status === 'Marked To PO' ||
                               selectedAdvanceItem?.subStatus === 'Approved')" matInput type="number"
-                      placeholder="Enter Amount..." (keydown)="numberCheck(item, $event)"
-                      (keyup)="CommaFormatted(item, $event)" [(ngModel)]="item.amount">
+                      placeholder="Enter Amount..." (keyup)="iaAmountChanged(item, $event)" [(ngModel)]="item.amount">
                   </mat-form-field>
                 </div>
               </div>

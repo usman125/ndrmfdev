@@ -49,12 +49,12 @@ export class SingleGrantDisbursmentsStore extends Store<SingleGrantDisbursmentsS
       ...this.state,
       disbursment: {
         ...this.state.disbursment,
-        quarterAdvanceList: this.state.disbursment.quarterAdvanceList.map((c) =>{
-          if (c.id === qaId){
+        quarterAdvanceList: this.state.disbursment.quarterAdvanceList.map((c) => {
+          if (c.id === qaId) {
             return {
               ...c,
               quarterAdvanceReviewsList: c.quarterAdvanceReviewsList.map((d) => {
-                if (d.id === id){
+                if (d.id === id) {
                   return {
                     ...d,
                     status: 'Completed'
@@ -235,17 +235,28 @@ export class SingleGrantDisbursmentsStore extends Store<SingleGrantDisbursmentsS
         ...this.state.disbursment,
         quarterAdvanceList: this.state.disbursment.quarterAdvanceList.map((c) => {
           if (c.id === id) {
-            return {
-              ...c,
-              data: [
-                ...c.data,
-                {
-                  ...data,
-                  amount: data.totalCost,
-                  parentCosts: data.parentCosts
-                }
-              ],
-              amount: c.amount + data.totalCost,
+            if (c.data !== null) {
+
+              return {
+                ...c,
+                data: [
+                  ...c.data,
+                  {
+                    ...data,
+                    amount: data.totalCost,
+                    parentCosts: data.parentCosts
+                  }
+                ],
+                amount: c.amount + data.totalCost,
+              }
+            } else {
+              data.amount = data.totalCost;
+              return {
+                ...c,
+                data: [data],
+                amount: data.totalCost,
+                parentCosts: data.parentCosts
+              }
             }
           }
           return c;

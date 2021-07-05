@@ -465,11 +465,14 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   addQuarterData(item) {
 
     let flag = false;
-    for (let i = 0; i < this.selectedRequest.quarterAdvanceList[this.step].data.length; i++) {
-      var key = this.selectedRequest.quarterAdvanceList[this.step].data[i];
-      if (key._id === item._id) {
-        flag = true;
-        break;
+    if (this.selectedRequest.quarterAdvanceList[this.step].data !== null) {
+
+      for (let i = 0; i < this.selectedRequest.quarterAdvanceList[this.step].data.length; i++) {
+        var key = this.selectedRequest.quarterAdvanceList[this.step].data[i];
+        if (key._id === item._id) {
+          flag = true;
+          break;
+        }
       }
     }
     if (!flag) {
@@ -1521,6 +1524,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     if ($event.srcElement.value > item.totalCost) {
       item.amount = item.totalCost;
     }
+    this.openSnackBar('CANNOT EXCEEDED AMOUNT!', 'Exit');
   }
 
   // ******** FIEL UPLOAD CODE ************
