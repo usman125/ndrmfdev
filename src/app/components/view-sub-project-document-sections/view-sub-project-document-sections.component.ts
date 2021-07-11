@@ -37,7 +37,7 @@ export class ViewSubProjectDocumentSectionsComponent implements OnInit {
     this._projectService.singleSubProjectDoc(this.selectedRequestId).subscribe(
       (result: any) => {
         // console.log("REUSLT SINGLE DOC REQUEST:--", result);
-        this._subProjectDocSectionsStore.addAllRequests(result.sections);
+        this._subProjectDocSectionsStore.addRequest(result.status, result.sections, result.dmpamTasks);
       },
       error => {
         console.log("REUSLT SINGLE DOC REQUEST:--", error);

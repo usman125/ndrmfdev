@@ -7,5 +7,7 @@ export class SubProjectDocState {
     proposalName: string,
     startDate: string,
     status: string,
+    docName: string,
+    docNumber: string,
   }[] = [];
 }

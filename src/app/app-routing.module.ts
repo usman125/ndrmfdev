@@ -466,6 +466,18 @@ const routes: Routes = [
     data: { roles: [Role.Ceo, Role.Gm, Role.Sme, Role.Po, Role.Fip] }
   },
   {
+    path: 'sub-project-document-dmpam-tasks',
+    loadChildren: () => import('./modules/sub-project-document-dmpam-tasks/sub-project-document-dmpam-tasks.module').then(m => m.SubProjectDocumentDmpamTasksModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Ceo, Role.Gm, Role.Sme, Role.Po, Role.Fip, Role.Dm] }
+  },
+  {
+    path: 'sub-project-document-tasks',
+    loadChildren: () => import('./modules/sub-project-document-tasks/sub-project-document-tasks.module').then(m => m.SubProjectDocumentTasksModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Ceo, Role.Gm, Role.Sme, Role.Po, Role.Fip, Role.Dm] }
+  },
+  {
     path: 'gia-comments-matrix/:projectId',
     loadChildren: () => import('./modules/gia-comments-matrix/gia-comments-matrix.module').then(m => m.GiaCommentsMatrixModule),
     canActivate: [AuthGuard],
@@ -487,7 +499,7 @@ const routes: Routes = [
     path: 'view-sub-project-document/:requestId',
     loadChildren: () => import('./modules/view-sub-project-document-sections/view-sub-project-document-sections.module').then(m => m.ViewSubProjectDocumentSectionsModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Po, Role.Sme] }
+    data: { roles: [Role.Po, Role.Sme, Role.Dm] }
   },
   {
     path: 'fill-qpr/:requestId',
@@ -597,6 +609,13 @@ const routes: Routes = [
     loadChildren: () => import('./modules/qpr-to-donor-request/qpr-to-donor-request.module').then(m => m.QprToDonorRequestModule),
     canActivate: [AuthGuard],
     data: { roles: [Role.Sme, Role.Po, Role.Ceo, Role.Gm] }
+    // component: ProjectWorkPlanComponent
+  },
+  {
+    path: 'sub-project-document-comments-matrix/:requestId',
+    loadChildren: () => import('./modules/sub-project-document-comments-matrix/sub-project-document-comments-matrix.module').then(m => m.SubProjectDocumentCommentsMatrixModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Sme, Role.Po, Role.Ceo, Role.Gm, Role.Dm] }
     // component: ProjectWorkPlanComponent
   },
 ];

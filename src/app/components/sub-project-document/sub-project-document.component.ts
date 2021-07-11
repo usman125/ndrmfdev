@@ -2,10 +2,10 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
-import { ProjectService } from 'src/app/services/project.service';
 import { Subscription } from 'rxjs';
 import { SubProjectDocStore } from 'src/app/stores/sub-proj-doc/sub-proj-doc-store';
 import { Router } from '@angular/router';
+import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-sub-project-document',
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class SubProjectDocumentComponent implements OnInit, OnDestroy {
 
-  public displayedColumns = ['name', 'startDate', 'endDate', 'status', 'action'];
+  public displayedColumns = ['docName', 'docNumber', 'proposalName', 'status', 'action'];
   public dataSource: any = [];
   public apiLoading: boolean = false;
   public loggedUser: any = null;
@@ -46,7 +46,7 @@ export class SubProjectDocumentComponent implements OnInit, OnDestroy {
     if (this.loggedUser.role === 'fip') {
       this._projectService.getPendingSubProjectDoc().subscribe(
         (result: any) => {
-          // console.log("PENGING SUB PROJ SOC SME:--", result);
+          console.log("PENGING SUB PROJ SOC SME:--", result);
           this._subProjectDocStore.addAllRequests(result);
         },
         error => {
@@ -56,7 +56,7 @@ export class SubProjectDocumentComponent implements OnInit, OnDestroy {
     } else if (this.loggedUser.role === 'process owner' || this.loggedUser.role === 'sme') {
       this._projectService.getSubProjectDoc().subscribe(
         (result: any) => {
-          // console.log("PENGING SUB PROJ SOC PO:--", result);
+          console.log("PENGING SUB PROJ SOC PO:--", result);
           this._subProjectDocStore.addAllRequests(result);
         },
         error => {

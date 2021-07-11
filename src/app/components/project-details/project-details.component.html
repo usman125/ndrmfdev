@@ -1270,10 +1270,13 @@
                 </mat-list-item>
               </mat-list>
               <div class="expiry-sections mt-2" *ngIf="loggedUser?.role === 'fip'">
-                <button (click)="commenceSubProjectDoc()" *ngIf="selectedProject?.giaChecklist?.data !== null"
-                  mat-button color="primary">
-                  <mat-icon class="mr-1">grading</mat-icon> {{'Start sub process doc' | uppercase}}
+                <button (click)="commenceSubProjectDoc()"
+                  *ngIf="!commenceSpdLoader && selectedProject?.giaChecklist?.data !== null" mat-button color="primary">
+                  <mat-icon class="mr-1">grading</mat-icon> {{'Start SubProject Scheme Doc' | uppercase}}
                 </button>
+                <div *ngIf="commenceSpdLoader" class="d-flex flex-fill justify-content-center">
+                  <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+                </div>
               </div>
             </ng-container>
             <!-- GOVT. FIP CODE HERE -->

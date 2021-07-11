@@ -33,6 +33,12 @@ export interface ConfirmData {
   enableGia: any;
   enableLoading: any;
   commentField: any;
+  subProcess: any;
+  subProcessNumber: any;
+  subProcessName: any;
+  confirmAction: any;
+  changeSpdStatus: any;
+  spdStatus: any;
 }
 
 @Component({
@@ -54,6 +60,8 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
   Subscription: Subscription = new Subscription();
   selectedProject: any = null;
   _routerSubscription: any = null;
+
+  spdStatuses: any = ['Approved', 'Conditional Approved', 'Reject'];
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
@@ -137,6 +145,10 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
     this.close({ status });
   }
 
+  changeSpdStatus() {
+    this.close({ status: this.data.spdStatus });
+  }
+
   uploadOfferLetter(status, endDate, comments) {
     this.close({ status, endDate, comments });
   }
@@ -165,9 +177,22 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
     })
   }
 
+  approveAction() {
+    this.close({
+      confirm: true,
+    })
+  }
+
   closeMarkUnEligible() {
     this.close({
       comments: this.data.markUnEligibleReason
+    })
+  }
+
+  commenceSubProcessScheme() {
+    this.close({
+      subProcessNumber: this.data.subProcessNumber,
+      subProcessName: this.data.subProcessName,
     })
   }
 

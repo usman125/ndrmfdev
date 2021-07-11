@@ -83,6 +83,9 @@ import { ConcernedPersonDialogComponent } from './components/concerned-person-di
 import { QprSingleRequestStore } from './stores/qpr-single-request/qpr-single-request-store';
 import { AdvanceLiquidationItemStore } from './stores/advance-liquidation-item/advance-liquidation-item-store';
 import { QprToDonorRequestStore } from './stores/qpr-to-donor-request/qpr-to-donor-request-store';
+// import { SubProjectDocumentCommentsMatrixComponent } from './components/sub-project-document-comments-matrix/sub-project-document-comments-matrix.component';
+// import { SubProjectDocumentDmpamTasksComponent } from './components/sub-project-document-dmpam-tasks/sub-project-document-dmpam-tasks.component';
+// import { SubProjectDocumentTasksComponent } from './components/sub-project-document-tasks/sub-project-document-tasks.component';
 // import { QprToDonorRequestComponent } from './components/qpr-to-donor-request/qpr-to-donor-request.component';
 // import { QprToDonorComponent } from './components/qpr-to-donor/qpr-to-donor.component';
 // import { SumPipe } from './pipes/sum-columns.pipe';
@@ -106,6 +109,9 @@ export function tokenGetter() {
     ActivityDetailsComponent,
     GrievanceRegistrationComponent,
     ConcernedPersonDialogComponent,
+    // SubProjectDocumentCommentsMatrixComponent,
+    // SubProjectDocumentDmpamTasksComponent,
+    // SubProjectDocumentTasksComponent,
     // QprToDonorRequestComponent,
     // QprToDonorComponent,
     // SumPipe,

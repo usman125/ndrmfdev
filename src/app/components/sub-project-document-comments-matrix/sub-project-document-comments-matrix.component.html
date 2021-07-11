@@ -1,0 +1,46 @@
+<mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+  <mat-toolbar-row>
+    <span class="d-flex align-items-center">
+      Comments Matrix Form
+    </span>
+    <div class="example-spacer"></div>
+    <button class="mr-2" mat-icon-button color="primary" [useExistingCss]="true" printSectionId="print-section"
+      ngxPrint>
+      <mat-icon>print</mat-icon>
+    </button>
+    <button class="d-flex align-items-center" (click)="fipIntimation()" color="accent" mat-button>
+      <mat-icon class="mr-2">feedback</mat-icon> Intimate Fip
+    </button>
+    <button class="d-flex align-items-center" (click)="goBack()" color="warn" mat-button>
+      <mat-icon>highlight_off</mat-icon> Close Comments
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="matrix" id="print-section">
+  <div class="row header-row">
+    <div class="col-md-3 item">
+      <h6> Name</h6>
+    </div>
+    <div class="col-md-3 item">
+      <h6> Proposal Sections</h6>
+    </div>
+    <div class="col-md-3 item">
+      <h6> Comments</h6>
+    </div>
+    <div class="col-md-3 item">
+      <h6> Date</h6>
+    </div>
+  </div>
+  <div class="row data-row" *ngFor="let item of allComments;">
+    <div class="col-md-3 item"><span class="mobileheads">Name</span><span>{{item.addedBy || 'N/A'}}</span></div>
+    <div class="col-md-3 item">
+      <span class="mobileheads">Section(s)</span>
+      <mat-chip-list>
+        <mat-chip *ngFor="let section of item.sections;">{{section}}</mat-chip>
+      </mat-chip-list>
+    </div>
+    <div class="col-md-3 item"><span class="mobileheads">Comments</span><span>{{item.comment || 'N/A'}}</span></div>
+    <div class="col-md-3 item"><span class="mobileheads">Date</span><span>{{item.createdAt | date:'shortDate'}}</span>
+    </div>
+  </div>
+</div>

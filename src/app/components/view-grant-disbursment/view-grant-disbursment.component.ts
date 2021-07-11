@@ -1523,8 +1523,8 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     // console.log("AMOUNT CHANGED:--", $event.srcElement.value);
     if ($event.srcElement.value > item.totalCost) {
       item.amount = item.totalCost;
+      this.openSnackBar('CANNOT EXCEEDED AMOUNT!', 'Exit');
     }
-    this.openSnackBar('CANNOT EXCEEDED AMOUNT!', 'Exit');
   }
 
   // ******** FIEL UPLOAD CODE ************

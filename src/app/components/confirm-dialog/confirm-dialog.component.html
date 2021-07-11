@@ -143,19 +143,33 @@
 
     </div>
 
+    <div class="controls" *ngIf="data?.subProcess">
+      <section>
+        <mat-form-field class="mb-2" appearance="outline">
+          <mat-label>Please enter preffered number</mat-label>
+          <input type="number" matInput placeholder="Enter Name Here..." [(ngModel)]="data.subProcessNumber">
+        </mat-form-field>
+        <mat-form-field class="mb-2" appearance="outline">
+          <mat-label>Please enter preffered name</mat-label>
+          <input type="text" matInput placeholder="Enter Name Here..." [(ngModel)]="data.subProcessName">
+        </mat-form-field>
+      </section>
+    </div>
+
     <div class="controls" *ngIf="data?.proposal_initmation">
       <mat-form-field appearance="outline">
         <mat-select (selectionChange)="proposalSectionChanged($event)" placeholder="Select Sections"
           [formControl]="proposalSections" multiple>
           <mat-select-trigger>
             <span *ngFor="let item of proposalSections.value; let i=index">
-              <span *ngIf="i===0">{{item.name}}</span>
+              <span *ngIf="i===0">{{item.name || item.sectionName}}</span>
             </span>
             <span *ngIf="proposalSections.value?.length > 1" class="example-additional-selection">
               (+{{proposalSections.value.length - 1}} others)
             </span>
           </mat-select-trigger>
-          <mat-option *ngFor="let object of data?.proposal_sections;" [value]="object">{{object.name}}</mat-option>
+          <mat-option *ngFor="let object of data?.proposal_sections;" [value]="object">{{object.name ||
+            object.sectionName}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field appearance="outline">
@@ -176,8 +190,17 @@
       </mat-form-field>
     </div>
 
-    <div class="controls" *ngIf="data?.enableLoading">
+    <div class="controls" *ngIf="data?.changeSpdStatus">
+      <mat-form-field appearance="outline">
+        <mat-select placeholder="Select a Status" [(ngModel)]="data.spdStatus">
+          <mat-option *ngFor="let object of spdStatuses;" [value]="object">
+            {{object}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
 
+    <div class="controls" *ngIf="data?.enableLoading">
       <mat-progress-spinner diameter="35" mode="indeterminate"></mat-progress-spinner>
     </div>
 
@@ -249,7 +272,6 @@
       mat-raised-button (click)="addThematicAreas()" color="warn" class="m-2">
       {{data.cancelText | uppercase}}
     </button>
-
     <button *ngIf="data?.selectThematic" mat-raised-button (click)="cancel()" color="warn" class="m-2">
       {{'Cancel' | uppercase}}
     </button>
@@ -259,6 +281,14 @@
     </button>
     <button mat-raised-button *ngIf="data?.proposal_initmation" color="primary" [disabled]="proposalSections.value?.length === 0
     || !proposalSections.value || !data?.comments" (click)="proposalIntimation()">
+      {{data.confirmText | uppercase}}
+    </button>
+
+    <button mat-raised-button *ngIf="data?.subProcess" (click)="cancel()" color="warn">
+      {{data.cancelText | uppercase}}
+    </button>
+    <button mat-raised-button *ngIf="data?.subProcess" color="primary"
+      [disabled]="!data?.subProcessNumber || !data?.subProcessName" (click)="commenceSubProcessScheme()">
       {{data.confirmText | uppercase}}
     </button>
 
@@ -278,11 +308,25 @@
       {{data.confirmText | uppercase}}
     </button>
 
+    <button mat-raised-button *ngIf="data?.enableGia" (click)="cancel()" color="warn">
+      {{data.cancelText | uppercase}}
+    </button>
     <button mat-raised-button *ngIf="data?.enableGia" (click)="enableGia('GIA')" color="accent">
       {{data.confirmText | uppercase}}
     </button>
-    <button mat-raised-button *ngIf="data?.enableGia" (click)="cancel()" color="warn">
+
+    <button mat-raised-button *ngIf="data?.confirmAction" (click)="cancel()" color="warn">
       {{data.cancelText | uppercase}}
+    </button>
+    <button mat-raised-button *ngIf="data?.confirmAction" (click)="approveAction()" color="accent">
+      {{data.confirmText | uppercase}}
+    </button>
+
+    <button mat-raised-button *ngIf="data?.changeSpdStatus" (click)="cancel()" color="warn">
+      {{data.cancelText | uppercase}}
+    </button>
+    <button mat-raised-button *ngIf="data?.changeSpdStatus" (click)="changeSpdStatus()" color="accent">
+      {{data.confirmText | uppercase}}
     </button>
   </div>
 </div>

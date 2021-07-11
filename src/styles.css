@@ -617,3 +617,10 @@ table tbody tr td {
   font-size: 12px !important;
   /* text-align: center !important; */
 }
+
+.heighted-box {
+  max-height: 250px;
+  min-height: 150px;
+  overflow: hidden;
+  overflow-y: scroll;
+}

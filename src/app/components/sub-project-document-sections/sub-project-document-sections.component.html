@@ -1,67 +1,15 @@
 <div class="row">
   <div class="col-md-8 pr-0" *ngIf="allSections.length && !commentsFlag">
-    <mat-card class="m-20 p-0" *ngIf="viewType === 'view'">
-      <mat-card-content>
-        <!-- <div class="assigned">
-          <div class="section" *ngFor="let section of assignedSections">
-            <div class="section-state flex-row-between p-3 mat-elevation-z3">
+    <div class="unassigned">
+      <div class="section margin-5 appraisal-box" *ngFor="let section of dataSource">
+        <mat-card class="m-20 p-0" *ngIf="viewType === 'view'">
+          <mat-card-content>
+            <div class="section-state flex-row-between p-3 mat-elevation-z8">
               <div class="name flex-row-between">
                 <div class="flex-column-start">
                   <h6>{{section.template.name}}</h6>
-                  <span class="flex-row-between" *ngIf="section?.reviewStatus === null" id="warn-comment">
-                    Not Reviewed
-                  </span>
-                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Review Pending'" id="warn-comment">
-                    Pending Review
-                  </span>
-                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Review Completed'" id="comment">
-                    Reviewed
-                  </span>
                 </div>
               </div>
-            </div>
-            <div class="p-4">
-              <div class="section-state flex-row-between p-2 mb-3 mt-3">
-                <div class="state">
-                  <span class="flex-row-between" *ngIf="section?.reviewStatus === null">
-                    <mat-icon class="mr-2" id="warn-comment">warning</mat-icon>
-                    <span id="answer">{{section.sme?.name}}</span>
-                  </span>
-                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Review Pending'">
-                    <mat-icon class="mr-2" id="warn-comment">info</mat-icon>
-                    <span id="answer">{{section.sme?.name}}</span>
-                  </span>
-                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Review Completed'">
-                    <mat-icon class="mr-2" id="comment">check</mat-icon>
-                    <span id="answer">{{section.sme?.name}}</span>
-                  </span>
-                </div>
-              </div>
-              <formio [form]="section.template" [submission]="{data:section.data}" readOnly="true"></formio>
-            </div>
-          </div>
-        </div> -->
-        <div class="unassigned">
-          <div class="section margin-5 appraisal-box" *ngFor="let section of dataSource">
-            <div class="section-state flex-row-between p-3 mat-elevation-z3">
-              <div class="name flex-row-between">
-                <div class="flex-column-start">
-                  <h6>{{section.template.name}}</h6>
-                  <span class="flex-row-between" *ngIf="section?.reviewStatus === null" id="warn-comment">
-                    Not Reviewed
-                  </span>
-                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Pending'" id="warn-comment">
-                    Pending Review
-                  </span>
-                  <span class="flex-row-between" *ngIf="section?.reviewStatus === 'Review Completed'" id="comment">
-                    Reviewed
-                  </span>
-                </div>
-              </div>
-              <button *ngIf="loggedUser?.role === 'process owner'" mat-button color="primary"
-                [disabled]="section?.reviewStatus === 'Pending'" (click)="assignForReview(section)">
-                <mat-icon class="mr-1">alarm</mat-icon>{{'Assign Task' | uppercase}}
-              </button>
             </div>
             <div class="p-4">
               <div class="section-state flex-row-between p-2 mb-3 mt-3">
@@ -82,54 +30,91 @@
               </div>
               <formio [form]="section.template" [submission]="{data:section.data}" readOnly="true"></formio>
             </div>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
   </div>
   <div class="col-md-4 pl-0" *ngIf="allSections.length && !commentsFlag">
-    <mat-card class="m-20 ml-0" *ngIf="loggedUser?.role === 'process owner'">
-      <mat-card-content>
-        <div class="fullbtn mb-2">
-          <button (click)="filterSections('completed')" color="accent" mat-raised-button>{{'Reviewed' |
-            uppercase}}</button>
-        </div>
-        <div class="fullbtn mb-2">
-          <button (click)="filterSections('pending')" color="primary" mat-raised-button>{{'Pending' |
-            uppercase}}</button>
-        </div>
-        <div class="fullbtn mb-2">
-          <button [disabled]="filterType === null" (click)="filterSections('reset')" color="warn"
-            mat-raised-button>RESET ALL</button>
-        </div>
-        <mat-list>
-          <mat-list-item>
-            <mat-icon mat-list-icon>alarm</mat-icon>
-            <div mat-line>{{'start date'}}</div>
-            <!-- <div mat-line>{{sectionStats?.pendingCount}}</div> -->
-          </mat-list-item>
-          <mat-list-item>
-            <mat-icon mat-list-icon>alarm</mat-icon>
-            <div mat-line>{{'end date'}}</div>
-            <!-- <div mat-line>{{sectionStats?.unassignCount}}</div> -->
-          </mat-list-item>
-          <mat-list-item>
-            <mat-icon mat-list-icon>assignment_turned_in</mat-icon>
-            <div mat-line>{{'Pending Reviews'}}</div>
-            <div mat-line>{{sectionStats?.pendingCount || 0}}</div>
-          </mat-list-item>
-          <mat-list-item>
-            <mat-icon mat-list-icon>folder</mat-icon>
-            <div mat-line>{{'Total Sections'}}</div>
-            <div mat-line>{{allSections.length}}</div>
-          </mat-list-item>
-        </mat-list>
-        <button mat-button color="primary" (click)="toggleComments()">
-          {{'view comments' | uppercase}}
-        </button>
-      </mat-card-content>
-    </mat-card>
-    <mat-card class="m-20 ml-0" *ngIf="loggedUser?.role === 'sme'">
+    <div *ngIf="loggedUser?.role === 'process owner' && loggedUser?.processNames.indexOf('SUB_PROJECT_DOCUMENT') > -1">
+      <mat-card class="m-20 ml-0">
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <mat-icon mat-list-icon>info</mat-icon>
+              <div mat-line>{{'Scheme Status'}}</div>
+              <div mat-line>{{selectedRequest?.status || '&nbsp;'}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>folder</mat-icon>
+              <div mat-line>{{'Scheme Sections'}}</div>
+              <div mat-line>{{allSections.length}}</div>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>assignment_delayed</mat-icon>
+              <div mat-line>{{'Assigned Dmpam Tasks'}}</div>
+              <div mat-line>{{selectedRequest?.dmpamTasks?.length || 0}}</div>
+            </mat-list-item>
+          </mat-list>
+          <div class="fullbtn mt-2">
+            <button [disabled]="selectedRequest?.status === 'Pending'" *ngIf="!changeStatusLoader" mat-raised-button
+              color="warn" (click)="changeSubProjectDocStatus()">
+              Change Status
+            </button>
+            <div *ngIf="changeStatusLoader" class="d-flex justify-content-center flex-fill">
+              <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="m-20 ml-0">
+        <mat-card-content>
+          <div class="fullbtn mb-2">
+            <mat-form-field appearance="outline">
+              <mat-label>Select Dm Pam to review</mat-label>
+              <mat-select [disabled]="selectedRequest?.status === 'Approved' || 
+              selectedRequest?.status === 'Conditional Approved' || 
+              selectedRequest?.status === 'Rejected'" [(ngModel)]="dmUser" placeholder="Select user">
+                <mat-option [disabled]="disableDmPamOption(object)" *ngFor="let object of allDms;" [value]="object">
+                  {{object.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button mat-raised-button color="primary" [disabled]="!dmUser" (click)="assignDmUsersForReviews()">Assign
+              For
+              Review</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="m-20 ml-0">
+        <mat-card-content>
+          <span style="display: block;" id="answer" class="pl-2 mt-3 mb-3">{{"Assigned Tasks for Dm Pam" |
+            uppercase}}</span>
+          <div class="d-flex p-3 mb-2" style="background-color: rgba(235, 235, 235, 0.5);"
+            *ngFor="let task of selectedRequest.dmpamTasks">
+            <div class="d-flex flex-fill flex-column">
+              <span>
+                {{task.assignee.name || '&nbsp;'}}
+              </span>
+              <span class="mt-2 d-flex flex-fill align-items-center" [ngClass]="{'warn-comment-b': task.status === 'Review Pending',
+                'comment-b': task.status === 'Review Completed' || task.status === 'Approved',
+              'notify-text': task.status === 'Rejected'}">
+                {{task.status || '&nbsp;'}}
+              </span>
+              <button class="mt-3" mat-button color="warn" (click)="toggleComments(task)">
+                {{'view comments' | titlecase}}
+              </button>
+            </div>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+
+    <!-- SME REVIEW SUBMISSION ON SECTION -->
+    <!-- <mat-card class="m-20 ml-0" *ngIf="loggedUser?.role === 'sme'">
       <div class="card-header">
         Enter Your Remarks
       </div>
@@ -143,12 +128,6 @@
             </option>
           </select>
         </mat-form-field>
-        <!-- <div class="card-header">
-          <span [hidden]="!item.assigned" *ngFor="let item of assignedReviewsSections" id="answer">
-            <span>Comments:</span>
-            {{item.comments}}
-          </span>
-        </div> -->
         <mat-form-field appearance="outline">
           <mat-label>General remarks</mat-label>
           <textarea (input)="sectionComments = $event.target.value" [value]="sectionComments"
@@ -159,7 +138,153 @@
           {{'add remarks' | uppercase}}
         </button>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
+
+    <!-- SUBMIT YOUR GENERAL REMARKS -->
+    <div *ngFor="let task of selectedRequest.dmpamTasks">
+      <div *ngFor="let obj of task.tasks">
+        <div *ngIf="obj.assignee.id === loggedUser.id">
+          <mat-card class="m-20 ml-0">
+            <mat-card-content>
+              <div class="border-heading">
+                Enter Your Remarks
+              </div>
+              <span *ngIf="obj.status === 'Completed'" style="display: block;padding-left: 5px;" id="comment-b"
+                class="mb-2">
+                {{obj.status | uppercase}} TASK</span>
+              <span *ngIf="obj.status === 'Pending'" style="display: block;padding-left: 5px;" id="answer" class="mb-2">
+                {{obj.status | uppercase}} TASK</span>
+              <p class="p-3 mb-2" style="background-color: rgba(235, 235, 235, 0.5);">
+                {{obj.comments || '&nbsp;'}}
+              </p>
+              <mat-form-field appearance="outline">
+                <mat-select placeholder="Select Sections" [formControl]="unAssignSections" multiple>
+                  <mat-select-trigger>
+                    <span *ngFor="let item of unAssignSections?.value; let i=index">
+                      <span *ngIf="i===0">{{item.sectionName}}</span>
+                    </span>
+                    <span *ngIf="unAssignSections.value?.length > 1" class="example-additional-selection">
+                      (+{{unAssignSections.value.length - 1}} others)
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option *ngFor="let topping of allSections" [value]="topping">{{topping.sectionName}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>General remarks</mat-label>
+                <textarea [disabled]="obj.status === 'Completed'" (input)="sectionComments = $event.target.value"
+                  [value]="sectionComments" placeholder="enter your remarks..." matInput cols="30" rows="10"></textarea>
+              </mat-form-field>
+              <div class="fullbtn mt-2">
+                <button (click)="addUnAssignedSectionReview(task.id, obj.id)" mat-raised-button color="primary"
+                  [disabled]="obj.status === 'Completed' || !sectionComments || unAssignSections.value?.length === 0">Submit
+                  Remarks</button>
+              </div>
+              <small class="mt-2">* Please select a specific section(s) to remark or submit a general remark without
+                selecting
+                section.</small>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+
+    <!-- DM PAM ASSIGN USERS FOR REVIEWS -->
+    <div *ngFor="let task of selectedRequest.dmpamTasks">
+      <div *ngIf="task.assignee.id === loggedUser.id">
+
+        <mat-card class="m-20 ml-0">
+          <mat-card-content>
+            <span style="display: block;" id="answer" class="pl-2 mt-2 mb-3">{{"Assigned Tasks for dm pam" |
+              uppercase}}</span>
+            <div class="d-flex p-3 mb-2" style="background-color: rgba(235, 235, 235, 0.5);"
+              *ngFor="let task of selectedRequest.dmpamTasks">
+              <div class="d-flex flex-column flex-fill">
+                <span>
+                  {{task.assignee.name || '&nbsp;'}}
+                </span>
+                <span class="d-flex flex-fill align-items-center" [ngClass]="{'warn-comment-b': task.status === 'Review Pending',
+                'comment-b': task.status === 'Review Completed' || task.status === 'Approved',
+              'notify-text': task.status === 'Rejected'}" class="mt-2">
+                  {{task.status || '&nbsp;'}}
+                </span>
+                <div *ngIf="!changeStatusLoader" class="d-flex flex-column flex-fill">
+                  <button class="mt-3" mat-button color="primary" (click)="toggleComments(task)">
+                    {{'view comments' | uppercase}}
+                  </button>
+                  <button [disabled]="task.status === 'Approved' || task.status === 'Rejected'" mat-button
+                    color="accent" (click)="changeSubProjectDocDmPamTaskStatus(task.id, 'APPROVED')">
+                    APPROVE
+                  </button>
+                  <button [disabled]="(task.status === 'Approved' || task.status === 'Rejected')" mat-button
+                    color="warn" (click)="changeSubProjectDocDmPamTaskStatus(task.id, 'REJECTED')">
+                    REJECT
+                  </button>
+                </div>
+                <div *ngIf="changeStatusLoader" class="d-flex justify-content-center flex-fill">
+                  <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="m-20 ml-0">
+          <mat-card-content>
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Select User(s) For Reviews</mat-label>
+              <mat-select matNativeControl [compareWith]="compareSmeObjects" [formControl]="reviewUsers" multiple>
+                <mat-form-field class="p-3 filter-input" appearance="outline">
+                  <mat-label>Filter By Department</mat-label>
+                  <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
+                </mat-form-field>
+                <mat-select-trigger>
+                  <span *ngFor="let item of reviewUsers.value; let i=index">
+                    <span *ngIf="i===0">{{item.name}}</span>
+                  </span>
+                  <span *ngIf="reviewUsers.value?.length > 1">
+                    (+{{reviewUsers.value.length - 1}} others)
+                  </span>
+                </mat-select-trigger>
+                <mat-optgroup *ngFor="let user of allUsers | depUserFilter:filterQuery" [label]="user.name">
+                  <mat-option [hidden]="loggedUser.id === item.id" [disabled]="checkQuarterUserDisabled(item)"
+                    *ngFor="let item of user.users" [value]="item">
+                    {{item.name}}
+                  </mat-option>
+                </mat-optgroup>
+              </mat-select>
+            </mat-form-field>
+            <div class="d-flex flex-fill justify-content-start">
+              <button style="width: 100%;" [disabled]="!reviewUsers.valid" class="mt-2 mb-2" mat-raised-button
+                color="primary" (click)="assignUsersForReviews('quarter', task.id)">
+                Assign For Reviews
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="m-20 ml-0">
+          <mat-card-content>
+            <span style="display: block;" id="answer" class="pl-2 mt-3 mb-3">
+              {{"Assigned users for Reviews" | uppercase}}
+            </span>
+            <div class="heighted-box">
+              <div class="d-flex p-3 mb-2" style="background-color: rgba(235, 235, 235, 0.5);"
+                *ngFor="let task of task.tasks">
+                <div class="d-flex flex-fill justify-content-between align-items-center">
+                  <span>{{task.assignee.name}}</span>
+                  <span class="mt-2" [ngClass]="{'warn-comment-b': task.status === 'Pending',
+                  'comment-b': task.status === 'Completed'}">
+                    {{task.status | titlecase}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
   </div>
   <div class="col-md-12" *ngIf="allSections.length === 0">
     <mat-card class="m-20">
@@ -186,11 +311,17 @@
           </div>
         </div>
         <div class="p-4">
-          <formio *ngIf="section?.data === null" (submit)="onSubmit($event, section)" [form]="section?.template"
+          <formio *ngIf="section?.data === null && ((section.status === null || section.status === 'Pending') && 
+            section.reassignmentStatus === null)" (submit)="onSubmit($event, section)" [form]="section?.template"
             [submission]="{data:section.data}">
           </formio>
-          <formio *ngIf="section?.data !== null" [form]="section?.template" readOnly="true"
-            [submission]="{data:section.data}"></formio>
+          <formio *ngIf="section?.data !== null && section.status === 'Completed' && 
+          section.reassignmentStatus === 'Pending'" (submit)="onSubmit($event, section)" [form]="section?.template"
+            [submission]="{data:section.data}">
+          </formio>
+          <formio *ngIf="section?.data !== null && (section.status === 'Completed' && 
+          (section.reassignmentStatus === null || section.reassignmentStatus === 'Completed'))"
+            [form]="section?.template" readOnly="true" [submission]="{data:section.data}"></formio>
         </div>
       </div>
     </div>
@@ -199,43 +330,40 @@
 
 <mat-card class="m-20" *ngIf="commentsFlag">
   <mat-card-content>
-    <div class="d-flex justify-content-end">
-      <button mat-button color="warn" (click)="toggleComments()">
-        {{'close comments' | uppercase}}
-      </button>
-    </div>
-    <div class="matrix" id="print-section">
-      <div class="row header-row">
-        <div class="col-md-3 item">
-          <h6 id="answer"> Name</h6>
-        </div>
-        <div class="col-md-3 item">
-          <h6 id="answer"> Report Section</h6>
-        </div>
-        <div class="col-md-3 item">
-          <h6 id="answer"> Status</h6>
-        </div>
-        <div class="col-md-3 item">
-          <h6 id="answer"> Comments</h6>
-        </div>
-        <div class="col-md-3 item">
-          <h6 id="answer"> Date</h6>
-        </div>
-      </div>
-      <div class="row data-row" *ngFor="let item of allSections;">
-        <div class="col-md-3 item"><span class="mobileheads">Name</span><span>{{item?.sme?.name || 'N/A'}}</span></div>
-        <div class="col-md-3 item">
-          {{item?.template?.name}}
-        </div>
-        <div class="col-md-3 item">
-          {{item.status}}
-        </div>
-        <div class="col-md-3 item"><span class="mobileheads">Comments</span><span>{{item.comments || 'N/A'}}</span>
-        </div>
-        <div class="col-md-3 item"><span class="mobileheads">Date</span><span>{{item.reviewCompletedOn |
-            date:'shortDate'}}</span>
-        </div>
-      </div>
-    </div>
+    <app-sub-project-document-comments-matrix (exit)="closeCommentsMatrix()"></app-sub-project-document-comments-matrix>
   </mat-card-content>
 </mat-card>
+
+<!-- <div class="matrix" id="print-section">
+  <div class="row header-row">
+    <div class="col-md-3 item">
+      <h6 id="answer"> Name</h6>
+    </div>
+    <div class="col-md-3 item">
+      <h6 id="answer"> Report Section</h6>
+    </div>
+    <div class="col-md-3 item">
+      <h6 id="answer"> Status</h6>
+    </div>
+    <div class="col-md-3 item">
+      <h6 id="answer"> Comments</h6>
+    </div>
+    <div class="col-md-3 item">
+      <h6 id="answer"> Date</h6>
+    </div>
+  </div>
+  <div class="row data-row" *ngFor="let item of allSections;">
+    <div class="col-md-3 item"><span class="mobileheads">Name</span><span>{{item?.sme?.name || 'N/A'}}</span></div>
+    <div class="col-md-3 item">
+      {{item?.template?.name}}
+    </div>
+    <div class="col-md-3 item">
+      {{item.status}}
+    </div>
+    <div class="col-md-3 item"><span class="mobileheads">Comments</span><span>{{item.comments || 'N/A'}}</span>
+    </div>
+    <div class="col-md-3 item"><span class="mobileheads">Date</span><span>{{item.reviewCompletedOn |
+        date:'shortDate'}}</span>
+    </div>
+  </div>
+</div> -->

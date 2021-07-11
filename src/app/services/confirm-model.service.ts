@@ -39,6 +39,12 @@ export class ConfirmModelService {
         enableGia: options.enableGia,
         enableLoading: options.enableLoading,
         commentField: options.commentField,
+        subProcess: options.subProcess,
+        subProcessName: options.subProcessName,
+        subProcessNumber: options.subProcessNumber,
+        confirmAction: options.confirmAction,
+        changeSpdStatus: options.changeSpdStatus,
+        spdStatus: options.spdStatus,
       };
       this.dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     } else {
@@ -67,6 +73,12 @@ export class ConfirmModelService {
           enableGia: options.enableGia,
           enableLoading: options.enableLoading,
           commentField: options.commentField,
+          subProcess: options.subProcess,
+          subProcessName: options.subProcessName,
+          subProcessNumber: options.subProcessNumber,
+          confirmAction: options.confirmAction,
+          changeSpdStatus: options.changeSpdStatus,
+          spdStatus: options.spdStatus,
         }
       });
     }

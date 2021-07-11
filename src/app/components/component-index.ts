@@ -1,10 +1,10 @@
-export  { CeoActionsComponent } from './ceo-actions/ceo-actions.component';
+export { CeoActionsComponent } from './ceo-actions/ceo-actions.component';
 export { CEOComponent } from './ceo/ceo.component';
 export { GrcActionsComponent } from './grc-actions/grc-actions.component';
 
-export  { EvidenceAndReviewsComponent } from './evidence-and-reviews/evidence-and-reviews.component';
+export { EvidenceAndReviewsComponent } from './evidence-and-reviews/evidence-and-reviews.component';
 export { ShowAttachmentsComponent } from './show-attachments/show-attachments.component';
-export  { UpdateComplaintComponent } from './update-complaint/update-complaint.component';
+export { UpdateComplaintComponent } from './update-complaint/update-complaint.component';
 export { UpdateComplaintStatusComponent } from './update-complaint-status/update-complaint-status.component';
 export { GRCComponent } from './grc/grc.component';
 export { EmailToConcernPersonComponent } from './email-to-concern-person/email-to-concern-person.component';
@@ -74,6 +74,7 @@ export { DataFilterPipe } from '../pipes/data-filter.pipe';
 export { CostsFilterPipe } from '../pipes/costs-filter.pipe';
 export { DepUserFilterPipe } from '../pipes/dep-user-filter.pipe';
 export { DepUserFilterPipe2 } from '../pipes/dep-user-filter.pipe2';
+export { DepUserFilterPipe3 } from '../pipes/dep-user-filter.pipe3';
 export { QprSumPipe } from '../pipes/qpr-sum-columns.pipe';
 
 export { CeoHomeComponent } from './ceo-home/ceo-home.component';
@@ -92,6 +93,8 @@ export { SubmitGiaReviewsComponent } from './submit-gia-reviews/submit-gia-revie
 export { GiaChecklistComponent } from './gia-checklist/gia-checklist.component';
 export { ViewGiaChecklistComponent } from './view-gia-checklist/view-gia-checklist.component';
 export { SubProjectDocumentComponent } from './sub-project-document/sub-project-document.component';
+export { SubProjectDocumentDmpamTasksComponent } from './sub-project-document-dmpam-tasks/sub-project-document-dmpam-tasks.component';
+export { SubProjectDocumentTasksComponent } from './sub-project-document-tasks/sub-project-document-tasks.component';
 
 export { SubProjectDocumentSectionsComponent } from './sub-project-document-sections/sub-project-document-sections.component';
 export { FillSubProjectDocumentSectionsComponent } from './fill-sub-project-document-sections/fill-sub-project-document-sections.component';
@@ -130,3 +133,4 @@ export { DesignationsComponent } from './designations/designations.component';
 
 export { QprToDonorComponent } from './qpr-to-donor/qpr-to-donor.component'
 export { QprToDonorRequestComponent } from './qpr-to-donor-request/qpr-to-donor-request.component'
+export { SubProjectDocumentCommentsMatrixComponent } from './sub-project-document-comments-matrix/sub-project-document-comments-matrix.component'

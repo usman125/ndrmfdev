@@ -7,13 +7,15 @@ export class SubProjectDocStore extends Store<SubProjectDocState> {
   constructor() {
     super(new SubProjectDocState());
   }
-  
+
   addRequest(
     endDate: string,
     id: string,
     proposalName: string,
     startDate: string,
     status: string,
+    docName: string,
+    docNumber: string,
   ): void {
     this.setState({
       ...this.state,
@@ -25,12 +27,14 @@ export class SubProjectDocStore extends Store<SubProjectDocState> {
           proposalName: proposalName,
           startDate: startDate,
           status: status,
+          docName: docName,
+          docNumber: docNumber,
         }
       ]
     });
   }
 
-  addAllRequests(requests){
+  addAllRequests(requests) {
     this.setState({
       ...this.state,
       requests: requests

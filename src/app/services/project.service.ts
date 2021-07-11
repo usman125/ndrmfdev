@@ -315,11 +315,11 @@ export class ProjectService {
   }
 
   // SUB PROJECT DOCUMENT
-  commenceSubProjectDoc(proposalId) {
+  commenceSubProjectDoc(proposalId, body) {
     const url = `${AppConfig.apiUrl}/implementation/${proposalId}/sub-proj-doc/commence`;
     return this._httpClient.post(
       url,
-      null
+      body
     );
   }
 
@@ -432,6 +432,68 @@ export class ProjectService {
         body: null,
         amount: null,
       }
+    );
+  }
+
+  addSubProjectDmPamTasks(requestId, body) {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/${requestId}/assign/dmpam/tasks`;
+    return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
+  getSubProjectDmPamTasks() {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/dmpam/tasks`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
+  getSubProjectTasks() {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/user/tasks`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+
+  assignUsersForReviewsByDmpam(requestId, body) {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/${requestId}/dmpam/assign/reviews`;
+    return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
+  submitSubProjectDocumentGeneralReview(id, taskId, data) {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/${id}/comment/add/${taskId}`;
+    return this._httpClient.post(
+      url,
+      data
+    );
+  }
+
+  reassignSubProjectDocToFIP(requestId, sectionIds) {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/${requestId}/reassign`;
+    return this._httpClient.post(
+      url,
+      sectionIds
+    );
+  }
+
+  changeSubProjectDocDmPamTaskStatus(requestId, status) {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/change-dmpam-task/${requestId}/status?status=${status}`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
+  changeSubProjectDocStatus(requestId, status) {
+    const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/change/${requestId}/status?status=${status}`;
+    return this._httpClient.put(
+      url,
+      null
     );
   }
 

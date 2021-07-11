@@ -1,13 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-// import { ExtendedAppraisalSmesStore } from "../../stores/extended-appraisal-smes/extended-appraisal-smes-store";
-// import { ExtendedAppraisalFormsStore } from "../../stores/extended-appraisal-forms/extended-appraisal-forms-store";
 import { Subscription } from "rxjs";
 import { AccreditationCommentsMatrixStore } from 'src/app/stores/accreditation-comments-matrix/accreditation-comments-matrix-store';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { ProjectService } from 'src/app/services/project.service';
 import { ConfirmModelService } from 'src/app/services/confirm-model.service';
-import { SettingsService } from 'src/app/services/settings.service';
+import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-extended-appraisal-smes',
@@ -23,14 +20,11 @@ export class ExtendedAppraisalSmesComponent implements OnInit, OnDestroy {
   selectedProject: any = null;
 
   constructor(
-    // private _extendedAppraisalSmesStore: ExtendedAppraisalSmesStore,
-    // private _extendedAppraisalFormsStore: ExtendedAppraisalFormsStore,
     private _accreditationCommentsMatrixStore: AccreditationCommentsMatrixStore,
     private _activatedRoute: ActivatedRoute,
-    private _projectService: ProjectService,
-    private _settingsService: SettingsService,
     private _confirmModelService: ConfirmModelService,
     private _location: Location,
+    private _projectService: ProjectService,
   ) { }
 
   ngOnInit(): void {

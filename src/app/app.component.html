@@ -10,8 +10,9 @@
     <mat-sidenav #sidenav *ngIf="loggedUser" mode="side" [opened]="sideNavMode" class="example-sidenav">
       <div class="profile-info">
         <img src="../assets/dummy.png" alt="Profile Image">
-        <div class="pro-name">
+        <div class="pro-name d-flex flex-column align-items-center justify-content-center">
           <span id="answer">{{userInfo?.firstName}}&nbsp;{{userInfo?.lastName}}</span>
+          <small class="mt-1" id="comment-b">{{userInfo?.role | titlecase}}</small>
         </div>
       </div>
       <div class="hero" *ngIf="loggedUserRole === 'admin'">
@@ -135,7 +136,7 @@
               <a *ngIf="accredited === false" mat-list-item disabled href="javascript: void(0);">Post a
                 Project</a>
               <a *ngIf="accredited === true" mat-list-item routerLinkActive="active-menu-item"
-                routerLink="/sub-project-document">Sub Project Documents</a>
+                routerLink="/sub-project-document">Sub Process Scheme Doc</a>
             </mat-nav-list>
           </mat-expansion-panel>
 
@@ -314,6 +315,21 @@
           </mat-expansion-panel>
         </mat-accordion>
 
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Sub Process Document Scheme
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sub-project-document-tasks">
+                Review Requests By DM
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </div>
 
       <div class="hero" *ngIf="loggedUserRole === 'dm pam'">
@@ -379,6 +395,25 @@
             <mat-nav-list>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/grant-disbursments">
                 All Requests
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        <mat-accordion multi="true">
+
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Sub Process Scheme Document
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sub-project-document-dmpam-tasks">
+                Review Requests By PAM
+              </a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sub-project-document-tasks">
+                Review Requests By DM
               </a>
             </mat-nav-list>
           </mat-expansion-panel>
@@ -459,6 +494,21 @@
           </mat-expansion-panel>
         </mat-accordion>
 
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Sub Process Document Scheme
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sub-project-document-tasks">
+                Review Requests By DM
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </div>
 
       <div class="hero" *ngIf="loggedUserRole === 'ceo'">
@@ -534,6 +584,21 @@
           </mat-expansion-panel>
         </mat-accordion>
 
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Sub Process Document Scheme
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sub-project-document-tasks">
+                Review Requests By DM
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </div>
 
 
@@ -585,8 +650,7 @@
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/primary-appraisal">Proposal
                 Requests</a>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/prepare-gia">Prepare Gia</a>
-              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sub-project-document">Sub
-                Project Documents</a>
+
             </mat-nav-list>
           </mat-expansion-panel>
         </mat-accordion>
@@ -653,6 +717,23 @@
             <mat-nav-list>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/qpr-to-donor">
                 All Requests
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Sub Process Document Scheme
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sub-project-document">Sub
+                Project Documents</a>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sub-project-document-tasks">
+                Review Requests By DM
               </a>
             </mat-nav-list>
           </mat-expansion-panel>

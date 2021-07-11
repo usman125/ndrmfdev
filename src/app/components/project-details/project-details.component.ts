@@ -102,6 +102,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
   commenceGdLoader: boolean = false;
   commenceQprLoader: boolean = false;
+  commenceSpdLoader: boolean = false;
 
   constructor(
     private _proposalSectionsStore: ProposalSectionsStore,
@@ -1529,14 +1530,41 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   }
 
   commenceSubProjectDoc() {
-    this._projectService.commenceSubProjectDoc(this.selectedProjectId).subscribe(
-      result => {
-        // console.log("RESULT AFTER COMMENCING:--", result);
-      },
-      error => {
-        console.log("ERROR AFTER COMMENCING:--", error);
+    const options = {
+      title: 'Pease fill details to start sub process scheme doc!!',
+      message: '',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      subProcess: true,
+    };
+    this._confirmModelService.open(options);
+    this._confirmModelService.confirmed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.commenceSpdLoader = true;
+        let body = {
+          docName: confirmed.subProcessName,
+          docNumber: confirmed.subProcessNumber,
+        }
+        console.log("COMMENING SUB PROJECT DOC:--", confirmed, body);
+        this._projectService.commenceSubProjectDoc(this.selectedProjectId, body).subscribe(
+          (result: any) => {
+            this.commenceSpdLoader = false;
+            const options = {
+              title: result.message,
+              message: '',
+              cancelText: 'CANCEL',
+              confirmText: 'OK',
+              add: true,
+            };
+            this._confirmModelService.open(options);
+            console.log("RESULT AFTER COMMENCING:--", result);
+          },
+          error => {
+            console.log("ERROR AFTER COMMENCING:--", error);
+          }
+        );
       }
-    );
+    })
   }
 
   commenceQPR() {
