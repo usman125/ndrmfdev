@@ -154,7 +154,7 @@ export class CostDetailsComponent implements OnInit, OnDestroy {
     this.options = options;
     this.Subscription.add(
       this._primaryAppraisalFormsStore.state$.subscribe(data => {
-        console.log("DATA FROM PRIMARY APPRAISAL FORM STORE:--", data.selectedProject);
+        // console.log("DATA FROM PRIMARY APPRAISAL FORM STORE:--", data.selectedProject);
         if (data.selectedProject !== null)
           this.canEditQpr = data.selectedProject.canEditQpr;
       })

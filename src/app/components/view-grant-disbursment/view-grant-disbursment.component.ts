@@ -1574,11 +1574,6 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   uploadFile() {
     const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
     fileUpload.onchange = () => {
-      // for (let index = 0; index < fileUpload.files.length; index++) {
-      //   const file: File = fileUpload.files[index];
-      //   this.selectedFiles;
-      // }
-      // this.uploadFiles();
       this.selectedFiles = fileUpload.files;
       console.log("THIS SELECUED FILES ARE:---", this.selectedFiles);
     };

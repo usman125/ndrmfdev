@@ -178,6 +178,13 @@
       </mat-form-field>
     </div>
 
+    <div class="controls" *ngIf="data?.confirmAction && data?.confirmComments">
+      <mat-form-field appearance="outline">
+        <mat-label>Your comments</mat-label>
+        <textarea [(ngModel)]="data.comments" matInput placeholder="Enter here..." cols="30" rows="10"></textarea>
+      </mat-form-field>
+    </div>
+
     <div class="controls" *ngIf="data?.markUnEligible">
       <mat-form-field appearance="outline">
         <textarea [(ngModel)]="data.markUnEligibleReason" matInput placeholder="Your comments..." rows="6"></textarea>
@@ -318,7 +325,12 @@
     <button mat-raised-button *ngIf="data?.confirmAction" (click)="cancel()" color="warn">
       {{data.cancelText | uppercase}}
     </button>
-    <button mat-raised-button *ngIf="data?.confirmAction" (click)="approveAction()" color="accent">
+    <button mat-raised-button *ngIf="data?.confirmAction && !data?.confirmComments" (click)="approveAction()"
+      color="accent">
+      {{data.confirmText | uppercase}}
+    </button>
+    <button mat-raised-button *ngIf="data?.confirmAction && data?.confirmComments" (click)="approveActionWithComments()"
+      color="accent">
       {{data.confirmText | uppercase}}
     </button>
 

@@ -21,6 +21,8 @@ export class PrimaryAppraisalFormsState {
     offerLetter: any;
     proposalName: any;
     canEditQpr: any;
+    tpvStatus: any;
+    pcStatus: any;
   } = null;
 }
 

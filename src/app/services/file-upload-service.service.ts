@@ -32,6 +32,26 @@ export class FileUploadService {
     return this.http.request(req);
   }
 
+  uploadTpvFiles(file: File, taskId, type): Observable<any> {
+
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+
+    let header = new HttpHeaders()
+    header.append("Content-Type", "multipart/form-data;")
+
+    let url = `${this.baseUrl}/tpv/${taskId}/upload-file`
+
+    const req = new HttpRequest(
+      'POST',
+      url,
+      formData,
+      { reportProgress: true, responseType: 'json', headers: header }
+    );
+
+    return this.http.request(req);
+  }
+
   getFiles(): Observable<any> {
     return this.http.get(`${this.baseUrl}/files`, { reportProgress: true, responseType: 'json' });
   }

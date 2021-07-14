@@ -27,6 +27,8 @@ import { ProjectImpPlanModule } from '../project-imp-plan/project-imp-plan.modul
 import { ProjectProposalFilesModule } from '../project-proposal-files/project-proposal-files.module';
 import { ResultFrameworkReportModule } from '../result-framework-report/result-framework-report.module';
 import { NgxPrintModule } from 'ngx-print';
+import { ProjectClosureRequestModule } from '../project-closure-request/project-closure-request.module';
+import { TpvModule } from '../tpv/tpv.module';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,8 @@ import { NgxPrintModule } from 'ngx-print';
     CommonModule,
     ProjectDetailsRoutingModule,
     ProjectPlanModule,
+    ProjectClosureRequestModule,
+    TpvModule,
     // ProjectWorkPlanModule,
     // PipModule,
     ProjectImpPlanModule,

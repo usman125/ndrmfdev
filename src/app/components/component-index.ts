@@ -133,4 +133,6 @@ export { DesignationsComponent } from './designations/designations.component';
 
 export { QprToDonorComponent } from './qpr-to-donor/qpr-to-donor.component'
 export { QprToDonorRequestComponent } from './qpr-to-donor-request/qpr-to-donor-request.component'
-export { SubProjectDocumentCommentsMatrixComponent } from './sub-project-document-comments-matrix/sub-project-document-comments-matrix.component'
+export { SubProjectDocumentCommentsMatrixComponent } from './sub-project-document-comments-matrix/sub-project-document-comments-matrix.component';
+export { ProjectClosureRequestComponent } from './project-closure-request/project-closure-request.component'
+export { TpvComponent } from './tpv/tpv.component'

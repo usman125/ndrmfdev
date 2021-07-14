@@ -497,5 +497,51 @@ export class ProjectService {
     );
   }
 
+  commenceProjectClosure(body) {
+    const url = `${AppConfig.apiUrl}/project-closure/commence`;
+    return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
+  commenceTpv(body) {
+    const url = `${AppConfig.apiUrl}/tpv/commence`;
+    return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
+  submitProjectClosureTask(taskId, body) {
+    const url = `${AppConfig.apiUrl}/project-closure/${taskId}/submit`;
+    return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
+  getProjectClosureByProposalId(proposalId) {
+    const url = `${AppConfig.apiUrl}/project-closure/${proposalId}/`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  getTpvRequestsByProposalId(proposalId) {
+    const url = `${AppConfig.apiUrl}/tpv/${proposalId}/`;
+    return this._httpClient.get(
+      url
+    );
+  }
+
+  submitTpvTask(taskId, body) {
+    const url = `${AppConfig.apiUrl}/tpv/${taskId}/submit`;
+    return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
 
 }

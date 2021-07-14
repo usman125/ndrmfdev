@@ -43,7 +43,15 @@
             <mat-list-item>
               <mat-icon mat-list-icon>info</mat-icon>
               <div mat-line>{{'Scheme Status'}}</div>
-              <div mat-line>{{selectedRequest?.status || '&nbsp;'}}</div>
+              <div mat-line>
+                <span [ngClass]="{'answer-b': selectedRequest?.status === 'Pending',  
+                  'info-comment-b': selectedRequest?.status === 'Review Pending' || 
+                  selectedRequest?.status === 'Conditional Approved',
+                  'comment-b': selectedRequest?.status === 'Review Completed' || selectedRequest?.status === 'Approved',
+                  'notify-text': selectedRequest?.status === 'Rejected'}">
+                  {{selectedRequest?.status || '&nbsp;'}}
+                </span>
+              </div>
             </mat-list-item>
             <mat-list-item>
               <mat-icon mat-list-icon>folder</mat-icon>
@@ -57,8 +65,7 @@
             </mat-list-item>
           </mat-list>
           <div class="fullbtn mt-2">
-            <button [disabled]="selectedRequest?.status === 'Pending'" *ngIf="!changeStatusLoader" mat-raised-button
-              color="warn" (click)="changeSubProjectDocStatus()">
+            <button *ngIf="!changeStatusLoader" mat-raised-button color="warn" (click)="changeSubProjectDocStatus()">
               Change Status
             </button>
             <div *ngIf="changeStatusLoader" class="d-flex justify-content-center flex-fill">
@@ -74,8 +81,7 @@
             <mat-form-field appearance="outline">
               <mat-label>Select Dm Pam to review</mat-label>
               <mat-select [disabled]="selectedRequest?.status === 'Approved' || 
-              selectedRequest?.status === 'Conditional Approved' || 
-              selectedRequest?.status === 'Rejected'" [(ngModel)]="dmUser" placeholder="Select user">
+              selectedRequest?.status === 'Conditional Approved'" [(ngModel)]="dmUser" placeholder="Select user">
                 <mat-option [disabled]="disableDmPamOption(object)" *ngFor="let object of allDms;" [value]="object">
                   {{object.name}}</mat-option>
               </mat-select>

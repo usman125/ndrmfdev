@@ -103,6 +103,10 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   commenceGdLoader: boolean = false;
   commenceQprLoader: boolean = false;
   commenceSpdLoader: boolean = false;
+  commenceClosureLoader: boolean = false;
+  commenceTpvLoader: boolean = false;
+  showTpv: boolean = false;
+  showPc: boolean = false;
 
   constructor(
     private _proposalSectionsStore: ProposalSectionsStore,
@@ -170,7 +174,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             if (result !== null) {
               if (c.data) {
                 this.selectedProjectInfo = c.data;
-                console.log("***********************SELECTED PROJECT MONTHS***********************", c.data, this.selectedProjectInfo)
+                // console.log("***********************SELECTED PROJECT MONTHS***********************", c.data, this.selectedProjectInfo)
                 this._authStore.setProjectMonths(c.data.duration);
               }
             }
@@ -266,6 +270,13 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
                 this.sectionStats.giaPendingCount = assignedUsers && assignedUsers.length - giaReviewsCount;
               }
             }
+          }
+
+          if (this.selectedProject.pcStatus !== null) {
+            this.showPc = true;
+          }
+          if (this.selectedProject.tpvStatus !== null) {
+            this.showTpv = true;
           }
 
         }
@@ -1669,6 +1680,89 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         console.log("ERROR COMMENING GD:---", error);
       }
     )
+  }
+
+  commenceProjectClosure() {
+    const options = {
+      title: 'Initiate Project Closure!!',
+      message: 'This will generate closure checklist to users',
+      cancelText: 'CANCEL',
+      confirmText: 'OK',
+      confirmAction: true,
+      confirmComments: true,
+    };
+    this._confirmModelService.open(options);
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      if (confirmed) {
+        let body = {
+          proposalId: this.selectedProjectId,
+          comments: confirmed.comments,
+        }
+        console.log("CONFIRMED:--", confirmed, body);
+        this.commenceClosureLoader = true;
+        this._projectService.commenceProjectClosure(body).subscribe(
+          (result: any) => {
+            this.commenceClosureLoader = false;
+            console.log("RESULT COMMENCING CLOSURE:--", result);
+          },
+          error => {
+            console.log("RESULT COMMENCING CLOSURE:--", error);
+            const options = {
+              title: error.error.message,
+              message: '',
+              cancelText: 'CANCEL',
+              confirmText: 'OK',
+              add: true,
+            };
+            this._confirmModelService.open(options);
+            this._confirmModelService.confirmed().subscribe(confirmed => {
+              this.commenceClosureLoader = false;
+            });
+          }
+        )
+      }
+    })
+  }
+
+  commenceTpv() {
+    const options = {
+      title: 'Initiate TPV, Are you Sure?',
+      message: 'This will generate TPV',
+      cancelText: 'NO',
+      confirmText: 'YES',
+      confirmAction: true,
+    };
+    this._confirmModelService.open(options);
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      if (confirmed) {
+        let body = {
+          proposalId: this.selectedProjectId,
+          comments: "none",
+        }
+        console.log("CONFIRMED:--", confirmed, body);
+        this.commenceTpvLoader = true;
+        this._projectService.commenceTpv(body).subscribe(
+          (result: any) => {
+            this.commenceTpvLoader = false;
+            console.log("RESULT COMMENCING PROJECT TPV:--", result);
+          },
+          error => {
+            console.log("RESULT COMMENCING PROJECT TPV:--", error);
+            const options = {
+              title: error.error.message,
+              message: '',
+              cancelText: 'CANCEL',
+              confirmText: 'OK',
+              add: true,
+            };
+            this._confirmModelService.open(options);
+            this._confirmModelService.confirmed().subscribe(confirmed => {
+              this.commenceTpvLoader = false;
+            });
+          }
+        )
+      }
+    })
   }
 
 }

@@ -624,3 +624,13 @@ table tbody tr td {
   overflow: hidden;
   overflow-y: scroll;
 }
+
+.bgdiv {
+  background-color: rgba(235, 235, 235, 0.7) !important;
+  padding: 15px;
+}
+
+.bgdivl {
+  background-color: rgba(235, 235, 235, 0.2) !important;
+  /* padding: 15px; */
+}

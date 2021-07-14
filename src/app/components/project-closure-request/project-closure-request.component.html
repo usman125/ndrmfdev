@@ -1,0 +1,367 @@
+<!-- ASSIGNED TASKS -->
+<p class="pl-2 pt-2" id="answer">
+  {{'assigned task' | uppercase}}
+</p>
+<div class="" *ngFor="let item of allRequests; let i = index;">
+  <div class="bgdiv d-flex align-items-center justify-content-between" *ngIf="item.assigned">
+    <span>
+      {{item.assignee.name || '&nbsp;'}}
+    </span>
+    <small [ngClass]="{'info-comment-b': item.status === 'Pending',
+            'comment-b': item.status === 'Completed'}">
+      {{item.status || '&nbsp;'}}
+    </small>
+  </div>
+  <div class="d-flex flex-fill flex-column align-items-start justify-content-between mt-2 p-3"
+    *ngIf="item.orderNum === 1 && item.assigned">
+    <div class="d-flex flex-column flex-fill" style="width: 100%;">
+      <div class="d-flex flex-column bgdivl mb-2">
+        <label id="example-radio-group-label">All activities completed?</label>
+        <mat-radio-group [disabled]="item.status === 'Completed' ||
+          (allRequests[i - 1] && allRequests[i - 1]?.status === 'Pending')" class="example-radio-group"
+          [(ngModel)]="item.generalFields.pip">
+          <mat-radio-button class="example-radio-button" value="true">
+            <span id="answer">{{'Yes'}}</span>
+          </mat-radio-button>
+          <mat-radio-button class="example-radio-button" value="false">
+            <span id="answer">{{'No'}}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="d-flex flex-column bgdivl mb-2">
+        <label id="example-radio-group-label">All targets achieved?</label>
+        <mat-radio-group [disabled]="item.status === 'Completed' ||
+          (allRequests[i - 1] && allRequests[i - 1]?.status === 'Pending')" class="example-radio-group"
+          [(ngModel)]="item.generalFields.rf">
+          <mat-radio-button class="example-radio-button" value="true">
+            <span id="answer">{{'Yes'}}</span>
+          </mat-radio-button>
+          <mat-radio-button class="example-radio-button" value="false">
+            <span id="answer">{{'No'}}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="d-flex flex-column bgdivl mb-2">
+        <label id="example-radio-group-label">All reports submitted?</label>
+        <mat-radio-group [disabled]="item.status === 'Completed' ||
+          (allRequests[i - 1] && allRequests[i - 1]?.status === 'Pending')" class="example-radio-group"
+          [(ngModel)]="item.generalFields.reports">
+          <mat-radio-button class="example-radio-button" value="true">
+            <span id="answer">{{'Yes'}}</span>
+          </mat-radio-button>
+          <mat-radio-button class="example-radio-button" value="false">
+            <span id="answer">{{'No'}}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="d-flex flex-column bgdivl mb-2">
+        <label id="example-radio-group-label">QPR?</label>
+        <mat-radio-group [disabled]="item.status === 'Completed' ||
+          (allRequests[i - 1] && allRequests[i - 1]?.status === 'Pending')" class="example-radio-group"
+          [(ngModel)]="item.generalFields.qpr">
+          <mat-radio-button class="example-radio-button" value="true">
+            <span id="answer">{{'Yes'}}</span>
+          </mat-radio-button>
+          <mat-radio-button class="example-radio-button" value="false">
+            <span id="answer">{{'No'}}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="d-flex flex-column bgdivl mb-2">
+        <label id="example-radio-group-label">SAEMR?</label>
+        <mat-radio-group [disabled]="item.status === 'Completed' ||
+          (allRequests[i - 1] && allRequests[i - 1]?.status === 'Pending')" class="example-radio-group"
+          [(ngModel)]="item.generalFields.saemr">
+          <mat-radio-button class="example-radio-button" value="true">
+            <span id="answer">{{'Yes'}}</span>
+          </mat-radio-button>
+          <mat-radio-button class="example-radio-button" value="false">
+            <span id="answer">{{'No'}}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="d-flex flex-column bgdivl mb-2">
+        <label id="example-radio-group-label">SAMR?</label>
+        <mat-radio-group [disabled]="item.status === 'Completed' ||
+          (allRequests[i - 1] && allRequests[i - 1]?.status === 'Pending')" class="example-radio-group"
+          [(ngModel)]="item.generalFields.samr">
+          <mat-radio-button class="example-radio-button" value="true">
+            <span id="answer">{{'Yes'}}</span>
+          </mat-radio-button>
+          <mat-radio-button class="example-radio-button" value="false">
+            <span id="answer">{{'No'}}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+
+    <div>
+      <button *ngIf="!apiLoading" [disabled]="item.status === 'Completed' ||
+          allRequests[i - 1]?.status === 'Pending'" mat-raised-button color="primary"
+        (click)="submitProjectClosureTask(item)">
+        Submit
+      </button>
+      <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="25"></mat-progress-spinner>
+    </div>
+  </div>
+
+  <div class="d-flex flex-fill flex-column align-items-start justify-content-between mt-2 p-3"
+    *ngIf="item.orderNum === 2 && item.assigned">
+    <div class="d-flex flex-column flex-fill" style="width: 100%;">
+      <div class="d-flex flex-column bgdivl mb-2">
+        <label id="example-radio-group-label">Legal covenants compliance?</label>
+        <mat-radio-group [disabled]="item.status === 'Completed' ||
+          allRequests[i - 1]?.status === 'Pending'" class="example-radio-group" [(ngModel)]="item.generalFields.lcc">
+          <mat-radio-button class="example-radio-button" value="true">
+            <span id="answer">{{'Yes'}}</span>
+          </mat-radio-button>
+          <mat-radio-button class="example-radio-button" value="false">
+            <span id="answer">{{'No'}}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="d-flex flex-column bgdivl mb-2">
+        <label id="example-radio-group-label">Procurement plan post review?</label>
+        <mat-radio-group [disabled]="item.status === 'Completed' ||
+          allRequests[i - 1]?.status === 'Pending'" class="example-radio-group" [(ngModel)]="item.generalFields.pppr">
+          <mat-radio-button class="example-radio-button" value="true">
+            <span id="answer">{{'Yes'}}</span>
+          </mat-radio-button>
+          <mat-radio-button class="example-radio-button" value="false">
+            <span id="answer">{{'No'}}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+
+    <div>
+      <button *ngIf="!apiLoading" [disabled]="item.status === 'Completed' ||
+          allRequests[i - 1]?.status === 'Pending'" mat-raised-button color="primary"
+        (click)="submitProjectClosureTask(item)">
+        Submit
+      </button>
+      <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="25"></mat-progress-spinner>
+    </div>
+  </div>
+
+  <div class="d-flex flex-fill flex-column align-items-start justify-content-between mt-2 p-3"
+    *ngIf="item.orderNum === 3 && item.assigned">
+    <div class="d-flex flex-column flex-fill" style="width: 100%;">
+      <div class="d-flex flex-column bgdivl mb-2">
+        <label id="example-radio-group-label">All activities completed?</label>
+        <mat-radio-group [disabled]="item.status === 'Completed' ||
+          allRequests[i - 1]?.status === 'Pending'" class="example-radio-group"
+          [(ngModel)]="item.generalFields.pipDone">
+          <mat-radio-button class="example-radio-button" value="true">
+            <span id="answer">{{'Yes'}}</span>
+          </mat-radio-button>
+          <mat-radio-button class="example-radio-button" value="false">
+            <span id="answer">{{'No'}}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="d-flex flex-column bgdivl mb-2">
+        <label id="example-radio-group-label">SOEs submitted?</label>
+        <mat-radio-group [disabled]="item.status === 'Completed' ||
+          allRequests[i - 1]?.status === 'Pending'" class="example-radio-group"
+          [(ngModel)]="item.generalFields.soesDone">
+          <mat-radio-button class="example-radio-button" value="true">
+            <span id="answer">{{'Yes'}}</span>
+          </mat-radio-button>
+          <mat-radio-button class="example-radio-button" value="false">
+            <span id="answer">{{'No'}}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="d-flex flex-column bgdivl mb-2">
+        <label id="example-radio-group-label">Liquidations done?</label>
+        <mat-radio-group [disabled]="item.status === 'Completed' ||
+          allRequests[i - 1]?.status === 'Pending'" class="example-radio-group"
+          [(ngModel)]="item.generalFields.liquidationDone">
+          <mat-radio-button class="example-radio-button" value="true">
+            <span id="answer">{{'Yes'}}</span>
+          </mat-radio-button>
+          <mat-radio-button class="example-radio-button" value="false">
+            <span id="answer">{{'No'}}</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+
+    <div>
+      <button *ngIf="!apiLoading" [disabled]="item.status === 'Completed' ||
+          allRequests[i - 1]?.status === 'Pending'" mat-raised-button color="primary"
+        (click)="submitProjectClosureTask(item)">
+        Submit
+      </button>
+      <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="25"></mat-progress-spinner>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+<!-- MAT DIVIDER -->
+<div class="d-flex flex-fill mt-4 mb-4" *ngIf="loggedUser?.role === 'process owner' && 
+loggedUser?.processNames.indexOf('PROJECT_PROPOSAL') > -1">
+  <mat-divider></mat-divider>
+</div>
+
+<!-- PROCESS OWNER FOR PROJECT PROPOSAL -->
+<div *ngIf="loggedUser?.role === 'process owner' && 
+loggedUser?.processNames.indexOf('PROJECT_PROPOSAL') > -1">
+  <p class="pl-2 pt-2" id="answer" *ngIf="assignedSections.length === 0">
+    {{'un-assigned tasks' | uppercase}}
+  </p>
+  <div class="" *ngFor="let item of allRequests; let i = index;">
+    <div class="bgdiv d-flex align-items-center justify-content-between" *ngIf="!item.assigned">
+      <span>
+        {{item.assignee.name || '&nbsp;'}}
+      </span>
+      <small [ngClass]="{'info-comment-b': item.status === 'Pending',
+            'comment-b': item.status === 'Completed'}">
+        {{item.status || '&nbsp;'}}
+      </small>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mt-2 p-3"
+      *ngIf="item.orderNum === 1 && !item.assigned">
+      <div class="d-flex flex-column flex-fill">
+        <div class="d-flex flex-column bgdivl mb-2">
+          <label id="example-radio-group-label">All activities completed?</label>
+          <mat-radio-group disabled class="example-radio-group" [(ngModel)]="item.generalFields.pip">
+            <mat-radio-button class="example-radio-button" value="true">
+              <span id="answer">{{'Yes'}}</span>
+            </mat-radio-button>
+            <mat-radio-button class="example-radio-button" value="false">
+              <span id="answer">{{'No'}}</span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="d-flex flex-column bgdivl mb-2">
+          <label id="example-radio-group-label">All targets achieved?</label>
+          <mat-radio-group disabled class="example-radio-group" [(ngModel)]="item.generalFields.rf">
+            <mat-radio-button class="example-radio-button" value="true">
+              <span id="answer">{{'Yes'}}</span>
+            </mat-radio-button>
+            <mat-radio-button class="example-radio-button" value="false">
+              <span id="answer">{{'No'}}</span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="d-flex flex-column bgdivl mb-2">
+          <label id="example-radio-group-label">All reports submitted?</label>
+          <mat-radio-group disabled class="example-radio-group" [(ngModel)]="item.generalFields.reports">
+            <mat-radio-button class="example-radio-button" value="true">
+              <span id="answer">{{'Yes'}}</span>
+            </mat-radio-button>
+            <mat-radio-button class="example-radio-button" value="false">
+              <span id="answer">{{'No'}}</span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="d-flex flex-column bgdivl mb-2">
+          <label id="example-radio-group-label">QPR?</label>
+          <mat-radio-group disabled class="example-radio-group" [(ngModel)]="item.generalFields.qpr">
+            <mat-radio-button class="example-radio-button" value="true">
+              <span id="answer">{{'Yes'}}</span>
+            </mat-radio-button>
+            <mat-radio-button class="example-radio-button" value="false">
+              <span id="answer">{{'No'}}</span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="d-flex flex-column bgdivl mb-2">
+          <label id="example-radio-group-label">SAEMR?</label>
+          <mat-radio-group disabled class="example-radio-group" [(ngModel)]="item.generalFields.saemr">
+            <mat-radio-button class="example-radio-button" value="true">
+              <span id="answer">{{'Yes'}}</span>
+            </mat-radio-button>
+            <mat-radio-button class="example-radio-button" value="false">
+              <span id="answer">{{'No'}}</span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="d-flex flex-column bgdivl mb-2">
+          <label id="example-radio-group-label">SAMR?</label>
+          <mat-radio-group disabled class="example-radio-group" [(ngModel)]="item.generalFields.samr">
+            <mat-radio-button class="example-radio-button" value="true">
+              <span id="answer">{{'Yes'}}</span>
+            </mat-radio-button>
+            <mat-radio-button class="example-radio-button" value="false">
+              <span id="answer">{{'No'}}</span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between mt-2 p-3"
+      *ngIf="item.orderNum === 2 && !item.assigned">
+      <div class="d-flex flex-column flex-fill">
+        <div class="d-flex flex-column bgdivl mb-2">
+          <label id="example-radio-group-label">Legal covenants compliance?</label>
+          <mat-radio-group disabled class="example-radio-group" [(ngModel)]="item.generalFields.lcc">
+            <mat-radio-button class="example-radio-button" value="true">
+              <span id="answer">{{'Yes'}}</span>
+            </mat-radio-button>
+            <mat-radio-button class="example-radio-button" value="false">
+              <span id="answer">{{'No'}}</span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="d-flex flex-column bgdivl mb-2">
+          <label id="example-radio-group-label">Procurement plan post review?</label>
+          <mat-radio-group disabled class="example-radio-group" [(ngModel)]="item.generalFields.pppr">
+            <mat-radio-button class="example-radio-button" value="true">
+              <span id="answer">{{'Yes'}}</span>
+            </mat-radio-button>
+            <mat-radio-button class="example-radio-button" value="false">
+              <span id="answer">{{'No'}}</span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between mt-2 p-3"
+      *ngIf="item.orderNum === 3 && !item.assigned">
+      <div class="d-flex flex-column flex-fill">
+        <div class="d-flex flex-column bgdivl mb-2">
+          <label id="example-radio-group-label">All activities completed?</label>
+          <mat-radio-group disabled class="example-radio-group" [(ngModel)]="item.generalFields.pipDone">
+            <mat-radio-button class="example-radio-button" value="true">
+              <span id="answer">{{'Yes'}}</span>
+            </mat-radio-button>
+            <mat-radio-button class="example-radio-button" value="false">
+              <span id="answer">{{'No'}}</span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="d-flex flex-column bgdivl mb-2">
+          <label id="example-radio-group-label">SOEs submitted?</label>
+          <mat-radio-group disabled class="example-radio-group" [(ngModel)]="item.generalFields.soesDone">
+            <mat-radio-button class="example-radio-button" value="true">
+              <span id="answer">{{'Yes'}}</span>
+            </mat-radio-button>
+            <mat-radio-button class="example-radio-button" value="false">
+              <span id="answer">{{'No'}}</span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="d-flex flex-column bgdivl mb-2">
+          <label id="example-radio-group-label">Liquidations done?</label>
+          <mat-radio-group disabled class="example-radio-group" [(ngModel)]="item.generalFields.liquidationDone">
+            <mat-radio-button class="example-radio-button" value="true">
+              <span id="answer">{{'Yes'}}</span>
+            </mat-radio-button>
+            <mat-radio-button class="example-radio-button" value="false">
+              <span id="answer">{{'No'}}</span>
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

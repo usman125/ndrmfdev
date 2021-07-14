@@ -396,6 +396,43 @@
         </mat-card-actions>
       </mat-card>
 
+      <!-- TPV TASKS -->
+      <mat-toolbar class="mat-elevation-z8" *ngIf="(viewType === 'propapp' || viewType === 'po') 
+        && (selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null) && showTpv"
+        style="padding: 15px 0px;" color="primary">
+        <mat-toolbar-row>
+          <span>TPV Checklist</span>
+          <div class="example-spacer"></div>
+          <button class="mt-2" mat-icon-button color="warn" (click)="showTpv = !showTpv">
+            <mat-icon class="mr-2">cancel</mat-icon>
+          </button>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-card class="m-20" *ngIf="(viewType === 'propapp' || viewType === 'po') 
+        && (selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null) && showTpv">
+        <mat-card-actions>
+          <app-tpv></app-tpv>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- PROJECT CLOSURE TASKS -->
+      <mat-toolbar class="mat-elevation-z8" *ngIf="(viewType === 'propapp' || viewType === 'po') 
+          && selectedProject?.pcStatus !== null && showPc" style="padding: 15px 0px;" color="primary">
+        <mat-toolbar-row>
+          <span>Proposal Closure Tasks</span>
+          <div class="example-spacer"></div>
+          <button class="mt-2" mat-icon-button color="warn" (click)="showPc = !showPc">
+            <mat-icon class="mr-2">cancel</mat-icon>
+          </button>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-card class="m-20" *ngIf="(viewType === 'propapp' || viewType === 'po') 
+          && selectedProject?.pcStatus !== null && showPc">
+        <mat-card-actions>
+          <app-project-closure-request></app-project-closure-request>
+        </mat-card-actions>
+      </mat-card>
+
       <!-- PROJECT PROPOSAL SECTION STATS -->
       <mat-toolbar class="mat-elevation-z8" *ngIf="viewType === 'propapp' || viewType === 'po'"
         style="padding: 15px 0px;" color="primary">
@@ -939,9 +976,51 @@
               <div class="expiry-sections mt-2">
                 <button [disabled]="commenceGdLoader" (click)="commenceGrantDisbursment()" class="m-1" mat-button
                   color="basic">
-                  <mat-icon class="mr-1">table_chart</mat-icon> {{'Inititate Grant Disbursment' | titlecase}}
+                  <mat-icon class="mr-1">table_chart</mat-icon> {{'Initiate Grant Disbursment' | titlecase}}
                 </button>
               </div>
+
+
+              <div class="expiry-sections mt-2 mb-2"
+                *ngIf="selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null">
+                <button
+                  [disabled]="selectedProject?.pcStatus === 'Pending' || selectedProject?.pcStatus === 'Completed'"
+                  *ngIf="!commenceClosureLoader" (click)="commenceProjectClosure()" mat-button color="warn">
+                  <mat-icon class="mr-1">edit</mat-icon> {{'Initiate Project closure' | titlecase}}
+                </button>
+                <div *ngIf="commenceClosureLoader" class="d-flex flex-fill justify-content-center">
+                  <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+                </div>
+              </div>
+
+              <div class="expiry-sections mt-2 mb-2"
+                *ngIf="selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null">
+                <button
+                  [disabled]="selectedProject?.tpvStatus === 'Pending' || selectedProject?.tpvStatus === 'Completed'"
+                  *ngIf="!commenceTpvLoader" (click)="commenceTpv()" mat-button color="warn">
+                  <mat-icon class="mr-1">edit</mat-icon> {{'Initiate TPV' | titlecase}}
+                </button>
+                <div *ngIf="commenceTpvLoader" class="d-flex flex-fill justify-content-center">
+                  <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+                </div>
+              </div>
+
+              <div class="expiry-sections mt-2 mb-2"
+                *ngIf="selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null">
+                <button mat-button [color]="showTpv ? 'warn' : 'primary'" (click)="showTpv = !showTpv">
+                  <mat-icon class="mr-1">edit</mat-icon>
+                  {{(showTpv ? 'Close TPV' : 'View TPV')}}
+                </button>
+              </div>
+
+              <div class="expiry-sections mt-2 mb-2"
+                *ngIf="selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null">
+                <button mat-button [color]="showPc ? 'warn' : 'primary'" (click)="showPc = !showPc">
+                  <mat-icon class="mr-1">edit</mat-icon>
+                  {{(showPc ? 'Close Project Closure' : 'View Project Closure')}}
+                </button>
+              </div>
+
             </div>
           </div>
         </mat-card-actions>

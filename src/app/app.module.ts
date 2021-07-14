@@ -83,6 +83,8 @@ import { ConcernedPersonDialogComponent } from './components/concerned-person-di
 import { QprSingleRequestStore } from './stores/qpr-single-request/qpr-single-request-store';
 import { AdvanceLiquidationItemStore } from './stores/advance-liquidation-item/advance-liquidation-item-store';
 import { QprToDonorRequestStore } from './stores/qpr-to-donor-request/qpr-to-donor-request-store';
+// import { TpvComponent } from './components/tpv/tpv.component';
+// import { ProjectClosureRequestComponent } from './components/project-closure-request/project-closure-request.component';
 // import { SubProjectDocumentCommentsMatrixComponent } from './components/sub-project-document-comments-matrix/sub-project-document-comments-matrix.component';
 // import { SubProjectDocumentDmpamTasksComponent } from './components/sub-project-document-dmpam-tasks/sub-project-document-dmpam-tasks.component';
 // import { SubProjectDocumentTasksComponent } from './components/sub-project-document-tasks/sub-project-document-tasks.component';
@@ -109,6 +111,8 @@ export function tokenGetter() {
     ActivityDetailsComponent,
     GrievanceRegistrationComponent,
     ConcernedPersonDialogComponent,
+    // TpvComponent,
+    // ProjectClosureRequestComponent,
     // SubProjectDocumentCommentsMatrixComponent,
     // SubProjectDocumentDmpamTasksComponent,
     // SubProjectDocumentTasksComponent,

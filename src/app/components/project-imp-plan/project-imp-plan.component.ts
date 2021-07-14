@@ -166,7 +166,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
       this._authStore.state$.subscribe(data => {
         this.quarters = [];
         this.months = data.auth.proMonths;
-        console.log("****MONTHS IN PROJECT IMPLEMENTATION PLAN*****\n", data);
+        // console.log("****MONTHS IN PROJECT IMPLEMENTATION PLAN*****\n", data);
         this.getQuarters('personal');
       })
     );

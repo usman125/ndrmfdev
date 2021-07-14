@@ -143,8 +143,7 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
             data.request.dmpamTasks.forEach(element => {
               if (element.assignee.id === this.loggedUser.id) {
                 this.assignedDmTask = element;
-                if (element.status === 'Approved' ||
-                  element.status === 'Rejected')
+                if (element.status === 'Approved')
                   this.reviewUsers.disable({ onlySelf: true });
                 else
                   this.reviewUsers.enable({ onlySelf: true });
