@@ -634,3 +634,25 @@ table tbody tr td {
   background-color: rgba(235, 235, 235, 0.2) !important;
   /* padding: 15px; */
 }
+
+.custom-expension .mat-expansion-panel {
+  box-shadow: none !important;
+}
+
+.custom-expension .mat-expansion-panel-header {
+  padding: 0 0px !important;
+}
+
+.custom-expension .mat-expansion-panel-body {
+  padding: 10px 5px 16px !important;
+  background-color: #fff !important;
+}
+
+.custom-expension .mat-expansion-panel-header-title .open,
+.custom-expension .mat-expanded .mat-expansion-panel-header-title .close {
+  display: block;
+}
+.custom-expension .mat-expanded .mat-expansion-panel-header-title .open,
+.custom-expension .mat-expansion-panel-header-title .close {
+  display: none;
+}

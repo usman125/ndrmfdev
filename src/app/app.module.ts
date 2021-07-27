@@ -159,7 +159,12 @@ export function tokenGetter() {
       config: {
         tokenGetter: tokenGetter,
         // whitelistedDomains: ["attendance.tallymarkscloud.com:8080"]
-        allowedDomains: ["localhost:8080", "attendance.tallymarkscloud.com:8080", "ndrmf.tallymarkscloud.com:8443"]
+        allowedDomains: [
+          "localhost:8080", 
+          "attendance.tallymarkscloud.com:8080", 
+          "ndrmf.tallymarkscloud.com:8443",
+          "ndrmf.tallymarkscloud.com:8080",
+        ]
       }
     }),
     FormioModule,

@@ -39,7 +39,7 @@ export class AdvanceLiquidationItemState {
       "remarks": string,
       "soeType": string,
       "id": string,
-    },
+    }[],
     "ndrmfSoes": {
       "activityId": string,
       "vendorName": string,
@@ -50,6 +50,6 @@ export class AdvanceLiquidationItemState {
       "remarks": string,
       "soeType": string,
       "id": string,
-    },
-  } = null;
+    }[],
+  }[] = null;
 }

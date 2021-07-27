@@ -109,6 +109,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   controlReviewUserForm: any = null;
 
   selectedAdvanceLiquidation: any = null;
+  selectedAdvanceLiquidations: any = null;
   selectedAdvanceItem: any = null;
 
   advanceForm: FormGroup;
@@ -199,7 +200,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
             //   typeof (this.selectedRequest.initialAdvance.data) === 'string' ?
             //   this.apiCosts = JSON.parse(this.selectedRequest.initialAdvance.data) :
             //   this.apiCosts = this.selectedRequest.initialAdvance.data;
-            this.apiCosts = this.selectedRequest.initialAdvance.data;
+            // this.apiCosts = this.selectedRequest.initialAdvance.data;
             // }
             let pendingCount = 0;
             let completedCount = 0;
@@ -286,7 +287,9 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
             // });
             // }
           }
-          console.log("RESULT SINGLE GRANT DISBURSMENT:---", this.selectedRequest,
+          console.log(
+            "RESULT SINGLE GRANT DISBURSMENT:---",
+            this.selectedRequest,
             this.costSelections,
             this.loggedUser,
             this.initialAdvanceStats,
@@ -297,7 +300,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     );
     this.Subscription.add(
       this._advanceLiquidationItemStore.state$.subscribe(data => {
-        this.selectedAdvanceLiquidation = data.data;
+        this.selectedAdvanceLiquidations = data.data;
         // this.selectedAdvanceItem = data;
         // if (this.selectedAdvanceLiquidation !== null && this.selectedAdvanceLiquidation.data !== null) {
         //   for (let i = 0; i < this.selectedAdvanceLiquidation.data.length; i++) {
@@ -333,21 +336,22 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
           this.costsData.enable({ onlySelf: true });
           this.advanceForm.enable({ onlySelf: true });
         }
-        if (data.data !== null && data.data.fipSoes)
-          this.fipLiquidationSoes = JSON.parse(JSON.stringify(data.data.fipSoes));
-        if (data.data !== null && data.data.ndrmfSoes)
-          this.ndrmfLiquidationSoes = JSON.parse(JSON.stringify(data.data.ndrmfSoes));
-        console.log("SELECTED ADVANCE LIQUIDATION IS:----", data.data, this.selectedAdvanceLiquidation, this.selectedAdvanceItem);
+        // if (data.data !== null && data.data.fipSoes)
+        //   this.fipLiquidationSoes = JSON.parse(JSON.stringify(data.data.fipSoes));
+        // if (data.data !== null && data.data.ndrmfSoes)
+        //   this.ndrmfLiquidationSoes = JSON.parse(JSON.stringify(data.data.ndrmfSoes));
+        console.log("SELECTED ADVANCE LIQUIDATION IS:----", data.data, this.selectedAdvanceLiquidations, this.selectedAdvanceItem);
       })
     );
   }
 
-  getCostSelection(implementationPlan) {
+  getCostSelection(implementationPlan, request) {
 
     let allCosts = [];
 
     let pip = null;
     let allSubCosts = [];
+    let quarterCosts = [];
     let totalProjectCost = 0;
     let fipTotalProjectCost = 0;
     let ndrmfTotalProjectCost = 0;
@@ -377,29 +381,29 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       }
     }
 
-    var test = _.chain(allSubCosts)
-      .groupBy('mainCostId')
-      .map((val, _id) => {
-        return {
-          val: val,
-          _id: _id,
-        }
-      })
-      .value();
-    for (let i = 0; i < this.projectActualCosts.length; i++) {
-      for (let j = 0; j < test.length; j++) {
-        if (this.projectActualCosts[i]._id === test[j]._id) {
-          this.projectActualCosts[i].children = test[j].val;
-        }
-      }
-    }
-    var test2 = _.filter(this.projectActualCosts, { mainCostId: null })
+    // var test = _.chain(allSubCosts)
+    //   .groupBy('mainCostId')
+    //   .map((val, _id) => {
+    //     return {
+    //       val: val,
+    //       _id: _id,
+    //     }
+    //   })
+    //   .value();
+    // for (let i = 0; i < this.projectActualCosts.length; i++) {
+    //   for (let j = 0; j < test.length; j++) {
+    //     if (this.projectActualCosts[i]._id === test[j]._id) {
+    //       this.projectActualCosts[i].children = test[j].val;
+    //     }
+    //   }
+    // }
+    // var test2 = _.filter(this.projectActualCosts, { mainCostId: null })
+    // this.dataSource.data = test2;
 
     this.totalProjectCost = totalProjectCost;
     this.fipTotalProjectCost = fipTotalProjectCost;
     this.ndrmfTotalProjectCost = ndrmfTotalProjectCost;
 
-    this.dataSource.data = test2;
 
     console.log("PROJECT ACTUAL COSTS:---",
       this.projectActualCosts,
@@ -417,7 +421,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       (result: any) => {
         console.log("RESULT SINGLE GRANT DISBURSMENT:---", result);
         // if (result && this.loggedUser.role === 'fip') {
-        this.getCostSelection(result.implementationPlan);
+        this.getCostSelection(result.implementationPlan, result);
         // }
         result.quarterAdvanceList = result.quarterAdvanceList.map(element => {
           return {
@@ -437,6 +441,19 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     );
     // this._router.navigate(['view-grant-disbursment', element.id]);
   }
+
+  // addDataCosts() {
+  //   this.apiCosts = [];
+  //   for (let i = 0; i < this.projectActualCosts.length; i++) {
+  //     let c = this.projectActualCosts[i];
+  //     if (!c.children) {
+  //       if (c.quarters[0].data !== null && c.quarters[0].value === true) {
+  //         c.amount = c.totalCost;
+  //         this.apiCosts.push(c);
+  //       }
+  //     }
+  //   }
+  // }
 
   addDataCosts(item) {
     let flag = false;
@@ -476,11 +493,6 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       }
     }
     if (!flag) {
-      // for (let i = 0; i < this.selectedRequest.quarterAdvanceList[this.step].data.length; i++) {
-      //   let obj = this.selectedRequest.quarterAdvanceList[this.step].data[i];
-      //   amount = amount + obj.amount;
-      // }
-      // amount = amount + item.totalCost;
 
       let costToAdd = null;
       for (let i = 0; i < this.projectActualCosts.length; i++) {
@@ -489,7 +501,6 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
           break;
         }
       }
-
       // console.log("AMOUNT FOR COSTS:---", amount, item, costToAdd);
       this._singleGrantDisbursmentsStore.addEntryToQuarterAdvance(
         this.selectedRequest.quarterAdvanceList[this.step].id,
@@ -500,6 +511,20 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       this.openSnackBar('ALREADY IN LIST!', 'Exit');
     }
   }
+
+  // addQuarterData() {
+  //   for (let i = 0; i < this.projectActualCosts.length; i++) {
+  //     let c = this.projectActualCosts[i];
+  //     if (!c.children) {
+  //       if (c.quarters[this.step + 1].data !== null && c.quarters[this.step + 1].value === true) {
+  //         this._singleGrantDisbursmentsStore.addEntryToQuarterAdvance(
+  //           this.selectedRequest.quarterAdvanceList[this.step].id,
+  //           c,
+  //         );
+  //       }
+  //     }
+  //   }
+  // }
 
   submitInitalAdvance() {
     this.approveLoading = true;
@@ -989,7 +1014,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     console.log("REJECT INTIAL ADVANCE********", type);
   }
 
-  approveQuarterLiquidation() {
+  approveQuarterLiquidation(liquidation) {
     this.approveLoading = true;
     const options = {
       title: '',
@@ -999,14 +1024,17 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       add: true,
       confirm: false,
     };
-    this._grantDisbursmentsService.approveAdvanceLiquidation(this.selectedAdvanceLiquidation.id).subscribe(
+    this._grantDisbursmentsService.approveAdvanceLiquidation(
+      liquidation.id
+    ).subscribe(
       (result: any) => {
-        this.approveLoading = false;
+        console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", result);
         options.title = result.message;
         this._confirmModelService.open(options);
-        this.selectedAdvanceLiquidation.status = 'Approved';
-        this.selectedAdvanceLiquidation.subStatus = 'Approved';
-        console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", result);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          this._advanceLiquidationItemStore.setAdvanceLiquidationStatus(liquidation, 'Approved');
+          this.approveLoading = false;
+        })
       },
       error => {
         this.approveLoading = false;
@@ -1024,7 +1052,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     )
   }
 
-  reassignQuarterLiquidation() {
+  reassignQuarterLiquidation(liquidation) {
     const options = {
       title: 'Please enter your remarks for FIP!',
       message: '',
@@ -1050,29 +1078,31 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
           confirm: false,
         };
         this._grantDisbursmentsService.reassignAdvanceLiquidation(
-          this.selectedAdvanceLiquidation.id, confirmed.comments).subscribe(
-            (result: any) => {
-              this.approveLoading = false;
-              options.title = result.message;
-              this._confirmModelService.open(options);
-              this._advanceLiquidationItemStore.setAdvanceLiquidationStatus('Re Assigned');
-              // this.selectedAdvanceItem.subStatus = 'Approved';
-              console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", result);
-            },
-            error => {
-              this.approveLoading = false;
-              const options = {
-                title: 'Error Doing Operation!',
-                message: 'Please contact system administrator',
-                cancelText: 'CANCEL',
-                confirmText: 'OK',
-                add: true,
-                confirm: false,
-              };
-              this._confirmModelService.open(options);
-              console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", error);
-            }
-          )
+          liquidation.id,
+          confirmed.comments
+        ).subscribe((result: any) => {
+          console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", result);
+          options.title = result.message;
+          this._confirmModelService.open(options);
+          this._confirmModelService.confirmed().subscribe(confirmed => {
+            this._advanceLiquidationItemStore.setAdvanceLiquidationStatus(liquidation, 'Re Assigned');
+            this.approveLoading = false;
+          })
+        },
+          error => {
+            this.approveLoading = false;
+            const options = {
+              title: 'Error Doing Operation!',
+              message: 'Please contact system administrator',
+              cancelText: 'CANCEL',
+              confirmText: 'OK',
+              add: true,
+              confirm: false,
+            };
+            this._confirmModelService.open(options);
+            console.log("APPROVE QUARTER ADVANCE LIQUIDATION:---", error);
+          }
+        )
       }
     })
   }
@@ -1136,14 +1166,45 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   setStep(item, id, selectionType) {
-    // console.log("CURRENT STEP:---", item, id, typeof (id));
+    console.log("CURRENT STEP:---", item, id, typeof (id));
     this.step = id;
     // @setTimeout(() => {})
     this.currentReviewsList = [];
     this.fipLiquidationSoes = [];
     this.ndrmfLiquidationSoes = [];
+    let quarterCosts = [];
     // this.selectedStepData = item;
     if (item !== null) {
+      if (selectionType === 'quarter') {
+        let itemTotal = 0;
+        for (let i = 0; i < this.projectActualCosts.length; i++) {
+          let c = this.projectActualCosts[i];
+          if (!c.children) {
+            if (c.quarters[this.step + 1].data !== null && c.quarters[this.step + 1].value === true) {
+              c.amount = c.totalCost;
+              itemTotal = itemTotal + c.totalCost;
+              quarterCosts.push(c)
+            }
+          }
+        }
+        item.amount = itemTotal;
+        item.data = quarterCosts;
+      } else {
+        this.apiCosts = [];
+        let itemTotal = 0;
+        for (let i = 0; i < this.projectActualCosts.length; i++) {
+          let c = this.projectActualCosts[i];
+          if (!c.children) {
+            if (c.quarters[0].data !== null && c.quarters[0].value === true) {
+              c.amount = c.totalCost;
+              itemTotal = itemTotal + c.totalCost;
+              this.apiCosts.push(c);
+            }
+          }
+        }
+        item.data = this.apiCosts;
+        item.amount = itemTotal;
+      }
       // this.selectedStepData.advanceLiquidationItem.data = item.data;
       this.selectedAdvanceItem = item;
       this.getAdvanceFiles();
@@ -1187,7 +1248,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
 
             if (typeof (id) === 'string') {
 
-              if (item.data[j].quarters[0].value === true && item.data[j].quarters[0].progress) {
+              if (item.data[j].quarters[0].value === true) {
                 item.data[j].fipQuarterBudgetAllocation = item.data[j].quarters[0].data.fipShare;
                 item.data[j].ndrmfQuarterBudgetAllocation = item.data[j].quarters[0].data.ndrmfShare;
               }
@@ -1205,7 +1266,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
               item.data[j].ndrmfRemainingBudget = item.data[j].ndrmfTotalBudgetAllocation - item.data[j].ndrmfExpenditureTillDate;
               item.data[j].fipRemainingBudget = item.data[j].fipTotalBudgetAllocation - item.data[j].fipExpenditureTillDate;
             } else {
-              if (item.data[j].quarters[item.quarter - 1].value === true && item.data[j].quarters[item.quarter - 1].progress) {
+              if (item.data[j].quarters[item.quarter - 1].value === true) {
                 item.data[j].fipQuarterBudgetAllocation = item.data[j].quarters[item.quarter - 1].data.fipShare;
                 item.data[j].ndrmfQuarterBudgetAllocation = item.data[j].quarters[item.quarter - 1].data.ndrmfShare;
               }
@@ -1232,23 +1293,31 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
           }
         }
       }
+
       if (item.advanceLiquidationItem !== null) {
-        this._advanceLiquidationItemStore.addAdvanceLiquidationItem(JSON.parse(JSON.stringify(item.advanceLiquidationItem)));
-        this._advanceLiquidationItemStore.addAdvanceLiquidationItemData(JSON.parse(JSON.stringify(item.data)));
+        this._advanceLiquidationItemStore.addAdvanceLiquidationItem(
+          JSON.parse(JSON.stringify(item.advanceLiquidations)),
+          JSON.parse(JSON.stringify(item.data))
+        );
+        // this._advanceLiquidationItemStore.addAdvanceLiquidationItemData(JSON.parse(JSON.stringify(item.data)));
       } else {
-        this._advanceLiquidationItemStore.addAdvanceLiquidationItem(null);
+        this._advanceLiquidationItemStore.addAdvanceLiquidationItem(null, null);
         // this._advanceLiquidationItemStore.addAdvanceLiquidationItemData(JSON.parse(JSON.stringify(item.data)));
       }
+
     }
 
     if (this.step !== null) {
+
       if (selectionType === 'quarter') {
         this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: id })
       }
       if (selectionType === 'initial') {
         this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: id })
       }
+
     }
+
   }
 
   nextStep(selectionType) {
@@ -1265,11 +1334,11 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     let count = 0;
     this.selectedAdvanceLiquidation.data.forEach(element => {
       count = count + element.amount;
-      this._advanceLiquidationItemStore.addAdvanceLiquidationItemTotalCost(count);
+      // this._advanceLiquidationItemStore.addAdvanceLiquidationItemTotalCost(count);
     });
   }
 
-  addNdrmfSoes() {
+  addNdrmfSoes(liquidation) {
     let object = {
       activityId: null,
       vendorName: null,
@@ -1282,11 +1351,15 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       id: null,
     }
     // this.costLiquidations.push(this.liquidationForm.value);
-    this.ndrmfLiquidationSoes.push(object);
-    console.log("ADDED NDRMF SOES ARE:--", this.ndrmfLiquidationSoes);
+    if (liquidation.ndrmfSoes === null) {
+      liquidation.ndrmfSoes = [object];
+    } else {
+      liquidation.ndrmfSoes.push(object);
+    }
+    console.log("ADDED NDRMF SOES ARE:--", liquidation.ndrmfSoes);
   }
 
-  addFipSoes() {
+  addFipSoes(liquidation) {
     let object = {
       activityId: null,
       vendorName: null,
@@ -1299,8 +1372,12 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       id: null,
     }
     // this.costLiquidations.push(this.liquidationForm.value);
-    this.fipLiquidationSoes.push(object);
-    console.log("ADDED FIP SOES ARE:--", this.fipLiquidationSoes);
+    if (liquidation.ndrmfSoes === null) {
+      liquidation.fipSoes = [object];
+    } else {
+      liquidation.fipSoes.push(object);
+    }
+    console.log("ADDED FIP SOES ARE:--", liquidation.fipSoes);
   }
 
   getNdrmfTotalBudgetAllocation(item) {
@@ -1374,35 +1451,30 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     return count;
   }
 
-  submitAdvanceLiquidation() {
+  submitAdvanceLiquidation(liquidation) {
     this.approveLoading = true;
-    this._advanceLiquidationItemStore.submitLiquidation(
-      this.ndrmfLiquidationSoes,
-      this.fipLiquidationSoes
-    );
-    this.submitLiquidationWithSoes();
+    this.submitLiquidationWithSoes(liquidation);
     // console.log("SUBMIT ADVANCE LIQUIDATION:--", this.selectedAdvanceLiquidation);
   }
 
-  submitLiquidationWithSoes() {
+  submitLiquidationWithSoes(liquidation) {
     let body = {
-      payeesName: this.selectedAdvanceLiquidation.payeesName,
-      payeesAddress: this.selectedAdvanceLiquidation.payeesAddress,
-      bankName: this.selectedAdvanceLiquidation.bankName,
-      bankAddress: this.selectedAdvanceLiquidation.bankAddress,
-      payeesAccount: this.selectedAdvanceLiquidation.payeesAccount,
-      swiftCode: this.selectedAdvanceLiquidation.swiftCode,
-      specialPaymentInstruction: this.selectedAdvanceLiquidation.specialPaymentInstruction,
-      ndrmfSoes: this.ndrmfLiquidationSoes,
-      fipSoes: this.fipLiquidationSoes,
+      payeesName: liquidation.payeesName,
+      payeesAddress: liquidation.payeesAddress,
+      bankName: liquidation.bankName,
+      bankAddress: liquidation.bankAddress,
+      payeesAccount: liquidation.payeesAccount,
+      swiftCode: liquidation.swiftCode,
+      specialPaymentInstruction: liquidation.specialPaymentInstruction,
+      ndrmfSoes: liquidation.ndrmfSoes,
+      fipSoes: liquidation.fipSoes,
     }
     this._grantDisbursmentsService.submitInitialAdvanceLiquidationWithSoes(
-      this.selectedAdvanceLiquidation.id,
+      liquidation.id,
       body
     ).subscribe(
       (result: any) => {
         console.log("RESULT ADDING LIQUIDATION:--", result);
-        this.approveLoading = false;
         const options = {
           title: result.message,
           message: '',
@@ -1412,6 +1484,14 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
           confirm: false,
         };
         this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          this._advanceLiquidationItemStore.submitLiquidation(
+            liquidation.id,
+            liquidation.ndrmfSoes,
+            liquidation.fipSoes
+          );
+          this.approveLoading = false;
+        });
       },
       error => {
         this.approveLoading = false;
@@ -1431,10 +1511,10 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
 
   updateAdvanceLiquidation() {
     this.approveLoading = true;
-    this._advanceLiquidationItemStore.submitLiquidation(
-      this.ndrmfLiquidationSoes,
-      this.fipLiquidationSoes
-    );
+    // this._advanceLiquidationItemStore.submitLiquidation(
+    //   this.ndrmfLiquidationSoes,
+    //   this.fipLiquidationSoes
+    // );
     this.updateLiquidationWithSoes();
     // console.log("SUBMIT ADVANCE LIQUIDATION:--", this.selectedAdvanceLiquidation);
   }

@@ -435,6 +435,22 @@ export class ProjectService {
     );
   }
 
+  commenceInitialAdvanceLiquidation(disbursmentId) {
+    const url = `${AppConfig.apiUrl}/${disbursmentId}/initial-advance/commence/liquidation/`;
+    return this._httpClient.post(
+      url,
+      null
+    );
+  }
+
+  commenceQuarterAdvanceLiquidation(advanceId) {
+    const url = `${AppConfig.apiUrl}/${advanceId}/quarter-advance/commence/liquidation/`;
+    return this._httpClient.post(
+      url,
+      null
+    );
+  }
+
   addSubProjectDmPamTasks(requestId, body) {
     const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/${requestId}/assign/dmpam/tasks`;
     return this._httpClient.post(

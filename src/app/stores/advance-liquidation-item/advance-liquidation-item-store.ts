@@ -8,78 +8,97 @@ export class AdvanceLiquidationItemStore extends Store<AdvanceLiquidationItemSta
     super(new AdvanceLiquidationItemState());
   }
 
-  addAdvanceLiquidationItem(data) {
-    this.setState({
-      ...this.state,
-      data: data
-    })
-  }
-
-  addAdvanceLiquidationItemData(data) {
-    this.setState({
-      ...this.state,
-      data: {
-        ...this.state.data,
-        data: data.map((c) => {
+  addAdvanceLiquidationItem(liquidations, data) {
+    if (liquidations !== null) {
+      this.setState({
+        ...this.state,
+        data: liquidations.map(c => {
           return {
             ...c,
-            // parentCosts: [],
+            data: data
           }
         })
-      }
-    })
+      })
+    } else {
+      this.setState({
+        ...this.state,
+        data: data
+      })
+    }
   }
 
-  setDataParents(activity, data) {
+  // addAdvanceLiquidationItemData(data) {
+  //   this.setState({
+  //     ...this.state,
+  //     data: {
+  //       ...this.state.data,
+  //       data: data.map((c) => {
+  //         return {
+  //           ...c,
+  //           // parentCosts: [],
+  //         }
+  //       })
+  //     }
+  //   })
+  // }
+
+  // setDataParents(activity, data) {
+  //   this.setState({
+  //     ...this.state,
+  //     data: {
+  //       ...this.state.data,
+  //       data: this.state.data.data.map((c) => {
+  //         if (activity._id === c._id) {
+  //           return {
+  //             ...c,
+  //             parentCosts: data,
+  //           }
+  //         }
+  //         return c;
+  //       })
+  //     }
+  //   })
+  // }
+
+  setAdvanceLiquidationStatus(liquidationId, status) {
     this.setState({
       ...this.state,
-      data: {
-        ...this.state.data,
-        data: this.state.data.data.map((c) => {
-          if (activity._id === c._id) {
-            return {
-              ...c,
-              parentCosts: data,
-            }
+      data: this.state.data.map((c) => {
+        if (c.id === liquidationId) {
+          return {
+            ...c,
+            status: status
           }
-          return c;
-        })
-      }
+        }
+      })
     })
   }
 
-  setAdvanceLiquidationStatus(status) {
+  submitLiquidation(liquidationId, ndrmfSoes, fipSoes) {
     this.setState({
       ...this.state,
-      data: {
-        ...this.state.data,
-        status: status,
-        subStatus: 'Pending',
-      }
-    })
-  }
-
-  submitLiquidation(ndrmfSoes, fipSoes) {
-    this.setState({
-      ...this.state,
-      data: {
-        ...this.state.data,
-        ndrmfSoes: ndrmfSoes,
-        fipSoes: fipSoes,
-        status: 'Under Review'
-      }
+      data: this.state.data.map((c) => {
+        if (c.id === liquidationId) {
+          return {
+            ...c,
+            ndrmfSoes: ndrmfSoes,
+            fipSoes: fipSoes,
+            status: 'Under Review'
+          }
+        }
+      })
     })
   }
 
 
-  addAdvanceLiquidationItemTotalCost(amount) {
-    this.setState({
-      ...this.state,
-      data: {
-        ...this.state.data,
-        amount: amount
-      }
-    })
-  }
+  // addAdvanceLiquidationItemTotalCost(amount) {
+  //   this.setState({
+  //     ...this.state,
+  //     data: {
+  //       ...this.state.data,
+  //       amount: amount
+  //     }
+  //   })
+  // }
 
 }
