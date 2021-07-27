@@ -37,20 +37,22 @@ export class QprSingleRequestStore extends Store<QprSingleRequestState> {
   }
 
   addExistedTasksForQpr(newArray, oldArray) {
-    this.setState({
-      ...this.state,
-      qpr: {
-        ...this.state.qpr,
-        tasksForOthers: this.state.qpr.tasksForOthers.map((c) => {
-          oldArray.forEach(element => {
-            if (element.assignee.id === c.assignee.id) {
-              c.status = 'Pending';
-            }
-          })
-          return c;
-        }),
-      }
-    });
+    if (this.state.qpr.tasksForOthers !== null) {
+      this.setState({
+        ...this.state,
+        qpr: {
+          ...this.state.qpr,
+          tasksForOthers: this.state.qpr.tasksForOthers.map((c) => {
+            oldArray.forEach(element => {
+              if (element.assignee.id === c.assignee.id) {
+                c.status = 'Pending';
+              }
+            })
+            return c;
+          }),
+        }
+      });
+    }
   }
 
   addNewTasksForQpr(newArray, oldArray) {
@@ -59,7 +61,7 @@ export class QprSingleRequestStore extends Store<QprSingleRequestState> {
       ...this.state,
       qpr: {
         ...this.state.qpr,
-        tasksForOthers: [...this.state.qpr.tasksForOthers, ...newArray]
+        tasksForOthers: newArray
       }
     });
   }

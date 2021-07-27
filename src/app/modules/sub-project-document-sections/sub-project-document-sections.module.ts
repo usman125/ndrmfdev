@@ -13,6 +13,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { SubProjectDocumentCommentsMatrixModule } from '../sub-project-document-comments-matrix/sub-project-document-comments-matrix.module';
+import { NgxPrintModule } from 'ngx-print';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -36,6 +38,8 @@ import { SubProjectDocumentCommentsMatrixModule } from '../sub-project-document-
     MatSelectModule,
     ReactiveFormsModule,
     MatChipsModule,
+    NgxPrintModule,
+    MatTooltipModule,
   ],
   exports: [SubProjectDocumentSectionsComponent]
 })

@@ -16,7 +16,7 @@ import { AccreditationRequestService } from 'src/app/services/accreditation-requ
 export class SmeQprRequestsComponent implements OnInit {
 
   dataSource: any;
-  displayedColumns = ['section', 'startDate', 'endDate', 'expiry', 'status', 'comments', 'actions'];
+  displayedColumns = ['section', 'fipName', 'quarter', 'startDate', 'expiry', 'status', 'comments', 'actions'];
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;

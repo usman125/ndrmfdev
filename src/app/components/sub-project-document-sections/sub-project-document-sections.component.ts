@@ -129,6 +129,7 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
             this.dataSource = this.allSections;
           }
 
+          this.allSections.sort((a, b) => (a.quarter > b.quarter) ? 1 : ((b.quarter > a.quarter) ? -1 : 0));
 
           this.apiLoading = false;
           console.log("\nALL SECTIONS:--\n", this.allSections,

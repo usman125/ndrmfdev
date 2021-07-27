@@ -73,11 +73,11 @@ export class QprToDonorComponent implements OnInit, AfterViewInit {
   }
 
   commenceQprToDonor() {
-    this.apiLoading = true;
+    // this.apiLoading = true;
     this._qprToDonorService.commenceQprToDonorRequest().subscribe(
       (result: any) => {
         console.log("RESULT COMMENCE QPR TO DONOR:--", result);
-        this.apiLoading = false;
+        // this.apiLoading = false;
         // this.dataSource = new MatTableDataSource(result);
         this.getAllRequests();
       },

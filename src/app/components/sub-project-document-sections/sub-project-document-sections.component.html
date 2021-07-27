@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-8 pr-0" *ngIf="allSections.length && !commentsFlag">
-    <div class="unassigned">
+    <div class="unassigned" id="print-subprocess-sections">
       <div class="section margin-5 appraisal-box" *ngFor="let section of dataSource">
         <mat-card class="m-20 p-0" *ngIf="viewType === 'view'">
           <mat-card-content>
@@ -70,6 +70,12 @@
             </button>
             <div *ngIf="changeStatusLoader" class="d-flex justify-content-center flex-fill">
               <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+            </div>
+            <div class="d-flex justify-content-center flex-fill">
+              <button ngxPrint [useExistingCss]="true" printSectionId="print-subprocess-sections"
+                matTooltip="Print Sections!" mat-icon-button color="primary">
+                <mat-icon>print</mat-icon>
+              </button>
             </div>
           </div>
         </mat-card-content>
@@ -267,6 +273,12 @@
                 Assign For Reviews
               </button>
             </div>
+            <div class="d-flex flex-fill justify-content-start">
+              <button ngxPrint [useExistingCss]="true" printSectionId="print-subprocess-sections"
+                matTooltip="Print Sections!" mat-icon-button color="primary">
+                <mat-icon>print</mat-icon>
+              </button>
+            </div>
           </mat-card-content>
         </mat-card>
 
@@ -301,7 +313,7 @@
   </div>
 </div>
 
-<mat-card class="m-20" *ngIf="viewType === 'fill' && !commentsFlag">
+<mat-card class="m-20" *ngIf="viewType === 'fill' && !commentsFlag" id="print-subprocess-sections">
   <mat-card-content>
     <div class="unassigned">
       <div class="section" *ngFor="let section of dataSource">

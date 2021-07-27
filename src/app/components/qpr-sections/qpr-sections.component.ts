@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { QprSectionsStore } from '../../stores/qpr-sections/qpr-sections-store';
 import { Subscription } from 'rxjs';
 import { QprStore } from '../../stores/qpr/qpr-store';
@@ -19,7 +19,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./qpr-sections.component.css'],
   providers: [ConfirmModelService]
 })
-export class QprSectionsComponent implements OnInit {
+export class QprSectionsComponent implements OnInit, OnDestroy {
 
   loggedUser: any = null;
   Subscription: Subscription = new Subscription();
@@ -727,12 +727,14 @@ export class QprSectionsComponent implements OnInit {
             reviewersArray.push(this.reviewUsers.value[i].id);
             let existed = false;
             let matched = null;
-            for (let j = 0; j < this.selectedQpr.tasksForOthers.length; j++) {
-              let x = this.selectedQpr.tasksForOthers[j];
-              if (x.assignee.id === this.reviewUsers.value[i].id) {
-                existed = true;
-                matched = x;
-                break;
+            if (this.selectedQpr.tasksForOthers) {
+              for (let j = 0; j < this.selectedQpr.tasksForOthers.length; j++) {
+                let x = this.selectedQpr.tasksForOthers[j];
+                if (x.assignee.id === this.reviewUsers.value[i].id) {
+                  existed = true;
+                  matched = x;
+                  break;
+                }
               }
             }
             if (existed) {
@@ -762,26 +764,35 @@ export class QprSectionsComponent implements OnInit {
               add: true,
               confirm: false,
             };
-            this._qprSingleRequestStore.addExistedTasksForQpr(newArray, existedArray);
-            this._qprSingleRequestStore.addNewTasksForQpr(newArray, existedArray);
             this._confirmModelService.open(options);
-            this.reviewUsers.reset();
-            this.aurLoader = false;
+            this._confirmModelService.confirmed().subscribe(confirmed => {
+              if (this.selectedQpr.tasksForOthers === null) {
+                this._qprSingleRequestStore.addNewTasksForQpr(newArray, existedArray);
+                this.reviewUsers.reset();
+                this.aurLoader = false;
+              } else {
+                this._qprSingleRequestStore.addExistedTasksForQpr(newArray, existedArray);
+                this.reviewUsers.reset();
+                this.aurLoader = false;
+              }
+            });
             console.log("RESULT ADDING TASKS:--", result);
           },
           (error: any) => {
             const options = {
-              title: 'Tasks added successfully!',
+              title: error.error.message,
               message: '',
               cancelText: 'CANCEL',
               confirmText: 'OK',
               add: true,
               confirm: false,
             };
-            options.title = error.error.message;
+            // options.title = error.error.message;
             this._confirmModelService.open(options);
-            this.aurLoader = false;
-            console.log("RESULT ADDING TASKS:--", error);
+            this._confirmModelService.confirmed().subscribe(confirmed => {
+              this.aurLoader = false;
+            })
+            console.log("ERROR RESULT ADDING TASKS:--", error);
           }
         );
       }
@@ -875,6 +886,10 @@ export class QprSectionsComponent implements OnInit {
       }
     });
 
+  }
+
+  ngOnDestroy() {
+    this.Subscription.unsubscribe();
   }
 
 }

@@ -25,6 +25,18 @@
         {{element.startDate | date:'shortDate'}}
       </td>
     </ng-container>
+    <ng-container matColumnDef="fipName">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef> Proposal </th>
+      <td mat-cell *matCellDef="let element">
+        {{element.fipName}}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="quarter">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef> Qpr # </th>
+      <td mat-cell *matCellDef="let element">
+        {{element.quarter}}
+      </td>
+    </ng-container>
 
     <ng-container matColumnDef="endDate">
       <th mat-header-cell mat-sort-header *matHeaderCellDef> End Date </th>
