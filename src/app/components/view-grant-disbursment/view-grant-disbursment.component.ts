@@ -130,6 +130,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   durationInSeconds = 5;
 
   apiLoading: boolean = false;
+  addLiquidationLoading: boolean = false;
 
   selectedFiles?: FileList;
   progressInfos: any[] = [];
@@ -1670,6 +1671,84 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     }, error => {
       console.log("RESULT GETTING FILES:--", error);
     });
+  }
+
+  addInitialAdvanceLiquidation() {
+    this.addLiquidationLoading = true;
+    this._grantDisbursmentsService.commenceInitialAdvanceLiquidation(
+      this.selectedRequest.id
+    ).subscribe(
+      (result: any) => {
+        console.log("RESULT ADDING LIQUIDATION:---", result);
+        const options = {
+          title: result.message,
+          message: '',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+        };
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          this._advanceLiquidationItemStore.addNewLiquidation(this.selectedAdvanceItem.data);
+          this.addLiquidationLoading = false;
+          this.openSnackBar('LIQUIDATION ADDED!', 'Exit');
+        })
+      },
+      error => {
+        console.log("ERROR ADDING LIQUIDATION:---", error);
+        const options = {
+          title: error.error.message,
+          message: 'Contact Administrator!',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+        };
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          this.addLiquidationLoading = false;
+          this.openSnackBar('LIQUIDATION ADDITION FAILED!', 'Exit');
+        })
+      }
+    )
+  }
+
+  addQuarterAdvanceLiquidation() {
+    this.addLiquidationLoading = true;
+    this._grantDisbursmentsService.commenceQuarterAdvanceLiquidation(
+      this.selectedAdvanceItem.id
+    ).subscribe(
+      (result: any) => {
+        console.log("RESULT ADDING LIQUIDATION:---", result);
+        const options = {
+          title: result.message,
+          message: '',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+        };
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          this._advanceLiquidationItemStore.addNewLiquidation(this.selectedAdvanceItem.data);
+          this.addLiquidationLoading = false;
+          this.openSnackBar('LIQUIDATION ADDED!', 'Exit');
+        })
+      },
+      error => {
+        console.log("ERROR ADDING LIQUIDATION:---", error);
+        const options = {
+          title: error.error.message,
+          message: 'Contact Administrator!',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+        };
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          this.addLiquidationLoading = false;
+          this.openSnackBar('LIQUIDATION ADDITION FAILED!', 'Exit');
+        })
+      }
+    )
   }
 
 }

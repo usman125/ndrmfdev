@@ -90,6 +90,32 @@ export class AdvanceLiquidationItemStore extends Store<AdvanceLiquidationItemSta
     })
   }
 
+  addNewLiquidation(data) {
+    this.setState({
+      ...this.state,
+      data: [
+        ...this.state.data,
+        {
+          "id": null,
+          "data": data,
+          "amount": null,
+          "comments": null,
+          "status": null,
+          "subStatus": null,
+          "payeesName": null,
+          "payeesAddress": null,
+          "bankName": null,
+          "bankAddress": null,
+          "payeesAccount": null,
+          "swiftCode": null,
+          "specialPaymentInstruction": null,
+          "fipSoes": [],
+          "ndrmfSoes": [],
+        }
+      ]
+    })
+  }
+
 
   // addAdvanceLiquidationItemTotalCost(amount) {
   //   this.setState({

@@ -1518,7 +1518,7 @@
           <!-- ******************** LIQUIDATION FOR ADVANCE ************************** -->
           <div class="border-heading mt-5 d-flex flex-fill justify-content-between align-items-center"
             *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'">
-            <span>Advance Liquidation &nbsp; {{li}}</span>
+            <span>Advance Liquidation &nbsp; {{li + 1}}</span>
             <button ngxPrint [useExistingCss]="true" [attr.printSectionId]="'print-initial-advance-liquidation'+li"
               matTooltip="Print Liquidation Application!" mat-mini-fab color="warn">
               <mat-icon>print</mat-icon>
@@ -2188,7 +2188,7 @@
 
               <!-- TABLE ROWS -->
               <div>
-                <div *ngFor="let item of ndrmfLiquidationSoes; let i = index;">
+                <div *ngFor="let item of liquidation.ndrmfSoes; let i = index;">
                   <div class="d-flex rag-div justify-content-between align-items-center table-row">
                     <span class="">
                       <mat-form-field appearance="outline">
@@ -2268,13 +2268,13 @@
                   &nbsp;
                 </span>
                 <span>
-                  {{(ndrmfLiquidationSoes | sum:'invoiceAmount') | number}}
+                  {{(liquidation.ndrmfSoes | sum:'invoiceAmount') | number}}
                 </span>
                 <span>
                   {{'&nbsp;'}}
                 </span>
                 <span>
-                  {{(ndrmfLiquidationSoes | sum:'paidAmount') | number}}
+                  {{(liquidation.ndrmfSoes | sum:'paidAmount') | number}}
                 </span>
                 <span>
                   {{'&nbsp;'}}
@@ -2671,7 +2671,7 @@
 
                 <!-- TABLE ROWS -->
                 <div>
-                  <div *ngFor="let item of fipLiquidationSoes; let i = index;">
+                  <div *ngFor="let item of liquidation.fipSoes; let i = index;">
                     <div class="d-flex rag-div justify-content-between align-items-center table-row">
                       <span class="">
                         <mat-form-field appearance="outline">
@@ -2751,13 +2751,13 @@
                     &nbsp;
                   </span>
                   <span>
-                    {{(fipLiquidationSoes | sum:'invoiceAmount') | number}}
+                    {{(liquidation.fipSoes | sum:'invoiceAmount') | number}}
                   </span>
                   <span>
                     {{'&nbsp;'}}
                   </span>
                   <span>
-                    {{(fipLiquidationSoes | sum:'paidAmount') | number}}
+                    {{(liquidation.fipSoes | sum:'paidAmount') | number}}
                   </span>
                   <span>
                     {{'&nbsp;'}}
@@ -2770,7 +2770,8 @@
                 <div class="d-flex justify-content-end mt-2 mb-2" *ngIf="loggedUser?.role === 'fip'">
 
                   <button [disabled]="liquidation?.status === 'Approved' ||
-                  liquidation?.status === 'Under Review'" mat-flat-button color="accent" (click)="addFipSoes(liquidation);">
+                  liquidation?.status === 'Under Review'" mat-flat-button color="accent"
+                    (click)="addFipSoes(liquidation);">
                     <mat-icon>add</mat-icon> Add SOE
                   </button>
                 </div>
@@ -2778,20 +2779,76 @@
               </div>
             </ng-container>
 
+            <div class="mb-3" *ngIf="loggedUser?.role === 'fip'">
+              <button *ngIf="!addLiquidationLoading" mat-raised-button color="warn"
+                (click)="addInitialAdvanceLiquidation()">
+                <mat-icon>add</mat-icon> Add New Liquidation
+              </button>
+              <mat-progress-spinner *ngIf="addLiquidationLoading" mode="indeterminate" diameter="20">
+              </mat-progress-spinner>
+            </div>
+
+
           </div>
+
+          <div class="d-flex flex-fill align-items-center justify-content-between" *ngIf="loggedUser?.role === 'fip'">
+            <div class="d-flex flex-fill">
+              <div>
+                <span id="answer">Liquidation Status:</span>
+                {{liquidation?.status}}
+              </div>
+            </div>
+            <div class="d-flex flex-fill justify-content-end">
+              <button *ngIf="!approveLoading && selectedAdvanceItem?.subStatus === 'Approved'"
+                [disabled]="(liquidation?.status === 'Approved' ||
+                                          liquidation?.status === 'Under Review' || selectedAdvanceItem?.status === 'Re Assigned')" mat-raised-button color="accent"
+                (click)="submitAdvanceLiquidation(liquidation)">
+                {{ (selectedAdvanceItem?.status === null ||
+                liquidation?.status === 'Not Initiated') ?
+                'Submit Quarter Liquidation' : 'Update Quarter Liquidation'}}
+              </button>
+              <mat-progress-spinner *ngIf="approveLoading" mode="indeterminate" diameter="20"></mat-progress-spinner>
+            </div>
+          </div>
+
+          <div class="d-flex flex-fill align-items-center justify-content-between" *ngIf="selectedRequest?.assigned">
+            <div class="d-flex flex-fill">
+              <div class="d-flex align-items-center">
+                <span id="answer">Liquidation Status: </span>
+                {{liquidation?.status}}
+              </div>
+            </div>
+            <div class="d-flex flex-fill justify-content-end">
+              <button class="mr-2" [disabled]="(liquidation?.status === 'Not Initiated' ||
+              liquidation?.status === 'Approved' || 
+              liquidation?.status === 'Re Assigned'
+              || liquidation.status === null) || 
+              (selectedRequest?.initialAdvance?.data === null || 
+              selectedRequest?.initialAdvance?.status === 'Re Assigned'
+              || selectedRequest?.initialAdvance?.status === 'Completed') || approveLoading" mat-raised-button
+                color="accent" (click)="approveQuarterLiquidation(liquidation)">
+                Approve Advance Liquidation
+              </button>
+              <button [disabled]="(liquidation?.status === 'Re Assigned' || 
+            liquidation?.status === 'Not Initiated' || 
+            liquidation.status === null) || (selectedRequest?.initialAdvance?.status === 'Re Assigned'
+            || selectedRequest?.initialAdvance?.status === 'Completed') || approveLoading" mat-raised-button
+                color="accent" (click)="reassignQuarterLiquidation(liquidation)">
+                Reassign Advance Liquidation
+              </button>
+            </div>
+          </div>
+
         </div>
 
         <mat-action-row>
           <div *ngIf="loggedUser?.role === 'fip'" class="d-flex align-items-center flex-fill justify-content-between">
             <div class="d-flex flex-column">
               <div class="mb-2">
-                <span id="answer">Advance Status:</span>
+                <span id="answer">Advance Status: </span>
                 {{selectedRequest?.initialAdvance.status}}
               </div>
-              <!-- <div>
-                <span id="answer">Liquidation Status:</span>
-                {{selectedAdvanceLiquidation?.status}}
-              </div> -->
+
             </div>
             <div class="d-flex flex-column">
               <button class="mb-2" [disabled]="apiCosts === null || 
@@ -2803,28 +2860,15 @@
                   selectedAdvanceItem?.status === 'Marked To PO' ||
                   selectedAdvanceItem?.subStatus === 'Approved') || approveLoading" mat-raised-button color="accent"
                 (click)="submitInitalAdvance();">Submit Initial Advance</button>
-              <!-- <div>
-                <button *ngIf="!approveLoading && selectedAdvanceItem?.subStatus === 'Approved'" [disabled]="(liquidation?.status === 'Approved' ||
-                              liquidation?.status === 'Under Review' || selectedAdvanceItem?.status === 'Re Assigned')"
-                  mat-raised-button color="accent" (click)="submitAdvanceLiquidation()">
-                  {{ (selectedAdvanceItem?.status === null ||
-                  liquidation?.status === 'Not Initiated') ?
-                  'Submit Quarter Liquidation' : 'Update Quarter Liquidation'}}
-                </button>
-                <mat-progress-spinner *ngIf="approveLoading" mode="indeterminate" diameter="20"></mat-progress-spinner>
-              </div> -->
+
             </div>
           </div>
           <div *ngIf="selectedRequest?.assigned" class="d-flex align-items-center flex-fill justify-content-between">
             <div class="d-flex flex-column">
               <div class="mb-2">
-                <span id="answer">Advance Status:</span>
+                <span id="answer">Advance Status: </span>
                 {{selectedRequest?.initialAdvance.status}}
               </div>
-              <!-- <div>
-                <span id="answer">Liquidation Status:</span>
-                {{liquidation?.status}}
-              </div> -->
             </div>
             <div class="d-flex flex-column">
               <button [disabled]="selectedAdvanceItem?.status === 'Re Assigned' || approveLoading" class="mb-2" (click)="(selectedRequest?.initialAdvance.subStatus === null ||
@@ -2837,32 +2881,15 @@
                 selectedRequest?.initialAdvance.subStatus === 'Pending') ?
                 'Approve Initial Advance' : 'Reject Initial Advance'}}
               </button>
-              <!-- <button class="mb-2" [disabled]="(selectedAdvanceItem?.status === 'Pending' || 
-              selectedAdvanceItem?.status === 'Re Assigned') || 
-              (liquidation?.status === 'Re Assigned') || approveLoading" color="accent"
-                mat-raised-button (click)="reassignInitialAdvance(selectedRequest)">
-                {{'Re-assign Initial Advance'}}
-              </button> -->
-              <div class="mb-2">
+              <!-- <div class="mb-2">
                 <mat-divider></mat-divider>
-              </div>
-              <!-- <button class="mb-2" [disabled]="(liquidation?.status === 'Not Initiated' ||
-                             liquidation?.status === 'Approved' || 
-                             liquidation?.status === 'Re Assigned'
-                              || liquidation === null) || 
-                             (selectedRequest?.initialAdvance?.data === null || 
-                             selectedRequest?.initialAdvance?.status === 'Re Assigned'
-                             || selectedRequest?.initialAdvance?.status === 'Completed') || approveLoading"
-                mat-raised-button color="accent" (click)="approveQuarterLiquidation()">
-                Approve Advance Liquidation
+              </div> -->
+              <button class="mb-2" [disabled]="(selectedAdvanceItem?.status === 'Pending' || 
+              selectedAdvanceItem?.status === 'Re Assigned') || approveLoading" color="accent" mat-raised-button
+                (click)="reassignInitialAdvance(selectedRequest)">
+                {{'Re-assign Initial Advance'}}
               </button>
-              <button [disabled]="(liquidation?.status === 'Re Assigned' || 
-                            liquidation?.status === 'Not Initiated' || 
-                            liquidation === null) || (selectedRequest?.initialAdvance?.status === 'Re Assigned'
-                            || selectedRequest?.initialAdvance?.status === 'Completed') || approveLoading"
-                mat-raised-button color="accent" (click)="reassignQuarterLiquidation()">
-                Reassign Advance Liquidation
-              </button> -->
+
             </div>
           </div>
         </mat-action-row>
@@ -5076,13 +5103,13 @@
                     &nbsp;
                   </span>
                   <span>
-                    {{(ndrmfLiquidationSoes | sum:'invoiceAmount') | number}}
+                    {{(liquidation.ndrmfSoes | sum:'invoiceAmount') | number}}
                   </span>
                   <span>
                     {{'&nbsp;'}}
                   </span>
                   <span>
-                    {{(ndrmfLiquidationSoes | sum:'paidAmount') | number}}
+                    {{(liquidation.ndrmfSoes | sum:'paidAmount') | number}}
                   </span>
                   <span>
                     {{'&nbsp;'}}
@@ -5094,7 +5121,8 @@
 
                 <div class="d-flex justify-content-end mt-2 mb-2" *ngIf="loggedUser?.role === 'fip'">
                   <button [disabled]="liquidation?.status === 'Approved' ||
-                    liquidation?.status === 'Under Review'" mat-flat-button color="accent" (click)="addNdrmfSoes(liquidation);">
+                    liquidation?.status === 'Under Review'" mat-flat-button color="accent"
+                    (click)="addNdrmfSoes(liquidation);">
                     <mat-icon>add</mat-icon> Add SOE
                   </button>
                 </div>
@@ -5589,7 +5617,8 @@
                   <div class="d-flex justify-content-end mt-2 mb-2" *ngIf="loggedUser?.role === 'fip'">
 
                     <button [disabled]="liquidation?.status === 'Approved' ||
-                    liquidation?.status === 'Under Review'" mat-flat-button color="accent" (click)="addFipSoes(liquidation);">
+                    liquidation?.status === 'Under Review'" mat-flat-button color="accent"
+                      (click)="addFipSoes(liquidation);">
                       <mat-icon>add</mat-icon> Add SOE
                     </button>
                   </div>
@@ -5638,6 +5667,16 @@
               </div>
 
             </div>
+
+            <div class="mb-3" *ngIf="loggedUser?.role === 'fip'">
+              <button *ngIf="!addLiquidationLoading" mat-raised-button color="warn"
+                (click)="addQuarterAdvanceLiquidation()">
+                <mat-icon>add</mat-icon> Add New Liquidation
+              </button>
+              <mat-progress-spinner *ngIf="addLiquidationLoading" mode="indeterminate" diameter="20">
+              </mat-progress-spinner>
+            </div>
+
           </div>
         </div>
 

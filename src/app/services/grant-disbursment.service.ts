@@ -145,4 +145,20 @@ export class GrantDisbursmentsService {
     );
   }
 
+  commenceInitialAdvanceLiquidation(disbursmentId) {
+    const url = `${AppConfig.apiUrl}/grant-disbursement/${disbursmentId}/initial-advance/commence/liquidation/`;
+    return this._httpClient.post(
+      url,
+      null
+    );
+  }
+
+  commenceQuarterAdvanceLiquidation(advanceId) {
+    const url = `${AppConfig.apiUrl}/grant-disbursement/${advanceId}/quarter-advance/commence/liquidation/`;
+    return this._httpClient.post(
+      url,
+      null
+    );
+  }
+
 }
