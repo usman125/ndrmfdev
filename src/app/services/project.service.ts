@@ -481,11 +481,11 @@ export class ProjectService {
     );
   }
 
-  changeSubProjectDocDmPamTaskStatus(requestId, status) {
+  changeSubProjectDocDmPamTaskStatus(requestId, status, body) {
     const url = `${AppConfig.apiUrl}/implementation/sub-proj-doc/change-dmpam-task/${requestId}/status?status=${status}`;
     return this._httpClient.put(
       url,
-      null
+      body
     );
   }
 
@@ -500,6 +500,22 @@ export class ProjectService {
   commenceProjectClosure(body) {
     const url = `${AppConfig.apiUrl}/project-closure/commence`;
     return this._httpClient.post(
+      url,
+      body
+    );
+  }
+
+  markProjectClosureToCeo(requestId) {
+    const url = `${AppConfig.apiUrl}/project-closure/${requestId}/mark-to-ceo`;
+    return this._httpClient.put(
+      url,
+      null
+    );
+  }
+
+  projectClosureCeoApproval(requestId, status, body) {
+    const url = `${AppConfig.apiUrl}/project-closure/${requestId}/ceo/approval?status=${status}`;
+    return this._httpClient.put(
       url,
       body
     );

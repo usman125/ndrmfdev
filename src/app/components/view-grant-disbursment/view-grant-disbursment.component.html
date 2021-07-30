@@ -2268,13 +2268,13 @@
                   &nbsp;
                 </span>
                 <span>
-                  {{(liquidation.ndrmfSoes | sum:'invoiceAmount') | number}}
+                  {{((liquidation.ndrmfSoes || []) | sum:'invoiceAmount') | number}}
                 </span>
                 <span>
                   {{'&nbsp;'}}
                 </span>
                 <span>
-                  {{(liquidation.ndrmfSoes | sum:'paidAmount') | number}}
+                  {{((liquidation.ndrmfSoes || []) | sum:'paidAmount') | number}}
                 </span>
                 <span>
                   {{'&nbsp;'}}
@@ -2751,13 +2751,13 @@
                     &nbsp;
                   </span>
                   <span>
-                    {{(liquidation.fipSoes | sum:'invoiceAmount') | number}}
+                    {{((liquidation.fipSoes || []) | sum:'invoiceAmount') | number}}
                   </span>
                   <span>
                     {{'&nbsp;'}}
                   </span>
                   <span>
-                    {{(liquidation.fipSoes | sum:'paidAmount') | number}}
+                    {{((liquidation.fipSoes || []) | sum:'paidAmount') | number}}
                   </span>
                   <span>
                     {{'&nbsp;'}}
@@ -5103,13 +5103,13 @@
                     &nbsp;
                   </span>
                   <span>
-                    {{(liquidation.ndrmfSoes | sum:'invoiceAmount') | number}}
+                    {{((liquidation.ndrmfSoes || []) | sum:'invoiceAmount') | number}}
                   </span>
                   <span>
                     {{'&nbsp;'}}
                   </span>
                   <span>
-                    {{(liquidation.ndrmfSoes | sum:'paidAmount') | number}}
+                    {{((liquidation.ndrmfSoes || []) | sum:'paidAmount') | number}}
                   </span>
                   <span>
                     {{'&nbsp;'}}
@@ -5598,13 +5598,13 @@
                       &nbsp;
                     </span>
                     <span>
-                      {{(liquidation.fipSoes | sum:'invoiceAmount') | number}}
+                      {{((liquidation.fipSoes || []) | sum:'invoiceAmount') | number}}
                     </span>
                     <span>
                       {{'&nbsp;'}}
                     </span>
                     <span>
-                      {{(liquidation.fipSoes | sum:'paidAmount') | number}}
+                      {{((liquidation.fipSoes || []) | sum:'paidAmount') | number}}
                     </span>
                     <span>
                       {{'&nbsp;'}}

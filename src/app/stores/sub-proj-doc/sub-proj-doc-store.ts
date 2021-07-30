@@ -15,6 +15,7 @@ export class SubProjectDocStore extends Store<SubProjectDocState> {
     startDate: string,
     status: string,
     docName: string,
+    fipName: string,
     docNumber: string,
   ): void {
     this.setState({
@@ -28,6 +29,7 @@ export class SubProjectDocStore extends Store<SubProjectDocState> {
           startDate: startDate,
           status: status,
           docName: docName,
+          fipName: fipName,
           docNumber: docNumber,
         }
       ]

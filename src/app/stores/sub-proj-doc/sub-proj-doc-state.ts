@@ -9,5 +9,6 @@ export class SubProjectDocState {
     status: string,
     docName: string,
     docNumber: string,
+    fipName: string,
   }[] = [];
 }

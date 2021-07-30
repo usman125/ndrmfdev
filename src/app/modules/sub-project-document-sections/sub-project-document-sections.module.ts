@@ -15,6 +15,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { SubProjectDocumentCommentsMatrixModule } from '../sub-project-document-comments-matrix/sub-project-document-comments-matrix.module';
 import { NgxPrintModule } from 'ngx-print';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 
@@ -40,6 +41,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatChipsModule,
     NgxPrintModule,
     MatTooltipModule,
+    MatDividerModule,
   ],
   exports: [SubProjectDocumentSectionsComponent]
 })

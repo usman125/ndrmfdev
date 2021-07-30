@@ -993,7 +993,7 @@
                 </div>
               </div>
 
-              <div class="expiry-sections mt-2 mb-2"
+              <!-- <div class="expiry-sections mt-2 mb-2"
                 *ngIf="selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null">
                 <button
                   [disabled]="selectedProject?.tpvStatus === 'Pending' || selectedProject?.tpvStatus === 'Completed'"
@@ -1003,7 +1003,7 @@
                 <div *ngIf="commenceTpvLoader" class="d-flex flex-fill justify-content-center">
                   <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
                 </div>
-              </div>
+              </div> -->
 
               <div class="expiry-sections mt-2 mb-2"
                 *ngIf="selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null">
@@ -1287,6 +1287,20 @@
             <mat-icon class="mr-1">table_chart</mat-icon> {{'Fill Proposal reports' | titlecase}}
           </button>
 
+        </mat-card-actions>
+
+        <!-- MNE PROCESS OWNER BUTTONS -->
+        <mat-card-actions class="p-3 footer-btns"
+          *ngIf="viewType === 'po' && loggedUser.role === 'process owner' && loggedUser?.processNames.indexOf('QPR') > -1">
+          <div *ngIf="selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null">
+            <button [disabled]="selectedProject?.tpvStatus === 'Pending' || selectedProject?.tpvStatus === 'Completed'"
+              *ngIf="!commenceTpvLoader" (click)="commenceTpv()" mat-button color="warn">
+              <mat-icon class="mr-1">edit</mat-icon> {{'Initiate TPV' | titlecase}}
+            </button>
+            <div *ngIf="commenceTpvLoader" class="d-flex flex-fill justify-content-center">
+              <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+            </div>
+          </div>
         </mat-card-actions>
 
       </mat-card>

@@ -44,7 +44,12 @@
     </ng-container>
     <ng-container matColumnDef="status">
       <th mat-header-cell mat-sort-header *matHeaderCellDef> Status </th>
-      <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+      <td mat-cell *matCellDef="let element">
+        <span [ngClass]="{'comment-b': element.status === 'Completed',
+        'info-comment-b': element.status === 'Pending'}">
+          {{element.status}}
+        </span>
+      </td>
     </ng-container>
     <ng-container matColumnDef="expiry">
       <th mat-header-cell mat-sort-header *matHeaderCellDef> Expiry </th>

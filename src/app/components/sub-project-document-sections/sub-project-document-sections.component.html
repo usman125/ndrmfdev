@@ -92,31 +92,41 @@
                   {{object.name}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <button mat-raised-button color="primary" [disabled]="!dmUser" (click)="assignDmUsersForReviews()">Assign
+            <button *ngIf="!assignUserLoader" mat-raised-button color="primary" [disabled]="!dmUser"
+              (click)="assignDmUsersForReviews()">Assign
               For
               Review</button>
+            <div *ngIf="assignUserLoader" class="d-flex justify-content-center flex-fill">
+              <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+            </div>
           </div>
         </mat-card-content>
       </mat-card>
 
       <mat-card class="m-20 ml-0">
         <mat-card-content>
-          <span style="display: block;" id="answer" class="pl-2 mt-3 mb-3">{{"Assigned Tasks for Dm Pam" |
+          <span style="display: block;border-bottom: 1px solid #ddd;" id="answer" class="pt-3 pb-3 mb-3">{{"Assigned Tasks for Dm Pam" |
             uppercase}}</span>
-          <div class="d-flex p-3 mb-2" style="background-color: rgba(235, 235, 235, 0.5);"
-            *ngFor="let task of selectedRequest.dmpamTasks">
+          <div class="position-relative d-flex flex-fill p-3" *ngFor="let task of selectedRequest.dmpamTasks; let i = index;">
             <div class="d-flex flex-fill flex-column">
-              <span>
-                {{task.assignee.name || '&nbsp;'}}
-              </span>
-              <span class="mt-2 d-flex flex-fill align-items-center" [ngClass]="{'warn-comment-b': task.status === 'Review Pending',
-                'comment-b': task.status === 'Review Completed' || task.status === 'Approved',
-              'notify-text': task.status === 'Rejected'}">
-                {{task.status || '&nbsp;'}}
-              </span>
-              <button class="mt-3" mat-button color="warn" (click)="toggleComments(task)">
-                {{'view comments' | titlecase}}
-              </button>
+              <p class="mb-2 mb-3"><span id="answer">Remarks:&nbsp;</span>{{task.dmComments || '&nbsp;'}}</p>
+              <div class="d-flex flex-fill flex-column">
+                <span>
+                  {{task.assignee.name || '&nbsp;'}}
+                </span>
+                <span class="mt-2 d-flex flex-fill align-items-center" [ngClass]="{'warn-comment-b': task.status === 'Review Pending',
+                  'comment-b': task.status === 'Review Completed' || task.status === 'Approved',
+                  'info-comment-b': task.status === 'Pending',
+                  'notify-text': task.status === 'Rejected'}">
+                  {{task.status || '&nbsp;'}}
+                </span>
+                <button class="mt-3" mat-button color="warn" (click)="toggleComments(task)">
+                  {{'view comments' | titlecase}}
+                </button>
+              </div>
+              <div class="d-flex mt-3 mb-3" *ngIf="i !== selectedRequest?.dmpamTasks?.length - 1">
+                <mat-divider></mat-divider>
+              </div>
             </div>
           </div>
 
@@ -189,9 +199,13 @@
                   [value]="sectionComments" placeholder="enter your remarks..." matInput cols="30" rows="10"></textarea>
               </mat-form-field>
               <div class="fullbtn mt-2">
-                <button (click)="addUnAssignedSectionReview(task.id, obj.id)" mat-raised-button color="primary"
+                <button *ngIf="!assignUserLoader" (click)="addUnAssignedSectionReview(task.id, obj.id)"
+                  mat-raised-button color="primary"
                   [disabled]="obj.status === 'Completed' || !sectionComments || unAssignSections.value?.length === 0">Submit
                   Remarks</button>
+                <div *ngIf="assignUserLoader" class="d-flex justify-content-center flex-fill">
+                  <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+                </div>
               </div>
               <small class="mt-2">* Please select a specific section(s) to remark or submit a general remark without
                 selecting
@@ -208,36 +222,38 @@
 
         <mat-card class="m-20 ml-0">
           <mat-card-content>
-            <span style="display: block;" id="answer" class="pl-2 mt-2 mb-3">{{"Assigned Tasks for dm pam" |
+            <span style="display: block;" id="answer" class="mt-2 mb-3">{{"Assigned Tasks for dm pam" |
               uppercase}}</span>
-            <div class="d-flex p-3 mb-2" style="background-color: rgba(235, 235, 235, 0.5);"
-              *ngFor="let task of selectedRequest.dmpamTasks">
-              <div class="d-flex flex-column flex-fill">
-                <span>
-                  {{task.assignee.name || '&nbsp;'}}
-                </span>
-                <span class="d-flex flex-fill align-items-center" [ngClass]="{'warn-comment-b': task.status === 'Review Pending',
+            <!-- <div class="d-flex p-3 mb-2" style="background-color: rgba(235, 235, 235, 0.5);"
+              *ngFor="let task of selectedRequest.dmpamTasks"> -->
+            <div class="d-flex flex-column flex-fill">
+              <p class="mb-2 mb-3"> <span id="answer">Remarks:&nbsp;</span> {{task.dmComments || '&nbsp;'}}</p>
+              <span>
+                {{task.assignee.name || '&nbsp;'}}
+              </span>
+              <span class="d-flex flex-fill align-items-center" [ngClass]="{'warn-comment-b': task.status === 'Review Pending',
                 'comment-b': task.status === 'Review Completed' || task.status === 'Approved',
+                'info-comment-b': task.status === 'Pending',
               'notify-text': task.status === 'Rejected'}" class="mt-2">
-                  {{task.status || '&nbsp;'}}
-                </span>
-                <div *ngIf="!changeStatusLoader" class="d-flex flex-column flex-fill">
-                  <button class="mt-3" mat-button color="primary" (click)="toggleComments(task)">
-                    {{'view comments' | uppercase}}
-                  </button>
-                  <button [disabled]="task.status === 'Approved' || task.status === 'Rejected'" mat-button
-                    color="accent" (click)="changeSubProjectDocDmPamTaskStatus(task.id, 'APPROVED')">
-                    APPROVE
-                  </button>
-                  <button [disabled]="(task.status === 'Approved' || task.status === 'Rejected')" mat-button
-                    color="warn" (click)="changeSubProjectDocDmPamTaskStatus(task.id, 'REJECTED')">
-                    REJECT
-                  </button>
-                </div>
-                <div *ngIf="changeStatusLoader" class="d-flex justify-content-center flex-fill">
-                  <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
-                </div>
+                {{task.status || '&nbsp;'}}
+              </span>
+              <div *ngIf="!changeStatusLoader" class="d-flex flex-column flex-fill">
+                <button class="mt-3" mat-button color="primary" (click)="toggleComments(task)">
+                  {{'view comments' | uppercase}}
+                </button>
+                <button [disabled]="task.status === 'Approved' || task.status === 'Rejected'" mat-button color="accent"
+                  (click)="changeSubProjectDocDmPamTaskStatus(task.id, 'APPROVED')">
+                  APPROVE
+                </button>
+                <button [disabled]="(task.status === 'Approved' || task.status === 'Rejected')" mat-button color="warn"
+                  (click)="changeSubProjectDocDmPamTaskStatus(task.id, 'REJECTED')">
+                  REJECT
+                </button>
               </div>
+              <div *ngIf="changeStatusLoader" class="d-flex justify-content-center flex-fill">
+                <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+              </div>
+              <!-- </div> -->
             </div>
           </mat-card-content>
         </mat-card>
@@ -268,10 +284,13 @@
               </mat-select>
             </mat-form-field>
             <div class="d-flex flex-fill justify-content-start">
-              <button style="width: 100%;" [disabled]="!reviewUsers.valid" class="mt-2 mb-2" mat-raised-button
-                color="primary" (click)="assignUsersForReviews('quarter', task.id)">
+              <button *ngIf="!assignUserLoader" style="width: 100%;" [disabled]="!reviewUsers.valid" class="mt-2 mb-2"
+                mat-raised-button color="primary" (click)="assignUsersForReviews('quarter', task.id)">
                 Assign For Reviews
               </button>
+              <div *ngIf="assignUserLoader" class="d-flex justify-content-center flex-fill">
+                <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+              </div>
             </div>
             <div class="d-flex flex-fill justify-content-start">
               <button ngxPrint [useExistingCss]="true" printSectionId="print-subprocess-sections"

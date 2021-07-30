@@ -15,7 +15,7 @@ export class SubProjectDocumentDmpamTasksComponent implements OnInit, OnDestroy 
 
   loggedUser = JSON.parse(localStorage.getItem('user'));
 
-  public displayedColumns = ['assigneedByName', 'docName', 'docNumber', 'status', 'comments', 'action'];
+  public displayedColumns = ['assigneedByName', 'docName', 'docNumber', 'fipName', 'status', 'comments', 'action'];
   public dataSource: any = [];
   public apiLoading: boolean = false;
   public Subscription: Subscription = new Subscription();
@@ -44,6 +44,8 @@ export class SubProjectDocumentDmpamTasksComponent implements OnInit, OnDestroy 
             assigneedByName: c.assigneedBy.name
           }
         }));
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
         this.apiLoading = false;
       },
       error => {

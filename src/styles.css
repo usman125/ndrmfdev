@@ -656,3 +656,7 @@ table tbody tr td {
 .custom-expension .mat-expansion-panel-header-title .close {
   display: none;
 }
+
+.small-text {
+  font-size: 12px;
+}

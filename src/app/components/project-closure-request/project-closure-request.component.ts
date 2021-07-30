@@ -19,6 +19,8 @@ export class ProjectClosureRequestComponent implements OnInit {
   assignedSections: any = [];
   unAssignedSections: any = [];
 
+  allTasksSubmitted: any = null;
+
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -139,8 +141,15 @@ export class ProjectClosureRequestComponent implements OnInit {
             }
           }
         });
+        this.allTasksSubmitted = this.allRequests.filter((c) => {
+          return c.status === 'Pending'
+        });
         this.apiLoading = false;
-        console.log("ALL CLOSURE REQUESTS ON PROPOSAL:--", this.allRequests, this.assignedSections, this.unAssignedSections);
+        console.log("ALL CLOSURE REQUESTS ON PROPOSAL:--\n",
+          "\n", this.allRequests,
+          "\n", this.assignedSections,
+          "\n", this.unAssignedSections,
+          "\n", this.allTasksSubmitted);
       },
       error => {
         console.log("ALL CLOSURE REQUESTS ON PROPOSAL:--", error);
@@ -177,6 +186,43 @@ export class ProjectClosureRequestComponent implements OnInit {
         console.log("RESULT AFTER SUBMITTING TASK:-", error);
       }
     );
+  }
+
+  getLabel(item) {
+    if (item.orderNum === 1) {
+      return 'M & E'
+    }
+    if (item.orderNum === 2) {
+      return 'GIA'
+    }
+    if (item.orderNum === 3) {
+      return 'PAM'
+    }
+  }
+
+  markProjectClosureToCeo() {
+    this.apiLoading = true;
+    const options = {
+      title: '',
+      message: '',
+      confirmText: 'OK',
+      cancelText: 'OK',
+      add: true,
+
+    }
+    this._projectService.markProjectClosureToCeo(
+      this.allRequests[0].closureId
+    ).subscribe((result: any) => {
+      options.title = result.message;
+      this._confirmModelService.open(options);
+      this._confirmModelService.confirmed().subscribe(confirmed => {
+        console.log("RESULT AFTER SUBMITTING TASK:-", result);
+        this.allRequests[0].markedToStatus = 'Pending';
+        this.apiLoading = false;
+      })
+    }, error => {
+      console.log("RESULT AFTER SUBMITTING TASK:-", error);
+    });
   }
 
 }

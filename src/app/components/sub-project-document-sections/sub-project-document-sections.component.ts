@@ -55,6 +55,7 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
   assignedReviewTask: any = null;
 
   changeStatusLoader: boolean = false;
+  assignUserLoader: boolean = false;
 
   constructor(
     private _subProjectDocSectionsStore: SubProjectDocSectionsStore,
@@ -270,6 +271,7 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
   }
 
   assignDmUsersForReviews() {
+    this.assignUserLoader = true;
     // console.log("ASSIGN USERS FOR REVIEWS:---", this.reviewUsers.value);
     const options = {
       title: 'Assign Users For Reviews!',
@@ -299,12 +301,11 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
               add: true,
               confirm: false,
             };
-            // this._qprSingleRequestStore.addExistedTasksForQpr(newArray, existedArray);
-            // this._qprSingleRequestStore.addNewTasksForQpr(newArray, existedArray);
             this._confirmModelService.open(options);
-            // this.reviewUsers.reset();
-            // this.aurLoader = false;
-            console.log("RESULT ADDING TASKS:--", result);
+            this._confirmModelService.confirmed().subscribe(confirmed => {
+              console.log("RESULT ADDING TASKS:--", result);
+              this.assignUserLoader = false;
+            })
           },
           (error: any) => {
             const options = {
@@ -317,8 +318,10 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
             };
             options.title = error.error.message;
             this._confirmModelService.open(options);
-            // this.aurLoader = false;
-            console.log("RESULT ADDING TASKS:--", error);
+            this._confirmModelService.confirmed().subscribe(confirmed => {
+              console.log("RESULT ADDING TASKS:--", error);
+              this.assignUserLoader = false;
+            })
           }
         );
       }
@@ -335,7 +338,7 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
       add: false,
       confirm: true,
     };
-
+    this.assignUserLoader = true;
 
     this._confirmModelService.open(options);
 
@@ -376,7 +379,6 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
       body
     ).subscribe(
       (result: any) => {
-        // console.log("RESULT ASSIGNING REVIEWS:---", result);
         this._subProjectDocSectionsStore.assignUsersForReviewsByDmpam(body.initialAdvanceId, storeArray);
         const options = {
           title: result.message,
@@ -387,7 +389,11 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
           confirm: false,
         };
         this._confirmModelService.open(options);
-        this.reviewUsers.reset();
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          // console.log("RESULT ASSIGNING REVIEWS:---", result);
+          this.reviewUsers.reset();
+          this.assignUserLoader = false;
+        })
       }, error => {
         const options = {
           title: error.error.message,
@@ -398,7 +404,10 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
           confirm: false,
         };
         this._confirmModelService.open(options);
-        console.log("RESULT ASSIGNING REVIEWS:---", error);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          console.log("RESULT ASSIGNING REVIEWS:---", error);
+          this.assignUserLoader = false;
+        })
       }
     );
 
@@ -450,7 +459,7 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
             name: null,
             users: []
           }
-          console.log(key + " -> " + result[key])
+          // console.log(key + " -> " + result[key])
           object.name = key;
           for (let i = 0; i < result[key].length; i++) {
             object.users.push(result[key][i]);
@@ -477,6 +486,9 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
   }
 
   addUnAssignedSectionReview(id, taskId) {
+
+    this.assignUserLoader = true;
+
     var sectionIds: any = [];
     if (this.unAssignSections.value) {
       for (let i = 0; i < this.unAssignSections.value.length; i++) {
@@ -495,8 +507,7 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
       taskId,
       object
     ).subscribe(
-      result => {
-        this.sectionComments = null;
+      (result: any) => {
         const options = {
           title: 'Successfully Added!',
           message: 'Click OK to exit',
@@ -507,10 +518,27 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
           setStatus: false,
         };
         this._confirmModelService.open(options);
-        this._subProjectDocSectionsStore.submitUserReview(id, taskId);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          this.sectionComments = null;
+          this._subProjectDocSectionsStore.submitUserReview(id, taskId);
+          this.assignUserLoader = false;
+        })
       },
       error => {
-        console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
+        const options = {
+          title: error.error.message,
+          message: 'Contact Support',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+          confirm: false,
+          setStatus: false,
+        };
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          console.log("ERROR AFTER PROPOSAL GENERAL REVIEW:--", error);
+          this.assignUserLoader = false;
+        })
       },
     );
   }
@@ -533,6 +561,7 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
       cancelText: 'NO',
       confirmText: 'YES',
       confirmAction: true,
+      confirmComments: true,
     };
     this._confirmModelService.open(options);
 
@@ -541,11 +570,24 @@ export class SubProjectDocumentSectionsComponent implements OnInit, OnDestroy {
         this.changeStatusLoader = true;
         console.log("CHANGE SPD DM PAM TASK STATUS:--", confirmed);
         let newStatus = status === 'APPROVED' ? 'Approved' : 'Rejected';
-        this._projectService.changeSubProjectDocDmPamTaskStatus(id, status).subscribe(
+        let body = {
+          comment: confirmed.comments
+        }
+        this._projectService.changeSubProjectDocDmPamTaskStatus(id, status, body).subscribe(
           (result: any) => {
-            this._subProjectDocSectionsStore.changeSubProjectDocDmPamTaskStatus(id, newStatus);
-            this.changeStatusLoader = false;
-            console.log("RESULT CHANGING STATUS:--", result);
+            const options = {
+              title: result.message,
+              message: '',
+              cancelText: 'NO',
+              confirmText: 'OK',
+              add: true,
+            };
+            this._confirmModelService.open(options);
+            this._confirmModelService.confirmed().subscribe(confirmed => {
+              console.log("RESULT CHANGING STATUS:--", result);
+              this._subProjectDocSectionsStore.changeSubProjectDocDmPamTaskStatus(id, newStatus);
+              this.changeStatusLoader = false;
+            })
           },
           error => {
             console.log("RESULT CHANGING STATUS:--", error);

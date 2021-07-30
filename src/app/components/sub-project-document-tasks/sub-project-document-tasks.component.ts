@@ -15,7 +15,7 @@ export class SubProjectDocumentTasksComponent implements OnInit {
 
   loggedUser = JSON.parse(localStorage.getItem('user'));
 
-  public displayedColumns = ['assigneedByName', 'docName', 'docNumber', 'status', 'comments', 'action'];
+  public displayedColumns = ['assigneedByName', 'docName', 'docNumber', 'fipName', 'status', 'comments', 'action'];
   public dataSource: any = [];
   public apiLoading: boolean = false;
   public Subscription: Subscription = new Subscription();

@@ -1182,8 +1182,8 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
           let c = this.projectActualCosts[i];
           if (!c.children) {
             if (c.quarters[this.step + 1].data !== null && c.quarters[this.step + 1].value === true) {
-              c.amount = c.totalCost;
-              itemTotal = itemTotal + c.totalCost;
+              c.amount = c.quarters[0].data.ndrmfShare;
+              itemTotal = itemTotal + c.amount;
               quarterCosts.push(c)
             }
           }
@@ -1197,8 +1197,8 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
           let c = this.projectActualCosts[i];
           if (!c.children) {
             if (c.quarters[0].data !== null && c.quarters[0].value === true) {
-              c.amount = c.totalCost;
-              itemTotal = itemTotal + c.totalCost;
+              c.amount = c.quarters[0].data.ndrmfShare;
+              itemTotal = itemTotal + c.amount;
               this.apiCosts.push(c);
             }
           }
