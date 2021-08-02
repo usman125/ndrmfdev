@@ -46,6 +46,7 @@ export class ConfirmModelService {
         changeSpdStatus: options.changeSpdStatus,
         spdStatus: options.spdStatus,
         confirmComments: options.confirmComments,
+        ceoDecision: options.ceoDecision,
       };
       this.dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     } else {
@@ -81,6 +82,7 @@ export class ConfirmModelService {
           changeSpdStatus: options.changeSpdStatus,
           spdStatus: options.spdStatus,
           confirmComments: options.confirmComments,
+          ceoDecision: options.ceoDecision,
         }
       });
     }

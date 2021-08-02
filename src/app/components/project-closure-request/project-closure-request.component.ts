@@ -225,4 +225,66 @@ export class ProjectClosureRequestComponent implements OnInit {
     });
   }
 
+  projectClosureCeoApproval() {
+    const options = {
+      title: '',
+      message: '',
+      confirmText: 'OK',
+      cancelText: 'CANCEL',
+      ceoDecision: true,
+      confirmComments: true,
+    }
+    this._confirmModelService.open(options);
+    this._confirmModelService.confirmed().subscribe(confirmed => {
+      if (confirmed) {
+        this.apiLoading = true;
+        let body = {
+          comment: confirmed.comments
+        };
+        console.log("CONFIRMED FROM MODEL:--", confirmed);
+        this._projectService.projectClosureCeoApproval(
+          this.allRequests[0].closureId,
+          confirmed.status,
+          body,
+        ).subscribe((result: any) => {
+          const options = {
+            title: result.message,
+            message: '',
+            confirmText: 'OK',
+            cancelText: 'OK',
+            add: true,
+          }
+          this._confirmModelService.open(options);
+          this._confirmModelService.confirmed().subscribe(confirmed => {
+            console.log("RESULT AFTER SUBMITTING TASK:-", result);
+            this.allRequests[0].markedToStatus = 'Completed';
+            this.allRequests[0].markedToSubStatus = confirmed.status;
+            this.allRequests[0].markedToComments = confirmed.comments;
+            this.apiLoading = false;
+          })
+        }, error => {
+          const options = {
+            title: error.error.message,
+            message: '',
+            confirmText: 'OK',
+            cancelText: 'OK',
+            add: true,
+          }
+          this._confirmModelService.open(options);
+          this._confirmModelService.confirmed().subscribe(confirmed => {
+            console.log("RESULT AFTER SUBMITTING TASK:-", error);
+            this.apiLoading = false;
+          })
+        });
+      }
+    })
+  }
+
+  checkUser() {
+    if (this.loggedUser?.processNames?.indexOf('PROJECT_PROPOSAL') > -1) {
+      return true;
+    }
+    return false;
+  }
+
 }

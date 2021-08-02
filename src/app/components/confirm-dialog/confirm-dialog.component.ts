@@ -40,6 +40,7 @@ export interface ConfirmData {
   changeSpdStatus: any;
   spdStatus: any;
   confirmComments: any;
+  ceoDecision: any;
 }
 
 @Component({
@@ -187,6 +188,14 @@ export class ConfirmDialogComponent implements OnInit, OnDestroy {
   approveActionWithComments() {
     this.close({
       confirm: true,
+      comments: this.data.comments,
+    })
+  }
+
+  ceoApprovalWithComments(status) {
+    this.close({
+      confirm: true,
+      status: status,
       comments: this.data.comments,
     })
   }

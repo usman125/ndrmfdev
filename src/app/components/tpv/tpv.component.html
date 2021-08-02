@@ -1,5 +1,7 @@
 <div class="pt-0 pb-3 pr-3 pl-3">
-  <div *ngIf="loggedUser?.processNames.indexOf('QPR') > -1" class="pb-5">
+  <div
+    *ngIf="checkUser()"
+    class="pb-5">
     <div class="border-heading">
       {{'pending checklist item' | uppercase}}
     </div>

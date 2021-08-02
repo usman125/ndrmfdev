@@ -366,8 +366,8 @@ loggedUser?.processNames.indexOf('PROJECT_PROPOSAL') > -1">
   </div>
 </div> -->
 <div *ngIf="allTasksSubmitted?.length === 0" class="pl-3 pb-3">
-  <p id="answer">CEO APPROVAL</p>
-  <div>
+  <div *ngIf="checkUser()">
+    <p id="answer">CEO APPROVAL</p>
     <button *ngIf="!apiLoading" (click)="markProjectClosureToCeo()"
       [disabled]="allRequests[0].markedToStatus === 'Pending'" mat-raised-button color="warn">
       MARK TO CEO
@@ -378,7 +378,10 @@ loggedUser?.processNames.indexOf('PROJECT_PROPOSAL') > -1">
     </div>
   </div>
   <div *ngIf="(allRequests[0].isMarkedTo !== null && 
-    allRequests[0].markedToStatus === 'Completed')">
+  allRequests[0].markedToStatus === 'Completed')">
+    <div class="mb-3" *ngIf="allRequests[0].markedToStatus === 'Completed'">
+      Marked To Ceo - Completed
+    </div>
     <div>
       <p>
         <span id="answer">
@@ -386,8 +389,14 @@ loggedUser?.processNames.indexOf('PROJECT_PROPOSAL') > -1">
         </span>
         {{allRequests[0].markedToComments}}
       </p>
-      {{allRequests[0].markedToSubStatus}}
+      <p id="comment-b">{{allRequests[0].markedToSubStatus | titlecase}}</p>
     </div>
+  </div>
+  <div *ngIf="loggedUser?.role === 'ceo'" class="pb-3">
+    <button *ngIf="!apiLoading" (click)="projectClosureCeoApproval()"
+      [disabled]="allRequests[0].markedToStatus === 'Completed'" mat-raised-button color="warn">
+      CEO DECISION
+    </button>
   </div>
 </div>
 

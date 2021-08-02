@@ -18,6 +18,7 @@ const AUTH = {
   userInfo: null,
   currentQuarter: null,
   id: null,
+  processNames: null,
 }
 
 export class AuthState {
@@ -41,5 +42,6 @@ export class AuthState {
     userInfo: any,
     currentQuarter: any,
     id: any,
+    processNames: any,
   } = AUTH;
 }

@@ -397,8 +397,8 @@
       </mat-card>
 
       <!-- TPV TASKS -->
-      <mat-toolbar class="mat-elevation-z8" *ngIf="(viewType === 'propapp' || viewType === 'po') 
-        && (selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null) && showTpv"
+      <mat-toolbar class="mat-elevation-z8"
+        *ngIf="(selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null) && showTpv"
         style="padding: 15px 0px;" color="primary">
         <mat-toolbar-row>
           <span>TPV Checklist</span>
@@ -408,16 +408,16 @@
           </button>
         </mat-toolbar-row>
       </mat-toolbar>
-      <mat-card class="m-20" *ngIf="(viewType === 'propapp' || viewType === 'po') 
-        && (selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null) && showTpv">
+      <mat-card class="m-20"
+        *ngIf="(selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null) && showTpv">
         <mat-card-actions>
           <app-tpv></app-tpv>
         </mat-card-actions>
       </mat-card>
 
       <!-- PROJECT CLOSURE TASKS -->
-      <mat-toolbar class="mat-elevation-z8" *ngIf="(viewType === 'propapp' || viewType === 'po') 
-          && selectedProject?.pcStatus !== null && showPc" style="padding: 15px 0px;" color="primary">
+      <mat-toolbar class="mat-elevation-z8" *ngIf="selectedProject?.pcStatus !== null && showPc"
+        style="padding: 15px 0px;" color="primary">
         <mat-toolbar-row>
           <span>Proposal Closure Tasks</span>
           <div class="example-spacer"></div>
@@ -426,8 +426,7 @@
           </button>
         </mat-toolbar-row>
       </mat-toolbar>
-      <mat-card class="m-20" *ngIf="(viewType === 'propapp' || viewType === 'po') 
-          && selectedProject?.pcStatus !== null && showPc">
+      <mat-card class="m-20" *ngIf="selectedProject?.pcStatus !== null && showPc">
         <mat-card-actions>
           <app-project-closure-request></app-project-closure-request>
         </mat-card-actions>
@@ -761,6 +760,8 @@
           </div>
         </mat-card-content>
 
+
+
         <!-- PROCESS OWNER ACTION BUTTONS -->
         <mat-card-actions class="pr-3 pl-3 pt-0 pb-3 footer-btns"
           *ngIf="viewType === 'po' && loggedUser.role !== 'sme' && selectedProject?.owner">
@@ -981,7 +982,7 @@
               </div>
 
 
-              <div class="expiry-sections mt-2 mb-2"
+              <!-- <div class="expiry-sections mt-2 mb-2"
                 *ngIf="selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null">
                 <button
                   [disabled]="selectedProject?.pcStatus === 'Pending' || selectedProject?.pcStatus === 'Completed'"
@@ -991,7 +992,7 @@
                 <div *ngIf="commenceClosureLoader" class="d-flex flex-fill justify-content-center">
                   <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
                 </div>
-              </div>
+              </div> -->
 
               <!-- <div class="expiry-sections mt-2 mb-2"
                 *ngIf="selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null">
@@ -1368,6 +1369,18 @@
                   <mat-icon class="mr-1">grading</mat-icon> {{'Start SubProject Scheme Doc' | uppercase}}
                 </button>
                 <div *ngIf="commenceSpdLoader" class="d-flex flex-fill justify-content-center">
+                  <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
+                </div>
+              </div>
+              <!-- FIP ACTION BUTTONS -->
+              <div class="expiry-sections mt-2 mb-2"
+                *ngIf="loggedUser.role === 'fip' && selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null">
+                <button
+                  [disabled]="selectedProject?.pcStatus === 'Pending' || selectedProject?.pcStatus === 'Completed'"
+                  *ngIf="!commenceClosureLoader" (click)="commenceProjectClosure()" mat-button color="warn">
+                  <mat-icon class="mr-1">edit</mat-icon> {{'Initiate Project closure' | titlecase}}
+                </button>
+                <div *ngIf="commenceClosureLoader" class="d-flex flex-fill justify-content-center">
                   <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
                 </div>
               </div>

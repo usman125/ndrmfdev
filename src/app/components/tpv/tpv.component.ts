@@ -175,5 +175,12 @@ export class TpvComponent implements OnInit {
 
   }
 
+  checkUser() {
+    if (this.loggedUser?.processNames?.indexOf('QPR') > -1) {
+      return true;
+    }
+    return false;
+  }
+
 
 }
