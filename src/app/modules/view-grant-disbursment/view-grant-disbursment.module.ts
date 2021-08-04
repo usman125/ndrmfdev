@@ -21,6 +21,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgxPrintModule } from 'ngx-print';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 
@@ -53,7 +54,8 @@ import { NgxPrintModule } from 'ngx-print';
     MatTreeModule,
     MatTooltipModule,
     MatSnackBarModule,
-    NgxPrintModule
+    NgxPrintModule,
+    MatTabsModule
   ]
 })
 export class ViewGrantDisbursmentModule { }

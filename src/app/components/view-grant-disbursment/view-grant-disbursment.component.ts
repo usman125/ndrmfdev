@@ -143,6 +143,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   advanceFiles: any = [];
 
   panelOpenState = false;
+  reviewLoading: boolean = false;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -668,6 +669,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     this._confirmModelService.confirmed().subscribe(confirmed => {
       if (confirmed) {
         // console.log("CONFIRMED FROM ASSIGN REVIEWS MODEL", confirmed);
+        this.reviewLoading = true;
         let reviewersArray = [];
         let storeArray = [];
         if (this.reviewUsers.value) {
@@ -714,19 +716,34 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     ).subscribe(
       (result: any) => {
         // console.log("RESULT ASSIGNING REVIEWS:---", result);
-        this.reviewUsers.reset();
-        this._singleGrantDisbursmentsStore.addToAdvanceReviewsList(storeArray);
         const options = {
           title: result.message,
-          message: 'Press OK to canel!',
+          message: '',
           cancelText: 'CANCEL',
           confirmText: 'OK',
           add: true,
           confirm: false,
         };
         this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          this.reviewUsers.reset();
+          this._singleGrantDisbursmentsStore.addToAdvanceReviewsList(storeArray);
+          this.reviewLoading = false;
+        });
       }, error => {
-        console.log("RESULT ASSIGNING REVIEWS:---", error);
+        const options = {
+          title: error.error.message,
+          message: 'Contact Support Administrator!',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+          confirm: false,
+        };
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          console.log("RESULT ASSIGNING REVIEWS:---", error);
+          this.reviewLoading = false;
+        });
       }
     );
 
@@ -738,20 +755,35 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       body
     ).subscribe(
       (result: any) => {
-        // console.log("RESULT ASSIGNING REVIEWS:---", result);
-        this._singleGrantDisbursmentsStore.addToQuarterAdvanceReviewsList(body.initialAdvanceId, storeArray);
         const options = {
           title: result.message,
-          message: 'Press OK to canel!',
+          message: '',
           cancelText: 'CANCEL',
           confirmText: 'OK',
           add: true,
           confirm: false,
         };
         this._confirmModelService.open(options);
-        this.reviewUsers.reset();
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          // console.log("RESULT ASSIGNING REVIEWS:---", result);
+          this.reviewUsers.reset();
+          this._singleGrantDisbursmentsStore.addToQuarterAdvanceReviewsList(body.initialAdvanceId, storeArray);
+          this.reviewLoading = false;
+        });
       }, error => {
-        console.log("RESULT ASSIGNING REVIEWS:---", error);
+        const options = {
+          title: error.error.message,
+          message: 'Contact Support Administrator!',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+          confirm: false,
+        };
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          console.log("RESULT ASSIGNING REVIEWS:---", error);
+          this.reviewLoading = false;
+        });
       }
     );
 
@@ -767,7 +799,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
             name: null,
             users: []
           }
-          console.log(key + " -> " + result[key])
+          // console.log(key + " -> " + result[key])
           object.name = key;
           for (let i = 0; i < result[key].length; i++) {
             object.users.push(result[key][i]);
@@ -843,14 +875,16 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         id: item.id,
         qaId: null,
         comments: item.comments,
-        type: type
+        type: type,
+        subStatus: item.subStatus ? item.subStatus : null,
       }
     } else {
       body = {
         id: item.id,
         qaId: this.controlReviewUserForm.id,
         comments: item.comments,
-        type: type
+        type: type,
+        subStatus: item.subStatus ? item.subStatus : null,
       }
     }
     this._grantDisbursmentsService.submitInitialAdvanceReview(
@@ -1182,8 +1216,10 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
           let c = this.projectActualCosts[i];
           if (!c.children) {
             if (c.quarters[this.step + 1].data !== null && c.quarters[this.step + 1].value === true) {
-              c.amount = c.quarters[0].data.ndrmfShare;
-              itemTotal = itemTotal + c.amount;
+              if (c.quarters[this.step + 1].data.ndrmfShare) {
+                c.amount = c.quarters[this.step + 1].data.ndrmfShare;
+                itemTotal = itemTotal + c.amount;
+              }
               quarterCosts.push(c)
             }
           }
@@ -1197,8 +1233,10 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
           let c = this.projectActualCosts[i];
           if (!c.children) {
             if (c.quarters[0].data !== null && c.quarters[0].value === true) {
-              c.amount = c.quarters[0].data.ndrmfShare;
-              itemTotal = itemTotal + c.amount;
+              if (c.quarters[0].data.ndrmfShare) {
+                c.amount = c.quarters[0].data.ndrmfShare;
+                itemTotal = itemTotal + c.amount;
+              }
               this.apiCosts.push(c);
             }
           }
@@ -1295,7 +1333,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         }
       }
 
-      if (item.advanceLiquidationItem !== null) {
+      if (item.advanceLiquidations !== null) {
         this._advanceLiquidationItemStore.addAdvanceLiquidationItem(
           JSON.parse(JSON.stringify(item.advanceLiquidations)),
           JSON.parse(JSON.stringify(item.data))
