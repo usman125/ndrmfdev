@@ -86,6 +86,7 @@ export class AdvanceLiquidationItemStore extends Store<AdvanceLiquidationItemSta
             status: 'Under Review'
           }
         }
+        return c;
       })
     })
   }

@@ -1565,7 +1565,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       id: null,
     }
     // this.costLiquidations.push(this.liquidationForm.value);
-    if (liquidation.ndrmfSoes === null) {
+    if (liquidation.fipSoes === null) {
       liquidation.fipSoes = [object];
     } else {
       liquidation.fipSoes.push(object);
