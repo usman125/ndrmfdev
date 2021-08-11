@@ -6,22 +6,27 @@ import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 @Component({
   selector: 'app-update-complaint-status',
   templateUrl: './update-complaint-status.component.html',
-  styleUrls: ['./update-complaint-status.component.css']
+  styleUrls: ['./update-complaint-status.component.css'],
+  providers: [ConfirmModelService]
 })
 export class UpdateComplaintStatusComponent implements OnInit {
 
   status: any;
   complainToedit: any;
-  constructor(  private _router: Router,
+  constructor(private _router: Router,
     private userServices: UserService,
     private _confirmModelService: ConfirmModelService,) {
-      this.complainToedit = JSON.parse(localStorage.getItem('complainToEdit'));
-    }
+    this.complainToedit = JSON.parse(localStorage.getItem('complainToEdit'));
+  }
 
   ngOnInit(): void {
   }
-  updateComplaintStatus(){
-    this.userServices.updateComplaintStatus(this.complainToedit.id, this.status).subscribe((result: any) => {
+
+  updateComplaintStatus() {
+    this.userServices.updateComplaintStatus(
+      this.complainToedit.id,
+      this.status
+    ).subscribe((result: any) => {
       console.log("Acknowledge results", result);
       const options = {
         title: 'Successfully  added!',
@@ -32,9 +37,12 @@ export class UpdateComplaintStatusComponent implements OnInit {
         confirm: false,
       };
       this._confirmModelService.open(options);
-      this._router.navigate(['allcomplains']);
+      this._confirmModelService.confirmed().subscribe(confirmed => {
+        this._router.navigate(['allcomplains']);
+      });
     });
   }
+
   goBack() {
     this._router.navigate(['allcomplains']);
   }

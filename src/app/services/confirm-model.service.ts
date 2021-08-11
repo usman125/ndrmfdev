@@ -47,6 +47,8 @@ export class ConfirmModelService {
         spdStatus: options.spdStatus,
         confirmComments: options.confirmComments,
         ceoDecision: options.ceoDecision,
+        evidanceFlag: options.evidanceFlag,
+        evidanceId: options.evidanceId,
       };
       this.dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     } else {
@@ -83,6 +85,8 @@ export class ConfirmModelService {
           spdStatus: options.spdStatus,
           confirmComments: options.confirmComments,
           ceoDecision: options.ceoDecision,
+          evidanceFlag: options.evidanceFlag,
+          evidanceId: options.evidanceId,
         }
       });
     }

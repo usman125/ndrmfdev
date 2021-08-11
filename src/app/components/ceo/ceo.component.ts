@@ -9,11 +9,11 @@ import { Router } from "@angular/router";
   styleUrls: ['./ceo.component.css']
 })
 export class CEOComponent implements OnInit {
-  displayedColumns = ['date','remarks', 'status','action'];
+  displayedColumns = ['date', 'remarks', 'status', 'action'];
   dataSource
   loading: boolean;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-   @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   ceoRespnseResulsut: any;
 
   constructor(
@@ -25,16 +25,16 @@ export class CEOComponent implements OnInit {
     this.userServices.CEOComplains().subscribe(
       result => {
         console.log("ALL Complains:--", result);
-       this.ceoRespnseResulsut = result
-       this.dataSource= this.ceoRespnseResulsut 
-    
+        this.ceoRespnseResulsut = result
+        this.dataSource = this.ceoRespnseResulsut
+
       },
       error => {
         console.log("ERROR FROM ALL COMPLAINS:--", error);
       }
     )
   }
-  ceoActions(user){
+  ceoActions(user) {
     console.log("complain to edit:--\n", user);
     this._router.navigate(['/ceoActions', user.complaintId]);
     localStorage.setItem('complainToEdit', JSON.stringify(user));

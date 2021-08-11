@@ -8,4 +8,7 @@ export enum Role {
   Ceo = 'ceo',
   Govt = 'govt',
   Approver = 'signup_approver',
+  Fp = 'fp',
+  Cp = 'cp',
+  Grc = 'grc',
 }

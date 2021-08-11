@@ -8,12 +8,13 @@ import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 @Component({
   selector: 'app-update-complaint',
   templateUrl: './update-complaint.component.html',
-  styleUrls: ['./update-complaint.component.css']
+  styleUrls: ['./update-complaint.component.css'],
+  providers: [ConfirmModelService]
 })
 export class UpdateComplaintComponent implements OnInit {
   myDate = new Date().toISOString();
-   name: any;
-   complaintId: any
+  name: any;
+  complaintId: any
   responseResults: any;
   feedback: any;
   ceoId: any;
@@ -30,44 +31,44 @@ export class UpdateComplaintComponent implements OnInit {
   ngOnInit(): void {
     this.userServices.getUserListByRole().subscribe(
       res => {
-      
+
         this.ceoId = res
         console.log("ceo id", this.ceoId[0].id)
       },
       _err => {
-        var error = _err.json();
-     console.log(error)
+        // var error = _err.json();
+        console.log(_err);
       }
     )
   }
   goBack() {
     this._router.navigate(['login']);
   }
-  updateComplaint(){
-   this.userServices.getComplaintById(this.complaintId).subscribe(
-    res => {
-  this.responseResults = res
-console.log("response results", this.responseResults)
-    },
-    _err => {
-      var error = _err.json();
-   console.log(error)
+  updateComplaint() {
+    this.userServices.getComplaintById(this.complaintId).subscribe(
+      res => {
+        this.responseResults = res
+        console.log("response results", this.responseResults)
+      },
+      _err => {
+        // var error = _err.json();
+        console.log(_err);
+      }
+    )
+  }
+  submitFeedback() {
+    this.loading = true;
+    if (!this.feedback) {
+      return
     }
-  )
-  }
-submitFeedback(){
-  this.loading = true;
-  if (!this.feedback){
-    return 
-  }
-     let feedbackBody = {
+    let feedbackBody = {
       addedDateTime: this.myDate,
       complainantName: this.responseResults.complainantName,
       complaintId: this.complaintId,
       email: this.responseResults.email,
       feedback: this.feedback
-     }
-     this.userServices.submitFeedback(feedbackBody).subscribe(
+    }
+    this.userServices.submitFeedback(feedbackBody).subscribe(
       res => {
         const options = {
           title: 'Successfully  added!',
@@ -78,45 +79,52 @@ submitFeedback(){
           confirm: false,
         };
         this._confirmModelService.open(options);
-        this._router.navigate(['login']);
-  console.log("feedback resp", res)
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          console.log("feedback resp", res);
+          // this._router.navigate(['allcomplains']);
+          this._router.navigate(['login']);
+        })
       },
       _err => {
-        var error = _err.json();
-     console.log(error)
+        // var error = _err.json();
+        console.log(_err);
       }
     )
-}
-UserAppeal(){
-  this.loading = true
-if(!this.remarks){
-  return
-}
-  let appealBody = {
-    appealDateTime: this.myDate,
-    appealTo: this.ceoId[0].id,
-    complaintId: this.complaintId,
-    remarks: this.remarks,
-    status: "INITIATED",
   }
-  this.userServices.addComplaintAppeal(appealBody).subscribe(
-    res => {
-    console.log("appealbodyrespnse", res)
-    const options = {
-      title: 'Successfully  added!',
-      message: 'OK to exit',
-      cancelText: 'CANCEL',
-      confirmText: 'OK',
-      add: true,
-      confirm: false,
-    };
-    this._confirmModelService.open(options);
-    this._router.navigate(['login']);
-    },
-    _err => {
-      var error = _err.json();
-   console.log(error)
+  UserAppeal() {
+    this.loading = true
+    if (!this.remarks) {
+      return
     }
-  )
-}
+    let appealBody = {
+      appealDateTime: this.myDate,
+      appealTo: this.ceoId[0].id,
+      complaintId: this.complaintId,
+      remarks: this.remarks,
+      status: "INITIATED",
+    }
+    this.userServices.addComplaintAppeal(appealBody).subscribe(
+      res => {
+        console.log("appealbodyrespnse", res)
+        const options = {
+          title: 'Successfully  added!',
+          message: 'OK to exit',
+          cancelText: 'CANCEL',
+          confirmText: 'OK',
+          add: true,
+          confirm: false,
+        };
+        this._confirmModelService.open(options);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          console.log("feedback resp", res);
+          // this._router.navigate(['allcomplains']);
+          this._router.navigate(['login']);
+        })
+      },
+      _err => {
+        // var error = _err.json();
+        console.log(_err)
+      }
+    )
+  }
 }

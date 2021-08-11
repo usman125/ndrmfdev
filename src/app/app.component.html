@@ -15,6 +15,7 @@
           <small class="mt-1" id="comment-b">{{userInfo?.role | titlecase}}</small>
         </div>
       </div>
+      <!-- ADMIN ACTIONS -->
       <div class="hero" *ngIf="loggedUserRole === 'admin'">
         <mat-accordion multi="true">
 
@@ -88,8 +89,43 @@
           </mat-expansion-panel> -->
 
         </mat-accordion>
+        <!-- <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Grievance Complaint Registration(s)
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/allcomplains">
+                All Complaints
+              </a>
+            </mat-nav-list> -->
+        <!-- <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/updateComplaint">
+                Update Complaints
+              </a>
+            </mat-nav-list>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                Complainant
+              </a>
+            </mat-nav-list>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/ceo">
+                CEO
+              </a>
+            </mat-nav-list>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/grc">
+                GRC
+              </a>
+            </mat-nav-list> -->
+        <!-- </mat-expansion-panel>
+        </mat-accordion> -->
       </div>
 
+      <!-- FIP ACTIONS -->
       <div class="hero" *ngIf="loggedUserRole === 'fip'">
         <mat-accordion multi="true">
 
@@ -200,9 +236,46 @@
           </mat-expansion-panel>
         </mat-accordion>
 
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Grievance Complaint Registration(s)
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/Grievanceregistration">
+                Registration A Complain
+              </a>
+            </mat-nav-list>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                All Complains
+              </a>
+            </mat-nav-list>
+            <!-- <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/allcomplains">
+                All Complainant
+              </a>
+            </mat-nav-list> -->
+
+            <!-- <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/ceo">
+                CEO
+              </a>
+            </mat-nav-list>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/grc">
+                GRC
+              </a>
+            </mat-nav-list> -->
+          </mat-expansion-panel>
+        </mat-accordion>
+
 
       </div>
 
+      <!-- SME ACTIONS -->
       <div class="hero" *ngIf="loggedUserRole === 'sme'">
         <mat-accordion multi="true">
 
@@ -330,8 +403,44 @@
           </mat-expansion-panel>
         </mat-accordion>
 
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Grievance Complaint Registration(s)
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                All Complaints
+              </a>
+            </mat-nav-list>
+            <!-- <mat-nav-list>
+                                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/updateComplaint">
+                                        Update Complaints
+                                      </a>
+                                    </mat-nav-list>
+                                    <mat-nav-list>
+                                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                                        Complainant
+                                      </a>
+                                    </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/ceo">
+                                        CEO
+                                      </a>
+                                    </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/grc">
+                                        GRC
+                                      </a>
+                                    </mat-nav-list> -->
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </div>
 
+      <!-- DM PAM ACTIONS -->
       <div class="hero" *ngIf="loggedUserRole === 'dm pam'">
         <mat-accordion multi="true">
 
@@ -419,8 +528,44 @@
           </mat-expansion-panel>
         </mat-accordion>
 
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Grievance Complaint Registration(s)
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                All Complaints
+              </a>
+            </mat-nav-list>
+            <!-- <mat-nav-list>
+                                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/updateComplaint">
+                                        Update Complaints
+                                      </a>
+                                    </mat-nav-list>
+                                    <mat-nav-list>
+                                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                                        Complainant
+                                      </a>
+                                    </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/ceo">
+                                        CEO
+                                      </a>
+                                    </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/grc">
+                                        GRC
+                                      </a>
+                                    </mat-nav-list> -->
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </div>
 
+      <!-- GM ACTIONS -->
       <div class="hero" *ngIf="loggedUserRole === 'gm'">
         <mat-accordion multi="true">
           <mat-expansion-panel [expanded]="true">
@@ -509,8 +654,44 @@
           </mat-expansion-panel>
         </mat-accordion>
 
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Grievance Complaint Registration(s)
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                All Complaints
+              </a>
+            </mat-nav-list>
+            <!-- <mat-nav-list>
+                                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/updateComplaint">
+                                        Update Complaints
+                                      </a>
+                                    </mat-nav-list>
+                                    <mat-nav-list>
+                                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                                        Complainant
+                                      </a>
+                                    </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/ceo">
+                                        CEO
+                                      </a>
+                                    </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/grc">
+                                        GRC
+                                      </a>
+                                    </mat-nav-list> -->
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </div>
 
+      <!-- CEO ACTIONS -->
       <div class="hero" *ngIf="loggedUserRole === 'ceo'">
         <mat-accordion multi="true">
           <mat-expansion-panel [expanded]="true">
@@ -594,6 +775,41 @@
             <mat-nav-list>
               <a mat-list-item routerLinkActive="active-menu-item" routerLink="/sub-project-document-tasks">
                 Review Requests By DM
+              </a>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Grievance Complaint Registration(s)
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/ceo">
+                All Complaints
+              </a>
+            </mat-nav-list>
+            <!-- <mat-nav-list>
+                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/updateComplaint">
+                        Update Complaints
+                      </a>
+                    </mat-nav-list>
+                    <mat-nav-list>
+                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                        Complainant
+                      </a>
+                    </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                      <a mat-list-item routerLinkActive="active-menu-item" routerLink="/ceo">
+                        CEO
+                      </a>
+                    </mat-nav-list> -->
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                Assigned Complaints
               </a>
             </mat-nav-list>
           </mat-expansion-panel>
@@ -739,6 +955,41 @@
           </mat-expansion-panel>
         </mat-accordion>
 
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Grievance Complaint Registration(s)
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                All Complaints
+              </a>
+            </mat-nav-list>
+            <!-- <mat-nav-list>
+                              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/updateComplaint">
+                                Update Complaints
+                              </a>
+                            </mat-nav-list>
+                            <mat-nav-list>
+                              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                                Complainant
+                              </a>
+                            </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/ceo">
+                                CEO
+                              </a>
+                            </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/grc">
+                                GRC
+                              </a>
+                            </mat-nav-list> -->
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </div>
 
       <!-- SIGN UP APPROVER -->
@@ -769,6 +1020,126 @@
             </mat-nav-list>
           </mat-expansion-panel>
         </mat-accordion>
+      </div>
+
+      <!-- FOCAL PERSON -->
+      <div class="hero" *ngIf="loggedUserRole === 'fp'">
+
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Grievance Complaint Registration(s)
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/allcomplains">
+                All Complaints
+              </a>
+            </mat-nav-list>
+            <!-- <mat-nav-list>
+                                    <a mat-list-item routerLinkActive="active-menu-item" routerLink="/updateComplaint">
+                                      Update Complaints
+                                    </a>
+                                  </mat-nav-list>
+                                  <mat-nav-list>
+                                    <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                                      Complainant
+                                    </a>
+                                  </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                                    <a mat-list-item routerLinkActive="active-menu-item" routerLink="/ceo">
+                                      CEO
+                                    </a>
+                                  </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                                    <a mat-list-item routerLinkActive="active-menu-item" routerLink="/grc">
+                                      GRC
+                                    </a>
+                                  </mat-nav-list> -->
+          </mat-expansion-panel>
+        </mat-accordion>
+
+      </div>
+
+      <!-- CONCERNED PERSON -->
+      <div class="hero" *ngIf="loggedUserRole === 'cp'">
+
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Grievance Complaint Registration(s)
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                All Complaints
+              </a>
+            </mat-nav-list>
+            <!-- <mat-nav-list>
+                                    <a mat-list-item routerLinkActive="active-menu-item" routerLink="/updateComplaint">
+                                      Update Complaints
+                                    </a>
+                                  </mat-nav-list>
+                                  <mat-nav-list>
+                                    <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                                      Complainant
+                                    </a>
+                                  </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                                    <a mat-list-item routerLinkActive="active-menu-item" routerLink="/ceo">
+                                      CEO
+                                    </a>
+                                  </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                                    <a mat-list-item routerLinkActive="active-menu-item" routerLink="/grc">
+                                      GRC
+                                    </a>
+                                  </mat-nav-list> -->
+          </mat-expansion-panel>
+        </mat-accordion>
+
+      </div>
+
+      <!-- GRC PERSON ACTIONS -->
+      <div class="hero" *ngIf="loggedUserRole === 'grc'">
+
+        <mat-accordion multi="true">
+          <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Grievance Complaint Registration(s)
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <a mat-list-item routerLinkActive="active-menu-item" routerLink="/grc">
+                All Complaints
+              </a>
+            </mat-nav-list>
+            <!-- <mat-nav-list>
+                                    <a mat-list-item routerLinkActive="active-menu-item" routerLink="/updateComplaint">
+                                      Update Complaints
+                                    </a>
+                                  </mat-nav-list>
+                                  <mat-nav-list>
+                                    <a mat-list-item routerLinkActive="active-menu-item" routerLink="/complainant">
+                                      Complainant
+                                    </a>
+                                  </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                                    <a mat-list-item routerLinkActive="active-menu-item" routerLink="/ceo">
+                                      CEO
+                                    </a>
+                                  </mat-nav-list> -->
+            <!-- <mat-nav-list>
+                                    <a mat-list-item routerLinkActive="active-menu-item" routerLink="/grc">
+                                      GRC
+                                    </a>
+                                  </mat-nav-list> -->
+          </mat-expansion-panel>
+        </mat-accordion>
+
       </div>
 
     </mat-sidenav>

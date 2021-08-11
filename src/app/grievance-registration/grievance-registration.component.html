@@ -2,119 +2,145 @@
   <mat-toolbar-row>
     <span>{{'Grievance Registration'}}</span>
     <span class="example-spacer"></span>
-    <button  (click)="goBack()" mat-icon-button aria-label="Login Page">
+    <button (click)="goBack()" mat-icon-button aria-label="Login Page">
       <mat-icon>keyboard_backspace</mat-icon>
     </button>
   </mat-toolbar-row>
-  </mat-toolbar>
-<div  style= "padding: 1rem;" >
-<form [formGroup]="registrationForm" (ngSubmit)="registerGrievanceUser()" fxLayoutAlign="center">
-  <mat-card  >
-  <mat-card-content fxLayout="column" style="align-content: center;">
-  <mat-form-field class="col col-md-12">
-    <textarea matInput placeholder="Enter your name" formControlName="complainantName"  [formControl]="registrationForm.controls['complainantName']" >
+</mat-toolbar>
+<div style="padding: 1rem;">
+  <form [formGroup]="registrationForm" (ngSubmit)="registerGrievanceUser()" fxLayoutAlign="center">
+    <mat-card>
+      <mat-card-content fxLayout="column" style="align-content: center;">
+        <mat-form-field class="col col-md-12">
+          <textarea matInput placeholder="Enter your name" formControlName="complainantName"
+            [formControl]="registrationForm.controls['complainantName']">
 
     </textarea>
-    <mat-error *ngIf="registrationForm.controls.complainantName.hasError('required')">
-      Username is
-      <strong>required</strong>
-  </mat-error>
-  </mat-form-field>
-  <mat-form-field class="col col-md-12">
-    <textarea matInput placeholder="Enter your address" formControlName="address"  [formControl]="registrationForm.controls['address']" ></textarea>
-    <mat-error *ngIf="registrationForm.controls.address.hasError('required')">
-      Adress is
-      <strong>required</strong>
-  </mat-error>
-  </mat-form-field>
-<mat-form-field class="col col-md-12">
-  <textarea matInput placeholder="Enter your CNIC" type="number" formControlName="cnic"  [formControl]="registrationForm.controls['cnic']" ></textarea>
-  <mat-error *ngIf="registrationForm.controls.cnic.hasError('required')">
-    CNIC is
-    <strong>required</strong>
-</mat-error>
-</mat-form-field>
-<mat-form-field class="col col-md-12">
-  <textarea matInput placeholder="Enter your email" type="email" formControlName="email"  [formControl]="registrationForm.controls['email']" ></textarea>
-</mat-form-field>
-<mat-form-field class="col col-md-12">
-  <textarea matInput placeholder="Enter your location" type="text" formControlName="complaintLocation"  [formControl]="registrationForm.controls['complaintLocation']" ></textarea>
-</mat-form-field>
-<mat-form-field class="col col-md-12">
-  <textarea matInput placeholder="Enter your Sub-Location" type="text" formControlName="complaintSubLocation"  [formControl]="registrationForm.controls['complaintSubLocation']" ></textarea>
-</mat-form-field>
-<div padding>
-  <label><b style="margin-left: 2rem;">Complaint lodged/registered against</b></label>
-  <mat-form-field class="col col-md-12">
-    <textarea matInput placeholder="Person (specify name)"  formControlName="complaintAgainstPersonOrDepartment"  [formControl]="registrationForm.controls['complaintAgainstPersonOrDepartment']" ></textarea>
-  </mat-form-field>
-  <mat-form-field class="col col-md-12">
-    <textarea matInput placeholder="Organization (specify name)"  formControlName="organizationName"  [formControl]="registrationForm.controls['organizationName']" ></textarea>
-  </mat-form-field>
-  <mat-form-field class="col col-md-12">
-    <textarea matInput placeholder="Vendor (specify name)"  formControlName="vendor"  [formControl]="registrationForm.controls['vendor']" ></textarea>
-  </mat-form-field>
-  <mat-form-field class="col col-md-12">
-    <textarea matInput placeholder="Consultant/third party (specify name)"  formControlName="consultantName"  [formControl]="registrationForm.controls['consultantName']" ></textarea>
-    <mat-error *ngIf="registrationForm.controls.consultantName.hasError('required')">
-      Consultant name is
-      <strong>required</strong>
-  </mat-error>
-  </mat-form-field>
-</div>
-<div padding>
-  <label ><b style="margin-left: 2rem;">Category of Complaint</b></label><br>
-  <mat-radio-group formControlName="complaintCategory" [formControl]="registrationForm.controls['complaintCategory']" >
-    <label ><h6 style="margin-left: 1rem;">Category A: Non-fulfilment of contractual obligations</h6></label><br>
-    <mat-radio-button style="margin-left: 1rem;"  value="Scope of work">Scope of work</mat-radio-button><br>
-    <mat-radio-button value="Location"> Location</mat-radio-button><br>
-    <mat-radio-button value="Quality of work and transparency">Quality of work and transparency</mat-radio-button><br>
-    <label ><h6 style="margin-left: 1rem;">Category B: Non-compliance to policies, rules and regulations</h6></label><br>
-    <mat-radio-button style="margin-left: 1rem;" value="Land acquisition">Land acquisition</mat-radio-button><br>
-    <mat-radio-button value="Compensation">Compensation</mat-radio-button><br>
-    <mat-radio-button value="Health, safety and environment">Health, safety and environment</mat-radio-button><br>
-    <label ><h6 style="margin-left: 1rem;">Category C: Decision about programme eligibility  or benefits</h6></label><br>
-    <mat-radio-button  style="margin-left: 1rem;" value="Vulnerability">Vulnerability</mat-radio-button><br>
-    <mat-radio-button value="Feasibility">Feasibility</mat-radio-button><br>
-    <mat-radio-button value="Sustainability">Sustainability</mat-radio-button><br>
-    <label ><h6 style="margin-left: 1rem;">Category D</h6></label><br>
-    <mat-radio-button  style="margin-left: 1rem;" value="Miscellaneous/Other(s)">Miscellaneous/Other(s)</mat-radio-button><br>
-  </mat-radio-group>
-  <hr>
-</div>
-<div>
-  <mat-form-field class="col col-md-12">
-    <textarea matInput placeholder="Short Description of the problem"  formControlName="shortDescription"  [formControl]="registrationForm.controls['shortDescription']" ></textarea>
-  </mat-form-field>
-  <mat-form-field class="col col-md-12">
-    <textarea matInput placeholder="Short Description of the factors causing problem"  formControlName="shortDescFectorCausingProblem"  [formControl]="registrationForm.controls['shortDescFectorCausingProblem']" ></textarea>
-  </mat-form-field>
-</div>
+          <mat-error *ngIf="registrationForm.controls.complainantName.hasError('required')">
+            Username is
+            <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="col col-md-12">
+          <textarea matInput placeholder="Enter your address" formControlName="address"
+            [formControl]="registrationForm.controls['address']"></textarea>
+          <mat-error *ngIf="registrationForm.controls.address.hasError('required')">
+            Adress is
+            <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="col col-md-12">
+          <textarea matInput placeholder="Enter your CNIC" type="number" formControlName="cnic"
+            [formControl]="registrationForm.controls['cnic']"></textarea>
+          <mat-error *ngIf="registrationForm.controls.cnic.hasError('required')">
+            CNIC is
+            <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="col col-md-12">
+          <textarea matInput placeholder="Enter your email" type="email" formControlName="email"
+            [formControl]="registrationForm.controls['email']"></textarea>
+        </mat-form-field>
+        <mat-form-field class="col col-md-12">
+          <textarea matInput placeholder="Enter your location" type="text" formControlName="complaintLocation"
+            [formControl]="registrationForm.controls['complaintLocation']"></textarea>
+        </mat-form-field>
+        <mat-form-field class="col col-md-12">
+          <textarea matInput placeholder="Enter your Sub-Location" type="text" formControlName="complaintSubLocation"
+            [formControl]="registrationForm.controls['complaintSubLocation']"></textarea>
+        </mat-form-field>
+        <div padding>
+          <label><b style="margin-left: 2rem;">Complaint lodged/registered against</b></label>
+          <mat-form-field class="col col-md-12">
+            <textarea matInput placeholder="Person (specify name)" formControlName="complaintAgainstPersonOrDepartment"
+              [formControl]="registrationForm.controls['complaintAgainstPersonOrDepartment']"></textarea>
+          </mat-form-field>
+          <mat-form-field class="col col-md-12">
+            <textarea matInput placeholder="Organization (specify name)" formControlName="organizationName"
+              [formControl]="registrationForm.controls['organizationName']"></textarea>
+          </mat-form-field>
+          <mat-form-field class="col col-md-12">
+            <textarea matInput placeholder="Vendor (specify name)" formControlName="vendor"
+              [formControl]="registrationForm.controls['vendor']"></textarea>
+          </mat-form-field>
+          <mat-form-field class="col col-md-12">
+            <textarea matInput placeholder="Consultant/third party (specify name)" formControlName="consultantName"
+              [formControl]="registrationForm.controls['consultantName']"></textarea>
+            <mat-error *ngIf="registrationForm.controls.consultantName.hasError('required')">
+              Consultant name is
+              <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div padding>
+          <label><b style="margin-left: 2rem;">Category of Complaint</b></label><br>
+          <mat-radio-group formControlName="complaintCategory"
+            [formControl]="registrationForm.controls['complaintCategory']">
+            <label>
+              <h6 style="margin-left: 1rem;">Category A: Non-fulfilment of contractual obligations</h6>
+            </label><br>
+            <mat-radio-button style="margin-left: 1rem;" value="Scope of work">Scope of work</mat-radio-button><br>
+            <mat-radio-button value="Location"> Location</mat-radio-button><br>
+            <mat-radio-button value="Quality of work and transparency">Quality of work and transparency
+            </mat-radio-button><br>
+            <label>
+              <h6 style="margin-left: 1rem;">Category B: Non-compliance to policies, rules and regulations</h6>
+            </label><br>
+            <mat-radio-button style="margin-left: 1rem;" value="Land acquisition">Land acquisition</mat-radio-button>
+            <br>
+            <mat-radio-button value="Compensation">Compensation</mat-radio-button><br>
+            <mat-radio-button value="Health, safety and environment">Health, safety and environment</mat-radio-button>
+            <br>
+            <label>
+              <h6 style="margin-left: 1rem;">Category C: Decision about programme eligibility or benefits</h6>
+            </label><br>
+            <mat-radio-button style="margin-left: 1rem;" value="Vulnerability">Vulnerability</mat-radio-button><br>
+            <mat-radio-button value="Feasibility">Feasibility</mat-radio-button><br>
+            <mat-radio-button value="Sustainability">Sustainability</mat-radio-button><br>
+            <label>
+              <h6 style="margin-left: 1rem;">Category D</h6>
+            </label><br>
+            <mat-radio-button style="margin-left: 1rem;" value="Miscellaneous/Other(s)">Miscellaneous/Other(s)
+            </mat-radio-button><br>
+          </mat-radio-group>
+          <hr>
+        </div>
+        <div>
+          <mat-form-field class="col col-md-12">
+            <textarea matInput placeholder="Short Description of the problem" formControlName="shortDescription"
+              [formControl]="registrationForm.controls['shortDescription']"></textarea>
+          </mat-form-field>
+          <mat-form-field class="col col-md-12">
+            <textarea matInput placeholder="Short Description of the factors causing problem"
+              formControlName="shortDescFectorCausingProblem"
+              [formControl]="registrationForm.controls['shortDescFectorCausingProblem']"></textarea>
+          </mat-form-field>
+        </div>
 
-</mat-card-content>
+      </mat-card-content>
 
 
 
-<div style="position: relative;">
-  <button  mat-flat-button color="primary"  type="submit">Register Grievance</button>
-</div>
+      <div style="position: relative;">
+        <button mat-flat-button color="primary" type="submit">Register Grievance</button>
+      </div>
 
-</mat-card>
+    </mat-card>
 
-</form>
-<div class="input-box mt-3">
-  <ul>
-    <li *ngFor="let file of files" style="list-style-type: none;">
-      <span id="file-label">
-        {{file.data.name}}
-      </span>
-    </li>
-  </ul>
-  <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple"
-    accept="{{accept}}" style="display: none;" />
-  <button mat-raised-button color="warn" (click)="uploadFile()" >
-    <mat-icon>file_upload</mat-icon>
-    {{'Upload File(s)'}}
-  </button>
-</div>
+  </form>
+  <div class="input-box mt-3">
+    <ul>
+      <li *ngFor="let file of files" style="list-style-type: none;">
+        <span id="file-label">
+          {{file.data.name}}
+        </span>
+      </li>
+    </ul>
+    <input class="display-block" type="file" id="fileUpload" name="fileUpload" multiple="multiple" accept="{{accept}}"
+      style="display: none;" />
+    <button mat-raised-button color="warn" (click)="uploadFile()">
+      <mat-icon>file_upload</mat-icon>
+      {{'Upload File(s)'}}
+    </button>
+  </div>
 </div>

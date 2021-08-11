@@ -53,14 +53,93 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: GrievanceRegistrationComponent
+        component: GrievanceRegistrationComponent,
+        data: { roles: [Role.Fip] }
       }
-    ]
+    ],
   },
   {
     path: 'updateComplaint',
     // component: SiteLayout,
     loadChildren: () => import('./modules/update-complaint/update-complaint.module').then(m => m.UpdateComplaintModule)
+  },
+  {
+    path: 'allcomplains',
+    loadChildren: () => import('./modules/list-of-all-complains/list-of-all-complains.module').then(m => m.ListOfAllComplainsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.Fp] }
+  },
+  {
+    path: 'AssignToConcernedPerson/:userId',
+    loadChildren: () => import('./modules/assign-to-concerned-person/assign-to-concerned-person.module').then(m => m.AssignToConcernedPersonModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.Fp] }
+  },
+  {
+    path: 'grcActions/:userId',
+    loadChildren: () => import('./modules/grc-actions/grc-actions.module').then(m => m.GrcActionsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'showAttachments/:userId',
+    loadChildren: () => import('./modules/show-attachments/show-attachments.module').then(m => m.ShowAttachmentsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.Fp] }
+  },
+  {
+    path: 'UpdateStatus/:userId',
+    loadChildren: () => import('./modules/update-complaint-status/update-complaint-status.module').then(m => m.UpdateComplaintStatusModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.Fp] }
+  },
+  {
+    path: 'emailtoConcernPerson/:userId',
+    loadChildren: () => import('./modules/email-to-concern-person/email-to-concern-person.module').then(m => m.EmailToConcernPersonModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'assignComplains',
+    loadChildren: () => import('./modules/assign-complain/assign-complain.module').then(m => m.AssignComplainModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'complainant',
+    loadChildren: () => import('./modules/complainant-screen/complainant-screen.module').then(m => m.ComplainantScreenModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.Fip, Role.Cp, Role.Po, Role.Sme, Role.Gm, Role.Ceo, Role.Dm] }
+  },
+  {
+    path: 'evidenceAndReviews/:userId',
+    loadChildren: () => import('./modules/evidence-and-reviews/evidence-and-reviews.module').then(m => m.EvidenceAndReviewsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.Fip, Role.Cp, Role.Po, Role.Sme, Role.Gm, Role.Ceo, Role.Dm] }
+  },
+  {
+    path: 'grc',
+    loadChildren: () => import('./modules/grc/grc.module').then(m => m.GRCModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Grc] }
+  },
+  {
+    path: 'ceo',
+    loadChildren: () => import('./modules/ceo/ceo.module').then(m => m.CEOModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.Ceo] }
+  },
+  {
+    path: 'ceoActions/:userId',
+    loadChildren: () => import('./modules/ceo-actions/ceo-actions.module').then(m => m.CeoActionsModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.Ceo] }
+  },
+  {
+    path: 'edit-complain/:userId',
+    loadChildren: () => import('./modules/edit-complain/edit-complain.module').then(m => m.EditComplainModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin, Role.Fp] }
   },
   {
     path: 'register',
@@ -85,84 +164,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin] }
   },
-  {
-    path: 'allcomplains',
-    loadChildren: () => import('./modules/list-of-all-complains/list-of-all-complains.module').then(m => m.ListOfAllComplainsModule),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
-  {
-    path: 'AssignToConcernedPerson/:userId',
-    loadChildren: () => import('./modules/assign-to-concerned-person/assign-to-concerned-person.module').then(m => m.AssignToConcernedPersonModule),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
-  {
-    path: 'grcActions/:userId',
-    loadChildren: () => import('./modules/grc-actions/grc-actions.module').then(m => m.GrcActionsModule),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
-  {
-    path: 'showAttachments/:userId',
-    loadChildren: () => import('./modules/show-attachments/show-attachments.module').then(m => m.ShowAttachmentsModule),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
-  {
-    path: 'UpdateStatus/:userId',
-    loadChildren: () => import('./modules/update-complaint-status/update-complaint-status.module').then(m => m.UpdateComplaintStatusModule),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
-  {
-    path: 'emailtoConcernPerson/:userId',
-    loadChildren: () => import('./modules/email-to-concern-person/email-to-concern-person.module').then(m => m.EmailToConcernPersonModule),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
-  {
-    path: 'assignComplains',
-    loadChildren: () => import('./modules/assign-complain/assign-complain.module').then(m => m.AssignComplainModule),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
-  {
-    path: 'complainant',
-    loadChildren: () => import('./modules/complainant-screen/complainant-screen.module').then(m => m.ComplainantScreenModule),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
-  {
-    path: 'evidenceAndReviews/:userId',
-    loadChildren: () => import('./modules/evidence-and-reviews/evidence-and-reviews.module').then(m => m.EvidenceAndReviewsModule),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
-  {
-    path: 'GRC',
-    loadChildren: () => import('./modules/grc/grc.module').then(m => m.GRCModule),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
-  {
-    path: 'CEO',
-    loadChildren: () => import('./modules/ceo/ceo.module').then(m => m.CEOModule),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
-  {
-    path: 'ceoActions/:userId',
-    loadChildren: () => import('./modules/ceo-actions/ceo-actions.module').then(m => m.CeoActionsModule),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
-  {
-    path: 'edit-complain/:userId',
-    loadChildren: () => import('./modules/edit-complain/edit-complain.module').then(m => m.EditComplainModule),
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
+  // OTHER APP ROUTES
   {
     path: 'surveys',
     loadChildren: () => import('./modules/surveys/surveys.module').then(m => m.SurveysModule),

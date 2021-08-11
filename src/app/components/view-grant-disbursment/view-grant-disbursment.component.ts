@@ -867,7 +867,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
   }
 
   submitReview(item, type) {
-    // console.log("REVIEW TO SUBMIT FOR ITEM:----", item);
+    console.log("REVIEW TO SUBMIT FOR ITEM:----", item);
     this.apiLoading = true;
     let body = null;
     if (type === 'initial') {
@@ -877,6 +877,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         comments: item.comments,
         type: type,
         subStatus: item.subStatus ? item.subStatus : null,
+        amount: item.amount ? item.amount : null,
       }
     } else {
       body = {
@@ -885,6 +886,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         comments: item.comments,
         type: type,
         subStatus: item.subStatus ? item.subStatus : null,
+        amount: item.amount ? item.amount : null,
       }
     }
     this._grantDisbursmentsService.submitInitialAdvanceReview(

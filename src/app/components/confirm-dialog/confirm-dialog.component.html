@@ -249,6 +249,13 @@
       </section>
     </div>
 
+    <div class="controls" *ngIf="data?.evidanceFlag">
+      <mat-form-field class="col col-md-12" appearance="outline">
+        <mat-label>Add Your Remarks</mat-label>
+        <textarea matInput placeholder="Add comments" [(ngModel)]="data.comments"></textarea>
+      </mat-form-field>
+    </div>
+
   </div>
 
   <div mat-dialog-actions>
@@ -355,6 +362,13 @@
       {{data.cancelText | uppercase}}
     </button>
     <button mat-raised-button *ngIf="data?.changeSpdStatus" (click)="changeSpdStatus()" color="accent">
+      {{data.confirmText | uppercase}}
+    </button>
+
+    <button mat-raised-button *ngIf="data?.evidanceFlag" (click)="cancel()" color="warn">
+      {{data.cancelText | uppercase}}
+    </button>
+    <button mat-raised-button *ngIf="data?.evidanceFlag" (click)="closeCommentField()" color="accent">
       {{data.confirmText | uppercase}}
     </button>
   </div>

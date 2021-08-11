@@ -7,9 +7,11 @@ import { ConfirmModelService } from 'src/app/services/confirm-model.service';
   selector: "app-assign-to-concern-person",
   templateUrl: "./assign-to-concern-person.component.html",
   styleUrls: ["./assign-to-concern-person.component.css"],
+  providers: [ConfirmModelService]
 })
 export class AssignToConcernPersonComponent implements OnInit {
   allUsers: any;
+  allDepUsers: any;
   myDate = new Date().toISOString();
   userId: any;
   logggedInUserData: any;
@@ -20,30 +22,40 @@ export class AssignToConcernPersonComponent implements OnInit {
   constructor(private userServices: UserService,
     private _confirmModelService: ConfirmModelService,
     private _router: Router,
-   ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.userServices.getAllUsers().subscribe((result: any) => {
-      console.log("allUsers", result);
-      this.allUsers = result;
+    // this.userServices.getAllUsers().subscribe((result: any) => {
+    //   console.log("allUsers", result);
+    //   this.allUsers = result;
+    // });
+
+    this.userServices.getAllDepartmentUsers().subscribe((result: any) => {
+      console.log("allDepUsers", result);
+      this.allDepUsers = result;
     });
+
     this.logggedInUserData = JSON.parse(localStorage.getItem('user'));
     this.assigneePerson = JSON.parse(localStorage.getItem('complainToEdit'));
   }
-  
+
   getUserId(id) {
     let previousUserID = id
     this.assignedPersonIds.push(
       {
-        "assignedDateTime":this.myDate,
+        "assignedDateTime": this.myDate,
         "assignedPersonId": previousUserID
-      }, );
- 
-    
+      }
+    );
+    console.log("ASSIGNEEE PERSON IDS:---", this.assignedPersonIds);
+
   }
   ConfirmAssignToConcernedPerson() {
     this.loading = true;
-    this.userServices.AssignComplainToConcernedPerson(this.assigneePerson.id, this.assignedPersonIds).subscribe((result: any) => {
+    this.userServices.AssignComplainToConcernedPerson(
+      this.assigneePerson.id,
+      this.assignedPersonIds
+    ).subscribe((result: any) => {
       console.log("assigned", result);
       const options = {
         title: 'Successfully  added!',
@@ -54,8 +66,10 @@ export class AssignToConcernPersonComponent implements OnInit {
         confirm: false,
       };
       this._confirmModelService.open(options);
-      this._router.navigate(['allcomplains']);
-    });
+      this._confirmModelService.confirmed().subscribe(confirmed => {
+        this._router.navigate(['allcomplains']);
+      });
+    })
   }
   goBack() {
     this._router.navigate(['allcomplains']);

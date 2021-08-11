@@ -18,21 +18,16 @@ export class ShowAttachmentsComponent implements OnInit {
     this.complainToedit = JSON.parse(localStorage.getItem('complainToEdit'));
     console.log("complaint to edit ", this.complainToedit)
     this.userServices.downLoadFile(this.complainToedit.id).subscribe(
-      (result) =>  {
+      (result) => {
         this.downloadingFileLink = result
-        
-     
       },
       err => {
-        var error = err.json();
-        console.log(error)
+        console.log(err)
       }
     );
   }
   downloadFile() {
     let data = this.downloadingFileLink
     console.log("in which shape", data)
-
-   
   }
 }

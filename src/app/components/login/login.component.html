@@ -25,11 +25,13 @@
     </mat-card-content>
     <mat-card-actions>
       <div class="login-custom-btn">
-        <button  mat-raised-button >Forgot Password?</button>
-        <button  mat-raised-button (click)="registerUser()">
+        <button mat-raised-button>Forgot Password?</button>
+        <button mat-raised-button (click)="registerUser()">
           Register
         </button>
       </div>
+      <button mat-raised-button (click)="goToRoute('Grievanceregistration')">Add Complaint</button>
+      <button mat-raised-button (click)="goToRoute('updateComplaint')">View Complaint</button>
     </mat-card-actions>
   </mat-card>
 </div>

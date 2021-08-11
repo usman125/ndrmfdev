@@ -5,7 +5,8 @@ import { Router } from "@angular/router";
 @Component({
   selector: 'app-grc-actions',
   templateUrl: './grc-actions.component.html',
-  styleUrls: ['./grc-actions.component.css']
+  styleUrls: ['./grc-actions.component.css'],
+  providers: [ConfirmModelService]
 })
 export class GrcActionsComponent implements OnInit {
   complain: any;
@@ -21,74 +22,79 @@ export class GrcActionsComponent implements OnInit {
   ) {
     this.complain = JSON.parse(localStorage.getItem('complainToEdit'));
     this.logggedInUserData = JSON.parse(localStorage.getItem('user'));
-   }
+  }
 
   ngOnInit(): void {
   }
-satisfiedGrc(){
+  satisfiedGrc() {
 
-  if(!this.coments){
-    return
-  }
-  this.loading = true;
+    if (!this.coments) {
+      return
+    }
+    this.loading = true;
 
-  let postBody = {
-    "comments": this.coments,
-    "reviewAddBy":this.logggedInUserData.userId,
-    "reviewAddDateTime": this.myDate,
-    "satisfied": true,
-  }
+    let postBody = {
+      "comments": this.coments,
+      "reviewAddBy": this.logggedInUserData.id,
+      "reviewAddDateTime": this.myDate,
+      "satisfied": true,
+    }
 
-  this.userservices.addreview(this.complain.id, postBody ).subscribe((result: any) => {
-    console.log("addreview", result);
-    this.addreview = result;
-  });
-  this.userservices.markInternaStatus(this.complain.id).subscribe((result: any) => {
-    console.log("internal status", result);
-    const options = {
-      title: 'Successfully  added!',
-      message: 'OK to exit',
-      cancelText: 'CANCEL',
-      confirmText: 'OK',
-      add: true,
-      confirm: false,
-    };
-    this._confirmModelService.open(options);
-    this._router.navigate(['GRC']);
-  }
-  );
-}
-NotsatisfiedGrc(){
-
-  if(!this.coments){
-    return
-  }
-  this.loading = true;
-
-  let postBody = {
-    "comments": this.coments,
-    "reviewAddBy":this.logggedInUserData.userId,
-    "reviewAddDateTime": this.myDate,
-    "satisfied": false,
+    this.userservices.addreview(this.complain.id, postBody).subscribe((result: any) => {
+      console.log("addreview", result);
+      this.addreview = result;
+    });
+    this.userservices.markInternaStatus(this.complain.id).subscribe((result: any) => {
+      console.log("internal status", result);
+      const options = {
+        title: 'Successfully  added!',
+        message: 'OK to exit',
+        cancelText: 'CANCEL',
+        confirmText: 'OK',
+        add: true,
+        confirm: false,
+      };
+      this._confirmModelService.open(options);
+      this._confirmModelService.confirmed().subscribe(confirmed => {
+        this._router.navigate(['GRC']);
+      })
+    }
+    );
   }
 
-  this.userservices.addreview(this.complain.id, postBody ).subscribe((result: any) => {
-    console.log("addreview", result);
-    this.addreview = result;
-  });
-  this.userservices.markInternaStatus(this.complain.id).subscribe((result: any) => {
-    console.log("internal status", result);
-    const options = {
-      title: 'Successfully  added!',
-      message: 'OK to exit',
-      cancelText: 'CANCEL',
-      confirmText: 'OK',
-      add: true,
-      confirm: false,
-    };
-    this._confirmModelService.open(options);
-    this._router.navigate(['GRC']);
+  NotsatisfiedGrc() {
+
+    if (!this.coments) {
+      return
+    }
+    this.loading = true;
+
+    let postBody = {
+      "comments": this.coments,
+      "reviewAddBy": this.logggedInUserData.id,
+      "reviewAddDateTime": this.myDate,
+      "satisfied": false,
+    }
+
+    this.userservices.addreview(this.complain.id, postBody).subscribe((result: any) => {
+      console.log("addreview", result);
+      this.addreview = result;
+    });
+    this.userservices.markInternaStatus(this.complain.id).subscribe((result: any) => {
+      console.log("internal status", result);
+      const options = {
+        title: 'Successfully  added!',
+        message: 'OK to exit',
+        cancelText: 'CANCEL',
+        confirmText: 'OK',
+        add: true,
+        confirm: false,
+      };
+      this._confirmModelService.open(options);
+      this._confirmModelService.confirmed().subscribe(confirmed => {
+        this._router.navigate(['GRC']);
+      })
+    }
+    );
   }
-  );
-}
 }

@@ -10,11 +10,11 @@ import { Router } from "@angular/router";
   styleUrls: ['./list-of-all-complains.component.css']
 })
 export class ListOfAllComplainsComponent implements OnInit {
-  displayedColumns = ['date','email','name','status','againstPerson', 'contactNumber', 'priority','sequence','action', 'assign', 'emailToConcernPerson','UpdateSatus','ShowAttachments'];
+  displayedColumns = ['date', 'email', 'name', 'status', 'againstPerson', 'contactNumber', 'priority', 'sequence', 'action', 'assign', 'emailToConcernPerson', 'UpdateSatus', 'ShowAttachments'];
   dataSource
- allComplainsData: any;
- loading: boolean;
- @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  allComplainsData: any;
+  loading: boolean;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
@@ -22,20 +22,20 @@ export class ListOfAllComplainsComponent implements OnInit {
     private _router: Router,
 
 
-    ) { }
+  ) { }
 
   ngOnInit(): void {
-this.userServices.getAllComplains().subscribe(
-  result => {
-    console.log("ALL Complains:--", result);
-   this.allComplainsData = result
-   this.dataSource= this.allComplainsData
- 
-  },
-  error => {
-    console.log("ERROR FROM ALL COMPLAINS:--", error);
-  }
-);
+    this.userServices.getAllComplains().subscribe(
+      result => {
+        console.log("ALL Complains:--", result);
+        this.allComplainsData = result
+        this.dataSource = this.allComplainsData
+
+      },
+      error => {
+        console.log("ERROR FROM ALL COMPLAINS:--", error);
+      }
+    );
   }
 
   eidtUser(user) {
@@ -43,20 +43,20 @@ this.userServices.getAllComplains().subscribe(
     this._router.navigate(['/edit-complain', user.id]);
     localStorage.setItem('complainToEdit', JSON.stringify(user));
   }
-  assignComplain(user){
+  assignComplain(user) {
     console.log("complain to edit:--\n", user);
     this._router.navigate(['/AssignToConcernedPerson', user.id]);
     localStorage.setItem('complainToEdit', JSON.stringify(user));
   }
-  emailToConcernPerson(user){
-   this._router.navigate(['/emailtoConcernPerson', user.id]);
+  emailToConcernPerson(user) {
+    this._router.navigate(['/emailtoConcernPerson', user.id]);
     localStorage.setItem('complainToEdit', JSON.stringify(user));
   }
-  ShowAtatchments(user){
-   this._router.navigate(['/showAttachments', user.id]);
-   localStorage.setItem('complainToEdit', JSON.stringify(user));
+  ShowAtatchments(user) {
+    this._router.navigate(['/showAttachments', user.id]);
+    localStorage.setItem('complainToEdit', JSON.stringify(user));
   }
-  updateComplaintStatus(user){
+  updateComplaintStatus(user) {
     this._router.navigate(['/UpdateStatus', user.id]);
     localStorage.setItem('complainToEdit', JSON.stringify(user));
   }

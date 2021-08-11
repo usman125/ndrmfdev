@@ -1,22 +1,24 @@
 <mat-toolbar style="margin-bottom:15px;padding: 15px 0px;" color="primary">
   <mat-toolbar-row>
     <span>Evidence and Reviews</span>
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <div style="padding: 1rem;">
-    <p>Complainant Location: &nbsp; {{complain.islamabad}}</p>
-    <p>Complainant Sublocation: &nbsp; {{complain.complaintSubLocation}}</p>
-    <p>Contact Number: &nbsp; {{complain.contactNo}}</p>
-    <p>Internal Status: &nbsp; {{complain.internalStatus}}</p>
-    <p>Organization Name: &nbsp; {{complain.organizationName}}</p>
-    <p>Status: &nbsp; {{complain.status}}</p>
-    <p>Description: &nbsp; {{complain.shortDescription}}</p>
-    <p>Vendor: &nbsp; {{complain.vendor}}</p>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div style="padding: 1rem;">
+  <p>Complainant Location: &nbsp; {{complain.islamabad}}</p>
+  <p>Complainant Sublocation: &nbsp; {{complain.complaintSubLocation}}</p>
+  <p>Contact Number: &nbsp; {{complain.contactNo}}</p>
+  <p>Internal Status: &nbsp; {{complain.internalStatus}}</p>
+  <p>Organization Name: &nbsp; {{complain.organizationName}}</p>
+  <p>Status: &nbsp; {{complain.status}}</p>
+  <p>Description: &nbsp; {{complain.shortDescription}}</p>
+  <p>Vendor: &nbsp; {{complain.vendor}}</p>
 </div>
 <div style="padding: 1rem;">
-    <div style="position: relative;">
-    <button style="align-content: flex-end; margin-left: 4rem;" (click)="openDialog(complain.id)" mat-flat-button color="primary" >Add review</button>
-    <button style="align-content: flex-end; margin-left: 4rem;" (click)="openDialog(complain.id)" mat-flat-button color="secondary" >Ask for evidence</button>
+  <div style="position: relative;">
+    <button style="align-content: flex-end; margin-left: 4rem;" (click)="openDialog(complain.id)" mat-flat-button
+      color="primary">Add review</button>
+    <button style="align-content: flex-end; margin-left: 4rem;" (click)="openDialog(complain.id)" mat-flat-button
+      color="secondary">Ask for evidence</button>
   </div>
 
 </div>

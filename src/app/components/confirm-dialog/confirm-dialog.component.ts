@@ -41,6 +41,8 @@ export interface ConfirmData {
   spdStatus: any;
   confirmComments: any;
   ceoDecision: any;
+  evidanceFlag: any;
+  evidanceId: any;
 }
 
 @Component({

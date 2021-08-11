@@ -32,7 +32,7 @@ export class ComplainantScreenComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userServices.getComplainantByUserId(this.logggedInUserData.userId).subscribe((result: any) => {
+    this.userServices.getComplainantByUserId(this.logggedInUserData.id).subscribe((result: any) => {
       console.log("complainant complains", result);
       this.complains = result;
       this.dataSource = this.complains

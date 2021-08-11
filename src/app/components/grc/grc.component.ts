@@ -31,7 +31,7 @@ export class GRCComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userServices.getComplainantByUserId(this.logggedInUserData.userId).subscribe((result: any) => {
+    this.userServices.getComplainantByUserId(this.logggedInUserData.id).subscribe((result: any) => {
       console.log("GRC complainst", result);
       this.complains = result;
       this.dataSource = this.complains

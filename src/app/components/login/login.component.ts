@@ -84,6 +84,15 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (this.loggedUser.role === 'signup_approver') {
         this._router.navigate(['approverhome']);
       }
+      if (this.loggedUser.role === 'fp') {
+        this._router.navigate(['allcomplains']);
+      }
+      if (this.loggedUser.role === 'cp') {
+        this._router.navigate(['complainant']);
+      }
+      if (this.loggedUser.role === 'grc') {
+        this._router.navigate(['grc']);
+      }
     }
   }
 
@@ -172,6 +181,14 @@ export class LoginComponent implements OnInit, OnDestroy {
             this._router.navigate(['ceohome']);
           } else if (this.user.role === 'signup_approver') {
             this._router.navigate(['approverhome']);
+          } else if (this.user.role === 'fp') {
+            this._router.navigate(['allcomplains']);
+          } else if (this.user.role === 'cp') {
+            this._router.navigate(['complainant']);
+
+          } else if (this.user.role === 'grc') {
+            this._router.navigate(['grc']);
+
           }
         } else {
           var newUser = JSON.stringify(this.user);
@@ -185,6 +202,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         this._authStore.removeLoading();
       }
     );
+  }
+
+  goToRoute(route) {
+    this._router.navigate([route]);
   }
 
   ngOnDestroy() {

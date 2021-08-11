@@ -27,20 +27,20 @@ export class ConcernedPersonDialogComponent implements OnInit {
     console.log("dialogData", this.data.id)
     this.logggedInUserData = JSON.parse(localStorage.getItem('user'));
   }
-   callDialogData(){
-let statusBody = {
-  "status": 'MARKED_TO_FOCAL_PERSON',
-}
-console.log("statusBody", statusBody.status)
+  callDialogData() {
+    let statusBody = {
+      "status": 'MARKED_TO_FOCAL_PERSON',
+    }
+    console.log("statusBody", statusBody.status)
 
     let postBody = {
       "comments": this.coments,
-      "reviewAddBy":this.logggedInUserData.userId,
+      "reviewAddBy": this.logggedInUserData.userId,
       "reviewAddDateTime": this.myDate,
       "satisfied": false,
     }
-     console.log("dialogPostBody", postBody)
-     this.userservices.addreview(this.data.id, postBody ).subscribe((result: any) => {
+    console.log("dialogPostBody", postBody)
+    this.userservices.addreview(this.data.id, postBody).subscribe((result: any) => {
       console.log("addreview", result);
       this.addreview = result;
     });
@@ -59,6 +59,6 @@ console.log("statusBody", statusBody.status)
     }
     );
 
-   }
+  }
 
 }

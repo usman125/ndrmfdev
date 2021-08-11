@@ -22,7 +22,8 @@
     </mat-form-field>
   </div>
   <div class="col-md-4 mt-3">
-    <button *ngIf="!withoutPasswords" (click)="getUsersWithoutCredentials()" mat-raised-button color="primary">Filter without credentials</button>
+    <button *ngIf="!withoutPasswords" (click)="getUsersWithoutCredentials()" mat-raised-button color="primary">Filter
+      without credentials</button>
     <button *ngIf="withoutPasswords" (click)="getAllUsers()" mat-raised-button color="primary">Get All Users</button>
   </div>
 </div>
@@ -50,6 +51,12 @@
             <mat-chip *ngIf="element.role === 'admin'" color="accent" selected>ADMIN</mat-chip>
             <mat-chip *ngIf="element.role === 'process owner'" color="accent" selected>PO</mat-chip>
             <mat-chip *ngIf="element.role === 'dm pam'" color="accent" selected>DM PAM</mat-chip>
+            <mat-chip *ngIf="element.role === 'ceo'" color="accent" selected>CEO</mat-chip>
+            <mat-chip *ngIf="element.role === 'gm'" color="accent" selected>GM</mat-chip>
+            <mat-chip *ngIf="element.role === 'signup_approver'" color="accent" selected>Signup Approver</mat-chip>
+            <mat-chip *ngIf="element.role === 'cp'" color="accent" selected>Concerned Person</mat-chip>
+            <mat-chip *ngIf="element.role === 'fp'" color="accent" selected>Focal Person</mat-chip>
+            <mat-chip *ngIf="element.role === 'grc'" color="accent" selected>GRC</mat-chip>
           </mat-chip-list>
         </td>
       </ng-container>

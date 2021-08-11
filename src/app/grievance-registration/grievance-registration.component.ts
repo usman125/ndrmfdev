@@ -1,5 +1,5 @@
 import { LoginService } from './../services/login.service';
-import { Input, ViewChild } from '@angular/core';
+import { Input, ViewChild, AfterViewInit } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -7,32 +7,36 @@ import { Router } from "@angular/router";
 import * as moment from "moment";
 import { SignaturePad } from 'angular2-signaturepad';
 import { ConfirmModelService } from 'src/app/services/confirm-model.service';
+
 @Component({
   selector: 'app-grievance-registration',
   templateUrl: './grievance-registration.component.html',
-  styleUrls: ['./grievance-registration.component.css']
+  styleUrls: ['./grievance-registration.component.css'],
+  providers: [ConfirmModelService]
 })
-export class GrievanceRegistrationComponent implements OnInit {
+export class GrievanceRegistrationComponent implements OnInit, AfterViewInit {
+
   @ViewChild(SignaturePad) signaturePad: SignaturePad;
   @Input() accept = 'file/*';
   @Input() text = 'Upload';
   /** Name used in form which will be sent in HTTP request. */
   @Input() param = 'file';
-  myDate = new Date().toISOString();
 
+  myDate = new Date().toISOString();
   formatteddate = moment(this.myDate).format("DD-MM-YYYY  HH:mm");
-  public signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
+  signaturePadOptions: Object = { // passed through to szimek/signature_pad constructor
     'minWidth': 2,
     'canvasWidth': 500,
     'canvasHeight': 300,
 
   };
 
-  public registrationForm: FormGroup;
+  registrationForm: FormGroup;
   testUser: any;
   files: any = [];
   fd: FormData;
   responseReult: Object;
+
   constructor(private formBuilder: FormBuilder,
     private loginservices: LoginService,
     private _confirmModelService: ConfirmModelService,
@@ -40,10 +44,11 @@ export class GrievanceRegistrationComponent implements OnInit {
     private userServices: UserService) {
     this.grievanceFormBuilder();
   }
+
   ngAfterViewInit() {
     // this.signaturePad is now available
-    this.signaturePad.set('minWidth', 5); // set szimek/signature_pad options at runtime
-    this.signaturePad.clear(); // invoke functions from szimek/signature_pad API
+    // this.signaturePad.set('minWidth', 5); // set szimek/signature_pad options at runtime
+    // this.signaturePad.clear(); // invoke functions from szimek/signature_pad API
   }
   drawComplete() {
     // will be notified of szimek/signature_pad's onEnd event
@@ -68,13 +73,8 @@ export class GrievanceRegistrationComponent implements OnInit {
       }
       // this.uploadFiles();
       console.log("Uploaded Files:---", this.files);
-
       this.fd = new FormData();
       this.fd.append(this.param, this.files[0].data);
-
-
-
-
     };
     fileUpload.click();
 
@@ -162,8 +162,8 @@ export class GrievanceRegistrationComponent implements OnInit {
 
       },
       _err => {
-        var error = _err.json();
-        console.log(error)
+        // var error = _err.json();
+        console.log(_err);
       }
     )
   }

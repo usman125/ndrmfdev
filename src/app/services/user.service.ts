@@ -33,25 +33,28 @@ export class UserService {
       }
     );
   }
-getAllComplains(){
-  const url = `${AppConfig.apiUrl}/complaint/find/all/`;
-  return this._httpClient.get(
-    url,
-  );
-}
-addComplaintAppeal(appealBody){
-  const url = `${AppConfig.apiUrl}/complaint/appeal`;
-  return this._httpClient.post(
-    url,
-    appealBody
-  );
-}
-CEOComplains(){
-  const url = `${AppConfig.apiUrl}/complaint/appeal/findall?status=INITIATED`;
-  return this._httpClient.get(
-    url,
-  );
-}
+  
+  getAllComplains() {
+    const url = `${AppConfig.apiUrl}/complaint/find/all/`;
+    return this._httpClient.get(
+      url,
+    );
+  }
+  
+  addComplaintAppeal(appealBody) {
+    const url = `${AppConfig.apiUrl}/complaint/appeal`;
+    return this._httpClient.post(
+      url,
+      appealBody
+    );
+  }
+
+  CEOComplains() {
+    const url = `${AppConfig.apiUrl}/complaint/appeal/findall?status=INITIATED`;
+    return this._httpClient.get(
+      url,
+    );
+  }
 
   editUser(values, id) {
     const url = `${AppConfig.apiUrl}/user/${id}`;
@@ -73,35 +76,35 @@ CEOComplains(){
     );
   }
 
-  emailToComplainant(complaintId,notifyBody, subject ){
+  emailToComplainant(complaintId, notifyBody, subject) {
     const url = `${AppConfig.apiUrl}/complaint/${complaintId}/complainant/notify?body=${notifyBody}&subject=${subject}`;
     return this._httpClient.post(
       url,
       null
     );
   }
-  acknowledgeComplaint(complaintId, body){
+  acknowledgeComplaint(complaintId, body) {
     const url = `${AppConfig.apiUrl}/complaint/${complaintId}/acknowledge`;
     return this._httpClient.put(
       url,
       body
     );
   }
-  updateComplaintStatus(complaintId, complaintStatus){
+  updateComplaintStatus(complaintId, complaintStatus) {
     const url = `${AppConfig.apiUrl}/complaint/${complaintId}/status?status=${complaintStatus}`;
     return this._httpClient.put(
       url,
       null
     );
   }
-  markInternaStatus(complaintId){
+  markInternaStatus(complaintId) {
     const url = `${AppConfig.apiUrl}/complaint/${complaintId}/internalStatus?status=MARKED_TO_FOCAL_PERSON`;
     return this._httpClient.put(
       url,
       null
     );
   }
-  addreview(complaintId, postBody){
+  addreview(complaintId, postBody) {
     const url = `${AppConfig.apiUrl}/complaint/${complaintId}/review/add`;
     return this._httpClient.post(
       url,
@@ -110,67 +113,67 @@ CEOComplains(){
 
   }
 
-  fileUpload(complaintId, postBody){
+  fileUpload(complaintId, postBody) {
     const url = `${AppConfig.apiUrl}/complaint/attachment/uploadFile?applicationRefNo=${complaintId}`;
     return this._httpClient.post(
       url,
       postBody
     );
   }
-  getUserListByRole(){
+  getUserListByRole() {
     const url = `${AppConfig.apiUrl}/complaint/user/findByRole?role=CEO`;
     return this._httpClient.get(
       url,
     );
 
   }
-  downLoadFile(complaintId): any{
+  downLoadFile(complaintId): any {
     const url = `${AppConfig.apiUrl}/complaint/attachment/find/${complaintId}/`;
     return this._httpClient.get(
       url,
     );
 
   }
-  RejectAppeal(appealId){
+  RejectAppeal(appealId) {
     const url = `${AppConfig.apiUrl}/complaint/appeal/status/update?appealId=${appealId}&status=REJECTED`;
     return this._httpClient.put(
       url,
       null
     );
   }
-  ReAssignAppeal(appealId){
+  ReAssignAppeal(appealId) {
     const url = `${AppConfig.apiUrl}/complaint/appeal/status/update?appealId=${appealId}&status=REASSIGNED`;
     return this._httpClient.put(
       url,
       null
     );
   }
-  submitFeedback(feedbackBody){
+  submitFeedback(feedbackBody) {
     const url = `${AppConfig.apiUrl}/complaint/complainant/feedback`;
     return this._httpClient.post(
       url,
       feedbackBody
     );
   }
-  getComplaintById(complaintId){
+  getComplaintById(complaintId) {
     const url = `${AppConfig.apiUrl}/complaint/find/${complaintId}`;
     return this._httpClient.get(
       url,
     );
   }
-  getComplainantByUserId(userId){
+  getComplainantByUserId(userId) {
     const url = `${AppConfig.apiUrl}/complaint/findByUser/${userId}`;
     return this._httpClient.get(
       url,
     );
   }
-AssignComplainToConcernedPerson(complaintId, postBody){
-  const url = `${AppConfig.apiUrl}/complaint/${complaintId}/assign/concerned-person?notificationBody=heelo&notificationTitle=hello`;
-  return this._httpClient.post(
-    url,
-    postBody
-  );
-}
+  AssignComplainToConcernedPerson(complaintId, postBody) {
+    const url = `${AppConfig.apiUrl}/complaint/${complaintId}/assign/concerned-person`;
+    return this._httpClient.post(
+      url,
+      postBody
+    );
+  }
   getAllUsers() {
     const url = `${AppConfig.apiUrl}/user/`;
     return this._httpClient.get(
