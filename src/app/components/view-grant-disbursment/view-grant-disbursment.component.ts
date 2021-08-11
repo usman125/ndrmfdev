@@ -195,15 +195,6 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
             // console.log("REQUEST IN VIEW*********:---", data.disbursment);
             this.selectedRequest = data.disbursment;
 
-            // if (this.selectedRequest.initialAdvance.status === 'Completed' ||
-            //   this.selectedRequest.initialAdvance.status === 'Re Assigned' ||
-            //   this.selectedRequest.initialAdvance.status === 'Approved') {
-            // this.selectedRequest && this.selectedRequest.initialAdvance &&
-            //   typeof (this.selectedRequest.initialAdvance.data) === 'string' ?
-            //   this.apiCosts = JSON.parse(this.selectedRequest.initialAdvance.data) :
-            //   this.apiCosts = this.selectedRequest.initialAdvance.data;
-            // this.apiCosts = this.selectedRequest.initialAdvance.data;
-            // }
             let pendingCount = 0;
             let completedCount = 0;
             if (this.selectedRequest.initialAdvance.initialAdvanceReviewsList !== null) {
@@ -1217,7 +1208,168 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         for (let i = 0; i < this.projectActualCosts.length; i++) {
           let c = this.projectActualCosts[i];
           if (!c.children) {
-            if (c.quarters[this.step + 1].data !== null && c.quarters[this.step + 1].value === true) {
+            if (c.quarters[this.step + 1] && c.quarters[this.step + 1].data !== null && c.quarters[this.step + 1].value === true) {
+              if (c.quarters[this.step + 1].data.ndrmfShare) {
+                c.amount = c.quarters[this.step + 1].data.ndrmfShare;
+                itemTotal = itemTotal + c.amount;
+              }
+              quarterCosts.push(c)
+            }
+          }
+        }
+        item.amount = itemTotal;
+        item.data = quarterCosts;
+      } else {
+        this.apiCosts = [];
+        let itemTotal = 0;
+        for (let i = 0; i < this.projectActualCosts.length; i++) {
+          let c = this.projectActualCosts[i];
+          if (!c.children) {
+            if (c.quarters[0].data !== null && c.quarters[0].value === true) {
+              if (c.quarters[0].data.ndrmfShare) {
+                c.amount = c.quarters[0].data.ndrmfShare;
+                itemTotal = itemTotal + c.amount;
+              }
+              this.apiCosts.push(c);
+            }
+          }
+        }
+        item.data = this.apiCosts;
+        item.amount = itemTotal;
+      }
+      // this.selectedStepData.advanceLiquidationItem.data = item.data;
+      this.selectedAdvanceItem = item;
+      this.getAdvanceFiles();
+      for (let i = 0; i < this.projectActualCosts.length; i++) {
+        let obj = this.projectActualCosts[i];
+        if (item.data !== null) {
+          for (let j = 0; j < item.data.length; j++) {
+            if (item.data[j]._id === obj._id) {
+              item.data[j].quarters = JSON.parse(JSON.stringify(obj.quarters));
+            }
+            this.parentCosts = [];
+            item.data[j].parentCosts = this.search(item.data[j]);
+
+            item.data[j].ndrmfExpenditureLastQuarter = 0;
+            item.data[j].fipExpenditureLastQuarter = 0;
+            item.data[j].ndrmfExpenditureCurrentQuarter = 0;
+            item.data[j].fipExpenditureCurrentQuarter = 0;
+            item.data[j].ndrmfTotalBudgetAllocation = 0;
+            item.data[j].fipTotalBudgetAllocation = 0;
+            item.data[j].fipQuarterBudgetAllocation = 0;
+            item.data[j].ndrmfQuarterBudgetAllocation = 0;
+            item.data[j].fipExpenditureTillDate = 0;
+            item.data[j].ndrmfExpenditureTillDate = 0;
+            item.data[j].totalRequirementForTheProject = 0;
+            item.data[j].ndrmfVarience = 0;
+            item.data[j].fipVarience = 0;
+
+            // console.log("**********ID MATCHED:---", item.data[j], obj, item.data[j].parentCosts);
+
+            // if (!item.data[j].parentCosts)
+            //   item.data[j].parentCosts = obj.parentCosts;
+
+            for (let k = 0; k < item.data[j].quarters.length; k++) {
+              let y = item.data[j].quarters[k];
+              if (y.value === true && y.data !== null) {
+                item.data[j].ndrmfTotalBudgetAllocation = item.data[j].ndrmfTotalBudgetAllocation + y.data.ndrmfShare;
+                item.data[j].fipTotalBudgetAllocation = item.data[j].fipTotalBudgetAllocation + y.data.fipShare;
+                item.data[j].totalRequirementForTheProject = item.data[j].totalRequirementForTheProject + (y.data.ndrmfShare + y.data.fipShare);
+              }
+            }
+
+            if (typeof (id) === 'string') {
+
+              if (item.data[j].quarters[0].value === true) {
+                item.data[j].fipQuarterBudgetAllocation = item.data[j].quarters[0].data.fipShare;
+                item.data[j].ndrmfQuarterBudgetAllocation = item.data[j].quarters[0].data.ndrmfShare;
+              }
+              if (item.data[j].quarters[0].value === true && item.data[j].quarters[0].progress) {
+                item.data[j].ndrmfExpenditureCurrentQuarter = item.data[j].quarters[0].progress.expenditureNdrmf;
+                item.data[j].fipExpenditureCurrentQuarter = item.data[j].quarters[0].progress.expenditureFip;
+              }
+
+              item.data[j].ndrmfVarience = item.data[j].ndrmfQuarterBudgetAllocation - item.data[j].ndrmfExpenditureCurrentQuarter;
+              item.data[j].fipVarience = item.data[j].fipQuarterBudgetAllocation - item.data[j].fipExpenditureCurrentQuarter;
+
+              item.data[j].fipExpenditureTillDate = 0 + item.data[j].fipExpenditureCurrentQuarter;
+              item.data[j].ndrmfExpenditureTillDate = 0 + item.data[j].ndrmfExpenditureCurrentQuarter;
+
+              item.data[j].ndrmfRemainingBudget = item.data[j].ndrmfTotalBudgetAllocation - item.data[j].ndrmfExpenditureTillDate;
+              item.data[j].fipRemainingBudget = item.data[j].fipTotalBudgetAllocation - item.data[j].fipExpenditureTillDate;
+            } else {
+              if (item.data[j].quarters[item.quarter - 1].value === true) {
+                item.data[j].fipQuarterBudgetAllocation = item.data[j].quarters[item.quarter - 1].data.fipShare;
+                item.data[j].ndrmfQuarterBudgetAllocation = item.data[j].quarters[item.quarter - 1].data.ndrmfShare;
+              }
+              if (item.data[j].quarters[item.quarter - 1].value === true && item.data[j].quarters[item.quarter - 1].progress) {
+                item.data[j].ndrmfExpenditureCurrentQuarter = item.data[j].quarters[item.quarter - 1].progress.expenditureNdrmf;
+                item.data[j].fipExpenditureCurrentQuarter = item.data[j].quarters[item.quarter - 1].progress.expenditureFip;
+              }
+              // console.log("HAVE PROGRESS*************", item.quarter, (item.quarter - 2), item.data[j].quarters[item.quarter - 2].progress)
+              if (item.data[j].quarters[item.quarter - 2].value === true && item.data[j].quarters[item.quarter - 2].progress) {
+                item.data[j].ndrmfExpenditureLastQuarter = item.data[j].quarters[item.quarter - 2].progress.expenditureNdrmf;
+                item.data[j].fipExpenditureLastQuarter = item.data[j].quarters[item.quarter - 2].progress.expenditureFip;
+              }
+
+              item.data[j].ndrmfVarience = item.data[j].ndrmfQuarterBudgetAllocation - item.data[j].ndrmfExpenditureCurrentQuarter;
+              item.data[j].fipVarience = item.data[j].fipQuarterBudgetAllocation - item.data[j].fipExpenditureCurrentQuarter;
+
+              item.data[j].fipExpenditureTillDate = item.data[j].fipExpenditureLastQuarter + item.data[j].fipExpenditureCurrentQuarter;
+              item.data[j].ndrmfExpenditureTillDate = item.data[j].ndrmfExpenditureLastQuarter + item.data[j].ndrmfExpenditureCurrentQuarter;
+
+              item.data[j].ndrmfRemainingBudget = item.data[j].ndrmfTotalBudgetAllocation - item.data[j].ndrmfExpenditureTillDate;
+              item.data[j].fipRemainingBudget = item.data[j].fipTotalBudgetAllocation - item.data[j].fipExpenditureTillDate;
+            }
+
+          }
+        }
+      }
+
+      if (item.advanceLiquidations !== null) {
+        this._advanceLiquidationItemStore.addAdvanceLiquidationItem(
+          JSON.parse(JSON.stringify(item.advanceLiquidations)),
+          JSON.parse(JSON.stringify(item.data))
+        );
+        // this._advanceLiquidationItemStore.addAdvanceLiquidationItemData(JSON.parse(JSON.stringify(item.data)));
+      } else {
+        this._advanceLiquidationItemStore.addAdvanceLiquidationItem(null, null);
+        // this._advanceLiquidationItemStore.addAdvanceLiquidationItemData(JSON.parse(JSON.stringify(item.data)));
+      }
+
+    }
+
+    if (this.step !== null) {
+
+      if (selectionType === 'quarter') {
+        this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: id })
+      }
+      if (selectionType === 'initial') {
+        this._singleGrantDisbursmentsStore.setSelectionType({ type: selectionType, key: id })
+      }
+
+    }
+
+  }
+
+  setTabStep($event, selectionType) {
+    console.log("CURRENT STEP:---", $event);
+    this.step = $event.index;
+    let id = this.step;
+    // // @setTimeout(() => {})
+    this.currentReviewsList = [];
+    this.fipLiquidationSoes = [];
+    this.ndrmfLiquidationSoes = [];
+    let quarterCosts = [];
+    // this.selectedStepData = this.selectedRequest.quarterAdvanceList[this.step];
+    let item = this.selectedRequest.quarterAdvanceList[this.step];
+    if (item !== null) {
+      if (selectionType === 'quarter') {
+        let itemTotal = 0;
+        for (let i = 0; i < this.projectActualCosts.length; i++) {
+          let c = this.projectActualCosts[i];
+          if (!c.children) {
+            if (c.quarters[this.step + 1] && c.quarters[this.step + 1].data !== null && c.quarters[this.step + 1].value === true) {
               if (c.quarters[this.step + 1].data.ndrmfShare) {
                 c.amount = c.quarters[this.step + 1].data.ndrmfShare;
                 itemTotal = itemTotal + c.amount;
