@@ -1488,6 +1488,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       }
 
       if (item.advanceLiquidations !== null) {
+        item.advanceLiquidations.sort((a, b) => (a.orderNumber > b.orderNumber) ? 1 : ((b.orderNumber > a.orderNumber) ? -1 : 0))
         this._advanceLiquidationItemStore.addAdvanceLiquidationItem(
           JSON.parse(JSON.stringify(item.advanceLiquidations)),
           JSON.parse(JSON.stringify(item.data))
@@ -1881,7 +1882,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         };
         this._confirmModelService.open(options);
         this._confirmModelService.confirmed().subscribe(confirmed => {
-          this._advanceLiquidationItemStore.addNewLiquidation(this.selectedAdvanceItem.data);
+          this._advanceLiquidationItemStore.addNewLiquidation(this.selectedAdvanceItem.data, result.id);
           this.addLiquidationLoading = false;
           this.openSnackBar('LIQUIDATION ADDED!', 'Exit');
         })
@@ -1920,7 +1921,7 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
         };
         this._confirmModelService.open(options);
         this._confirmModelService.confirmed().subscribe(confirmed => {
-          this._advanceLiquidationItemStore.addNewLiquidation(this.selectedAdvanceItem.data);
+          this._advanceLiquidationItemStore.addNewLiquidation(this.selectedAdvanceItem.data, result.id);
           this.addLiquidationLoading = false;
           this.openSnackBar('LIQUIDATION ADDED!', 'Exit');
         })

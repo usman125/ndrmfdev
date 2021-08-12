@@ -1555,7 +1555,7 @@
         <!-- <div *ngFor="let liquidation of selectedAdvanceLiquidations; let li = index;"> -->
         <mat-tab-group color="accent" backgroundColor="accent">
           <mat-tab *ngFor="let liquidation of selectedAdvanceLiquidations; let li = index;"
-            [label]="'Liquidation #' + (li + 1)">
+            [label]="'LIQUIDATION #' + (li + 1)">
             <div id="print-initial-advance-liquidation">
 
               <!-- PRINT NDRMF LOGO AND WA NUMBER BOX -->
@@ -2977,7 +2977,7 @@
 
         <mat-tab-group (selectedTabChange)="setTabStep($event, 'quarter')">
           <mat-tab *ngFor="let item of selectedRequest?.quarterAdvanceList; let i = index;"
-            [label]="'QUARTER ADVANCE' + (i+2)">
+            [label]="'QUARTER ADVANCE #' + (i+2)">
 
 
 
@@ -3048,7 +3048,7 @@
         </div> -->
 
             <!-- PRINT ADVANCE STARTS HERE -->
-            <mat-tab-group>
+            <mat-tab-group align-tabs="right">
               <mat-tab label="WITHDRAWAL APPLICATION">
 
                 <div id="print-quarter-advance">
@@ -4470,6 +4470,10 @@
               <mat-tab-group>
                 <mat-tab *ngFor="let liquidation of selectedAdvanceLiquidations; let li = index;"
                   [label]="'Liquidation #' + (li + 1)">
+                  <!-- <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">thumb_up</mat-icon>
+                    {{'Liquidation #'}} {{li + 1}}
+                  </ng-template> -->
                   <div class="mt-5">
 
                     <mat-tab-group>
@@ -5809,14 +5813,16 @@
                       </mat-tab>
                     </mat-tab-group>
 
-                    <div class="d-flex mb-3 align-items-center justify-conetnt-between flex-fill">
+                    <div class="d-flex pt-4 pb-4 align-items-center justify-conetnt-between flex-fill">
 
                       <div class="d-flex flex-fill">
                         <span id="comment">Liquidation Status:&nbsp;</span>
                         {{liquidation?.status}}
                       </div>
 
-                      <div class="d-flex flex-fill justify-content-end">
+                      <div
+                        [ngClass]="{'justify-content-center': approveLoading, 'justify-content-end': !approveLoading}"
+                        class="d-flex flex-fill">
                         <div *ngIf="selectedRequest?.assigned">
                           <button class="mr-2" [disabled]="liquidation?.status === 'Not Initiated' ||
                               liquidation?.status === 'Approved' || liquidation?.status === 'Re Assigned'
@@ -5843,8 +5849,11 @@
                               liquidation?.status === 'Not Initiated') ?
                               'Submit Quarter Liquidation' : 'Update Quarter Liquidation'}}
                             </button>
-                            <mat-progress-spinner *ngIf="approveLoading" mode="indeterminate" diameter="20">
-                            </mat-progress-spinner>
+
+                            <div *ngIf="approveLoading">
+                              <mat-progress-spinner mode="indeterminate" diameter="20">
+                              </mat-progress-spinner>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -5857,7 +5866,7 @@
 
               <!-- </div> -->
 
-              <div class="mb-3 mt-3" *ngIf="loggedUser?.role === 'fip'">
+              <div class="mb-3 mt-3 d-block" *ngIf="loggedUser?.role === 'fip'">
                 <button *ngIf="!addLiquidationLoading" mat-raised-button color="warn"
                   (click)="addQuarterAdvanceLiquidation()">
                   <mat-icon>add</mat-icon> Add New Liquidation
@@ -5932,28 +5941,26 @@
 
 
             <!-- ACTION BUTTONS -->
-            <mat-action-row>
-              <!-- <button mat-button color="primary" (click)="nextStep('quarter')">Next</button> -->
-              <div class="d-flex flex-fill justify-content-between align-items-center">
-                <div class="d-flex flex-fill">
-                  <span id="comment">Advance Status:&nbsp;</span>
-                  {{selectedAdvanceItem?.status}}
-                </div>
-                <div *ngIf="selectedRequest?.assigned" class="d-flex flex-fill justify-content-end">
-                  <button class="mr-2"
-                    [disabled]="(selectedAdvanceItem?.subStatus === 'Approved' ||
-              selectedAdvanceItem?.subStatus === null || selectedAdvanceItem?.status === 'Re Assigned') || approveLoading"
-                    mat-raised-button color="accent" (click)="approveQuarterAdvance()">
-                    Approve Quarter Advance
-                  </button>
-                  <button [disabled]="(selectedAdvanceItem?.status === 'Re Assigned' || 
-            selectedAdvanceItem?.status === null) 
-            || approveLoading" mat-raised-button color="warn" (click)="reassignQuarterAdvance()">
-                    Reassign Quarter Advance
-                  </button>
-                </div>
+            <!-- <button mat-button color="primary" (click)="nextStep('quarter')">Next</button> -->
+            <div class="d-flex flex-fill justify-content-between align-items-center pt-3">
+              <div class="d-flex flex-fill">
+                <span id="comment">Advance Status:&nbsp;</span>
+                {{selectedAdvanceItem?.status}}
               </div>
-            </mat-action-row>
+              <div *ngIf="selectedRequest?.assigned" class="d-flex flex-fill justify-content-end">
+                <button class="mr-2"
+                  [disabled]="(selectedAdvanceItem?.subStatus === 'Approved' ||
+                    selectedAdvanceItem?.subStatus === null || selectedAdvanceItem?.status === 'Re Assigned') || approveLoading"
+                  mat-raised-button color="accent" (click)="approveQuarterAdvance()">
+                  Approve Quarter Advance
+                </button>
+                <button [disabled]="(selectedAdvanceItem?.status === 'Re Assigned' || 
+                    selectedAdvanceItem?.status === null) 
+                    || approveLoading" mat-raised-button color="warn" (click)="reassignQuarterAdvance()">
+                  Reassign Quarter Advance
+                </button>
+              </div>
+            </div>
 
           </mat-tab>
         </mat-tab-group>

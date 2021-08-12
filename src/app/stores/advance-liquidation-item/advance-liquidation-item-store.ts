@@ -91,13 +91,13 @@ export class AdvanceLiquidationItemStore extends Store<AdvanceLiquidationItemSta
     })
   }
 
-  addNewLiquidation(data) {
+  addNewLiquidation(data, id) {
     this.setState({
       ...this.state,
       data: [
         ...this.state.data,
         {
-          "id": null,
+          "id": id,
           "data": data,
           "amount": null,
           "comments": null,
