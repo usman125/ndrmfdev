@@ -56,7 +56,7 @@ export class GrcActionsComponent implements OnInit {
       };
       this._confirmModelService.open(options);
       this._confirmModelService.confirmed().subscribe(confirmed => {
-        this._router.navigate(['GRC']);
+        this._router.navigate(['grc']);
       })
     }
     );
@@ -92,7 +92,7 @@ export class GrcActionsComponent implements OnInit {
       };
       this._confirmModelService.open(options);
       this._confirmModelService.confirmed().subscribe(confirmed => {
-        this._router.navigate(['GRC']);
+        this._router.navigate(['grc']);
       })
     }
     );

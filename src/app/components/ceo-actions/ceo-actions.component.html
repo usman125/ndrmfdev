@@ -1,26 +1,127 @@
 <div *ngIf="dataOfComplainID" style="padding: 1rem;">
-<mat-card>
-<mat-card-content >
-    <p>Complaint Name: &nbsp; {{dataOfComplainID.complainantName}}  </p>
-    <p>Address: &nbsp; {{dataOfComplainID.address}} </p>
-    <p>Email: &nbsp; {{dataOfComplainID.email}}</p>
-    <p>CNIC: &nbsp; {{dataOfComplainID.cnic}}</p>
-    <p>Against Person: &nbsp; {{dataOfComplainID.complaintAgainstPersonOrDepartment}}</p>
-    <p>Category: &nbsp; {{dataOfComplainID.complaintCategory}}</p>
-    <p>Location: &nbsp; {{dataOfComplainID.complaintLocation}}</p>
-    <p>Sub-Location: &nbsp; {{dataOfComplainID.complaintSubLocation}}</p>
-    <p>Internal Status &nbsp; {{dataOfComplainID.internalStatus}}</p>
-    <p>Sequence Number: &nbsp; {{dataOfComplainID.seqNo}}</p>
-    <p>Status: &nbsp; {{dataOfComplainID.status}}</p>
-    <p>Consultant Name: &nbsp; {{dataOfComplainID.consultantName}}</p>
-    <p>Factor Causing Problem: &nbsp; {{dataOfComplainID.shortDescFectorCausingProblem}}</p>
-    <p>Short Description: &nbsp; {{dataOfComplainID.shortDescription}}</p>
-    </mat-card-content>
-    <div style="position: relative; padding: 1rem;">
-        <button *ngIf="!loading" mat-flat-button color="warn" (click)="RejectAppeal()">Reject</button>
-        <button style="margin-left: 3rem;" *ngIf="!loading" mat-flat-button color="primary" (click)="ReAssignAppeal()">Re-Assign</button>
-        <mat-progress-spinner   *ngIf="loading" class="spinner p-3" diameter="35" mode="indeterminate"></mat-progress-spinner>
+  <mat-card class="m-20">
+    <mat-card-content>
+      <!-- <p>Complaint Name: &nbsp; {{dataOfComplainID.complainantName}} </p>
+      <p>Address: &nbsp; {{dataOfComplainID.address}} </p>
+      <p>Email: &nbsp; {{dataOfComplainID.email}}</p>
+      <p>CNIC: &nbsp; {{dataOfComplainID.cnic}}</p>
+      <p>Against Person: &nbsp; {{dataOfComplainID.complaintAgainstPersonOrDepartment}}</p>
+      <p>Category: &nbsp; {{dataOfComplainID.complaintCategory}}</p>
+      <p>Location: &nbsp; {{dataOfComplainID.complaintLocation}}</p>
+      <p>Sub-Location: &nbsp; {{dataOfComplainID.complaintSubLocation}}</p>
+      <p>Internal Status &nbsp; {{dataOfComplainID.internalStatus}}</p>
+      <p>Sequence Number: &nbsp; {{dataOfComplainID.seqNo}}</p>
+      <p>Status: &nbsp; {{dataOfComplainID.status}}</p>
+      <p>Consultant Name: &nbsp; {{dataOfComplainID.consultantName}}</p>
+      <p>Factor Causing Problem: &nbsp; {{dataOfComplainID.shortDescFectorCausingProblem}}</p>
+      <p>Short Description: &nbsp; {{dataOfComplainID.shortDescription}}</p> -->
+
+
+      <div class="border-heading">Complaint Name</div>
+      <div style="padding: 1rem;">
+        <div class="mb-3 row">
+          <div class="d-flex flex-fill general-info col-md-3">
+            <span id="title">Complainant Location</span>
+            <span id="value">
+              {{dataOfComplainID.complainantName || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="d-flex flex-fill general-info col-md-3">
+            <span id="title">Address</span>
+            <span id="value">
+              {{dataOfComplainID.address || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="d-flex flex-fill general-info col-md-3">
+            <span id="title">Email</span>
+            <span id="value">
+              {{dataOfComplainID.email || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="d-flex flex-fill general-info col-md-3">
+            <span id="title">CNIC</span>
+            <span id="value">
+              {{dataOfComplainID.cnic || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <div class="d-flex flex-fill general-info col-md-3">
+            <span id="title">Against Person</span>
+            <span id="value">
+              {{dataOfComplainID.complaintAgainstPersonOrDepartment || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="d-flex flex-fill general-info col-md-3">
+            <span id="title">Category</span>
+            <span id="value">
+              {{dataOfComplainID.complaintCategory || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="d-flex flex-fill general-info col-md-3">
+            <span id="title">Location</span>
+            <span id="value">
+              {{dataOfComplainID.complaintLocation || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="d-flex flex-fill general-info col-md-3">
+            <span id="title">Sub-Location</span>
+            <span id="value">
+              {{dataOfComplainID.complaintSubLocation || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <div class="d-flex flex-fill general-info col-md-3">
+            <span id="title">Internal Status</span>
+            <span id="value">
+              {{dataOfComplainID.internalStatus || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="d-flex flex-fill general-info col-md-3">
+            <span id="title">Sequence Number</span>
+            <span id="value">
+              {{dataOfComplainID.seqNo || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="d-flex flex-fill general-info col-md-3">
+            <span id="title">Status</span>
+            <span id="value">
+              {{dataOfComplainID.status || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="d-flex flex-fill general-info col-md-3">
+            <span id="title">Consultant Name</span>
+            <span id="value">
+              {{dataOfComplainID.consultantName || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <div class="d-flex flex-fill general-info col-md-4">
+            <span id="title">Factor Causing Problem</span>
+            <span id="value">
+              {{dataOfComplainID.shortDescFectorCausingProblem || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="d-flex flex-fill general-info col-md-8">
+            <span id="title">Short Description</span>
+            <span id="value">
+              {{dataOfComplainID.shortDescription || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
       </div>
-</mat-card>
+
+
+      <div style="position: relative; padding: 1rem;">
+        <button *ngIf="!loading" mat-flat-button color="warn" (click)="RejectAppeal()">Reject</button>
+        <button style="margin-left: 3rem;" *ngIf="!loading" mat-flat-button color="primary"
+          (click)="ReAssignAppeal()">Re-Assign</button>
+        <mat-progress-spinner *ngIf="loading" class="spinner p-3" diameter="35" mode="indeterminate">
+        </mat-progress-spinner>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
 </div>

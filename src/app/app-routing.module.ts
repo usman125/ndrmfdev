@@ -79,7 +79,7 @@ const routes: Routes = [
     path: 'grcActions/:userId',
     loadChildren: () => import('./modules/grc-actions/grc-actions.module').then(m => m.GrcActionsModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Grc] }
   },
   {
     path: 'showAttachments/:userId',
