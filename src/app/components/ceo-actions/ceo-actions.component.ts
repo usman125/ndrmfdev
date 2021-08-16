@@ -35,45 +35,45 @@ export class CeoActionsComponent implements OnInit {
       }
     )
   }
+
   RejectAppeal() {
-    this.loading = true,
-      this.userServices.RejectAppeal(this.complainData.id).subscribe(
-        res => {
-          console.log("reject appeal result", res)
-          const options = {
-            title: 'Status has been updated',
-            message: '',
-            cancelText: 'CANCEL',
-            confirmText: 'OK',
-            add: true,
-            confirm: false,
-          };
-          this._confirmModelService.open(options);
-          this._confirmModelService.confirmed().subscribe(confirmed => {
-            this._router.navigate(['ceo']);
-          })
-        }
-      )
+    this.loading = true;
+    this.userServices.RejectAppeal(
+      this.complainData.id
+    ).subscribe(res => {
+      console.log("reject appeal result", res)
+      const options = {
+        title: 'Status has been updated',
+        message: '',
+        cancelText: 'CANCEL',
+        confirmText: 'OK',
+        add: true,
+        confirm: false,
+      };
+      this._confirmModelService.open(options);
+      this._confirmModelService.confirmed().subscribe(confirmed => {
+        this._router.navigate(['ceo']);
+      })
+    });
   }
+
   ReAssignAppeal() {
-    this.loading = true,
-      this.userServices.ReAssignAppeal(this.complainData.id).subscribe(
-        res => {
-          console.log("ReAssign ppeal result", res)
-          const options = {
-            title: 'Status has been updated',
-            message: '',
-            cancelText: 'CANCEL',
-            confirmText: 'OK',
-            add: true,
-            confirm: false,
-          };
-          this._confirmModelService.open(options);
-          this._confirmModelService.confirmed().subscribe(confirmed => {
-            this._router.navigate(['ceo']);
-          })
-        }
-      )
+    this.loading = true;
+    this.userServices.ReAssignAppeal(this.complainData.id).subscribe(res => {
+      console.log("ReAssign ppeal result", res)
+      const options = {
+        title: 'Status has been updated',
+        message: '',
+        cancelText: 'CANCEL',
+        confirmText: 'OK',
+        add: true,
+        confirm: false,
+      };
+      this._confirmModelService.open(options);
+      this._confirmModelService.confirmed().subscribe(confirmed => {
+        this._router.navigate(['ceo']);
+      })
+    });
   }
 }
 

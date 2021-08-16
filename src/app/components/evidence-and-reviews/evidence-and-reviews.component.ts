@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class EvidenceAndReviewsComponent implements OnInit {
   results: any;
-  complain: any;
+  complainToedit: any;
   logggedInUserData: any;
   addreview: any;
 
@@ -23,7 +23,7 @@ export class EvidenceAndReviewsComponent implements OnInit {
     private _userServices: UserService,
     private _router: Router,
   ) {
-    this.complain = JSON.parse(localStorage.getItem('complainToEdit'));
+    this.complainToedit = JSON.parse(localStorage.getItem('complainToEdit'));
     this.logggedInUserData = JSON.parse(localStorage.getItem("user"));
   }
 

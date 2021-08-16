@@ -9,23 +9,27 @@ import { Router } from "@angular/router";
   providers: [ConfirmModelService]
 })
 export class GrcActionsComponent implements OnInit {
-  complain: any;
+
+  complainToedit: any;
   loading: Boolean;
   coments: any;
   myDate = new Date().toISOString();
   logggedInUserData: any;
   addreview: any;
+
   constructor(
     private userservices: UserService,
     private _confirmModelService: ConfirmModelService,
     private _router: Router,
   ) {
-    this.complain = JSON.parse(localStorage.getItem('complainToEdit'));
+    this.complainToedit = JSON.parse(localStorage.getItem('complainToEdit'));
     this.logggedInUserData = JSON.parse(localStorage.getItem('user'));
   }
 
   ngOnInit(): void {
+    console.log("GRC COMPLAIN TO EDIT:--", this.complainToedit);
   }
+
   satisfiedGrc() {
 
     if (!this.coments) {
@@ -40,11 +44,11 @@ export class GrcActionsComponent implements OnInit {
       "satisfied": true,
     }
 
-    this.userservices.addreview(this.complain.id, postBody).subscribe((result: any) => {
+    this.userservices.addreview(this.complainToedit.id, postBody).subscribe((result: any) => {
       console.log("addreview", result);
       this.addreview = result;
     });
-    this.userservices.markInternaStatus(this.complain.id).subscribe((result: any) => {
+    this.userservices.markInternaStatus(this.complainToedit.id).subscribe((result: any) => {
       console.log("internal status", result);
       const options = {
         title: 'Successfully  added!',
@@ -58,8 +62,7 @@ export class GrcActionsComponent implements OnInit {
       this._confirmModelService.confirmed().subscribe(confirmed => {
         this._router.navigate(['grc']);
       })
-    }
-    );
+    });
   }
 
   NotsatisfiedGrc() {
@@ -76,11 +79,11 @@ export class GrcActionsComponent implements OnInit {
       "satisfied": false,
     }
 
-    this.userservices.addreview(this.complain.id, postBody).subscribe((result: any) => {
+    this.userservices.addreview(this.complainToedit.id, postBody).subscribe((result: any) => {
       console.log("addreview", result);
       this.addreview = result;
     });
-    this.userservices.markInternaStatus(this.complain.id).subscribe((result: any) => {
+    this.userservices.markInternaStatus(this.complainToedit.id).subscribe((result: any) => {
       console.log("internal status", result);
       const options = {
         title: 'Successfully  added!',
@@ -94,7 +97,6 @@ export class GrcActionsComponent implements OnInit {
       this._confirmModelService.confirmed().subscribe(confirmed => {
         this._router.navigate(['grc']);
       })
-    }
-    );
+    });
   }
 }

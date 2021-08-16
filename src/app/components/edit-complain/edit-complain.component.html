@@ -12,9 +12,10 @@
 
     <mat-card class="m-20">
       <mat-card-content>
+
         <div class="row mb-3">
           <div class="general-info col-md-4">
-            <span id="title">Complaint Name</span>
+            <span id="title">Submitted By</span>
             <span id="value">
               {{complainToedit.complainantName || '&nbsp;'}}
             </span>
@@ -32,6 +33,30 @@
             </span>
           </div>
         </div>
+
+
+        <div class="row mb-3">
+          <div class="general-info col-md-4">
+            <span id="title">Location</span>
+            <span id="value">
+              {{complainToedit.complaintLocation || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="general-info col-md-4">
+            <span id="title">Sub Location</span>
+            <span id="value">
+              {{complainToedit.complaintSubLocation || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="general-info col-md-4">
+            <span id="title">Vendor</span>
+            <span id="value">
+              {{complainToedit.vendor || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+
+
         <div class="row mb-3">
           <div class="general-info col-md-4">
             <span id="title">Agasinst Person</span>
@@ -52,14 +77,44 @@
             </span>
           </div>
         </div>
+
+
         <div class="row mb-3">
-          <div class="general-info col-md-6">
+          <div class="general-info col-md-4">
+            <span id="title">Gender</span>
+            <span id="value">
+              {{complainToedit.gender || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="general-info col-md-4">
+            <span id="title">Sequence #</span>
+            <span id="value">
+              {{complainToedit.seqNo || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="general-info col-md-4">
+            <span id="title">Priority</span>
+            <span id="value">
+              {{complainToedit.priority || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+
+
+        <div class="row mb-3">
+          <div class="general-info col-md-4">
             <span id="title">CNIC</span>
             <span id="value">
               {{complainToedit.cnic || '&nbsp;'}}
             </span>
           </div>
-          <div class="general-info col-md-6">
+          <div class="general-info col-md-4">
+            <span id="title">Status</span>
+            <span id="value">
+              {{complainToedit.status || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="general-info col-md-4">
             <span id="title">Internal Status</span>
             <span id="value">
               {{complainToedit.internalStatus || '&nbsp;'}}
@@ -67,74 +122,123 @@
           </div>
         </div>
 
-        <div>
-          <h6 class="mb-3 mt-3"><strong>Assigneed User(s)</strong> </h6>
-          <div *ngFor="let asiignee of complainToedit.assignees" class="mb-3 row">
-            <div class="d-flex flex-fill general-info col-md-3">
-              <span id="title">Name</span>
-              <span id="value">
-                {{asiignee.assignedPersonName || '&nbsp;'}}
-              </span>
-            </div>
-            <div class="d-flex flex-fill general-info col-md-3">
-              <span id="title">Internal Status</span>
-              <span id="value">
-                {{(asiignee.assignedTimestamp | date: "dd/MM/yyyy") || '&nbsp;'}}
-              </span>
-            </div>
-            <div class="d-flex flex-fill general-info col-md-3">
-              <span id="title">Email</span>
-              <span id="value">
-                {{asiignee.email || '&nbsp;'}}
-              </span>
-            </div>
-            <div class="d-flex flex-fill general-info col-md-3">
-              <span id="title">Organization</span>
-              <span id="value">
-                {{asiignee.org || '&nbsp;'}}
-              </span>
-            </div>
+
+        <div class="row mb-3">
+          <div class="general-info col-md-4">
+            <span id="title">Against Person</span>
+            <span id="value">
+              {{complainToedit.complaintAgainstPersonOrDepartment || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="general-info col-md-4">
+            <span id="title">Contact #</span>
+            <span id="value">
+              {{complainToedit.contactNo || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="general-info col-md-4">
+            <span id="title">Short Description</span>
+            <span id="value">
+              {{complainToedit.shortDescription || '&nbsp;'}}
+            </span>
           </div>
         </div>
-        <div>
-          <h6><strong>Reviews</strong></h6>
-          <p *ngFor="let review of complainToedit.reviews"> {{review.comments}} &nbsp; <strong>Review By:</strong>
-            &nbsp; {{review.userName}} &nbsp; <strong>Date:</strong> &nbsp; {{review.reviewDateTime | date:
-            "dd/MM/yyyy"}} &nbsp; <strong>Organization:</strong> &nbsp; {{review.org}} </p>
+
+
+        <div class="border-heading mt-4" style="display: block;">
+          Assigneed User(s)
         </div>
-        <div>
+
+        <div class="d-flex align-items-center rag-div table-header">
+          <span>Name</span>
+          <span>Internal Status</span>
+          <span>Email</span>
+          <span>Organization</span>
+        </div>
+
+        <div *ngFor="let asiignee of complainToedit.assignees" class="d-flex align-items-center rag-div table-row">
+          <span>
+            {{asiignee.assignedPersonName || '&nbsp;'}}
+          </span>
+          <span>
+            {{(asiignee.assignedTimestamp | date: "dd/MM/yyyy") || '&nbsp;'}}
+          </span>
+          <span>
+            {{asiignee.email || '&nbsp;'}}
+          </span>
+          <span>
+            {{asiignee.org || '&nbsp;'}}
+          </span>
+        </div>
+
+
+
+        <div class="border-heading mt-4" style="display: block;">
+          Review By User(s)
+        </div>
+
+        <div class="d-flex align-items-center rag-div table-header">
+          <span>Name</span>
+          <span>Date</span>
+          <span>Organization</span>
+          <span>Comments</span>
+        </div>
+
+        <div *ngFor="let review of complainToedit.reviews" class="d-flex align-items-center rag-div table-row">
+          <span>
+            {{review.userName || '&nbsp;'}}
+          </span>
+          <span>
+            {{(review.reviewDateTime | date:"fullDate") || '&nbsp;'}}
+          </span>
+          <span>
+            {{review.org || '&nbsp;'}}
+          </span>
+          <span>
+            {{review.comments || '&nbsp;'}}
+          </span>
+        </div>
+
+
+        <div class="mt-4" style="display: block;">
           <mat-form-field>
-            <input matInput placeholder="Seq.No" type="number" [(ngModel)]="sequenceNumber">
+            <input matInput placeholder="Seq.No" type="number" [(ngModel)]="complainToedit.seqNo">
           </mat-form-field>
         </div>
-        <mat-form-field>
-          <mat-label>Priority</mat-label>
-          <mat-select [(ngModel)]="priority">
-            <mat-option value="High">High</mat-option>
-            <mat-option value="Medium">Medium</mat-option>
-            <mat-option value="Low">Low</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Complaint Status</mat-label>
-          <mat-select [(ngModel)]="status">
-            <mat-option value="Pending">Pending</mat-option>
-            <mat-option value="Initiated">Initiated</mat-option>
-            <mat-option value="Closed">Closed</mat-option>
-          </mat-select>
-        </mat-form-field>
+
+        <div class="mt-3" style="display: block;">
+          <mat-form-field>
+            <mat-label>Priority</mat-label>
+            <mat-select [(ngModel)]="complainToedit.priority">
+              <mat-option value="High">High</mat-option>
+              <mat-option value="Medium">Medium</mat-option>
+              <mat-option value="Low">Low</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="mt-3" style="display: block;">
+          <mat-form-field>
+            <mat-label>Complaint Status</mat-label>
+            <mat-select [(ngModel)]="status">
+              <mat-option value="Pending">Pending</mat-option>
+              <mat-option value="Initiated">Initiated</mat-option>
+              <mat-option value="Closed">Closed</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div style="position: relative;">
+          <button *ngIf="!loading" mat-flat-button color="primary" (click)="SubmitEditComplain()">Acknowledge</button>
+          <!-- <button *ngIf="!loading"
+            [disabled]="complainToedit?.assignees === null || complainToedit?.assignees.length === 0" mat-flat-button
+            color="primary" (click)="SubmitEditComplain()">Acknowledge</button> -->
+
+          <mat-progress-spinner *ngIf="loading" class="spinner p-3" diameter="35" mode="indeterminate">
+          </mat-progress-spinner>
+
+        </div>
       </mat-card-content>
-
-      <div style="position: relative;">
-        <button *ngIf="!loading" mat-flat-button color="primary" (click)="SubmitEditComplain()">Acknowledge</button>
-        <!-- <button *ngIf="!loading"
-          [disabled]="complainToedit?.assignees === null || complainToedit?.assignees.length === 0" mat-flat-button
-          color="primary" (click)="SubmitEditComplain()">Acknowledge</button> -->
-
-        <mat-progress-spinner *ngIf="loading" class="spinner p-3" diameter="35" mode="indeterminate">
-        </mat-progress-spinner>
-
-      </div>
     </mat-card>
 
   </div>

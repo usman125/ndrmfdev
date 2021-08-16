@@ -14,68 +14,144 @@
     <p>Status: &nbsp; {{complain.status}}</p>
     <p>Description: &nbsp; {{complain.shortDescription}}</p>
     <p>Vendor: &nbsp; {{complain.vendor}}</p> -->
-    <div style="padding: 1rem;">
-      <div class="mb-3 row">
-        <div class="d-flex flex-fill general-info col-md-3">
-          <span id="title">Complainant Location</span>
-          <span id="value">
-            {{complain.islamabad || '&nbsp;'}}
-          </span>
-        </div>
-        <div class="d-flex flex-fill general-info col-md-3">
-          <span id="title">Complainant Sublocation</span>
-          <span id="value">
-            {{complain.complaintSubLocation || '&nbsp;'}}
-          </span>
-        </div>
-        <div class="d-flex flex-fill general-info col-md-3">
-          <span id="title">Contact Number</span>
-          <span id="value">
-            {{complain.contactNo || '&nbsp;'}}
-          </span>
-        </div>
-        <div class="d-flex flex-fill general-info col-md-3">
-          <span id="title">Internal Status</span>
-          <span id="value">
-            {{complain.internalStatus || '&nbsp;'}}
-          </span>
-        </div>
-      </div>
-      <div class="mb-3 row">
-        <div class="d-flex flex-fill general-info col-md-3">
-          <span id="title">Organization Name</span>
-          <span id="value">
-            {{complain.organizationName || '&nbsp;'}}
-          </span>
-        </div>
-        <div class="d-flex flex-fill general-info col-md-3">
-          <span id="title">Status</span>
-          <span id="value">
-            {{complain.status || '&nbsp;'}}
-          </span>
-        </div>
-        <div class="d-flex flex-fill general-info col-md-3">
-          <span id="title">Vendor</span>
-          <span id="value">
-            {{complain.vendor || '&nbsp;'}}
-          </span>
-        </div>
-        <div class="d-flex flex-fill general-info col-md-3">
-          <span id="title">Description</span>
-          <span id="value">
-            {{complain.shortDescription || '&nbsp;'}}
-          </span>
-        </div>
-      </div>
-    </div>
-    <div style="padding: 1rem;">
-      <div style="position: relative;">
-        <button style="align-content: flex-end; margin-left: 4rem;" (click)="openDialog(complain.id)" mat-flat-button
-          color="primary">Add review</button>
-        <button style="align-content: flex-end; margin-left: 4rem;" (click)="openDialog(complain.id)" mat-flat-button
-          color="secondary">Ask for evidence</button>
-      </div>
 
+    <div class="border-heading">Complain Details</div>
+
+    <div class="row mb-3">
+      <div class="general-info col-md-4">
+        <span id="title">Complaint Name</span>
+        <span id="value">
+          {{complainToedit.complainantName || '&nbsp;'}}
+        </span>
+      </div>
+      <div class="general-info col-md-4">
+        <span id="title">Address</span>
+        <span id="value">
+          {{complainToedit.address || '&nbsp;'}}
+        </span>
+      </div>
+      <div class="general-info col-md-4">
+        <span id="title">Email</span>
+        <span id="value">
+          {{complainToedit.email || '&nbsp;'}}
+        </span>
+      </div>
     </div>
+
+
+    <div class="row mb-3">
+      <div class="general-info col-md-4">
+        <span id="title">Location</span>
+        <span id="value">
+          {{complainToedit.complaintLocation || '&nbsp;'}}
+        </span>
+      </div>
+      <div class="general-info col-md-4">
+        <span id="title">Sub Location</span>
+        <span id="value">
+          {{complainToedit.complaintSubLocation || '&nbsp;'}}
+        </span>
+      </div>
+      <div class="general-info col-md-4">
+        <span id="title">Vendor</span>
+        <span id="value">
+          {{complainToedit.vendor || '&nbsp;'}}
+        </span>
+      </div>
+    </div>
+
+
+    <div class="row mb-3">
+      <div class="general-info col-md-4">
+        <span id="title">Agasinst Person</span>
+        <span id="value">
+          {{complainToedit.complaintAgainstPersonOrDepartment || '&nbsp;'}}
+        </span>
+      </div>
+      <div class="general-info col-md-4">
+        <span id="title">Category</span>
+        <span id="value">
+          {{complainToedit.complaintCategory || '&nbsp;'}}
+        </span>
+      </div>
+      <div class="general-info col-md-4">
+        <span id="title">Consultant Name</span>
+        <span id="value">
+          {{complainToedit.consultantName || '&nbsp;'}}
+        </span>
+      </div>
+    </div>
+
+
+    <div class="row mb-3">
+      <div class="general-info col-md-4">
+        <span id="title">Gender</span>
+        <span id="value">
+          {{complainToedit.gender || '&nbsp;'}}
+        </span>
+      </div>
+      <div class="general-info col-md-4">
+        <span id="title">Sequence #</span>
+        <span id="value">
+          {{complainToedit.seqNo || '&nbsp;'}}
+        </span>
+      </div>
+      <div class="general-info col-md-4">
+        <span id="title">Priority</span>
+        <span id="value">
+          {{complainToedit.priority || '&nbsp;'}}
+        </span>
+      </div>
+    </div>
+
+
+    <div class="row mb-3">
+      <div class="general-info col-md-4">
+        <span id="title">CNIC</span>
+        <span id="value">
+          {{complainToedit.cnic || '&nbsp;'}}
+        </span>
+      </div>
+      <div class="general-info col-md-4">
+        <span id="title">Status</span>
+        <span id="value">
+          {{complainToedit.status || '&nbsp;'}}
+        </span>
+      </div>
+      <div class="general-info col-md-4">
+        <span id="title">Internal Status</span>
+        <span id="value">
+          {{complainToedit.internalStatus || '&nbsp;'}}
+        </span>
+      </div>
+    </div>
+
+
+    <div class="row mb-3">
+      <div class="general-info col-md-4">
+        <span id="title">Against Person</span>
+        <span id="value">
+          {{complainToedit.complaintAgainstPersonOrDepartment || '&nbsp;'}}
+        </span>
+      </div>
+      <div class="general-info col-md-4">
+        <span id="title">Contact #</span>
+        <span id="value">
+          {{complainToedit.contactNo || '&nbsp;'}}
+        </span>
+      </div>
+      <div class="general-info col-md-4">
+        <span id="title">Short Description</span>
+        <span id="value">
+          {{complainToedit.shortDescription || '&nbsp;'}}
+        </span>
+      </div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-end">
+      <button (click)="openDialog(complainToedit.id)" mat-flat-button color="primary">Add review</button>
+      <button class="ml-3" (click)="openDialog(complainToedit.id)" mat-flat-button color="accent">Ask for evidence</button>
+    </div>
+
   </mat-card-content>
 </mat-card>

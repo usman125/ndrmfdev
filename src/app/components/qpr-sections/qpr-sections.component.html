@@ -304,7 +304,8 @@
                   </span>
                   <button *ngIf="loggedUser?.role === 'process owner' && loggedUser?.processNames.indexOf('QPR') > -1"
                     (click)="assignTasks(item.id, 'single')" mat-button
-                    [disabled]="item.reviewStatus === 'Pending' || allLoading || singleLoading || item.data === null" color="primary">
+                    [disabled]="item.reviewStatus === 'Pending' || allLoading || singleLoading || item.data === null"
+                    color="primary">
                     <mat-icon>{{(item.reviewStatus === null) ?
                       'assignment' : 'redo'}}</mat-icon>
                     {{(item.reviewStatus === null) ?

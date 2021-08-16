@@ -27,7 +27,7 @@ export class EditComplainComponent implements OnInit {
 
     this.complainToedit = JSON.parse(localStorage.getItem('complainToEdit'));
     this.logggedInUserData = JSON.parse(localStorage.getItem('user'));
-    console.log("status", this.status)
+    console.log("status", this.status, this.complainToedit)
     if (this.status == undefined) {
       this.status = "Initiated"
     }

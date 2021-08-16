@@ -97,7 +97,7 @@ const routes: Routes = [
     path: 'emailtoConcernPerson/:userId',
     loadChildren: () => import('./modules/email-to-concern-person/email-to-concern-person.module').then(m => m.EmailToConcernPersonModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Admin, Role.Fp] }
   },
   {
     path: 'assignComplains',

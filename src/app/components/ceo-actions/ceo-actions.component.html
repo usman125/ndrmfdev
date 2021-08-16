@@ -19,98 +19,138 @@
 
       <div class="border-heading">Complaint Name</div>
       <div style="padding: 1rem;">
-        <div class="mb-3 row">
-          <div class="d-flex flex-fill general-info col-md-3">
-            <span id="title">Complainant Location</span>
+        
+        <div class="row mb-3">
+          <div class="general-info col-md-4">
+            <span id="title">Submitted By</span>
             <span id="value">
-              {{dataOfComplainID.complainantName || '&nbsp;'}}
+              {{dataOfComplainID.complaintName || '&nbsp;'}}
             </span>
           </div>
-          <div class="d-flex flex-fill general-info col-md-3">
+          <div class="general-info col-md-4">
             <span id="title">Address</span>
             <span id="value">
               {{dataOfComplainID.address || '&nbsp;'}}
             </span>
           </div>
-          <div class="d-flex flex-fill general-info col-md-3">
+          <div class="general-info col-md-4">
             <span id="title">Email</span>
             <span id="value">
               {{dataOfComplainID.email || '&nbsp;'}}
             </span>
           </div>
-          <div class="d-flex flex-fill general-info col-md-3">
-            <span id="title">CNIC</span>
-            <span id="value">
-              {{dataOfComplainID.cnic || '&nbsp;'}}
-            </span>
-          </div>
         </div>
-        <div class="mb-3 row">
-          <div class="d-flex flex-fill general-info col-md-3">
-            <span id="title">Against Person</span>
-            <span id="value">
-              {{dataOfComplainID.complaintAgainstPersonOrDepartment || '&nbsp;'}}
-            </span>
-          </div>
-          <div class="d-flex flex-fill general-info col-md-3">
-            <span id="title">Category</span>
-            <span id="value">
-              {{dataOfComplainID.complaintCategory || '&nbsp;'}}
-            </span>
-          </div>
-          <div class="d-flex flex-fill general-info col-md-3">
+        
+        
+        <div class="row mb-3">
+          <div class="general-info col-md-4">
             <span id="title">Location</span>
             <span id="value">
               {{dataOfComplainID.complaintLocation || '&nbsp;'}}
             </span>
           </div>
-          <div class="d-flex flex-fill general-info col-md-3">
-            <span id="title">Sub-Location</span>
+          <div class="general-info col-md-4">
+            <span id="title">Sub Location</span>
             <span id="value">
               {{dataOfComplainID.complaintSubLocation || '&nbsp;'}}
             </span>
           </div>
+          <div class="general-info col-md-4">
+            <span id="title">Vendor</span>
+            <span id="value">
+              {{dataOfComplainID.vendor || '&nbsp;'}}
+            </span>
+          </div>
         </div>
-        <div class="mb-3 row">
-          <div class="d-flex flex-fill general-info col-md-3">
-            <span id="title">Internal Status</span>
+        
+        
+        <div class="row mb-3">
+          <div class="general-info col-md-4">
+            <span id="title">Agasinst Person</span>
             <span id="value">
-              {{dataOfComplainID.internalStatus || '&nbsp;'}}
+              {{dataOfComplainID.complaintAgainstPersonOrDepartment || '&nbsp;'}}
             </span>
           </div>
-          <div class="d-flex flex-fill general-info col-md-3">
-            <span id="title">Sequence Number</span>
+          <div class="general-info col-md-4">
+            <span id="title">Category</span>
             <span id="value">
-              {{dataOfComplainID.seqNo || '&nbsp;'}}
+              {{dataOfComplainID.complaintCategory || '&nbsp;'}}
             </span>
           </div>
-          <div class="d-flex flex-fill general-info col-md-3">
-            <span id="title">Status</span>
-            <span id="value">
-              {{dataOfComplainID.status || '&nbsp;'}}
-            </span>
-          </div>
-          <div class="d-flex flex-fill general-info col-md-3">
+          <div class="general-info col-md-4">
             <span id="title">Consultant Name</span>
             <span id="value">
               {{dataOfComplainID.consultantName || '&nbsp;'}}
             </span>
           </div>
         </div>
-        <div class="mb-3 row">
-          <div class="d-flex flex-fill general-info col-md-4">
-            <span id="title">Factor Causing Problem</span>
+        
+        
+        <div class="row mb-3">
+          <div class="general-info col-md-4">
+            <span id="title">Gender</span>
             <span id="value">
-              {{dataOfComplainID.shortDescFectorCausingProblem || '&nbsp;'}}
+              {{dataOfComplainID.gender || '&nbsp;'}}
             </span>
           </div>
-          <div class="d-flex flex-fill general-info col-md-8">
+          <div class="general-info col-md-4">
+            <span id="title">Sequence #</span>
+            <span id="value">
+              {{dataOfComplainID.seqNo || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="general-info col-md-4">
+            <span id="title">Priority</span>
+            <span id="value">
+              {{dataOfComplainID.priority || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        
+        
+        <div class="row mb-3">
+          <div class="general-info col-md-4">
+            <span id="title">CNIC</span>
+            <span id="value">
+              {{dataOfComplainID.cnic || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="general-info col-md-4">
+            <span id="title">Status</span>
+            <span id="value">
+              {{dataOfComplainID.status || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="general-info col-md-4">
+            <span id="title">Internal Status</span>
+            <span id="value">
+              {{dataOfComplainID.internalStatus || '&nbsp;'}}
+            </span>
+          </div>
+        </div>
+        
+        
+        <div class="row mb-3">
+          <div class="general-info col-md-4">
+            <span id="title">Against Person</span>
+            <span id="value">
+              {{dataOfComplainID.complaintAgainstPersonOrDepartment || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="general-info col-md-4">
+            <span id="title">Contact #</span>
+            <span id="value">
+              {{dataOfComplainID.contactNo || '&nbsp;'}}
+            </span>
+          </div>
+          <div class="general-info col-md-4">
             <span id="title">Short Description</span>
             <span id="value">
               {{dataOfComplainID.shortDescription || '&nbsp;'}}
             </span>
           </div>
         </div>
+
       </div>
 
 
