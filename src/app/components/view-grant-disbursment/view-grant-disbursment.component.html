@@ -2204,10 +2204,11 @@
               <div class="mb-3" *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'">
                 <div class="d-flex justify-content-between mt-2 mb-2">
                   <p id="answer" class="p-2">SOEs for NDRMF</p>
-                  <!-- <button mat-mini-fab color="accent" (click)="addNdrmfSoes();">
-                                    <mat-icon>add</mat-icon>
-                                  </button> -->
+                  <button mat-mini-fab color="accent" (click)="exportexcelNdrmf()">
+                    <mat-icon>cloud_download</mat-icon>
+                  </button>
                 </div>
+
 
                 <!-- TABLE HEADER -->
                 <div class="table-header rag-div d-flex align-items-center">
@@ -2221,77 +2222,76 @@
                 </div>
 
                 <!-- TABLE ROWS -->
-                <div>
-                  <div *ngFor="let item of liquidation.ndrmfSoes; let i = index;">
-                    <div class="d-flex rag-div justify-content-between align-items-center table-row">
-                      <span class="">
-                        <mat-form-field appearance="outline">
-                          <mat-label>Select Activity</mat-label>
-                          <mat-select [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
+                <div *ngFor="let item of liquidation.ndrmfSoes; let i = index;">
+                  <div class="d-flex rag-div justify-content-between align-items-center table-row">
+                    <span class="">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Select Activity</mat-label>
+                        <mat-select [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
                   liquidation?.status === 'Under Review')" matNativeControl [(ngModel)]="item.activityId">
-                            <mat-option *ngFor="let obj of liquidation?.data" [value]="obj._id">{{obj.title
-                              | titlecase}}</mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                      </span>
-                      <span class="">
-                        <mat-form-field appearance="outline">
-                          <mat-label>Vendor Name</mat-label>
-                          <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
+                          <mat-option *ngFor="let obj of liquidation?.data" [value]="obj._id">{{obj.title
+                            | titlecase}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </span>
+                    <span class="">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Vendor Name</mat-label>
+                        <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
                   liquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.vendorName"
-                            placeholder="enter here..." matInput>
-                        </mat-form-field>
-                      </span>
-                      <span class="">
-                        <mat-form-field appearance="outline">
-                          <mat-label>Total Bill / Invoice amount</mat-label>
-                          <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
+                          placeholder="enter here..." matInput>
+                      </mat-form-field>
+                    </span>
+                    <span class="">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Total Bill / Invoice amount</mat-label>
+                        <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
                   liquidation?.status === 'Under Review')" type="number" [(ngModel)]="item.invoiceAmount"
-                            placeholder="enter here..." matInput>
-                        </mat-form-field>
-                      </span>
-                      <span class="">
-                        <mat-form-field appearance="outline"
-                          *ngIf="loggedUser.role === 'fip' || (liquidation?.status === 'Re Assigned' ||
+                          placeholder="enter here..." matInput>
+                      </mat-form-field>
+                    </span>
+                    <span class="">
+                      <mat-form-field appearance="outline"
+                        *ngIf="loggedUser.role === 'fip' || (liquidation?.status === 'Re Assigned' ||
                                                           liquidation?.status === 'Not Initiated') || item.dateOfPayment === null">
-                          <mat-label>Date of Payment</mat-label>
-                          <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
+                        <mat-label>Date of Payment</mat-label>
+                        <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
                                       liquidation?.status === 'Under Review')" matInput [matDatepicker]="picker"
-                            [(ngModel)]="item.dateOfPayment">
-                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                          <mat-datepicker #picker></mat-datepicker>
-                        </mat-form-field>
-                        <small id="date-field" *ngIf="loggedUser.role !== 'fip' && item.dateOfPayment !== null">
-                          {{item.dateOfPayment |
-                          date:'shortDate'}}</small>
-                      </span>
-                      <span class="">
-                        <mat-form-field appearance="outline">
-                          <mat-label>Paid Amount</mat-label>
-                          <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
+                          [(ngModel)]="item.dateOfPayment">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                      <small id="date-field" *ngIf="loggedUser.role !== 'fip' && item.dateOfPayment !== null">
+                        {{item.dateOfPayment |
+                        date:'shortDate'}}</small>
+                    </span>
+                    <span class="">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Paid Amount</mat-label>
+                        <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
                   liquidation?.status === 'Under Review')" type="number" [(ngModel)]="item.paidAmount"
-                            placeholder="enter here..." matInput>
-                        </mat-form-field>
-                      </span>
-                      <span class="">
-                        <mat-form-field appearance="outline">
-                          <mat-label>Cheque #</mat-label>
-                          <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
+                          placeholder="enter here..." matInput>
+                      </mat-form-field>
+                    </span>
+                    <span class="">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Cheque #</mat-label>
+                        <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
                   liquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.chequeNumber"
-                            placeholder="enter here..." matInput>
-                        </mat-form-field>
-                      </span>
-                      <span class="">
-                        <mat-form-field appearance="outline">
-                          <mat-label>Remarks</mat-label>
-                          <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
+                          placeholder="enter here..." matInput>
+                      </mat-form-field>
+                    </span>
+                    <span class="">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Remarks</mat-label>
+                        <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
                   liquidation?.status === 'Under Review')" type="text" [(ngModel)]="item.remarks"
-                            placeholder="enter here..." matInput>
-                        </mat-form-field>
-                      </span>
-                    </div>
+                          placeholder="enter here..." matInput>
+                      </mat-form-field>
+                    </span>
                   </div>
                 </div>
+
 
                 <!-- TABLE TOTALS ROW -->
                 <div class="d-flex align-items-center justify-content-between rag-div table-header">
@@ -2324,6 +2324,47 @@
                     (click)="addNdrmfSoes(liquidation);">
                     <mat-icon>add</mat-icon> Add SOE
                   </button>
+                </div>
+
+                <div id="excel-table-ndrmf" style="display: none;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Categories</th>
+                        <th>Vendor Name</th>
+                        <th>Invoice amount</th>
+                        <th>Date of Payment</th>
+                        <th>Paid Amount</th>
+                        <th>Cheque #</th>
+                        <th>Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of liquidation.ndrmfSoes; let i = index;">
+                        <td>
+                          {{getActivityName(item.activityId)}}
+                        </td>
+                        <td>
+                          {{item.vendorName}}
+                        </td>
+                        <td>
+                          {{item.invoiceAmount}}
+                        </td>
+                        <td>
+                          {{item.dateOfPayment}}
+                        </td>
+                        <td>
+                          {{item.paidAmount}}
+                        </td>
+                        <td>
+                          {{item.chequeNumber}}
+                        </td>
+                        <td>
+                          {{item.remarks}}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
 
               </div>
@@ -2690,9 +2731,9 @@
                 <div class="mb-3">
                   <div class="d-flex justify-content-between mt-2 mb-2">
                     <p id="answer" class="p-2">SOEs for FIP</p>
-                    <!-- <button mat-mini-fab color="accent" (click)="addFipSoes();">
-                  <mat-icon>add</mat-icon>
-                </button> -->
+                    <button mat-mini-fab color="accent" (click)="exportexcelFip();">
+                      <mat-icon>add</mat-icon>
+                    </button>
                   </div>
 
                   <!-- TABLE HEADER -->
@@ -2814,6 +2855,48 @@
                   </div>
 
                 </div>
+
+                <div id="excel-table-fip" style="display: none;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Categories</th>
+                        <th>Vendor Name</th>
+                        <th>Invoice amount</th>
+                        <th>Date of Payment</th>
+                        <th>Paid Amount</th>
+                        <th>Cheque #</th>
+                        <th>Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of liquidation.ndrmfSoes; let i = index;">
+                        <td>
+                          {{getActivityName(item.activityId)}}
+                        </td>
+                        <td>
+                          {{item.vendorName}}
+                        </td>
+                        <td>
+                          {{item.invoiceAmount}}
+                        </td>
+                        <td>
+                          {{item.dateOfPayment}}
+                        </td>
+                        <td>
+                          {{item.paidAmount}}
+                        </td>
+                        <td>
+                          {{item.chequeNumber}}
+                        </td>
+                        <td>
+                          {{item.remarks}}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
               </ng-container>
 
 

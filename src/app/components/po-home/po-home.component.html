@@ -320,13 +320,6 @@
   <div *ngIf="group.value === 'kpi-projects'">
     <mat-card class="m-20">
       <mat-card-content>
-        <!-- <mat-tab-group (selectedTabChange)="onTabChanged($event);">
-          <mat-tab [id]="tab.id" *ngFor="let tab of projectTabs; let index = index" [label]="tab.name">
-            <div *ngIf="selectedProject !== null" class="mt-4">
-              <app-result-framework-report></app-result-framework-report>
-            </div>
-          </mat-tab>
-        </mat-tab-group> -->
         <app-kpi-project-stats></app-kpi-project-stats>
       </mat-card-content>
     </mat-card>

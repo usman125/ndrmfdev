@@ -28,7 +28,7 @@ export class KpiProjectStatsComponent implements OnInit {
   public indicatorChartOptions: ChartOptions = {
     responsive: false,
     maintainAspectRatio: false,
-    scales: { xAxes: [{ stacked: true }], yAxes: [{ stacked: true }] },
+    scales: { xAxes: [{ stacked: false }], yAxes: [{ stacked: false }] },
     plugins: {
       datalabels: {
         anchor: 'start',

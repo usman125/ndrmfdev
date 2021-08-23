@@ -18,6 +18,7 @@ import * as _ from 'lodash';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FileUploadService } from 'src/app/services/file-upload-service.service';
+import * as XLSX from 'xlsx';
 
 
 /**
@@ -1944,4 +1945,47 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     )
   }
 
+
+  exportexcelNdrmf(): void {
+    /*name of the excel-file which will be downloaded. */
+    let fileName = 'SoesNdrmf.xlsx';
+    /* table id is passed over here */
+    let element = document.getElementById('excel-table-ndrmf');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, fileName);
+
+  }
+
+  exportexcelFip(): void {
+    /*name of the excel-file which will be downloaded. */
+    let fileName = 'SoesFip.xlsx';
+    /* table id is passed over here */
+    let element = document.getElementById('excel-table-fip');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, fileName);
+
+  }
+
+  getActivityName(activityId) {
+    for (let i = 0; i < this.projectActualCosts.length; i++) {
+      let x = this.projectActualCosts[i];
+      if (x._id === activityId)
+        return x.title;
+    }
+  }
+
+
 }
+

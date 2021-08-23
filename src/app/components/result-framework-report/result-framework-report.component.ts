@@ -23,7 +23,7 @@ export class ResultFrameworkReportComponent implements OnInit, OnDestroy {
   public barChartOptions: ChartOptions = {
     responsive: true,
     // We use these empty structures as placeholders for dynamic theming.
-    scales: { xAxes: [{ stacked: true }], yAxes: [{ stacked: true }] },
+    scales: { xAxes: [{ stacked: false }], yAxes: [{ stacked: false }] },
     // scales: { yAxes: [{ stacked: true }] },
     plugins: {
       datalabels: {
