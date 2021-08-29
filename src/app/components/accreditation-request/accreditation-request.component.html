@@ -336,10 +336,11 @@
                   <mat-label>Comments for fip</mat-label>
                   <textarea matInput [(ngModel)]="commentsForFip" placeholder="write your comments..."></textarea>
                 </mat-form-field>
-                <button (click)="intimateFip()"
+                <button *ngIf="!intimateLoading" (click)="intimateFip()"
                   [disabled]="!commentsForFip || (sectionStats?.unassignCount !== userReviewRequests.length)"
                   color="accent" mat-raised-button>INTIMATE
                   FIP</button>
+                <mat-progress-spinner *ngIf="intimateLoading" mode="indeterminate" diameter="25"></mat-progress-spinner>
               </div>
             </div>
           </div>

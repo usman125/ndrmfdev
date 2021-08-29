@@ -134,6 +134,8 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
   addReportUsersForm: FormGroup;
   reportReviewUsers: any = [];
 
+  intimateLoading: boolean = false;
+
 
   constructor(
     // private _accreditationRequestStore: AccreditationRequestStore,
@@ -413,7 +415,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
               review: c.review ? {
                 comments: c.review.comments,
                 status: c.review.status,
-                rating: parseFloat(c.review.rating)/2,
+                rating: parseFloat(c.review.rating) / 2,
                 controlWiseComments: JSON.parse(c.review.controlWiseComments),
               } : {
                 comments: null,
@@ -525,7 +527,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
                 // if (c.formReviewObjects) {
                 for (let j = 0; j < this.formReviewObjects.length; j++) {
                   if (this.formReviewObjects[j].key === JSON.parse(c.review.controlWiseComments)[i].key) {
-                    this.formReviewObjects[j].rating = parseFloat(JSON.parse(c.review.controlWiseComments)[i].rating)/2;
+                    this.formReviewObjects[j].rating = parseFloat(JSON.parse(c.review.controlWiseComments)[i].rating) / 2;
                     this.formReviewObjects[j].status = JSON.parse(c.review.controlWiseComments)[i].status;
                     this.formReviewObjects[j].comments = JSON.parse(c.review.controlWiseComments)[i].comments;
                   }
@@ -545,7 +547,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
             review: c.review !== null ? {
               comments: c.review.comments,
               status: c.review.status,
-              rating: c.review.rating/2,
+              rating: c.review.rating / 2,
               controlWiseComments: c.review.controlWiseComments !== null ? JSON.parse(c.review.controlWiseComments) : c.review.controlWiseComments,
             } : {
               comments: null,
@@ -864,6 +866,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
           startDate: result.startDate,
           endDate: result.endDate,
         }
+        this.intimateLoading = true;
         // console.log("RESULT:--", result, this.allSectionSelections, this.selectedRequest, values);
         this._accreditationRequestService.reassignFipSection(this.selectedRequestId, values).subscribe(
           result => {
@@ -882,10 +885,26 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
             };
 
             this._confirmModelService.open(options);
-            this.commentsForFip = null;
+            this._confirmModelService.confirmed().subscribe(confirmed => {
+              this.commentsForFip = null;
+              this.intimateLoading = false;
+            })
           },
           error => {
             console.log("RESULT FROM REASSIGN:--", error);
+            const options = {
+              title: error.error.message,
+              message: 'Contact Support.',
+              cancelText: 'CANCEL',
+              confirmText: 'OK',
+              add: true,
+              confirm: false,
+            };
+
+            this._confirmModelService.open(options);
+            this._confirmModelService.confirmed().subscribe(confirmed => {
+              this.intimateLoading = false;
+            })
           }
         );
       }

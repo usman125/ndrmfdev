@@ -205,7 +205,7 @@
           </mat-expansion-panel> -->
 
         </mat-accordion>
-        <mat-accordion multi="true">
+        <mat-accordion multi="true" *ngIf="accredited === true">
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
@@ -220,7 +220,7 @@
           </mat-expansion-panel>
         </mat-accordion>
 
-        <mat-accordion multi="true">
+        <mat-accordion multi="true" *ngIf="accredited === true">
 
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
@@ -236,7 +236,7 @@
           </mat-expansion-panel>
         </mat-accordion>
 
-        <mat-accordion multi="true">
+        <mat-accordion multi="true" *ngIf="accredited === true">
           <mat-expansion-panel [expanded]="true">
             <mat-expansion-panel-header>
               <mat-panel-title>
