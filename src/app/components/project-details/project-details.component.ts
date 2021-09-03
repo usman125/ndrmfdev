@@ -963,7 +963,10 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
 
     this._confirmModelService.confirmed().subscribe(confirmed => {
       if (confirmed) {
-        this._projectService.appriveGia(this.selectedProjectId, confirmed.endDate.toISOString()).subscribe(
+        this._projectService.appriveGia(
+          this.selectedProjectId,
+          confirmed.endDate.toISOString()
+        ).subscribe(
           result => {
             this.uploadTacMoms('GIA', 'yesgia');
             this._primaryAppraisalFormsStore.addGiaCheckList(confirmed.endDate);
