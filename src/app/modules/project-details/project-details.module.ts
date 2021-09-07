@@ -29,6 +29,7 @@ import { ResultFrameworkReportModule } from '../result-framework-report/result-f
 import { NgxPrintModule } from 'ngx-print';
 import { ProjectClosureRequestModule } from '../project-closure-request/project-closure-request.module';
 import { TpvModule } from '../tpv/tpv.module';
+import { ProposalActivityVerificationsModule } from '../proposal-activity-verifications/proposal-activity-verifications.module';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { TpvModule } from '../tpv/tpv.module';
     ProjectDetailsRoutingModule,
     ProjectPlanModule,
     ProjectClosureRequestModule,
+    ProposalActivityVerificationsModule,
     TpvModule,
     // ProjectWorkPlanModule,
     // PipModule,

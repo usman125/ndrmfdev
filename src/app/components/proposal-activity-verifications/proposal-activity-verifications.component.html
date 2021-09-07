@@ -1,0 +1,34 @@
+<div class="d-flex align-items-center rag-div table-header">
+  <span>#</span>
+  <span>Activity</span>
+  <span>Quarter</span>
+  <span>
+    General Comments
+  </span>
+  <span>
+    Date
+  </span>
+  <span>
+    View Attachments
+  </span>
+</div>
+<div class="d-flex align-items-center rag-div table-row" *ngFor="let item of allVerifications; let i = index;">
+  <span>{{i+1}}</span>
+  <span>
+    {{getActivityName(item.activity)}}
+  </span>
+  <span>
+    {{item.quarter}}
+  </span>
+  <span>
+    {{item.generalComments}}
+  </span>
+  <span>
+    {{item.created_at | date:'shortDate'}}
+  </span>
+  <span>
+    <button mat-icon-button color="primary">
+      VIEW
+    </button>
+  </span>
+</div>

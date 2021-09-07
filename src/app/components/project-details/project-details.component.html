@@ -396,6 +396,24 @@
         </mat-card-actions>
       </mat-card>
 
+
+      <!-- ACTIVITY VERIFICATION TASKS -->
+      <mat-toolbar class="mat-elevation-z8" style="padding: 15px 0px;" color="primary">
+        <mat-toolbar-row>
+          <span>Activity Verfications for the Project Proposal</span>
+          <div class="example-spacer"></div>
+          <!-- <button class="mt-2" mat-icon-button color="warn" (click)="showPc = !showPc">
+                  <mat-icon class="mr-2">cancel</mat-icon>
+                </button> -->
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-card class="m-20" *ngIf="selectedProject?.pcStatus !== null && showPc">
+        <mat-card-actions>
+          <app-proposal-activity-verifications></app-proposal-activity-verifications>
+        </mat-card-actions>
+      </mat-card>
+
+
       <!-- TPV TASKS -->
       <mat-toolbar class="mat-elevation-z8"
         *ngIf="(selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null) && showTpv"
@@ -414,6 +432,7 @@
           <app-tpv></app-tpv>
         </mat-card-actions>
       </mat-card>
+
 
       <!-- PROJECT CLOSURE TASKS -->
       <mat-toolbar class="mat-elevation-z8" *ngIf="selectedProject?.pcStatus !== null && showPc"
