@@ -88,7 +88,7 @@
             </span>
             <span class="mb-3" style="display: block;font-weight: bold;" *ngIf="item.review.rating !== null">
               SCORED WEITAGE:
-              <span id="comment">{{(item.review.rating) | number:'1.0-4'}}</span>
+              <span id="comment">{{(item.review.rating) | number:'1.0-3'}}</span>
             </span>
             <button *ngIf="item.assigned && selectedSection === item.id || currentUser?.role !== 'sme'"
               mat-raised-button color="primary" (click)="toggleEntryForm(item)">
@@ -367,7 +367,7 @@
             </div>
             <div class="right-block">
               <span class="head">Current Score</span>
-              <span class="comments">{{(userAllScore) || 0 | number:'1.0-4'}}</span>
+              <span class="comments">{{(userAllScore) || 0 | number:'1.0-3'}}</span>
               <!-- <span class="comments">{{(userAllScore/2) || 0 | number:'1.0-4'}}</span> -->
               <!-- <span *ngIf="userAllScore" id="answer" class="comments">{{(userAllScore/5 * 100)}}%</span> -->
             </div>
@@ -1192,7 +1192,7 @@
       <div class="scores row" style="padding: 0px;margin: 0px 0px;">
         <div class="col-md-4 col-xs-4 col-sm-4 d-flex flex-column box" *ngFor="let item of userReviewRequests">
           <span class="name">{{item.name || '&nbsp;'}}</span>
-          <span class="sme">{{item.review.rating || '&nbsp;'}}</span>
+          <span class="sme">{{(item.review.rating | number:'1.0-3') || '&nbsp;'}}</span>
         </div>
       </div>
 
@@ -1210,7 +1210,7 @@
           <span class="head">{{'Overall Score'}}</span>
         </div>
         <div class="col-md-3 col-xs-3 col-sm-3 overall">
-          <span class="value">{{userAllScore || '&nbsp;'}}</span>
+          <span class="value">{{(userAllScore | number:'1.0-3') || '&nbsp;'}}</span>
         </div>
         <div class="col-md-2 col-xs-2 col-sm-2 overall">
           <span class="head">{{'Risk Ranking'}}</span>

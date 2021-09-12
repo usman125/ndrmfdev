@@ -5298,19 +5298,26 @@
                                   </mat-form-field>
                                 </span>
                                 <span class="">
-                                  <mat-form-field appearance="outline" *ngIf="loggedUser.role === 'fip' || (liquidation?.status === 'Re Assigned' ||
-                                        liquidation?.status === 'Not Initiated') || item.dateOfPayment === null">
-                                    <mat-label>Date of Payment</mat-label>
-                                    <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
+                                  <div *ngIf="loggedUser?.role === 'fip' && (liquidation?.status === 'Not Initiated' || 
+                                  liquidation?.status === 'Re Assigned')">
+                                    <mat-form-field appearance="outline" *ngIf="loggedUser.role === 'fip' || (liquidation?.status === 'Re Assigned' ||
+                                    liquidation?.status === 'Not Initiated') || item.dateOfPayment === null">
+                                      <mat-label>Date of Payment</mat-label>
+                                      <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
                                     liquidation?.status === 'Under Review')" matInput [matDatepicker]="picker3"
-                                      [(ngModel)]="item.dateOfPayment">
-                                    <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker3></mat-datepicker>
-                                  </mat-form-field>
-                                  <small id="date-field"
-                                    *ngIf="loggedUser.role !== 'fip' && item.dateOfPayment !== null">
+                                        [(ngModel)]="item.dateOfPayment">
+                                      <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                                      <mat-datepicker #picker3></mat-datepicker>
+                                    </mat-form-field>
+                                  </div>
+                                  <small id="date-field" *ngIf="loggedUser?.role === 'fip' && (liquidation?.status !== 'Not Initiated' || 
+                                  liquidation?.status !== 'Re Assigned')">
+                                    {{item.dateOfPayment | date:'shortDate'}}
+                                  </small>
+                                  <small id="date-field" *ngIf="loggedUser.role !== 'fip'">
                                     {{item.dateOfPayment |
-                                    date:'shortDate'}}</small>
+                                    date:'shortDate'}}
+                                  </small>
                                 </span>
                                 <span class="">
                                   <mat-form-field appearance="outline">
@@ -5815,19 +5822,27 @@
                                     </mat-form-field>
                                   </span>
                                   <span>
-                                    <mat-form-field appearance="outline" *ngIf="loggedUser.role === 'fip' || (liquidation?.status === 'Re Assigned' ||
-                                      liquidation?.status === 'Not Initiated') || item.dateOfPayment === null">
-                                      <mat-label>Date of Payment</mat-label>
-                                      <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
-                                      liquidation?.status === 'Under Review')" matInput [matDatepicker]="picker42"
-                                        [(ngModel)]="item.dateOfPayment">
-                                      <mat-datepicker-toggle matSuffix [for]="picker42"></mat-datepicker-toggle>
-                                      <mat-datepicker #picker42></mat-datepicker>
-                                    </mat-form-field>
-                                    <small id="date-field"
-                                      *ngIf="loggedUser.role !== 'fip' && item.dateOfPayment !== null">
+                                    <div *ngIf="loggedUser?.role === 'fip' && (liquidation?.status === 'Not Initiated' || 
+                                                                      liquidation?.status === 'Re Assigned')">
+                                      <mat-form-field appearance="outline"
+                                        *ngIf="loggedUser.role === 'fip' || (liquidation?.status === 'Re Assigned' ||
+                                                                        liquidation?.status === 'Not Initiated') || item.dateOfPayment === null">
+                                        <mat-label>Date of Payment</mat-label>
+                                        <input [disabled]="loggedUser.role !== 'fip' || (liquidation?.status === 'Approved' ||
+                                                                        liquidation?.status === 'Under Review')"
+                                          matInput [matDatepicker]="picker3" [(ngModel)]="item.dateOfPayment">
+                                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker3></mat-datepicker>
+                                      </mat-form-field>
+                                    </div>
+                                    <small id="date-field" *ngIf="loggedUser?.role === 'fip' && (liquidation?.status !== 'Not Initiated' || 
+                                                                      liquidation?.status !== 'Re Assigned')">
+                                      {{item.dateOfPayment | date:'shortDate'}}
+                                    </small>
+                                    <small id="date-field" *ngIf="loggedUser.role !== 'fip'">
                                       {{item.dateOfPayment |
-                                      date:'shortDate'}}</small>
+                                      date:'shortDate'}}
+                                    </small>
                                   </span>
                                   <span>
                                     <mat-form-field appearance="outline">

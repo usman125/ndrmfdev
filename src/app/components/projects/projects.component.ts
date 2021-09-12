@@ -261,32 +261,34 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this._projectService.commenceNewProjects(values).subscribe(
       (result: any) => {
         // console.log("RESULT ADDING PROJECT:---", result);
-        if (this.viewType !== 'govt') {
-          this._projectsStore.addProject(
-            result.id,
-            this.loggedUser.firstName + this.loggedUser.lastName,
-            values.name,
-            'Draft',
-            new Date().toISOString(),
-            values.thematicAreaName,
-            true
-          );
-          this._confirmModelService.close();
-          // this._router.navigate(['/project-details', result.id]);
-        } else {
-          this._projectsStore.addProject(
-            result.id,
-            this.loggedUser.firstName + this.loggedUser.lastName,
-            values.name,
-            'Upload PC1',
-            new Date().toISOString(),
-            values.thematicAreaName,
-            true
-          );
-          // this._confirmModelService.dialogRef.close();
-          this._router.navigate(['/project-details', result.id]);
-          // window.location.href = '/project-details/' + result.id;
-        }
+        // if (this.viewType !== 'govt') {
+        //   this._projectsStore.addProject(
+        //     result.id,
+        //     this.loggedUser.firstName + this.loggedUser.lastName,
+        //     values.name,
+        //     'Draft',
+        //     new Date().toISOString(),
+        //     values.thematicAreaName,
+        //     true
+        //   );
+        this._confirmModelService.close();
+        // this._router.navigate(['/project-details', result.id]);
+        // } else {
+        //   this._projectsStore.addProject(
+        //     result.id,
+        //     this.loggedUser.firstName + this.loggedUser.lastName,
+        //     values.name,
+        //     'Upload PC1',
+        //     new Date().toISOString(),
+        //     values.thematicAreaName,
+        //     true
+        //   );
+        // this._confirmModelService.dialogRef.close();
+        // this._router.navigate(['/project-details', result.id]);
+        // window.location.href = '/project-details/' + result.id;
+        // }
+        // this.ngOnInit();
+        location.reload();
       },
       error => {
         console.log("ERROR ADDING PROJECT:---", error);

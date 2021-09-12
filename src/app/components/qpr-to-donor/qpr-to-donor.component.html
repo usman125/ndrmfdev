@@ -3,9 +3,10 @@
     <span>QPR to Donor</span>
     <span class="example-spacer"></span>
     <button mat-icon-button (click)="commenceQprToDonor()" [disabled]="apiLoading" *ngIf="loggedUser?.role === 'process owner' && 
-      loggedUser?.processNames.indexOf('QPR_TO_DONOR') > -1">
+      loggedUser?.processNames.indexOf('QPR_TO_DONOR') > -1 && !apiLoading">
       <mat-icon>add</mat-icon>
     </button>
+    <mat-progress-spinner *ngIf="apiLoading" mode="indeterminate" diameter="30"></mat-progress-spinner>
   </mat-toolbar-row>
 </mat-toolbar>
 

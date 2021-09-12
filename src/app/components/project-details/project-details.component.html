@@ -416,7 +416,7 @@
 
       <!-- TPV TASKS -->
       <mat-toolbar class="mat-elevation-z8"
-        *ngIf="(selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null) && showTpv"
+        *ngIf="(selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null) && showTpv && loggedUser?.role !== 'fip'"
         style="padding: 15px 0px;" color="primary">
         <mat-toolbar-row>
           <span>TPV Checklist</span>
@@ -427,7 +427,7 @@
         </mat-toolbar-row>
       </mat-toolbar>
       <mat-card class="m-20"
-        *ngIf="(selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null) && showTpv">
+        *ngIf="(selectedProject?.giaChecklist?.data !== null && selectedProject?.giaChecklist !== null) && showTpv && loggedUser?.role !== 'fip'">
         <mat-card-actions>
           <app-tpv></app-tpv>
         </mat-card-actions>
@@ -435,7 +435,7 @@
 
 
       <!-- PROJECT CLOSURE TASKS -->
-      <mat-toolbar class="mat-elevation-z8" *ngIf="selectedProject?.pcStatus !== null && showPc"
+      <mat-toolbar class="mat-elevation-z8" *ngIf="selectedProject?.pcStatus !== null && showPc && loggedUser?.role !== 'fip'"
         style="padding: 15px 0px;" color="primary">
         <mat-toolbar-row>
           <span>Proposal Closure Tasks</span>
@@ -445,7 +445,7 @@
           </button>
         </mat-toolbar-row>
       </mat-toolbar>
-      <mat-card class="m-20" *ngIf="selectedProject?.pcStatus !== null && showPc">
+      <mat-card class="m-20" *ngIf="selectedProject?.pcStatus !== null && showPc && loggedUser?.role !== 'fip'">
         <mat-card-actions>
           <app-project-closure-request></app-project-closure-request>
         </mat-card-actions>

@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { ConfirmModelService } from 'src/app/services/confirm-model.service';
 import { QprToDonorService } from '../../services/qpr-to-donor.service';
 
 
@@ -26,7 +27,8 @@ import { QprToDonorService } from '../../services/qpr-to-donor.service';
 @Component({
   selector: 'app-qpr-to-donor',
   templateUrl: './qpr-to-donor.component.html',
-  styleUrls: ['./qpr-to-donor.component.css']
+  styleUrls: ['./qpr-to-donor.component.css'],
+  providers: [ConfirmModelService]
 })
 export class QprToDonorComponent implements OnInit, AfterViewInit {
 
@@ -43,6 +45,7 @@ export class QprToDonorComponent implements OnInit, AfterViewInit {
   constructor(
     private _qprToDonorService: QprToDonorService,
     private _router: Router,
+    private _confirmModelService: ConfirmModelService,
   ) {
     // Create 100 users
     // const users = Array.from({ length: 100 }, (_, k) => createNewUser(k + 1));
@@ -73,16 +76,38 @@ export class QprToDonorComponent implements OnInit, AfterViewInit {
   }
 
   commenceQprToDonor() {
-    // this.apiLoading = true;
+    this.apiLoading = true;
     this._qprToDonorService.commenceQprToDonorRequest().subscribe(
       (result: any) => {
         console.log("RESULT COMMENCE QPR TO DONOR:--", result);
-        // this.apiLoading = false;
+        const options = {
+          title: 'Request Commenced Successfully!',
+          message: '',
+          cancelText: 'OK',
+          confirmText: 'OK',
+          add: true,
+        };
+        this._confirmModelService.open(options);
         // this.dataSource = new MatTableDataSource(result);
-        this.getAllRequests();
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          this.apiLoading = false;
+          this.getAllRequests();
+        })
       },
       error => {
         console.log("RESULT COMMENCE QPR TO DONOR:--", error);
+        const options = {
+          title: error.error.message,
+          message: 'Please contact system administrator!',
+          cancelText: 'OK',
+          confirmText: 'OK',
+          add: true,
+        };
+        this._confirmModelService.open(options);
+        // this.dataSource = new MatTableDataSource(result);
+        this._confirmModelService.confirmed().subscribe(confirmed => {
+          this.apiLoading = false;
+        })
       }
     );
   }

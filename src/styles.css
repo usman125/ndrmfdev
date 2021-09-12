@@ -237,10 +237,11 @@ table {
   box-shadow: none !important;
 }
 .loginfields .login-custom-btn button {
-  width: 47%;
+  width: 100%;
   border-radius: 0;
   box-shadow: none !important;
   margin-left: 10px !important;
+  margin-right: 8px !important;
 }
 
 /* TRACK PAD STYLES */
