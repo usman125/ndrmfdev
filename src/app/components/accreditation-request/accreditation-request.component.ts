@@ -386,7 +386,7 @@ export class AccreditationRequestComponent implements OnInit, OnDestroy, AfterVi
         (result: any) => {
           // this.selectedRequest = result;
           this.selectedRequest = result.qualItem;
-          this.selectedRequest.eligibility = result.eligItem[0];
+          this.selectedRequest.eligibility = result.eligItem;
           this.selectedRequest.eligibility.data = typeof (this.selectedRequest.eligibility.data) === 'string' ?
             JSON.parse(this.selectedRequest.eligibility.data) :
             this.selectedRequest.eligibility.data;
