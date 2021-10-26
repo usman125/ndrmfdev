@@ -1,8 +1,10 @@
-<ng-container *ngIf="apiLoading">
-  <mat-progress-spinner mode="indeterminate" [diameter]="25"></mat-progress-spinner>
+<ng-container>
+  <div class="d-flex flex-fill" *ngIf="apiLoading || allProjectsLoading">
+    <mat-progress-spinner mode="indeterminate" [diameter]="25"></mat-progress-spinner>
+  </div>
 </ng-container>
-<ng-container *ngIf="!apiLoading">
-  <mat-accordion>
+<ng-container>
+  <mat-accordion *ngIf="!apiLoading && !allProjectsLoading">
     <div class="p-2 mb-3" *ngFor="let output of outPutsArray">
       <h4 class="mb-3" id="comment">{{output.value}} - {{output.label}}</h4>
       <div *ngFor="let suboutput of output.subOutputs" class="mb-3">
@@ -77,7 +79,7 @@
                   <div class="col-md-12">
                     <p id="answer">District(s) Data</p>
                     <div style="display: block">
-                      
+
                       <canvas baseChart [datasets]="districtChartData" [options]="divisionChartOptions"
                         [labels]="districtChartLabels" [chartType]="districtChartType">
                       </canvas>

@@ -20,6 +20,7 @@ export class ProjectClosureRequestComponent implements OnInit {
   unAssignedSections: any = [];
 
   allTasksSubmitted: any = null;
+  // apiLoading: boolean = false;
 
 
   constructor(
@@ -38,6 +39,7 @@ export class ProjectClosureRequestComponent implements OnInit {
   }
 
   getProjectClosureDetails() {
+    this.apiLoading = true;
     this._projectService.getProjectClosureByProposalId(this.selectedProjectId).subscribe(
       (result: any) => {
         this.allRequests = result.sort((a, b) => (a.orderNum > b.orderNum) ? 1 : ((b.orderNum > a.orderNum) ? -1 : 0))
@@ -152,6 +154,7 @@ export class ProjectClosureRequestComponent implements OnInit {
           "\n", this.allTasksSubmitted);
       },
       error => {
+        this.apiLoading = false;
         console.log("ALL CLOSURE REQUESTS ON PROPOSAL:--", error);
       }
     )

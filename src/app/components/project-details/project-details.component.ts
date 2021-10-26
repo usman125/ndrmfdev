@@ -16,6 +16,7 @@ import { ExtendedAppraisalSmesStore } from 'src/app/stores/extended-appraisal-sm
 import { AccreditationCommentsMatrixStore } from 'src/app/stores/accreditation-comments-matrix/accreditation-comments-matrix-store';
 // import { AccreditationRequestService } from 'src/app/services/accreditation-request.service';
 import * as _ from 'lodash';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-project-details',
@@ -108,6 +109,9 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
   showTpv: boolean = false;
   showPc: boolean = false;
 
+  impPlanTotal: any = null;
+  impPlanTree: any = null;
+
   constructor(
     private _proposalSectionsStore: ProposalSectionsStore,
     // private _proposalFormsStore: ProposalFormsStore,
@@ -174,7 +178,7 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
             if (result !== null) {
               if (c.data) {
                 this.selectedProjectInfo = c.data;
-                // console.log("***********************SELECTED PROJECT MONTHS***********************", c.data, this.selectedProjectInfo)
+                console.log("***********************SELECTED PROJECT MONTHS***********************", c.data, this.selectedProjectInfo)
                 this._authStore.setProjectMonths(c.data.duration);
               }
             }
@@ -1766,6 +1770,52 @@ export class ProjectDetailsComponent implements OnInit, OnDestroy {
         )
       }
     })
+  }
+
+  getActivtiesTotal($event) {
+    console.log("ACTIVTIES TOTAL FROM EVENT EMIITER IN PROJET DETAIL IS:--", $event);
+    this.impPlanTotal = $event;
+  }
+
+  activitiesTree($event) {
+    let costs = [];
+    this.impPlanTree = [];
+    for (let i = 0; i < $event.tree.length; i++) {
+      let x = $event.tree[i];
+      if (!x.children)
+        this.impPlanTree.push(x);
+    }
+    console.log("ACTIVTIES TREE FROM EMIITER IN PROJET DETAIL IS:--", $event, this.impPlanTree);
+  }
+
+  downloadProjectDetails() {
+    /*name of the excel-file which will be downloaded. */
+    let fileName = this.selectedProject.proposalName + '-details.xlsx';
+    /* table id is passed over here */
+    let element = document.getElementById('project-details');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, fileName);
+  }
+
+  downloadProjectImpPlanDetails() {
+    /*name of the excel-file which will be downloaded. */
+    let fileName = this.selectedProject.proposalName + '-imp-plan.xlsx';
+    /* table id is passed over here */
+    let element = document.getElementById('project-imp-plan');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, fileName);
   }
 
 }

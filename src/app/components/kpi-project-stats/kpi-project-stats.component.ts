@@ -17,6 +17,7 @@ export class KpiProjectStatsComponent implements OnInit {
 
   apiLoading: boolean = false;
   chartLoading: boolean = false;
+  allProjectsLoading: boolean = false;
   allProjects: any = null;
   formElements: any = null;
   projectStats: any = null;
@@ -243,9 +244,10 @@ export class KpiProjectStatsComponent implements OnInit {
   }
 
   getAllProject() {
-    this.apiLoading = true;
+    this.allProjectsLoading = true;
     this._projectService.getAllProjects().subscribe(
       (result: any) => {
+        console.log("**************RESULT ALL PROJECT*********:--", result);
         this.allProjects = [];
         var preCount = 0;
         var extCount = 0;
@@ -296,6 +298,11 @@ export class KpiProjectStatsComponent implements OnInit {
                   // );
                   this.prepareChartData(object);
                   this.allProjects.push(object);
+                  if (i < result.length - 1) {
+                    this.allProjectsLoading = true;
+                  } else {
+                    this.allProjectsLoading = false;
+                  }
                   console.log("KPI INDICATORS ALL PROJECTS:--", this.allProjects);
                 }
               },
@@ -311,10 +318,10 @@ export class KpiProjectStatsComponent implements OnInit {
           urCount,
           totalCount: result.length
         }
-        this.apiLoading = false;
+        this.allProjectsLoading = false;
       },
       error => {
-        this.apiLoading = false;
+        this.allProjectsLoading = false;
         console.log("ERROR DM PM ALL PROJECTS:--", error);
       }
     );
@@ -708,7 +715,6 @@ export class KpiProjectStatsComponent implements OnInit {
     let tempUcsAchieved = [];
 
     for (let i = 0; i < provincesChartArray.length; i++) {
-
       this.chartLoading = true;
       let key = provincesChartArray[i];
 

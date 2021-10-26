@@ -13,6 +13,7 @@ export class ProposalActivityVerificationsComponent implements OnInit {
   selectedProjectId: any = null;
   projectImpPlan: any = null;
   allVerifications: any = [];
+  apiLoading: boolean = false;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -34,12 +35,15 @@ export class ProposalActivityVerificationsComponent implements OnInit {
   }
 
   getActivityDetails() {
+    this.apiLoading = true;
     this._mobileService.getActivitiesForProposal(this.selectedProjectId).subscribe(
       result => {
+        this.apiLoading = false;
         console.log("************************data from API************************:--", result);
         this.allVerifications = result;
       },
       error => {
+        this.apiLoading = false;
         console.log("************************data from verifications API************************:--", error);
       }
     );

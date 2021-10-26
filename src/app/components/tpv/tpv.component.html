@@ -1,8 +1,6 @@
-<div class="pt-0 pb-3 pr-3 pl-3">
-  <div
-    *ngIf="checkUser()"
-    class="pb-5">
-    <div class="border-heading">
+<div class="pt-0 pb-3 pr-3 pl-3" *ngIf="!mainLoading">
+  <div *ngIf="checkUser()" class="{'pb-5': currentTask !== null}">
+    <div class="border-heading" *ngIf="currentTask !== null">
       {{'pending checklist item' | uppercase}}
     </div>
     <div class="d-flex flex-column mb-2 pl-2" *ngIf="currentTask !== null">
@@ -100,4 +98,7 @@
     </mat-tab-group>
   </div>
 
+</div>
+<div *ngIf="mainLoading" class="d-flex">
+  <mat-progress-spinner mode="indeterminate" diameter="25"></mat-progress-spinner>
 </div>

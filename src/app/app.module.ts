@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { SignaturePadModule } from 'angular2-signaturepad';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -83,6 +84,7 @@ import { ConcernedPersonDialogComponent } from './components/concerned-person-di
 import { QprSingleRequestStore } from './stores/qpr-single-request/qpr-single-request-store';
 import { AdvanceLiquidationItemStore } from './stores/advance-liquidation-item/advance-liquidation-item-store';
 import { QprToDonorRequestStore } from './stores/qpr-to-donor-request/qpr-to-donor-request-store';
+// import { MobileViewComponent } from './components/mobile-view/mobile-view.component';
 // import { ProposalActivityVerificationsComponent } from './components/proposal-activity-verifications/proposal-activity-verifications.component';
 // import { TpvComponent } from './components/tpv/tpv.component';
 // import { ProjectClosureRequestComponent } from './components/project-closure-request/project-closure-request.component';
@@ -112,6 +114,7 @@ export function tokenGetter() {
     ActivityDetailsComponent,
     GrievanceRegistrationComponent,
     ConcernedPersonDialogComponent,
+    // MobileViewComponent,
     // ProposalActivityVerificationsComponent,
     // TpvComponent,
     // ProjectClosureRequestComponent,
@@ -162,8 +165,8 @@ export function tokenGetter() {
         tokenGetter: tokenGetter,
         // whitelistedDomains: ["attendance.tallymarkscloud.com:8080"]
         allowedDomains: [
-          "localhost:8080", 
-          "attendance.tallymarkscloud.com:8080", 
+          "localhost:8080",
+          "attendance.tallymarkscloud.com:8080",
           "ndrmf.tallymarkscloud.com:8443",
           "ndrmf.tallymarkscloud.com:8080",
         ]
@@ -225,6 +228,12 @@ export function tokenGetter() {
     QprSingleRequestStore,
     AdvanceLiquidationItemStore,
     QprToDonorRequestStore,
+    [
+      {
+        provide: LocationStrategy,
+        useClass: HashLocationStrategy
+      }
+    ]
   ],
   bootstrap: [AppComponent],
   exports: [FlexLayoutModule],

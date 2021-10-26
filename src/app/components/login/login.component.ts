@@ -93,6 +93,9 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (this.loggedUser.role === 'grc') {
         this._router.navigate(['grc']);
       }
+      if (this.loggedUser.role === 'mobile_user') {
+        this._router.navigate(['mobile-view']);
+      }
     }
   }
 
@@ -137,7 +140,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (this.user.roles.indexOf('FIP') > -1) {
           this.user.role = 'fip';
         }
-        // console.log("USER:---", this.user);
+        console.log("USER:---", this.user);
         this._authStore.setUserInfo(this.user);
         this._authStore.setAuthToken(this.user.authToken);
         this._authStore.setUserRole(this.user.role);
@@ -185,10 +188,10 @@ export class LoginComponent implements OnInit, OnDestroy {
             this._router.navigate(['allcomplains']);
           } else if (this.user.role === 'cp') {
             this._router.navigate(['complainant']);
-
           } else if (this.user.role === 'grc') {
             this._router.navigate(['grc']);
-
+          } else if (this.user.role === 'mobile_user') {
+            this._router.navigate(['mobile-view']);
           }
         } else {
           var newUser = JSON.stringify(this.user);

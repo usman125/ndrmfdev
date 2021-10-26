@@ -17,6 +17,7 @@ export class TpvComponent implements OnInit {
 
   loggedUser = JSON.parse(localStorage.getItem('user'));
   apiLoading: boolean = false;
+  mainLoading: boolean = false;
   selectedProjectId: any = null;
   allRequests: any = [];
 
@@ -53,14 +54,16 @@ export class TpvComponent implements OnInit {
   }
 
   getProjectClosureDetails() {
+    this.mainLoading = true;
     this._projectService.getTpvRequestsByProposalId(this.selectedProjectId).subscribe(
       (result: any) => {
         this.allRequests = result.sort((a, b) => (a.orderNum > b.orderNum) ? 1 : ((b.orderNum > a.orderNum) ? -1 : 0))
         console.log("ALL TPV ON PROPOSAL:--", this.allRequests);
         this.getCurrentTask();
-        this.apiLoading = false;
+        this.mainLoading = false;
       },
       error => {
+        this.mainLoading = false;
         console.log("ALL TPV ON PROPOSAL:--", error);
       }
     );

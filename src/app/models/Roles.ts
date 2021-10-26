@@ -11,4 +11,5 @@ export enum Role {
   Fp = 'fp',
   Cp = 'cp',
   Grc = 'grc',
+  MV = 'mobile_user',
 }

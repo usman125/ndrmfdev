@@ -4,6 +4,7 @@ import { ProposalActivityVerificationsComponent } from '../../components/compone
 import { ProposalActivityVerificationsRoutingModule } from './proposal-activity-verifications-routing.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 
@@ -15,7 +16,8 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     ProposalActivityVerificationsRoutingModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   exports: [ProposalActivityVerificationsComponent]
 })

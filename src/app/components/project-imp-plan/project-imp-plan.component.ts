@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import * as _ from 'lodash';
@@ -113,6 +113,8 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
   selectedClub: any = null;
   @Input() qprView;
   @Input() activeQuarter;
+  @Output() activitiesTotal = new EventEmitter();
+  @Output() activitiesTree = new EventEmitter();
 
   constructor(
     public dialog: MatDialog,
@@ -403,6 +405,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     // console.log("ALL COSTS FROM PREPARE FORM:--\n:--", test, test2, this.allCosts, "\nDATA COSTS:--", this.dataCosts);
     this.dataSource.data = test2;
     this.treeControl.expandAll();
+    this.activitiesTree.emit({ tree: this.allCosts });
   }
 
   inputChanged(_id, $event) {
@@ -972,6 +975,7 @@ export class ProjectImpPlanComponent implements OnInit, OnDestroy {
     }
     // console.log("ALL NON CLUBBED ENTRIES COUNT:--", unClubActivitiesCount, unClubEntries);
     this.totalUnClubbedEntriesCount = unClubActivitiesCount;
+    this.activitiesTotal.emit({ total: this.totalUnClubbedEntriesCount + this.totalClubsCount });
   }
 
   selectClub(item) {

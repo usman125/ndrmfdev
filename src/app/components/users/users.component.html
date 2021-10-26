@@ -4,9 +4,13 @@
     <span class="example-spacer"></span>
     <button matTooltip="Sync User!" color="primary" (click)="syncUser()" mat-icon-button>
       <mat-icon aria-hidden="false" aria-label="Sync User">sync_alt
-      </mat-icon>&nbsp;Sync users
+      </mat-icon>&nbsp;Sync Sap Users
     </button>
     <span class="example-spacer"></span>
+    <button matTooltip="Print FIPs!" (click)="downloadUserDetails()" color="primary" mat-icon-button>
+      <mat-icon class="example-icon mr-2" aria-hidden="false" aria-label="Add User">print
+      </mat-icon>
+    </button>
     <button matTooltip="Add User!" (click)="goToAdd()" color="primary" mat-icon-button>
       <mat-icon class="example-icon" aria-hidden="false" aria-label="Add User">add
       </mat-icon>
@@ -107,3 +111,26 @@
 
   </mat-card-content>
 </mat-card>
+
+<div id="user-details" style="display: none;">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>Country</th>
+        <th>Postal Code</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of printArray; let i = index;">
+        <td>{{user.firstName}}&nbsp;{{user.lastName}}</td>
+        <td>{{user.address}}</td>
+        <td>{{user.location}}</td>
+        <td>{{'&nbsp;'}}</td>
+        <td>{{'&nbsp;'}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

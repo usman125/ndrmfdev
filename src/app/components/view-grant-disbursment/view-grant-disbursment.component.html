@@ -34,9 +34,12 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
 
-        <div class="d-flex flex-fill justify-content-between align-items-center" *ngIf="loggedUser?.role !== 'fip'">
-          <span>&nbsp;</span>
-          <button ngxPrint [useExistingCss]="true" printSectionId="print-initial-advance"
+        <div class="d-flex flex-fill justify-content-end align-items-center" *ngIf="loggedUser?.role !== 'fip'">
+          <button class="mr-2" (click)="downloadInititalAdvance()" matTooltip="Download Advance Excel!" mat-mini-fab
+            color="warn">
+            <mat-icon>cloud_download</mat-icon>
+          </button>
+          <button ngxPrint class="ml-3" [useExistingCss]="true" printSectionId="print-initial-advance"
             matTooltip="Print Withdrawal Application!" mat-mini-fab color="warn">
             <mat-icon>print</mat-icon>
           </button>
@@ -58,50 +61,10 @@
               {{selectedRequest.initialAdvance.reassignedOn | date:'shortDate'}}
             </small>
           </div>
-          <!-- <div class="d-flex flex-column justify-content-between"
-            *ngIf="selectedRequest !== null && selectedRequest?.initialAdvance?.advanceLiquidationItem !== null">
-            <span id="answer" style="font-size: 12px;padding: 10px;">{{'NDRMF comments on liquidation application' |
-              uppercase}}</span>
-            <span style="font-size: 14px;background-color: #f9f9f9;padding: 10px;">
-              {{selectedRequest.initialAdvance.advanceLiquidationItem.reassignmentComments}}
-            </span>
-            <small style="font-weight:550;background-color: #f9f9f9;padding: 5px 10px 10px;">
-              <small id="comment">
-                Posted On:
-              </small>
-              {{selectedRequest.initialAdvance.reassignedOn | date:'shortDate'}}
-            </small>
-          </div> -->
         </div>
-
-        <!-- ACTIVITY TREE BOX -->
-        <!-- <div *ngIf="loggedUser?.role === 'fip' && dataSource && 
-        (selectedAdvanceItem?.status === null || selectedAdvanceItem?.status === 'Under Review' ||
-        selectedAdvanceItem?.status === 'Re Assigned' || selectedAdvanceItem?.status === 'Draft')"
-          style="height: 250px;overflow: hidden;overflow-y: scroll;">
-          <div class="border-heading mt-2">
-            <span>Select activities for withdrawal applictaion</span>
-          </div>
-          <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-            <mat-tree-node (click)="addDataCosts(node)" style="cursor: pointer;" matTooltip="Add to Withdrawl Request!"
-              *matTreeNodeDef="let node" matTreeNodePadding>
-              <button color="warn" mat-icon-button disabled></button>
-              <span>{{node.title}}</span>
-            </mat-tree-node>
-            <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-              <button color="warn" mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.title">
-                <mat-icon class="mat-icon-rtl-mirror">
-                  {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-                </mat-icon>
-              </button>
-              <span style="font-weight: 550;color:#151515;">{{node.title}}</span>
-            </mat-tree-node>
-          </mat-tree>
-        </div> -->
 
         <!-- PRINT ADVANCE SECTION STARTS HERE -->
         <div id="print-initial-advance">
-
 
           <!-- FORM CONTROLS BOX FOR FIP -->
           <ng-container *ngIf="loggedUser?.role === 'fip'">
@@ -280,49 +243,6 @@
                 </div>
               </div>
             </form>
-
-            <!-- SELECT COSTS FORM FIELD -->
-            <!-- <div class="row d-flex align-items-center">
-              <div class="col-md-9">
-
-                <mat-form-field appearance="outline" *ngIf="apiCosts === null">
-                  <mat-label>Select Cost(s)</mat-label>
-                  <mat-select matNativeControl [formControl]="costsData" multiple>
-                    <mat-form-field class="p-3 filter-input" *ngIf="apiCosts === null" appearance="outline">
-                      <mat-label>Filter</mat-label>
-                      <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
-                    </mat-form-field>
-                    <mat-select-trigger>
-                      <span *ngFor="let item of costsData.value; let i=index">
-                        <span *ngIf="i===0">{{item.title}}</span>
-                      </span>
-                      <span *ngIf="costsData.value?.length > 1">
-                        (+{{costsData.value.length - 1}} others)
-                      </span>
-                    </mat-select-trigger>
-                    <mat-option *ngFor="let item of costSelections | costsFilter:filterQuery" [value]="item">{{item.title
-                      | titlecase}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" *ngIf="apiCosts !== null">
-                  <mat-label>Select Cost</mat-label>
-                  <mat-select matNativeControl [formControl]="costsData">
-                    <mat-form-field class="p-3 filter-input" *ngIf="apiCosts !== null" appearance="outline">
-                      <mat-label>Filter</mat-label>
-                      <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
-                    </mat-form-field>
-                    <mat-option *ngFor="let item of costSelections | costsFilter:filterQuery" [value]="item">{{item.title
-                      | titlecase}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-              </div>
-              <div class="col-md-2">
-                <button [disabled]="!costsData.valid" mat-raised-button color="primary" (click)="addDataCosts();">Add
-                  Costs</button>
-              </div>
-            </div> -->
 
             <!-- ADVANCE CONSISTS OF SECTION 4 PRINT BOX -->
             <div class="row">
@@ -636,7 +556,6 @@
 
             <div class="row mb-3">
               <div class="col-md-12">
-
 
                 <!-- PRINT BOX -->
                 <div class="row">
@@ -1387,6 +1306,40 @@
             </div>
           </ng-container>
 
+          <div class="d-none" id="advance-table-download" *ngIf="selectedRequest?.initialAdvance.data">
+            <table>
+              <thead>
+                <tr>
+                  <th>Proposal_Id</th>
+                  <th>Withdrawal_Id</th>
+                  <th>Budget Category</th>
+                  <th>Budget Sub Category</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of apiCosts; let i = index;">
+                  <td>{{selectedRequest.proposal_id}}</td>
+                  <td>{{1}}</td>
+                  <td>
+                    <span>
+                      <div *ngIf="item?.parentCosts">
+                        <div *ngFor="let _ of item?.parentCosts; let i = index">
+                          <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                            <small>{{name}}</small>
+                            <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' : '&nbsp;'}}</small>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </span>
+                  </td>
+                  <td>{{item.title}}</td>
+                  <td>{{item.amount | number}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
         </div>
 
         <!-- TOOL BOX FOR PROCESS OWNER DISBURSEMENT -->
@@ -1550,9 +1503,7 @@
           </button>
         </div>
 
-        <!-- ******************** LIQUIDATIONS FOR ADVANCE ************************** -->
-        <!-- LIQUIDATION PRINT SECTION START HERE -->
-        <!-- <div *ngFor="let liquidation of selectedAdvanceLiquidations; let li = index;"> -->
+        <!-- ******************** LIQUIDATIONS FOR ADVANCE STARTS HERE ************************** -->
         <mat-tab-group color="accent" backgroundColor="accent">
           <mat-tab *ngFor="let liquidation of selectedAdvanceLiquidations; let li = index;"
             [label]="'LIQUIDATION #' + (li + 1)">
@@ -1663,26 +1614,26 @@
                   <mat-form-field appearance="outline">
                     <mat-label>Payees Name</mat-label>
                     <input [disabled]="loggedUser.role !== 'fip' 
-                || (liquidation?.status === 'Approved' ||
-                  liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.payeesName" matInput type="text"
-                      placeholder="enter here...">
+                      || (liquidation?.status === 'Approved' ||
+                      liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.payeesName" matInput
+                      type="text" placeholder="enter here...">
                   </mat-form-field>
                 </div>
                 <div class="col-md-12">
                   <mat-form-field appearance="outline">
                     <mat-label>Payees Address</mat-label>
                     <input [disabled]="loggedUser.role !== 'fip' 
-                || (liquidation?.status === 'Approved' ||
-                  liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.payeesAddress" matInput type="text"
-                      placeholder="enter here...">
+                      || (liquidation?.status === 'Approved' ||
+                      liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.payeesAddress" matInput
+                      type="text" placeholder="enter here...">
                   </mat-form-field>
                 </div>
                 <div class="col-md-12">
                   <mat-form-field appearance="outline">
                     <mat-label>Bank Name</mat-label>
                     <input [disabled]="loggedUser.role !== 'fip' 
-                || (liquidation?.status === 'Approved' ||
-                  liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.bankName" matInput type="text"
+                      || (liquidation?.status === 'Approved' ||
+                      liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.bankName" matInput type="text"
                       placeholder="enter here...">
                   </mat-form-field>
                 </div>
@@ -1690,26 +1641,26 @@
                   <mat-form-field appearance="outline">
                     <mat-label>Bank Address</mat-label>
                     <input [disabled]="loggedUser.role !== 'fip' 
-                || (liquidation?.status === 'Approved' ||
-                  liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.bankAddress" matInput type="text"
-                      placeholder="enter here...">
+                      || (liquidation?.status === 'Approved' ||
+                      liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.bankAddress" matInput
+                      type="text" placeholder="enter here...">
                   </mat-form-field>
                 </div>
                 <div class="col-md-6">
                   <mat-form-field appearance="outline">
                     <mat-label>Payees Account #</mat-label>
                     <input [disabled]="loggedUser.role !== 'fip' 
-                || (liquidation?.status === 'Approved' ||
-                  liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.payeesAccount" matInput type="text"
-                      placeholder="enter here...">
+                      || (liquidation?.status === 'Approved' ||
+                      liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.payeesAccount" matInput
+                      type="text" placeholder="enter here...">
                   </mat-form-field>
                 </div>
                 <div class="col-md-6">
                   <mat-form-field appearance="outline">
                     <mat-label>Swift Code</mat-label>
                     <input [disabled]="loggedUser.role !== 'fip' 
-                || (liquidation?.status === 'Approved' ||
-                  liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.swiftCode" matInput type="text"
+                      || (liquidation?.status === 'Approved' ||
+                      liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.swiftCode" matInput type="text"
                       placeholder="enter here...">
                   </mat-form-field>
                 </div>
@@ -1717,9 +1668,9 @@
                   <mat-form-field appearance="outline">
                     <mat-label>Special Payment Instruction</mat-label>
                     <input [disabled]="loggedUser.role !== 'fip' 
-                || (liquidation?.status === 'Approved' ||
-                  liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.specialPaymentInstruction" matInput
-                      type="text" placeholder="enter here...">
+                      || (liquidation?.status === 'Approved' ||
+                      liquidation?.status === 'Under Review')" [(ngModel)]="liquidation.specialPaymentInstruction"
+                      matInput type="text" placeholder="enter here...">
                   </mat-form-field>
                 </div>
               </div>
@@ -2204,7 +2155,7 @@
               <div class="mb-3" *ngIf="selectedRequest?.initialAdvance?.subStatus === 'Approved'">
                 <div class="d-flex justify-content-between mt-2 mb-2">
                   <p id="answer" class="p-2">SOEs for NDRMF</p>
-                  <button mat-mini-fab color="accent" (click)="exportexcelNdrmf()">
+                  <button matTooltip="Download Ndrmf Soes!" mat-mini-fab color="accent" (click)="exportexcelNdrmf()">
                     <mat-icon>cloud_download</mat-icon>
                   </button>
                 </div>
@@ -2330,6 +2281,9 @@
                   <table>
                     <thead>
                       <tr>
+                        <th>Liquidation_id</th>
+                        <th>Withdrawal_id</th>
+                        <th>Proposal_id</th>
                         <th>Categories</th>
                         <th>Vendor Name</th>
                         <th>Invoice amount</th>
@@ -2341,6 +2295,15 @@
                     </thead>
                     <tbody>
                       <tr *ngFor="let item of liquidation.ndrmfSoes; let i = index;">
+                        <td>
+                          {{(li + 1)}}
+                        </td>
+                        <td>
+                          {{1}}
+                        </td>
+                        <td>
+                          {{selectedRequest.proposal_id}}
+                        </td>
                         <td>
                           {{getActivityName(item.activityId)}}
                         </td>
@@ -2731,8 +2694,8 @@
                 <div class="mb-3">
                   <div class="d-flex justify-content-between mt-2 mb-2">
                     <p id="answer" class="p-2">SOEs for FIP</p>
-                    <button mat-mini-fab color="accent" (click)="exportexcelFip();">
-                      <mat-icon>add</mat-icon>
+                    <button matTooltip="Download Fip Soes!" mat-mini-fab color="accent" (click)="exportexcelFip();">
+                      <mat-icon>cloud_download</mat-icon>
                     </button>
                   </div>
 
@@ -2860,6 +2823,9 @@
                   <table>
                     <thead>
                       <tr>
+                        <th>Liquidation_id</th>
+                        <th>Withdrawal_id</th>
+                        <th>Proposal_id</th>
                         <th>Categories</th>
                         <th>Vendor Name</th>
                         <th>Invoice amount</th>
@@ -2871,6 +2837,15 @@
                     </thead>
                     <tbody>
                       <tr *ngFor="let item of liquidation.ndrmfSoes; let i = index;">
+                        <td>
+                          {{(li + 1)}}
+                        </td>
+                        <td>
+                          {{1}}
+                        </td>
+                        <td>
+                          {{selectedRequest.proposal_id}}
+                        </td>
                         <td>
                           {{getActivityName(item.activityId)}}
                         </td>
@@ -2966,8 +2941,6 @@
           </mat-tab>
         </mat-tab-group>
 
-        <!-- </div> -->
-
         <mat-action-row>
           <div *ngIf="loggedUser?.role === 'fip'" class="d-flex align-items-center flex-fill justify-content-between">
             <div class="d-flex flex-column">
@@ -3033,41 +3006,17 @@
     <mat-card>
       <mat-card-content>
 
-
-        <!-- <mat-accordion class="example-headers-align" multi>
-        <mat-expansion-panel *ngFor="let item of selectedRequest?.quarterAdvanceList; let i = index;"
-        [expanded]="step === i" (opened)="setStep(item, i, 'quarter')">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <span style="font-weight: 550;" class="responsive-text d-flex align-items-center">
-              <mat-icon matTooltip="Review Pending" class="mr-2" color="warn" *ngIf="item.showNoti === true">
-                notifications_active</mat-icon>
-              <mat-icon matTooltip="Review Completed" class="mr-2" color="accent" *ngIf="item.showNoti === false">
-                notifications</mat-icon>
-              Quarter Advance #{{i+2}}
-            </span>
-          </mat-panel-title>
-          <mat-panel-description>
-            <span id="comment" class="responsive-text" style="font-weight: 550;">
-              {{item.status ?
-              item.status : '&nbsp;' }}
-            </span>
-            <mat-icon>
-              unfold_more
-            </mat-icon>
-          </mat-panel-description>
-        </mat-expansion-panel-header> -->
-
         <mat-tab-group (selectedTabChange)="setTabStep($event, 'quarter')">
           <mat-tab *ngFor="let item of selectedRequest?.quarterAdvanceList; let i = index;"
             [label]="'QUARTER ADVANCE #' + (i+2)">
 
-
-
-
-            <div class="d-flex flex-fill justify-content-between align-items-center" *ngIf="loggedUser?.role !== 'fip'">
-              <span>&nbsp;</span>
-              <button ngxPrint [useExistingCss]="true" printSectionId="print-quarter-advance"
+            <div class="d-flex flex-fill justify-content-end align-items-center pt-3"
+              *ngIf="loggedUser?.role !== 'fip'">
+              <button class="mr-3" (click)="downloadQuarterAdvance(i+2)" matTooltip="Withdrawal Download Excel!"
+                mat-mini-fab color="warn">
+                <mat-icon>cloud_download</mat-icon>
+              </button>
+              <button class="mr-3" ngxPrint [useExistingCss]="true" printSectionId="print-quarter-advance"
                 matTooltip="Print Withdrawal Application!" mat-mini-fab color="warn">
                 <mat-icon>print</mat-icon>
               </button>
@@ -3089,46 +3038,9 @@
                   {{selectedAdvanceItem.reassignedOn | date:'shortDate'}}
                 </small>
               </div>
-              <!-- <div class="d-flex flex-column justify-content-between"
-            *ngIf="selectedAdvanceLiquidation?.reassignmentComments !== null">
-            <span id="answer" style="font-size: 12px;padding: 10px;">{{'NDRMF comments on liquidation application' |
-              uppercase}}</span>
-            <span style="font-size: 14px;background-color: #f9f9f9;padding: 10px;">
-              {{selectedAdvanceLiquidation.reassignmentComments}}
-            </span>
-            <small style="font-weight:550;background-color: #f9f9f9;padding: 5px 10px 10px;">
-              <small id="comment">
-                Posted On:
-              </small>
-              {{selectedAdvanceLiquidation.reassignedOn | date:'shortDate'}}
-            </small>
-          </div> -->
             </div>
 
-            <!-- ACTIVITY TREE BOX -->
-            <!-- <div *ngIf="loggedUser?.role === 'fip' && dataSource && 
-        (selectedAdvanceItem?.status === null || selectedAdvanceItem?.status === 'Under Review' ||
-        selectedAdvanceItem?.status === 'Re Assigned' || selectedAdvanceItem?.status === 'Draft')"
-          style="height: 250px;overflow: hidden;overflow-y: scroll;">
-          <div class="border-heading mt-2">
-            <span>Select activities for withdrawal applictaion</span>
-          </div>
-          <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-            <mat-tree-node (click)="addQuarterData(node)" style="cursor: pointer;"
-              matTooltip="Add to Withdrawl Request!" *matTreeNodeDef="let node" matTreeNodePadding>
-              <button color="warn" mat-icon-button disabled></button>
-              <span>{{node.title}}</span>
-            </mat-tree-node>
-            <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-              <button color="warn" mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.title">
-                <mat-icon class="mat-icon-rtl-mirror">
-                  {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-                </mat-icon>
-              </button>
-              <span style="font-weight: 550;color:#151515;">{{node.title}}</span>
-            </mat-tree-node>
-          </mat-tree>
-        </div> -->
+
 
             <!-- PRINT ADVANCE STARTS HERE -->
             <mat-tab-group align-tabs="right">
@@ -3539,56 +3451,6 @@
                         </div>
                       </div>
                     </div>
-
-                    <!-- SELECT COSTS FORM FIELD -->
-                    <!-- <div class="row d-flex align-items-center mb-3">
-              <div class="col-md-9">
-
-                <mat-form-field appearance="outline" *ngIf="selectedRequest?.quarterAdvanceList[step]?.data === null">
-                  <mat-label>Select Cost(s)</mat-label>
-                  <mat-select matNativeControl [formControl]="costsData" multiple>
-                    <mat-form-field class="p-3 filter-input"
-                      *ngIf="selectedRequest?.quarterAdvanceList[step]?.data === null" appearance="outline">
-                      <mat-label>Filter</mat-label>
-                      <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
-                    </mat-form-field>
-                    <mat-select-trigger>
-                      <div *ngIf="costsData && costsData?.value?.length">
-                        <span *ngFor="let item of costsData.value; let i=index">
-                          <span *ngIf="i===0">{{item.title}}</span>
-                        </span>
-                        <span *ngIf="costsData.value?.length > 1">
-                          (+{{costsData.value.length - 1}} others)
-                        </span>
-                      </div>
-                    </mat-select-trigger>
-                    <mat-option *ngFor="let item of costSelections | costsFilter:filterQuery" [value]="item">{{item.title
-                      | titlecase}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" *ngIf="selectedRequest?.quarterAdvanceList[step]?.data !== null">
-                  <mat-label>Select Cost</mat-label>
-                  <mat-select matNativeControl [formControl]="costsData">
-                    <mat-form-field class="p-3 filter-input"
-                      *ngIf="selectedRequest?.quarterAdvanceList[step]?.data !== null" appearance="outline">
-                      <mat-label>Filter</mat-label>
-                      <input matInput type="text" placeholder="Enter keyword..." [(ngModel)]="filterQuery">
-                    </mat-form-field>
-                    <mat-option *ngFor="let item of costSelections | costsFilter:filterQuery" [value]="item">{{item.title
-                      | titlecase}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-              </div>
-              <div class="col-md-2">
-                <button [disabled]="selectedRequest.quarterAdvanceList[step]?.status === 'Approved' ||
-                                    selectedRequest.quarterAdvanceList[step]?.status === 'Under Review' ||
-                                    selectedRequest.quarterAdvanceList[step]?.status === 'Completed' || !costsData.valid"
-                  mat-raised-button color="primary" (click)="addQuarterData();">Add Costs</button>
-              </div>
-              </div> -->
-
                     <!-- ACTIVITY TABLE HEADER -->
                     <div class="row d-flex align-items-center header-box">
                       <div class="col-md-4 heading-contain">
@@ -3601,7 +3463,6 @@
                         <span class="pl-2">Amount</span>
                       </div>
                     </div>
-
                     <!-- ACTIVITY TABLE ROWS -->
                     <div *ngIf="selectedRequest !== null && selectedRequest.quarterAdvanceList[step]">
                       <div class="row cost-box d-flex align-items-center mt-2"
@@ -4065,6 +3926,43 @@
                       </div>
                     </div>
 
+                    <!-- DOWNLOAD QUARTER ADVANCE TABLE -->
+                    <div class="d-none" id="quarter-advance-table"
+                      *ngIf="selectedRequest.quarterAdvanceList[step]?.data !== null">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Proposal_Id</th>
+                            <th>Withdrawal_Id</th>
+                            <th>Budget Category</th>
+                            <th>Budget Sub Category</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of selectedRequest.quarterAdvanceList[step].data; let i = index;">
+                            <td>{{selectedRequest.proposal_id}}</td>
+                            <td>{{selectedRequest.quarterAdvanceList[step].quarter}}</td>
+                            <td>
+                              <span>
+                                <div *ngIf="item?.parentCosts">
+                                  <div *ngFor="let _ of item?.parentCosts; let i = index">
+                                    <ng-container *ngIf="item?.parentCosts[item?.parentCosts.length-i-1] as name">
+                                      <small>{{name}}</small>
+                                      <small id="comment">{{i !== (item?.parentCosts.length - 1) ? ' ->' :
+                                        '&nbsp;'}}</small>
+                                    </ng-container>
+                                  </div>
+                                </div>
+                              </span>
+                            </td>
+                            <td>{{item.title}}</td>
+                            <td>{{item.amount | number}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
 
                   </ng-container>
 
@@ -4232,6 +4130,7 @@
                   </div>
                 </div>
               </mat-tab>
+
               <!-- BUDGET UTILIZATION FIP -->
               <mat-tab label="BUDGET UTILIZATION NDRMF">
                 <div id="print-quarter-advance">
@@ -5250,10 +5149,12 @@
                           <!-- NDRMF SOEs -->
                           <div class="mb-3">
                             <div class="d-flex justify-content-between mt-2 mb-2">
-                              <p id="answer" class="p-2">SOEs for NDRMF</p>
-                              <!-- <button mat-mini-fab color="accent" (click)="addNdrmfSoes();">
-                                              <mat-icon>add</mat-icon>
-                                            </button> -->
+                              <div id="answer" class="p-2 d-flex align-items-center justify-conetnt-between">
+                                <span class="mr-2">SOEs for NDRMF</span>
+                                <button mat-mini-fab color="accent" (click)="downloadQuarterAdvanceNdrmfSoes(li+1);">
+                                  <mat-icon>cloud_download</mat-icon>
+                                </button>
+                              </div>
                             </div>
 
                             <!-- TABLE HEADER -->
@@ -5379,6 +5280,59 @@
                               </button>
                             </div>
 
+                          </div>
+
+                          <div id="quarter-liquidation-ndrmf-soes" class="d-none">
+                            <table>
+                              <thead>
+                                <tr>
+                                  <th>Proposal_Id</th>
+                                  <th>Liquidation_Id</th>
+                                  <th>Withdrawal_No</th>
+                                  <th>Categories</th>
+                                  <th>Vendor Name</th>
+                                  <th>Invoice amount</th>
+                                  <th>Date of Payment</th>
+                                  <th>Paid Amount</th>
+                                  <th>Cheque #</th>
+                                  <th>Remarks</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let item of liquidation.ndrmfSoes; let i = index;">
+                                  <td>
+                                    {{selectedRequest.proposal_id}}
+                                  </td>
+                                  <td>
+                                    {{li+1}}
+                                  </td>
+                                  <td>
+                                    {{selectedAdvanceItem.quarter}}
+                                  </td>
+                                  <td>
+                                    {{getActivityName(item.activityId)}}
+                                  </td>
+                                  <td>
+                                    {{item.vendorName}}
+                                  </td>
+                                  <td>
+                                    {{item.invoiceAmount}}
+                                  </td>
+                                  <td>
+                                    {{item.dateOfPayment}}
+                                  </td>
+                                  <td>
+                                    {{item.paidAmount}}
+                                  </td>
+                                  <td>
+                                    {{item.chequeNumber}}
+                                  </td>
+                                  <td>
+                                    {{item.remarks}}
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
                           </div>
                         </div>
                       </mat-tab>
@@ -5776,7 +5730,12 @@
                           <ng-container>
                             <div class="mb-3">
                               <div class="d-flex justify-content-between mt-2 mb-2">
-                                <p id="answer" class="p-2">SOEs - FIP Share</p>
+                                <div id="answer" class="p-2 align-items-center justify-conetnt-between">
+                                  <span class="mr-2">SOEs - FIP Share</span>
+                                  <button mat-mini-fab color="accent" (click)="downloadQuarterAdvanceFipSoes(li+1);">
+                                    <mat-icon>cloud_download</mat-icon>
+                                  </button>
+                                </div>
                               </div>
 
                               <!-- TABLE HEADER -->
@@ -5905,6 +5864,58 @@
                                 </button>
                               </div>
 
+                            </div>
+                            <div id="quarter-liquidation-fip-soes" class="d-none">
+                              <table>
+                                <thead>
+                                  <tr>
+                                    <th>Proposal_Id</th>
+                                    <th>Liquidation_Id</th>
+                                    <th>Withdrawal_No</th>
+                                    <th>Categories</th>
+                                    <th>Vendor Name</th>
+                                    <th>Invoice amount</th>
+                                    <th>Date of Payment</th>
+                                    <th>Paid Amount</th>
+                                    <th>Cheque #</th>
+                                    <th>Remarks</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let item of liquidation.fipSoes; let i = index;">
+                                    <td>
+                                      {{selectedRequest.proposal_id}}
+                                    </td>
+                                    <td>
+                                      {{li+1}}
+                                    </td>
+                                    <td>
+                                      {{selectedAdvanceItem.quarter}}
+                                    </td>
+                                    <td>
+                                      {{getActivityName(item.activityId)}}
+                                    </td>
+                                    <td>
+                                      {{item.vendorName}}
+                                    </td>
+                                    <td>
+                                      {{item.invoiceAmount}}
+                                    </td>
+                                    <td>
+                                      {{item.dateOfPayment}}
+                                    </td>
+                                    <td>
+                                      {{item.paidAmount}}
+                                    </td>
+                                    <td>
+                                      {{item.chequeNumber}}
+                                    </td>
+                                    <td>
+                                      {{item.remarks}}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
                             </div>
                           </ng-container>
                         </div>

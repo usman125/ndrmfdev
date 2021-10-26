@@ -136,4 +136,5 @@ export { QprToDonorRequestComponent } from './qpr-to-donor-request/qpr-to-donor-
 export { SubProjectDocumentCommentsMatrixComponent } from './sub-project-document-comments-matrix/sub-project-document-comments-matrix.component';
 export { ProjectClosureRequestComponent } from './project-closure-request/project-closure-request.component'
 export { TpvComponent } from './tpv/tpv.component';
-export { ProposalActivityVerificationsComponent } from './proposal-activity-verifications/proposal-activity-verifications.component'
+export { ProposalActivityVerificationsComponent } from './proposal-activity-verifications/proposal-activity-verifications.component';
+export { MobileViewComponent } from './mobile-view/mobile-view.component';

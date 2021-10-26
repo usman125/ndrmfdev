@@ -9,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { UserService } from "../../services/user.service";
 import { ConfirmModelService } from '../../services/confirm-model.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-users',
@@ -29,6 +30,8 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  printArray: any = [];
 
 
 
@@ -92,8 +95,12 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
             roles: result[i].roles,
             orgId: result[i].orgId,
             orgName: result[i].orgName,
-            org: [{ 'id': result[i].orgId, 'name': result[i].orgName }]
+            org: [{ 'id': result[i].orgId, 'name': result[i].orgName }],
+            address: result[i].address,
+            location: result[i].location,
           }
+          if (object.role === 'fip data entry' || object.role === 'fip')
+            this.printArray.push(object)
           usersArray.push(object);
         }
         this._usersStore.setAllUsers(usersArray);
@@ -232,6 +239,21 @@ export class UsersComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log("RESULT SYNCING USER:--", error);
       }
     );
+  }
+
+  downloadUserDetails() {
+    /*name of the excel-file which will be downloaded. */
+    let fileName = 'FipUserDetails.xlsx';
+    /* table id is passed over here */
+    let element = document.getElementById('user-details');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, fileName);
   }
 
 

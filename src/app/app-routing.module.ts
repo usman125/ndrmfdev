@@ -614,6 +614,13 @@ const routes: Routes = [
     // component: ProjectWorkPlanComponent
   },
   {
+    path: 'mobile-view',
+    loadChildren: () => import('./modules/mobile-view/mobile-view.module').then(m => m.MobileViewModule),
+    canActivate: [AuthGuard],
+    data: { roles: [Role.MV] }
+    // component: ProjectWorkPlanComponent
+  },
+  {
     path: 'sub-project-document-comments-matrix/:requestId',
     loadChildren: () => import('./modules/sub-project-document-comments-matrix/sub-project-document-comments-matrix.module').then(m => m.SubProjectDocumentCommentsMatrixModule),
     canActivate: [AuthGuard],

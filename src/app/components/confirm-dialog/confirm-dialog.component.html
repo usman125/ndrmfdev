@@ -110,12 +110,12 @@
 
       <section *ngIf="areas?.value?.length">
 
-        <div *ngFor="let area of areas.value">
+        <div *ngFor="let area of areas.value; let i = index;">
           <mat-form-field appearance="outline">
-            <mat-label>Experience</mat-label>
+            <mat-label>{{area.name}} Experience</mat-label>
             <input type="number" matInput placeholder="Enter years" [(ngModel)]="area.experience">
           </mat-form-field>
-          <section class="example-section">
+          <section class="example-section" *ngIf="i === areas.value.length - 1">
             <label class="example-margin">Availability of counterpart Financing:</label>
             <mat-radio-group [(ngModel)]="area.counterpart">
               <mat-radio-button class="example-margin" value="yes">Yes</mat-radio-button>

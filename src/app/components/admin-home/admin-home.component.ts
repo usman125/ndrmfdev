@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { Router } from '@angular/router';
 import { UserService } from "../../services/user.service";
 import { SettingsService } from "../../services/settings.service";
@@ -74,6 +75,9 @@ export class AdminHomeComponent implements OnInit {
       if (!localStorage.getItem('firstLoad')) {
         localStorage['firstLoad'] = true;
         window.location.reload();
+        // this._router.navigateByUrl('/admin-home', { skipLocationChange: true }).then(() => {
+        //   this._router.navigate(['route']);
+        // });
       }
       else
         localStorage.removeItem('firstLoad');

@@ -193,8 +193,8 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
       this._singleGrantDisbursmentsStore.state$.subscribe(
         data => {
           if (data.disbursment) {
-            // console.log("REQUEST IN VIEW*********:---", data.disbursment);
             this.selectedRequest = data.disbursment;
+            console.log("REQUEST IN VIEW*********:---", this.selectedRequest);
 
             let pendingCount = 0;
             let completedCount = 0;
@@ -1967,6 +1967,70 @@ export class ViewGrantDisbursmentComponent implements OnInit, OnDestroy {
     let fileName = 'SoesFip.xlsx';
     /* table id is passed over here */
     let element = document.getElementById('excel-table-fip');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, fileName);
+
+  }
+
+  downloadQuarterAdvance(index): void {
+    /*name of the excel-file which will be downloaded. */
+    let fileName = 'QuarterAdvance' + index + '.xlsx';
+    /* table id is passed over here */
+    let element = document.getElementById('quarter-advance-table');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, fileName);
+
+  }
+
+  downloadQuarterAdvanceNdrmfSoes(index): void {
+    /*name of the excel-file which will be downloaded. */
+    let fileName = 'QuarterAdvance-Liquidation' + index + '-NdrmfSoes.xlsx';
+    /* table id is passed over here */
+    let element = document.getElementById('quarter-liquidation-ndrmf-soes');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, fileName);
+
+  }
+
+  downloadQuarterAdvanceFipSoes(index): void {
+    /*name of the excel-file which will be downloaded. */
+    let fileName = 'QuarterAdvance-Liquidation' + index + '-FipSoes.xlsx';
+    /* table id is passed over here */
+    let element = document.getElementById('quarter-liquidation-fip-soes');
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    /* save to file */
+    XLSX.writeFile(wb, fileName);
+
+  }
+
+  downloadInititalAdvance(): void {
+    /*name of the excel-file which will be downloaded. */
+    let fileName = 'Initial-Advance-FipSoes.xlsx';
+    /* table id is passed over here */
+    let element = document.getElementById('advance-table-download');
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
 
     /* generate workbook and add the worksheet */
